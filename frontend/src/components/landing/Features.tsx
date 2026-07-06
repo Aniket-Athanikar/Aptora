@@ -1,0 +1,189 @@
+"use client";
+
+import React, { useRef } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import {
+  FileSpreadsheet,
+  Database,
+  CalendarRange,
+  GraduationCap,
+  HelpCircle,
+  LineChart
+} from "lucide-react";
+import GlassCard from "../ui/GlassCard";
+import SectionHeading from "../ui/SectionHeading";
+
+// 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
+function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
+  const xSpring = useSpring(x, springConfig);
+  const ySpring = useSpring(y, springConfig);
+
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], [15, -15]);
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-15, 15]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = (e.clientX - rect.left) / width - 0.5;
+    const mouseY = (e.clientY - rect.top) / height - 0.5;
+
+    x.set(mouseX);
+    y.set(mouseY);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className={`relative cursor-pointer group ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export default function Features() {
+  const list = [
+    {
+      title: "AI Notes Generator",
+      description: "Get chapter-wise notes, summary, mindmaps & key points instantly from any book or source.",
+      icon: FileSpreadsheet,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.25)] hover:border-[#6D4AFF]/40",
+      iconColor: "text-[#6D4AFF] bg-[#6D4AFF]/5 border-[#6D4AFF]/20 group-hover:bg-[#6D4AFF]/10",
+    },
+    {
+      title: "Question Bank",
+      description: "Unlimited MCQs, PYQs, subjective questions with deep detailed conceptual explanations.",
+      icon: Database,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(34,197,94,0.25)] hover:border-emerald-500/40",
+      iconColor: "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 group-hover:bg-emerald-500/10",
+    },
+    {
+      title: "Daily Practice",
+      description: "100 Questions every day based on your weak areas and actual board/exam patterns.",
+      icon: CalendarRange,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.25)] hover:border-amber-500/40",
+      iconColor: "text-amber-500 bg-amber-500/5 border-amber-500/20 group-hover:bg-amber-500/10",
+    },
+    {
+      title: "Mock Tests",
+      description: "Full-length mock tests with real-time analysis, rankings, and standard percentile scoring.",
+      icon: GraduationCap,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.25)] hover:border-[#4F46E5]/40",
+      iconColor: "text-[#4F46E5] bg-[#4F46E5]/5 border-[#4F46E5]/20 group-hover:bg-[#4F46E5]/10",
+    },
+    {
+      title: "AI Tutor",
+      description: "Ask any question from your uploaded material and get instant contextual chat explanation.",
+      icon: HelpCircle,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.25)] hover:border-[#A855F7]/40",
+      iconColor: "text-[#A855F7] bg-[#A855F7]/5 border-[#A855F7]/20 group-hover:bg-[#A855F7]/10",
+    },
+    {
+      title: "Smart Analytics",
+      description: "Daily practice tracker, accuracy maps, weak topics identification, and smart study recommendations.",
+      icon: LineChart,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.25)] hover:border-pink-500/40",
+      iconColor: "text-pink-500 bg-pink-500/5 border-pink-500/20 group-hover:bg-pink-500/10",
+    },
+  ];
+
+  // Duplicating the array to create a seamless infinite loop for the marquee
+  const carouselItems = [...list, ...list];
+
+  return (
+    <section id="features" className="py-20 bg-[#faf9ff] relative overflow-hidden border-t border-[#ECECEC] perspective-[1200px]">
+
+      {/* Ambient Animated Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 select-none overflow-hidden">
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-[100px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-gradient-to-tr from-[#A855F7]/5 to-transparent rounded-full blur-[100px]"
+        />
+      </div>
+
+      <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10 mb-12">
+        <SectionHeading
+          badge="Product Features"
+          title="Powerful Features to Boost Your"
+          gradientTitle="Preparation"
+          description="Everything you need in one intelligent platform to maximize your scores."
+        />
+      </div>
+
+      {/* Auto-Carousel Marquee Wrapper */}
+      <div className="relative w-full flex overflow-hidden group">
+
+        {/* Left and Right Gradient Masks for a clean fade-out effect */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-r from-[#faf9ff] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-l from-[#faf9ff] to-transparent z-20 pointer-events-none" />
+
+        {/* Scrolling Track */}
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            ease: "linear",
+            duration: 45, // Slow, comfortable reading speed
+            repeat: Infinity
+          }}
+          className="flex gap-6 md:gap-8 px-4 md:px-8 w-max"
+        >
+          {carouselItems.map((item, idx) => (
+            <div key={idx} className="w-[300px] md:w-[400px] flex-shrink-0 py-10">
+              <TiltCard className="h-full">
+                <GlassCard
+                  className={`flex flex-col items-start p-8 h-full bg-white/70 backdrop-blur-xl border-[#ECECEC] rounded-[32px] gap-6 transition-all duration-500 shadow-sm ${item.glow}`}
+                >
+                  {/* Icon Wrapper with Z-Depth */}
+                  <div
+                    style={{ transform: "translateZ(50px)" }}
+                    className={`w-14 h-14 rounded-2xl border flex items-center justify-center shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 ${item.iconColor}`}
+                  >
+                    <item.icon className="w-6 h-6" />
+                  </div>
+
+                  {/* Content Container with Z-Depth */}
+                  <div style={{ transform: "translateZ(40px)" }} className="flex flex-col gap-3">
+                    <h3 className="font-extrabold text-neutral-900 text-xl leading-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-neutral-500 text-sm font-semibold leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Hidden Decorative Glow on Hover */}
+                  <div
+                    style={{ transform: "translateZ(20px)" }}
+                    className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[32px] pointer-events-none"
+                  />
+                </GlassCard>
+              </TiltCard>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}

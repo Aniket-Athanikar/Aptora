@@ -1,0 +1,27 @@
+# Frontend NPM Dependencies (Next.js 15, TypeScript, Tailwind v4 Stack)
+# To install all, run: npm install <package_name>
+
+framer-motion
+gsap
+lenis
+three
+@types/three
+@react-three/fiber
+@react-three/drei
+lucide-react
+motion
+react-countup
+embla-carousel-react
+react-hook-form
+zod
+clsx
+tailwind-merge
+@hookform/resolvers
+@tailwindcss/postcss
+tailwindcss
+typescript
+@types/node
+@types/react
+@types/react-dom
+eslint
+eslint-config-next
