@@ -2,9 +2,11 @@
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import Link from "next/link";
 import { Star, Quote } from "lucide-react";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
+import GlowButton from "../ui/GlowButton";
 
 // 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -106,7 +108,6 @@ export default function Testimonials() {
         <div className="absolute left-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-r from-[#faf9ff] to-transparent z-20 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-l from-[#faf9ff] to-transparent z-20 pointer-events-none" />
 
-        {/* Scrolling Track */}
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{
@@ -160,6 +161,15 @@ export default function Testimonials() {
             </div>
           ))}
         </motion.div>
+      </div>
+
+      {/* Success Stories CTA Button */}
+      <div className="flex justify-center mt-12 relative z-10">
+        <Link href="/success-stories">
+          <GlowButton variant="gradient" className="px-8 py-3.5 text-xs font-black" magnetic={false}>
+            Explore More Success Stories
+          </GlowButton>
+        </Link>
       </div>
     </section>
   );

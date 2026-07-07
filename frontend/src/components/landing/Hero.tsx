@@ -2,6 +2,7 @@
 
 import { Play, CheckCircle, Star, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import GlowButton from "../ui/GlowButton";
 import FloatingCards from "./FloatingCards";
 import dynamic from "next/dynamic";
@@ -84,15 +85,17 @@ export default function Hero() {
             transition={{ delay: 0.4 }}
             className="flex flex-wrap gap-4 items-center"
           >
-            <GlowButton variant="gradient" className="px-8 py-3.5 text-sm">
-              Start Free Now
-            </GlowButton>
-            <button className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900 font-bold text-sm px-5 py-3.5 cursor-pointer transition-colors">
+            <Link href="/login">
+              <GlowButton variant="gradient" className="px-8 py-3.5 text-sm" magnetic={false}>
+                Start Free Now
+              </GlowButton>
+            </Link>
+            <Link href="/how-it-works" className="inline-flex items-center gap-2 text-neutral-600 hover:text-[#6D4AFF] font-bold text-sm px-5 py-3.5 transition-colors">
               <div className="w-8 h-8 rounded-full bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center">
                 <Play className="w-3.5 h-3.5 text-[#6D4AFF] fill-[#6D4AFF]" />
               </div>
               Watch Demo
-            </button>
+            </Link>
           </motion.div>
 
           {/* Ratings & Social Proof */}

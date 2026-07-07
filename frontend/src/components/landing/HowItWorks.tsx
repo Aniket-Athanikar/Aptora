@@ -2,9 +2,11 @@
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import Link from "next/link";
 import { UploadCloud, FileText, BrainCircuit, Trophy, ArrowRight } from "lucide-react";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
+import GlowButton from "../ui/GlowButton";
 
 // 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -168,6 +170,15 @@ export default function HowItWorks() {
               </TiltCard>
             </motion.div>
           ))}
+        </div>
+
+        {/* Explore Detailed Guide CTA Button */}
+        <div className="flex justify-center mt-12">
+          <Link href="/how-it-works">
+            <GlowButton variant="gradient" className="px-8 py-3.5 text-xs font-black" magnetic={false}>
+              See How It Works In Detail
+            </GlowButton>
+          </Link>
         </div>
       </div>
     </section>

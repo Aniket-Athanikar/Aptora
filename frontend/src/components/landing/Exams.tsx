@@ -2,13 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import {
   Building2, GraduationCap, BookOpen, Briefcase, TrendingUp,
   Fingerprint, Globe2, FileCheck, Flame, Award, Cpu, Target,
-  Zap, ShieldCheck, Languages, Code, Calculator, School, UserCheck
+  ShieldCheck, Languages, Code, Calculator, School, UserCheck
 } from "lucide-react";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
+import GlowButton from "../ui/GlowButton";
 
 export default function Exams() {
   const allExams = [
@@ -85,6 +87,15 @@ export default function Exams() {
           ))}
         </motion.div>
       </motion.div>
+
+      {/* Explore All Exams CTA Button */}
+      <div className="flex justify-center mt-12">
+        <Link href="/exams">
+          <GlowButton variant="gradient" className="px-8 py-3.5 text-xs font-black" magnetic={false}>
+            Explore All Covered Exams
+          </GlowButton>
+        </Link>
+      </div>
     </section>
   );
 }

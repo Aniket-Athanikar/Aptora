@@ -2,11 +2,11 @@
 
 import React, { useState, useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import GlassCard from "../ui/GlassCard";
-import SectionHeading from "../ui/SectionHeading";
-import GlowButton from "../ui/GlowButton";
+import PageLayout from "@/components/layout/PageLayout";
+import GlassCard from "@/components/ui/GlassCard";
+import GlowButton from "@/components/ui/GlowButton";
 
 // High-Performance 3D Tilt Wrapper
 function PricingTiltCard({ children, className, isPopular }: { children: React.ReactNode; className?: string; isPopular?: boolean }) {
@@ -51,7 +51,7 @@ function PricingTiltCard({ children, className, isPopular }: { children: React.R
   );
 }
 
-export default function Pricing() {
+export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
 
   const plans = [
@@ -102,38 +102,18 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-20 bg-[#faf9ff] relative border-t border-[#ECECEC] overflow-hidden perspective-[2000px]">
-
-      {/* Ambient Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 select-none">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-[100px]"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-gradient-to-tl from-[#A855F7]/5 to-transparent rounded-full blur-[120px]"
-        />
-      </div>
-
-      {/* Reduced max-width to 1150px for a medium, tighter layout */}
+    <PageLayout
+      title="Simple, Transparent Pricing"
+      description="Choose the plan that's right for you"
+      breadcrumb={[{ label: "Pricing", href: "/pricing" }]}
+    >
+      {/* Container holding the grid and layout elements */}
       <div className="layout-container max-w-[1150px] px-4 mx-auto relative z-10">
-
-        {/* Heading */}
-        <SectionHeading
-          badge="Pricing"
-          title="Simple, Transparent"
-          gradientTitle="Pricing"
-          description="Choose the exact plan you need to crush your upcoming exams."
-        />
 
         {/* Medium Sized Toggle Switch */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-center gap-4 mb-12 mt-6"
         >
           <span className={`text-sm font-bold transition-colors duration-300 ${billingCycle === "monthly" ? "text-neutral-900" : "text-neutral-400"}`}>
@@ -178,8 +158,7 @@ export default function Pricing() {
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5, ease: [0.21, 1.02, 0.43, 1.01] }}
               className="flex w-full"
             >
@@ -273,7 +252,28 @@ export default function Pricing() {
             </motion.div>
           ))}
         </div>
+
+        {/* 30-Day Money Back Guarantee */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-16 text-center"
+        >
+          <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-full px-8 py-4 shadow-md">
+            <ShieldCheck className="w-6 h-6 text-[#22C55E]" />
+            <div className="text-left">
+              <p className="text-sm font-black text-neutral-900">
+                30-Day Money Back Guarantee
+              </p>
+              <p className="text-xs text-neutral-500 font-semibold">
+                Not satisfied? Get a full refund within 30 days, no questions asked.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
-    </section>
+    </PageLayout>
   );
 }

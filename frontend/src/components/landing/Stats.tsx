@@ -2,43 +2,57 @@
 
 import { motion } from "framer-motion";
 import AnimatedCounter from "../ui/AnimatedCounter";
+import Image from "next/image";
 
 export default function Stats() {
   const stats = [
     { value: 10000, suffix: "+", label: "Active Students" },
-    { value: 1, suffix: "M+", label: "Questions Practiced" },
-    { value: 50000, suffix: "+", label: "Books Uploaded" },
-    { value: 95, suffix: "%", label: "Success Rate" },
-    { value: 10, suffix: "+", label: "Exams Covered" },
+    { value: 1, suffix: "M+", label: "Questions" },
+    { value: 50000, suffix: "+", label: "Books" },
+    { value: 95, suffix: "%", label: "Success" },
+    { value: 10, suffix: "+", label: "Exams" },
   ];
 
   return (
-    <section className="py-16 relative overflow-hidden bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white">
-      {/* Glow Rings background */}
-      <div className="absolute inset-0 opacity-15 pointer-events-none">
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 rounded-full border border-white" />
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/50" />
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-white/30" />
-      </div>
+    <section className="py-10 px-4">
+      {/* Container Box */}
+      <div className="layout-container max-w-[1000px] mx-auto bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] rounded-[32px] p-8 md:p-12 relative overflow-hidden shadow-2xl border border-white/10">
+        
+        {/* Background Image texture */}
+        <div className="absolute inset-0 z-0 opacity-25">
+          <Image
+            src="/stats-bg.png"
+            alt="Stats Background texture"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
 
-      <div className="layout-container max-w-[1320px] relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center text-center">
+        {/* Background Student Illustration - Using a reliable placeholder to prevent 404 */}
+        <div className="absolute right-0 bottom-0 opacity-20 pointer-events-none hidden md:block z-0">
+           <img 
+             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=400&auto=format&fit=crop" 
+             alt="Student studying" 
+             className="w-64 h-auto object-contain"
+           />
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 relative z-10">
           {stats.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.05, duration: 0.6 }}
-              className="flex flex-col gap-2"
+              transition={{ delay: idx * 0.1 }}
+              className="flex flex-col gap-1 text-center"
             >
-              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-                <AnimatedCounter
-                  end={item.value}
-                  suffix={item.suffix}
-                />
+              <h3 className="text-2xl lg:text-3xl font-black text-white tracking-tight">
+                <AnimatedCounter end={item.value} suffix={item.suffix} />
               </h3>
-              <p className="text-xs sm:text-sm font-semibold tracking-wider text-purple-100 uppercase">
+              <p className="text-[10px] sm:text-xs font-bold text-purple-200 uppercase tracking-widest">
                 {item.label}
               </p>
             </motion.div>

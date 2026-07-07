@@ -1,38 +1,61 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import GlowButton from "../ui/GlowButton";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user, isAuthenticated, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("#");
+  const [activeLink, setActiveLink] = useState(pathname || "/");
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 40);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Sync active link with current pathname
+  useEffect(() => {
+    setActiveLink(pathname || "/");
+  }, [pathname]);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Features", href: "#features" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "Exams", href: "#exams" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "Features", href: "/features" },
+    { name: "Exams", href: "/exams" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Blog", href: "/blog" },
   ];
+
+  const handleLogout = () => {
+    logout();
+    setUserMenuOpen(false);
+    router.push("/");
+  };
 
   return (
     <header
@@ -45,62 +68,122 @@ export default function Navbar() {
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto flex items-center justify-between">
 
-        {/* Logo - Restored Animation & Increased Size */}
+        {/* Logo */}
         <Link
-          href="#"
-          onClick={() => setActiveLink("#")}
-          className="flex items-center gap-3 font-black text-xl tracking-tight text-neutral-900 group"
+          href="/"
+          onClick={() => setActiveLink("/")}
+          className="flex items-center gap-3 font-black text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
         >
           <img
             src="/favicon.ico"
             alt="ExamForge AI Logo"
             className="w-12 h-12 md:w-14 md:h-14 rounded-full animate-spin-slow glow-avatar object-cover border-2 border-[#ECECEC]"
           />
-          <span className="font-extrabold tracking-wider text-neutral-950 uppercase text-xl mt-1">
+          <span className="font-black tracking-tight text-neutral-950 uppercase text-2xl md:text-3xl mt-1">
             EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
           </span>
         </Link>
 
-        {/* Center Nav Links with Interactive Stick Line */}
+        {/* Center Nav Links */}
         <nav className="hidden lg:flex items-center gap-8 mt-1">
           {navLinks.map((link) => (
-            <Link
+            <motion.div
               key={link.name}
-              href={link.href}
-              onClick={() => setActiveLink(link.href)}
-              className={cn(
-                "relative text-sm font-bold transition-colors py-2",
-                activeLink === link.href
-                  ? "text-[#6D4AFF]"
-                  : "text-neutral-600 hover:text-neutral-900"
-              )}
+              whileHover={{ scale: 1.08, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              {link.name}
-
-              {/* Active Click-to-Select Stick Line */}
-              {activeLink === link.href && (
-                <motion.div
-                  layoutId="active-nav-stick"
-                  className="absolute -bottom-1 left-0 right-0 h-[3px] bg-[#6D4AFF] rounded-full shadow-[0_2px_10px_1px_rgba(109,74,255,0.5)]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </Link>
+              <Link
+                href={link.href}
+                onClick={() => setActiveLink(link.href)}
+                className={cn(
+                  "relative text-sm font-black uppercase tracking-wider transition-colors py-2 block",
+                  activeLink === link.href
+                    ? "text-[#6D4AFF]"
+                    : "text-neutral-600 hover:text-neutral-900"
+                )}
+              >
+                {link.name}
+                {activeLink === link.href && (
+                  <motion.div
+                    layoutId="active-nav-stick"
+                    className="absolute -bottom-1 left-0 right-0 h-[3px] bg-[#6D4AFF] rounded-full shadow-[0_2px_10px_1px_rgba(109,74,255,0.5)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            </motion.div>
           ))}
         </nav>
 
         {/* Right Actions */}
         <div className="hidden lg:flex items-center gap-4 mt-1">
-          <Link href="/login" className="text-sm font-bold text-neutral-600 hover:text-[#6D4AFF] cursor-pointer transition-colors px-4 py-2">
-            Login
-          </Link>
-          <Link href="/login">
-            <GlowButton variant="gradient" className="text-xs px-6 py-3 font-bold" magnetic={false}>
-              Get Started
-            </GlowButton>
-          </Link>
+          {isAuthenticated && user ? (
+            /* ── Logged-in User Menu ── */
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-[#ECECEC] bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center text-white text-xs font-black uppercase">
+                  {user.name.charAt(0)}
+                </div>
+                <span className="text-sm font-bold text-neutral-800 max-w-[120px] truncate">
+                  {user.name}
+                </span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 text-neutral-400 transition-transform duration-200",
+                  userMenuOpen && "rotate-180"
+                )} />
+              </button>
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {userMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-[#ECECEC] rounded-2xl shadow-xl overflow-hidden"
+                  >
+                    <div className="p-4 border-b border-[#ECECEC]">
+                      <p className="text-sm font-black text-neutral-900 truncate">{user.name}</p>
+                      <p className="text-xs font-medium text-neutral-500 truncate">{user.email}</p>
+                    </div>
+                    <div className="p-2">
+                      <button
+                        onClick={() => { setUserMenuOpen(false); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer"
+                      >
+                        <User className="w-4 h-4 text-neutral-400" /> MY PROFILE
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      >
+                        <LogOut className="w-4 h-4" /> LOGOUT
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            /* ── Guest Actions ── */
+            <>
+              <Link href="/login" className="text-sm font-bold text-neutral-600 hover:text-[#6D4AFF] cursor-pointer transition-colors px-4 py-2">
+                LOGIN
+              </Link>
+              <Link href="/login">
+                <GlowButton variant="gradient" className="text-xs px-6 py-3 font-bold" magnetic={false}>
+                  GET STARTED
+                </GlowButton>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -132,7 +215,6 @@ export default function Navbar() {
                 )}
               >
                 {link.name}
-                {/* Mobile Active Stick Line */}
                 {activeLink === link.href && (
                   <motion.div
                     layoutId="mobile-active-nav-stick"
@@ -146,27 +228,47 @@ export default function Navbar() {
 
           <hr className="border-[#ECECEC]" />
 
-          <div className="flex flex-col gap-3">
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3.5 font-bold text-neutral-700 border border-[#ECECEC] rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all block"
-            >
-              Login
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3.5 font-bold bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
-            >
-              Get Started
-            </Link>
-          </div>
+          {isAuthenticated && user ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-black uppercase">
+                  {user.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-neutral-900">{user.name}</p>
+                  <p className="text-xs text-neutral-500">{user.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                className="w-full text-center py-3.5 font-bold text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-all"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3.5 font-bold text-neutral-700 border border-[#ECECEC] rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all block"
+              >
+                Login
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3.5 font-bold bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
+              >
+                Get Started
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Restored & Bolder Glowing Bottom Border Line */}
-      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] to-transparent shadow-[0_0_20px_3px_rgba(109,74,255,0.85)] z-50" />
+      {/* Glowing Bottom Border */}
+      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.85)] z-50" />
     </header>
   );
 }

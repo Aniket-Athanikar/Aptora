@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import List, Optional
+from typing import Optional
 from fastapi import FastAPI, HTTPException, status, Response, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
@@ -14,9 +14,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("backend")
 
 app = FastAPI(
-    title=os.getenv("PROJECT_NAME", "FastAPI-NextJS-Premium"),
-    description="Asynchronous backend API for premium landing pages and authentication",
-    version="1.0.0"
+    title=os.getenv("PROJECT_NAME", "ExamForge-AI-Backend"),
+    description="Asynchronous backend API for ExamForge AI authentication and services",
+    version="2.0.0"
 )
 
 # CORS middleware configuration
@@ -31,18 +31,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Contact Models
+# ─── Models ─────────────────────────────────────────────────────────
+
 class ContactForm(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100, example="John Doe")
-    email: EmailStr = Field(..., example="john.doe@example.com")
-    message: str = Field(..., min_length=10, max_length=1000, example="I would love to build a premium web application together!")
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    message: str = Field(..., min_length=10, max_length=1000)
 
 class ContactResponse(BaseModel):
     success: bool
     message: str
     data: ContactForm
 
-# Auth Models
 class LoginPayload(BaseModel):
     email: EmailStr
     password: str
@@ -52,8 +52,18 @@ class LoginResponse(BaseModel):
     message: str
     email: str
 
+class SignupPayload(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+
+class SignupResponse(BaseModel):
+    success: bool
+    message: str
+    email: str
+
 class OtpPayload(BaseModel):
-    otp: str = Field(..., min_length=6, max_length=6, example="123456")
+    otp: str = Field(..., min_length=6, max_length=6)
     email: EmailStr
     phone: str = "+91 98765 43210"
 
@@ -69,64 +79,116 @@ class ForgotResponse(BaseModel):
     success: bool
     message: str
 
-# Endpoints
+class ResetPasswordPayload(BaseModel):
+    email: EmailStr
+    otp: str = Field(..., min_length=6, max_length=6)
+    new_password: str = Field(..., min_length=8)
+
+class ResetPasswordResponse(BaseModel):
+    success: bool
+    message: str
+
+
+# ─── Endpoints ──────────────────────────────────────────────────────
+
 @app.get("/", status_code=status.HTTP_200_OK)
 async def read_root():
-    logger.info("Root endpoint accessed asynchronously")
+    logger.info("Root endpoint accessed")
     return {
         "status": "healthy",
-        "message": "Welcome to the Premium FastAPI Backend",
-        "features": ["Asynchronous Endpoints", "CORS Middleware", "Pydantic Validation", "Secure Auth Mock Flow"]
+        "message": "Welcome to ExamForge AI Backend",
+        "version": "2.0.0",
+        "features": ["Auth Flow", "CORS", "CSRF", "OTP Verification", "Password Reset"]
     }
+
 
 @app.post("/api/contact", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
 async def submit_contact_form(payload: ContactForm):
-    logger.info(f"Received form submission from {payload.name} ({payload.email})")
+    logger.info(f"Contact form from {payload.name} ({payload.email})")
     return ContactResponse(
         success=True,
         message="Form submitted successfully! We will get back to you shortly.",
         data=payload
     )
 
-# Async Auth Flow Endpoints
+
+# ─── Auth Endpoints ─────────────────────────────────────────────────
+
 @app.post("/api/auth/login", response_model=LoginResponse)
 async def auth_login(payload: LoginPayload, response: Response):
-    logger.info(f"Logging in user: {payload.email}")
-    # Simulating secure CSRF Token set in Cookie
+    logger.info(f"Login attempt: {payload.email}")
+    # Set CSRF cookie
     response.set_cookie(
         key="csrf_token",
-        value="secured-csrf-verification-token-102938",
+        value="ef-csrf-" + payload.email.split("@")[0],
         httponly=True,
         samesite="lax",
-        secure=False # Set true in production
+        secure=False  # True in production
     )
     return LoginResponse(
         success=True,
-        message="Welcome Back! Verification email has been sent.",
+        message="Login successful! OTP sent to your email.",
         email=payload.email
     )
 
+
+@app.post("/api/auth/signup", response_model=SignupResponse)
+async def auth_signup(payload: SignupPayload, response: Response):
+    logger.info(f"Signup: {payload.name} ({payload.email})")
+    # Set CSRF cookie
+    response.set_cookie(
+        key="csrf_token",
+        value="ef-csrf-signup-" + payload.email.split("@")[0],
+        httponly=True,
+        samesite="lax",
+        secure=False
+    )
+    return SignupResponse(
+        success=True,
+        message="Account created! OTP sent for verification.",
+        email=payload.email
+    )
+
+
 @app.post("/api/auth/verify-otp", response_model=OtpResponse)
 async def verify_otp(payload: OtpPayload, csrf_token: Optional[str] = Cookie(None)):
-    logger.info(f"Verifying OTP for {payload.email}")
-    
-    # Simple check for demo purposes (accepts 123456 or any 6-digit number starting with 1)
+    logger.info(f"Verifying OTP for {payload.email}: {payload.otp}")
+
+    # Accept 123456 or any 6-digit number starting with 1 (demo)
     if not (payload.otp == "123456" or (len(payload.otp) == 6 and payload.otp.startswith("1"))):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid OTP code. For testing, use 123456."
         )
-        
+
     return OtpResponse(
         success=True,
-        message="OTP Verification successful! Redirecting to dashboard...",
-        token="authenticated-session-jwt-token-998877"
+        message="OTP verified successfully! Welcome to ExamForge AI.",
+        token="ef-jwt-" + payload.email.split("@")[0] + "-authenticated"
     )
+
 
 @app.post("/api/auth/forgot-password", response_model=ForgotResponse)
 async def forgot_password(payload: ForgotPayload):
-    logger.info(f"Requesting password reset for {payload.email}")
+    logger.info(f"Password reset requested for {payload.email}")
     return ForgotResponse(
         success=True,
-        message="Reset link successfully generated and dispatched to your email."
+        message="OTP sent to your email for password reset."
+    )
+
+
+@app.post("/api/auth/reset-password", response_model=ResetPasswordResponse)
+async def reset_password(payload: ResetPasswordPayload):
+    logger.info(f"Password reset for {payload.email} with OTP {payload.otp}")
+
+    # Validate OTP (same demo logic)
+    if not (payload.otp == "123456" or (len(payload.otp) == 6 and payload.otp.startswith("1"))):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid OTP. For testing, use 123456."
+        )
+
+    return ResetPasswordResponse(
+        success=True,
+        message="Password reset successful! You can now login with your new password."
     )

@@ -84,7 +84,7 @@ export default function Users() {
   ];
 
   // Premium easing curve
-  const customEase = [0.21, 1.02, 0.43, 1.01];
+  const customEase: [number, number, number, number] = [0.21, 1.02, 0.43, 1.01];
 
   return (
     <section className="py-20 bg-[#faf9ff] border-t border-[#ECECEC] relative overflow-hidden perspective-[1200px]">

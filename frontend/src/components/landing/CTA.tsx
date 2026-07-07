@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Play, Bot, BookOpen, GraduationCap } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function CTA() {
   return (
@@ -17,9 +19,20 @@ export default function CTA() {
           transition={{ duration: 0.8 }}
           className="relative bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] rounded-3xl p-8 md:p-12 text-white text-center flex flex-col items-center justify-center gap-5 overflow-hidden shadow-xl"
         >
+          {/* Background Image texture */}
+          <div className="absolute inset-0 z-0 opacity-25">
+            <Image
+              src="/cta-bg.png"
+              alt="CTA Background texture"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
           {/* Ambient circles */}
-          <div className="absolute top-[-20%] left-[-20%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[60px]" />
-          <div className="absolute bottom-[-20%] right-[-20%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[60px]" />
+          <div className="absolute top-[-20%] left-[-20%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[60px] z-0" />
+          <div className="absolute bottom-[-20%] right-[-20%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[60px] z-0" />
 
           {/* Floating AI Avatar Vector/Icon (Scaled down) */}
           <motion.div
@@ -68,12 +81,14 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-wrap gap-3 items-center justify-center mt-3 z-10">
-            <button className="bg-white hover:bg-neutral-50 text-neutral-900 text-sm font-bold px-6 py-3 rounded-full cursor-pointer shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-              Start Free Now
-            </button>
-            <button className="inline-flex items-center gap-2 text-white hover:text-purple-50 text-sm font-bold px-5 py-3 cursor-pointer transition-colors bg-white/10 hover:bg-white/15 border border-white/10 rounded-full">
+            <Link href="/login">
+              <button className="bg-white hover:bg-neutral-50 text-neutral-900 text-sm font-bold px-6 py-3 rounded-full cursor-pointer shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+                Start Free Now
+              </button>
+            </Link>
+            <Link href="/how-it-works" className="inline-flex items-center gap-2 text-white hover:text-purple-50 text-sm font-bold px-5 py-3 cursor-pointer transition-colors bg-white/10 hover:bg-white/15 border border-white/10 rounded-full">
               <Play className="w-3.5 h-3.5 text-white fill-white" /> Watch Demo
-            </button>
+            </Link>
           </div>
         </motion.div>
       </div>

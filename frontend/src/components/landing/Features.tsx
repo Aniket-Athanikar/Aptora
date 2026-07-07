@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import Link from "next/link";
 import {
   FileSpreadsheet,
   Database,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
+import GlowButton from "../ui/GlowButton";
 
 // 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -183,6 +185,15 @@ export default function Features() {
             </div>
           ))}
         </motion.div>
+      </div>
+
+      {/* Explore All Features CTA Button */}
+      <div className="flex justify-center mt-10 relative z-10">
+        <Link href="/features">
+          <GlowButton variant="gradient" className="px-8 py-3.5 text-xs font-black" magnetic={false}>
+            Explore All Features
+          </GlowButton>
+        </Link>
       </div>
     </section>
   );
