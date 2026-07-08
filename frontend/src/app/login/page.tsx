@@ -30,6 +30,9 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import GlassCard from "../../components/ui/GlassCard";
 import { useAuth } from "@/lib/auth-context";
+import { cn } from "@/lib/utils";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const ThreeHero = dynamic(() => import("../../components/three/ThreeHero"), {
   ssr: false,
@@ -59,13 +62,19 @@ const resetSchema = z
     path: ["confirmPassword"],
   });
 
-const signupSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email." }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
-});
+const signupSchema = z
+  .object({
+    name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+    email: z.string().email({ message: "Please enter a valid email." }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters." }),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
 
 type LoginValues = z.infer<typeof loginSchema>;
 type ForgotValues = z.infer<typeof forgotSchema>;
@@ -112,13 +121,30 @@ function BrandHeader({
   );
 }
 
+const getPasswordStrength = (pass: string) => {
+  let score = 0;
+  if (!pass) return { score: 0, label: "", color: "bg-neutral-200", text: "text-neutral-400" };
+  if (pass.length >= 6) score += 1;
+  if (pass.length >= 8) score += 1;
+  if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score += 1;
+  if (/[0-9]/.test(pass)) score += 1;
+  if (/[^A-Za-z0-9]/.test(pass)) score += 1;
+  
+  if (score <= 1) return { score: 1, label: "Weak", color: "bg-red-500", text: "text-red-500" };
+  if (score === 2) return { score: 2, label: "Fair", color: "bg-orange-500", text: "text-orange-500" };
+  if (score === 3) return { score: 3, label: "Good", color: "bg-yellow-500", text: "text-yellow-500" };
+  return { score: 4, label: "Strong", color: "bg-green-500", text: "text-green-500" };
+};
+
 // ─── Page Component ─────────────────────────────────────────────────
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
   const [step, setStep] = useState<AuthStep>("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
+  const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
   const [emailForVerification, setEmailForVerification] = useState("");
   const [nameForSignup, setNameForSignup] = useState("");
   const phoneForOTP = "+91 98765 43210";
@@ -169,14 +195,19 @@ export default function LoginPage() {
   const {
     register: registerReset,
     handleSubmit: handleResetSubmit,
+    watch: watchReset,
     formState: { errors: resetErrors },
   } = useForm<ResetValues>({ resolver: zodResolver(resetSchema) });
 
   const {
     register: registerSignup,
     handleSubmit: handleSignupSubmit,
+    watch: watchSignup,
     formState: { errors: signupErrors },
   } = useForm<SignupValues>({ resolver: zodResolver(signupSchema) });
+
+  const watchedSignupPassword = watchSignup("password") || "";
+  const watchedResetPassword = watchReset("password") || "";
 
   // ── Handlers ──
   const onLogin = async (data: LoginValues) => {
@@ -184,17 +215,18 @@ export default function LoginPage() {
     setAuthError(null);
     setAuthSuccess(null);
     try {
-      const response = await fetch("http://localhost:8000/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-Token": csrfToken,
         },
-        body: JSON.stringify({ email: data.email, password: data.password }),
+        body: JSON.stringify({ email: data.email, password: data.password, skip_email: false }),
       });
       const result = await response.json();
       if (response.ok && result.success) {
         setEmailForVerification(result.email || data.email);
+        setNameForSignup(result.name || "");
         setOtpValues(Array(6).fill(""));
         setOtpTimer(90);
         setStep("verify-otp");
@@ -214,7 +246,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setAuthError(null);
     try {
-      const response = await fetch("http://localhost:8000/api/auth/signup", {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -224,8 +256,9 @@ export default function LoginPage() {
           name: data.name,
           email: data.email,
           password: data.password,
-          confirm_password: data.password,
+          confirm_password: data.confirmPassword,
           phone: phoneForOTP,
+          skip_email: false,
         }),
       });
       const result = await response.json();
@@ -256,7 +289,7 @@ export default function LoginPage() {
     setAuthSuccess(null);
     try {
       const response = await fetch(
-        "http://localhost:8000/api/auth/verify-otp",
+        `${API_URL}/api/auth/verify-otp`,
         {
           method: "POST",
           headers: {
@@ -297,7 +330,7 @@ export default function LoginPage() {
     setAuthSuccess(null);
     try {
       const response = await fetch(
-        "http://localhost:8000/api/auth/forgot-password",
+        `${API_URL}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: {
@@ -338,7 +371,7 @@ export default function LoginPage() {
     setAuthError(null);
     try {
       const response = await fetch(
-        "http://localhost:8000/api/auth/reset-password",
+        `${API_URL}/api/auth/reset-password`,
         {
           method: "POST",
           headers: {
@@ -496,6 +529,7 @@ export default function LoginPage() {
                     </button>
                   </div>
 
+
                   <Button
                     type="submit"
                     disabled={isLoading}
@@ -635,6 +669,58 @@ export default function LoginPage() {
                     {signupErrors.password && (
                       <p className="text-[10px] text-red-500 font-bold mt-1">
                         {signupErrors.password.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Password Strength Meter */}
+                  {watchedSignupPassword && (
+                    <div className="flex flex-col gap-1.5 -mt-2">
+                      <div className="flex justify-between items-center text-[10px] font-bold">
+                        <span className="text-neutral-500">Password Strength:</span>
+                        <span className={getPasswordStrength(watchedSignupPassword).text}>
+                          {getPasswordStrength(watchedSignupPassword).label}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-4 gap-1.5 h-1.5 rounded-full overflow-hidden">
+                        {[1, 2, 3, 4].map((index) => (
+                          <div
+                            key={index}
+                            className={cn(
+                              "h-full rounded-full transition-all duration-300",
+                              getPasswordStrength(watchedSignupPassword).score >= index
+                                ? getPasswordStrength(watchedSignupPassword).color
+                                : "bg-neutral-200"
+                            )}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Confirm Password */}
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <Input
+                      {...registerSignup("confirmPassword")}
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm Password"
+                      className="pl-10 pr-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                    {signupErrors.confirmPassword && (
+                      <p className="text-[10px] text-red-500 font-bold mt-1">
+                        {signupErrors.confirmPassword.message}
                       </p>
                     )}
                   </div>
@@ -961,15 +1047,51 @@ export default function LoginPage() {
                     )}
                   </div>
 
+                  {/* Password Strength Meter */}
+                  {watchedResetPassword && (
+                    <div className="flex flex-col gap-1.5 -mt-2">
+                      <div className="flex justify-between items-center text-[10px] font-bold">
+                        <span className="text-neutral-500">Password Strength:</span>
+                        <span className={getPasswordStrength(watchedResetPassword).text}>
+                          {getPasswordStrength(watchedResetPassword).label}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-4 gap-1.5 h-1.5 rounded-full overflow-hidden">
+                        {[1, 2, 3, 4].map((index) => (
+                          <div
+                            key={index}
+                            className={cn(
+                              "h-full rounded-full transition-all duration-300",
+                              getPasswordStrength(watchedResetPassword).score >= index
+                                ? getPasswordStrength(watchedResetPassword).color
+                                : "bg-neutral-200"
+                            )}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Confirm password */}
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                     <Input
                       {...registerReset("confirmPassword")}
-                      type={showResetPassword ? "text" : "password"}
+                      type={showResetConfirmPassword ? "text" : "password"}
                       placeholder="Confirm New Password"
-                      className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
+                      className="pl-10 pr-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
+                    >
+                      {showResetConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
                     {resetErrors.confirmPassword && (
                       <p className="text-[10px] text-red-500 font-bold mt-1">
                         {resetErrors.confirmPassword.message}

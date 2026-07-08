@@ -1,16 +1,59 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: examforge_postgres
+    environment:
+      POSTGRES_DB: Exame_forgeDB
+      POSTGRES_USER: aniket
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: examforge_redis
+    ports:
+      - "6479:6379"
+    restart: always
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: examforge_qdrant
+    ports:
+      - "6433:6333"
+      - "6434:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: always
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
       - ./backend:/app
     environment:
       - ENV=development
       - PORT=8000
       - HOST=0.0.0.0
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=Exame_forgeDB
+      - DB_USER=aniket
+      - DB_PASSWORD=admin123
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
     restart: always
 
   frontend:
@@ -18,13 +61,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - "3002:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
     depends_on:
       - backend
     restart: always
+
+volumes:
+  pgdata:
+  qdrant_data:

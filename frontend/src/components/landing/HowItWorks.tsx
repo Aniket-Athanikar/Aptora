@@ -94,7 +94,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 border-t border-[#ECECEC] bg-white relative overflow-hidden perspective-[1200px]">
+    <section id="how-it-works" className="py-20 border-t border-[#ECECEC] bg-transparent relative overflow-hidden perspective-[1200px]">
       {/* 3D Floating Mesh Geometric Background Elements */}
       <div className="absolute inset-0 pointer-events-none opacity-30 select-none">
         <motion.div

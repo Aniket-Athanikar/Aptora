@@ -7,11 +7,13 @@ import { ArrowLeft, Send, Upload, CheckCircle2, User, Mail, Link as LinkIcon, Me
 import PageLayout from "@/components/layout/PageLayout";
 import Link from "next/link";
 import Image from "next/image";
+import { useToast } from "@/lib/ToastContext";
 
 function JobApplyForm() {
   const searchParams = useSearchParams();
   const rawRole = searchParams.get("role") || "General Application";
   const roleName = decodeURIComponent(rawRole);
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,6 +28,7 @@ function JobApplyForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
+    toast(`Application for ${roleName} submitted successfully!`, "success");
     setSubmitted(true);
   };
 

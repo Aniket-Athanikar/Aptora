@@ -1,31 +1,35 @@
 "use client";
 
-import { Play, CheckCircle, Star, ArrowRight } from "lucide-react";
+import { Play, CheckCircle, Star, ArrowRight, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import GlowButton from "../ui/GlowButton";
 import FloatingCards from "./FloatingCards";
 import dynamic from "next/dynamic";
 import GlassCard from "../ui/GlassCard";
+import Image from "next/image";
 
-const ThreeHero = dynamic(() => import("../three/ThreeHero"), {
+const HeroBackground = dynamic(() => import("./HeroBackground"), {
   ssr: false,
 });
 
 export default function Hero() {
   const checkmarks = [
-    "Select Any Study Material (PDF/Image)",
-    "AI Creates Notes, MCQs, Flashcards",
-    "Daily Practice & Mock Tests",
-    "Smart Analytics & Weakness Detection",
+    "Instead of students reading 15 books...",
+    "Student select exam books.",
+    "AI reads everything.",
+    "AI teaches.",
+    "AI creates notes.",
+    "AI creates MCQs.",
+    "AI predicts questions.",
+    "AI tracks progress.",
+    "AI becomes personal teacher.",
   ];
 
   return (
     <section className="relative pt-32 pb-20 overflow-hidden min-h-screen flex items-center">
-      {/* Three.js Neural Network Overlay behind hero content */}
-      <div className="absolute inset-0 w-full h-full opacity-60 z-0 pointer-events-none">
-        <ThreeHero />
-      </div>
+      {/* Dynamic Animated particle & neural background */}
+      <HeroBackground />
 
       <div className="layout-container max-w-[1320px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
         {/* Left: Text & Pitch */}
@@ -60,7 +64,7 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             className="text-base sm:text-lg text-neutral-500 font-medium leading-relaxed max-w-lg"
           >
-            Select your exam books, notes & PYQs. Our AI will create personalized notes, generate questions, track your progress and make you exam-ready!
+            Select Books + Previous Year Papers → AI Creates Personalized Study Material, Daily Training, Mock Tests, Weakness Analysis, and Predicts Important Topics!
           </motion.p>
 
           {/* Checkmarks */}
@@ -150,10 +154,13 @@ export default function Hero() {
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 rounded-full blur-xl pointer-events-none" />
 
               <div className="relative w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500">
-                <img
+                <Image
                   src="/ai-avatar.png"
                   alt="AI Exam Coach Avatar"
+                  width={288}
+                  height={288}
                   className="w-full h-full object-cover"
+                  priority
                 />
               </div>
 
@@ -179,6 +186,20 @@ export default function Hero() {
           </motion.div>
           <FloatingCards />
         </div>
+      </div>
+      {/* Animated Scroll Down indicator at the bottom center of Hero */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 cursor-pointer">
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+          onClick={() => {
+            const el = document.getElementById("how-it-works");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+          className="w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:border-[#6D4AFF]/30 hover:text-[#6D4AFF] text-neutral-500 transition-all"
+        >
+          <ChevronDown className="w-5 h-5" />
+        </motion.div>
       </div>
     </section>
   );

@@ -109,7 +109,7 @@ export default function Features() {
   const carouselItems = [...list, ...list];
 
   return (
-    <section id="features" className="py-20 bg-[#faf9ff] relative overflow-hidden border-t border-[#ECECEC] perspective-[1200px]">
+    <section id="features" className="py-20 bg-transparent relative overflow-hidden border-t border-[#ECECEC] perspective-[1200px]">
 
       {/* Ambient Animated Background */}
       <div className="absolute inset-0 pointer-events-none opacity-40 select-none overflow-hidden">

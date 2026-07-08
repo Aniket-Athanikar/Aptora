@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { Sparkles, Play, Bot, BookOpen, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useToast } from "@/lib/ToastContext";
 
 export default function CTA() {
+  const { toast } = useToast();
   return (
-    <section className="py-16 md:py-20 bg-[#faf9ff] relative border-t border-[#ECECEC] overflow-hidden">
+    <section className="py-16 md:py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden">
       {/* Reduced max-width to 1024px for a sleeker, medium-sized banner */}
       <div className="layout-container max-w-[1024px] px-4 mx-auto">
 
@@ -81,12 +83,12 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-wrap gap-3 items-center justify-center mt-3 z-10">
-            <Link href="/login">
+            <Link href="/login" onClick={() => toast("Redirecting to login portal...", "info")}>
               <button className="bg-white hover:bg-neutral-50 text-neutral-900 text-sm font-bold px-6 py-3 rounded-full cursor-pointer shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
                 Start Free Now
               </button>
             </Link>
-            <Link href="/how-it-works" className="inline-flex items-center gap-2 text-white hover:text-purple-50 text-sm font-bold px-5 py-3 cursor-pointer transition-colors bg-white/10 hover:bg-white/15 border border-white/10 rounded-full">
+            <Link href="/how-it-works" onClick={() => toast("Opening platform video tour...", "info")} className="inline-flex items-center gap-2 text-white hover:text-purple-50 text-sm font-bold px-5 py-3 cursor-pointer transition-colors bg-white/10 hover:bg-white/15 border border-white/10 rounded-full">
               <Play className="w-3.5 h-3.5 text-white fill-white" /> Watch Demo
             </Link>
           </div>

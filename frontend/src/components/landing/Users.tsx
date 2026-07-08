@@ -87,7 +87,7 @@ export default function Users() {
   const customEase: [number, number, number, number] = [0.21, 1.02, 0.43, 1.01];
 
   return (
-    <section className="py-20 bg-[#faf9ff] border-t border-[#ECECEC] relative overflow-hidden perspective-[1200px]">
+    <section className="py-20 bg-transparent border-t border-[#ECECEC] relative overflow-hidden perspective-[1200px]">
 
       {/* Subtle Ambient Background Mesh */}
       <div className="absolute inset-0 pointer-events-none opacity-40 select-none overflow-hidden">

@@ -102,7 +102,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-20 bg-[#faf9ff] relative border-t border-[#ECECEC] overflow-hidden perspective-[2000px]">
+    <section id="pricing" className="py-16 md:py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden perspective-[2000px]">
 
       {/* Ambient Floating Particles */}
       <div className="absolute inset-0 pointer-events-none opacity-30 select-none">

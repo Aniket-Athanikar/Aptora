@@ -31,9 +31,11 @@ export default function Stats() {
 
         {/* Background Student Illustration - Using a reliable placeholder to prevent 404 */}
         <div className="absolute right-0 bottom-0 opacity-20 pointer-events-none hidden md:block z-0">
-           <img 
-             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=400&auto=format&fit=crop" 
+           <Image 
+             src="/student-study.png" 
              alt="Student studying" 
+             width={256}
+             height={170}
              className="w-64 h-auto object-contain"
            />
         </div>

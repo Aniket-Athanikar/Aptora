@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import GlowButton from "../ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -60,13 +61,13 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 w-full z-[999] transition-all duration-500",
+        "fixed top-4 left-4 right-4 z-[999] max-w-[1280px] md:mx-auto rounded-[24px] transition-all duration-500 border pointer-events-auto",
         scrolled
-          ? "py-3 bg-white/80 backdrop-blur-xl border-b border-[#ECECEC] shadow-sm"
-          : "py-5 bg-transparent border-transparent"
+          ? "bg-white/75 backdrop-blur-xl border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] py-2.5"
+          : "bg-white/30 backdrop-blur-md border-white/20 shadow-sm py-4"
       )}
     >
-      <div className="layout-container max-w-[1320px] px-4 mx-auto flex items-center justify-between">
+      <div className="layout-container max-w-[1320px] px-6 mx-auto flex items-center justify-between">
 
         {/* Logo */}
         <Link
@@ -74,10 +75,13 @@ export default function Navbar() {
           onClick={() => setActiveLink("/")}
           className="flex items-center gap-3 font-black text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
         >
-          <img
+          <Image
             src="/favicon.ico"
             alt="ExamForge AI Logo"
+            width={56}
+            height={56}
             className="w-12 h-12 md:w-14 md:h-14 rounded-full animate-spin-slow glow-avatar object-cover border-2 border-[#ECECEC]"
+            priority
           />
           <span className="font-black tracking-tight text-neutral-950 uppercase text-2xl md:text-3xl mt-1">
             EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
@@ -188,7 +192,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-neutral-600 hover:text-[#6D4AFF] transition-colors mt-1"
+          className="lg:hidden p-2 text-neutral-300 hover:text-[#6D4AFF] transition-colors mt-1"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
@@ -197,7 +201,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-b border-[#ECECEC] p-6 shadow-2xl flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-[#060410]/95 backdrop-blur-xl border-b border-neutral-900 p-6 shadow-2xl flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-300">
           <nav className="flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
@@ -211,7 +215,7 @@ export default function Navbar() {
                   "relative text-base font-bold transition-all px-4 py-3 rounded-xl",
                   activeLink === link.href
                     ? "bg-[#6D4AFF]/5 text-[#6D4AFF]"
-                    : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+                    : "text-neutral-300 hover:bg-neutral-900/50 hover:text-white"
                 )}
               >
                 {link.name}
@@ -226,22 +230,22 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <hr className="border-[#ECECEC]" />
+          <hr className="border-neutral-900" />
 
           {isAuthenticated && user ? (
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl">
+              <div className="flex items-center gap-3 px-4 py-3 bg-neutral-900/60 border border-neutral-800 rounded-xl">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-black uppercase">
                   {user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-neutral-900">{user.name}</p>
-                  <p className="text-xs text-neutral-500">{user.email}</p>
+                  <p className="text-sm font-bold text-white">{user.name}</p>
+                  <p className="text-xs text-neutral-400">{user.email}</p>
                 </div>
               </div>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="w-full text-center py-3.5 font-bold text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-all"
+                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all"
               >
                 Logout
               </button>
@@ -251,7 +255,7 @@ export default function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold text-neutral-700 border border-[#ECECEC] rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all block"
+                className="w-full text-center py-3.5 font-bold text-neutral-300 border border-neutral-800 rounded-xl hover:bg-neutral-900/60 hover:border-neutral-700 transition-all block"
               >
                 Login
               </Link>
@@ -267,8 +271,8 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Glowing Bottom Border */}
-      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.85)] z-50" />
+      {/* Glowing Bottom Border of the capsule */}
+      <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_12px_2px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
     </header>
   );
 }

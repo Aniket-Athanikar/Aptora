@@ -81,7 +81,7 @@ export default function Testimonials() {
   const extendedFeedback = [...feedback, ...feedback, ...feedback, ...feedback];
 
   return (
-    <section id="testimonials" className="py-20 bg-[#faf9ff] relative border-t border-[#ECECEC] overflow-hidden perspective-[1200px]">
+    <section id="testimonials" className="py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden perspective-[1200px]">
 
       {/* Ambient Animated Background Rings */}
       <div className="absolute inset-0 pointer-events-none opacity-30 select-none overflow-hidden flex items-center justify-center">

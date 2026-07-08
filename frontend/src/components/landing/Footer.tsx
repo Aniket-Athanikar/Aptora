@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import {
   Facebook,
   Twitter,
@@ -23,12 +24,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-neutral-950 text-neutral-400 py-16 border-t border-neutral-900 relative z-10">
+    <footer className="text-neutral-400 py-16 border-t border-neutral-900 relative z-10 overflow-hidden bg-neutral-950">
+      {/* Tech background overlays */}
+      <div className="absolute inset-0 bg-[#060410] z-0" />
+      <div className="absolute top-0 left-[30%] w-[40%] h-[120px] bg-gradient-to-b from-[#6D4AFF]/15 to-transparent blur-[80px] rounded-full pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.05] mix-blend-color-dodge z-0 pointer-events-none" />
 
       {/* Restored & Bolder Glowing Top Border Line */}
-      <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.85)] z-50" />
+      <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.85)] z-50 pointer-events-none" />
 
-      <div className="layout-container max-w-[1320px] px-4 mx-auto">
+      <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-neutral-800">
@@ -38,9 +43,11 @@ export default function Footer() {
 
             {/* Logo - Restored Animation & Increased Size (Matching Navbar) */}
             <Link href="/" className="flex items-center gap-3 font-black text-2xl md:text-3xl tracking-tight text-white group transition-all duration-300 hover:scale-105 w-fit">
-              <img
+              <Image
                 src="/favicon.ico"
                 alt="ExamForge AI Logo"
+                width={56}
+                height={56}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full animate-spin-slow glow-avatar object-cover border-2 border-neutral-800"
               />
               <span className="font-black tracking-tight text-white uppercase text-2xl md:text-3xl mt-1">

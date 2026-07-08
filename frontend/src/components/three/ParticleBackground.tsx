@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+const ThreeHero = dynamic(() => import("./ThreeHero"), {
+  ssr: false,
+});
 
 export default function ParticleBackground() {
   const [mounted, setMounted] = useState(false);
@@ -17,6 +22,11 @@ export default function ParticleBackground() {
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.4]" />
       <div className="absolute top-0 left-0 w-full h-full bg-dot-pattern opacity-[0.5]" />
       <div className="absolute top-0 left-0 w-full h-full bg-radial-gradient" />
+
+      {/* Interactive WebGL Neural Network canvas */}
+      <div className="absolute inset-0 w-full h-full opacity-60 z-0 pointer-events-none">
+        <ThreeHero />
+      </div>
 
       {/* Floating purple energy blobs */}
       <div className="absolute top-[20%] left-[10%] w-[35rem] h-[35rem] rounded-full bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 blur-[120px] animate-soft-pulse" />
