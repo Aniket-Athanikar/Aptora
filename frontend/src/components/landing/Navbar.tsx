@@ -10,6 +10,27 @@ import GlowButton from "../ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
 
+const getAvatarUrl = (name: string) => {
+  const femaleNames = ["mrunal", "priya", "sneha", "neha", "reddy", "sharma", "puja", "pooja", "anita", "sunita", "rekha", "kiran", "chaudhari"];
+  const cleanName = name.toLowerCase().trim();
+  const isFemale = femaleNames.some(fName => cleanName.includes(fName));
+  return isFemale 
+    ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
+    : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120";
+};
+
+const formatDisplayName = (name: string) => {
+  if (!name) return "";
+  let clean = name.replace(/[0-9]/g, ""); // Remove numbers
+  clean = clean.replace(/recruitology/gi, ""); // Remove recruitology
+  clean = clean.replace(/gmail/gi, ""); // Remove gmail
+  clean = clean.trim();
+  if (clean.length > 0) {
+    clean = clean.charAt(0).toUpperCase() + clean.slice(1);
+  }
+  return clean || name;
+};
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -131,11 +152,16 @@ export default function Navbar() {
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-[#ECECEC] bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center text-white text-xs font-black uppercase">
-                  {user.name.charAt(0)}
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#ECECEC]">
+                  <Image
+                    src={getAvatarUrl(user.name)}
+                    alt={user.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
                 <span className="text-sm font-bold text-neutral-800 max-w-[120px] truncate">
-                  {user.name}
+                  {formatDisplayName(user.name)}
                 </span>
                 <ChevronDown className={cn(
                   "w-3.5 h-3.5 text-neutral-400 transition-transform duration-200",
@@ -154,12 +180,12 @@ export default function Navbar() {
                     className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-[#ECECEC] rounded-2xl shadow-xl overflow-hidden"
                   >
                     <div className="p-4 border-b border-[#ECECEC]">
-                      <p className="text-sm font-black text-neutral-900 truncate">{user.name}</p>
+                      <p className="text-sm font-black text-neutral-900 truncate">{formatDisplayName(user.name)}</p>
                       <p className="text-xs font-medium text-neutral-500 truncate">{user.email}</p>
                     </div>
                     <div className="p-2">
                       <button
-                        onClick={() => { setUserMenuOpen(false); }}
+                        onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer"
                       >
                         <User className="w-4 h-4 text-neutral-400" /> MY PROFILE
@@ -235,17 +261,29 @@ export default function Navbar() {
           {isAuthenticated && user ? (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 px-4 py-3 bg-neutral-900/60 border border-neutral-800 rounded-xl">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-black uppercase">
-                  {user.name.charAt(0)}
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-neutral-800">
+                  <Image
+                    src={getAvatarUrl(user.name)}
+                    alt={user.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{user.name}</p>
+                  <p className="text-sm font-bold text-white">{formatDisplayName(user.name)}</p>
                   <p className="text-xs text-neutral-400">{user.email}</p>
                 </div>
               </div>
+              <Link
+                href="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3.5 font-bold text-neutral-300 border border-neutral-800 rounded-xl hover:bg-neutral-900/60 hover:border-neutral-700 transition-all block"
+              >
+                View Profile
+              </Link>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all"
+                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all cursor-pointer"
               >
                 Logout
               </button>

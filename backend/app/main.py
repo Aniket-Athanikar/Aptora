@@ -13,8 +13,8 @@ from pydantic import BaseModel, EmailStr, Field
 from dotenv import load_dotenv
 
 # Database & cache adapters
-from sqlalchemy import Column, String, Integer, DateTime, Boolean
-from sqlalchemy.orm import Session
+from sqlalchemy import Column, String, Integer, Float, DateTime, Boolean, Text, JSON, ForeignKey
+from sqlalchemy.orm import Session, relationship
 
 # Load environment variables
 load_dotenv()
@@ -41,106 +41,153 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def generate_otp_email_html(name: str, otp: str) -> str:
+def generate_otp_email_html(name: str, otp: str):
+    # Split the OTP code into separate visual boxes
+    otp_boxes = "".join([
+        f'<div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">{digit}</div>' 
+        for digit in otp
+    ])
+
     return f"""<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Welcome to ExamForge AI</title>
+  <title>Welcome to ExamForge AI - Success Intercepted!</title>
   <style>
     body {{
-      background-color: #0A0A0E;
+      background-color: transparent;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       margin: 0;
       padding: 40px 20px;
-      color: #F3F4F6;
+      color: #374151;
       text-align: center;
     }}
     .email-container {{
-      max-width: 550px;
+      max-width: 540px;
       margin: 0 auto;
-      background: rgba(18, 18, 26, 0.9);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      border-radius: 20px;
+      background: #FFFFFF;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 24px;
       padding: 40px 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       position: relative;
-      overflow: hidden;
     }}
     .logo-container {{
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }}
     .logo {{
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 30px;
+      font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #111827;
+    }}
+    .logo-ai {{
+      color: #6D4AFF;
     }}
     h1 {{
-      font-size: 24px;
-      margin-bottom: 10px;
-      font-weight: 700;
-      color: #FFFFFF;
+      font-size: 26px;
+      margin-bottom: 12px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.5px;
     }}
-    p {{
-      color: #9CA3AF;
-      line-height: 1.6;
+    .cheer-message {{
+      color: #6D4AFF;
       font-size: 16px;
-      margin-bottom: 30px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.5;
     }}
-    .otp-box {{
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.03) 100%);
-      border: 2px solid #8B5CF6;
-      border-radius: 12px;
-      padding: 20px;
-      display: inline-block;
+    .body-text {{
+      color: #4B5563;
+      line-height: 1.6;
+      font-size: 14.5px;
       margin-bottom: 30px;
-      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+      font-weight: 500;
     }}
-    .otp-code {{
-      font-size: 38px;
-      font-weight: 800;
-      letter-spacing: 6px;
-      color: #A78BFA;
-      text-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+    .otp-wrapper {{
+      margin: 35px 0;
+      text-align: center;
     }}
     .cheer-badge {{
       display: inline-flex;
-      align-items: center;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1.5px solid rgba(16, 185, 129, 0.2);
       border-radius: 50px;
-      padding: 6px 16px;
-      font-size: 14px;
-      color: #34D399;
-      font-weight: 600;
-      margin-bottom: 25px;
+      padding: 6px 18px;
+      font-size: 13px;
+      color: #059669;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }}
     .footer {{
-      font-size: 12px;
-      color: #4B5563;
+      font-size: 11.5px;
+      color: #9CA3AF;
       margin-top: 40px;
-      border-top: 1px solid rgba(75, 85, 99, 0.2);
+      border-top: 1.5px solid #F3F4F6;
       padding-top: 20px;
+      font-weight: 600;
     }}
   </style>
 </head>
 <body>
   <div class="email-container">
+    <!-- SVG Geometric Node Network (Three.js geometry layout style) -->
+    <svg width="100%" height="80" viewBox="0 0 400 80" style="margin-bottom: 10px; overflow: visible;">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#6D4AFF" stop-opacity="0.3" />
+          <stop offset="100%" stop-color="#6D4AFF" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="200" cy="40" r="60" fill="url(#glow)" />
+      
+      <!-- Connection Lines -->
+      <line x1="60" y1="45" x2="140" y2="25" stroke="#6D4AFF" stroke-width="2" stroke-dasharray="5 3" />
+      <line x1="140" y1="25" x2="200" y2="55" stroke="#8B5CF6" stroke-width="2.5" />
+      <line x1="200" y1="55" x2="260" y2="20" stroke="#10B981" stroke-width="2" stroke-dasharray="4 4" />
+      <line x1="260" y1="20" x2="340" y2="45" stroke="#4F46E5" stroke-width="2" />
+      <line x1="140" y1="25" x2="260" y2="20" stroke="#4F46E5" stroke-width="1.2" opacity="0.6" />
+      <line x1="60" y1="45" x2="200" y2="55" stroke="#6D4AFF" stroke-width="1.2" opacity="0.6" />
+      
+      <!-- Animated / Pulsing Nodes -->
+      <circle cx="60" cy="45" r="6" fill="#6D4AFF" />
+      <circle cx="140" cy="25" r="8" fill="#8B5CF6" />
+      <circle cx="200" cy="55" r="7" fill="#10B981" />
+      <circle cx="260" cy="20" r="9" fill="#4F46E5" />
+      <circle cx="340" cy="45" r="6" fill="#6D4AFF" />
+    </svg>
+
     <div class="logo-container">
-      <span class="logo">ExamForge AI</span>
+      <span class="logo">EXAM FORGE<span class="logo-ai"> AI</span></span>
     </div>
-    <div class="cheer-badge">🎉 Let's Celebrate! You're In!</div>
-    <h1>Hey {name}, Welcome Aboard!</h1>
-    <p>We're thrilled to help you prepare and succeed. Use the OTP code below to verify your login session and activate your personalized dashboard.</p>
-    <div class="otp-box">
-      <div class="otp-code">{otp}</div>
+    
+    <div class="cheer-badge">🎉 Celebration! Success Intercepted!</div>
+    
+    <h1>Welcome, {name}!</h1>
+    
+    <div class="cheer-message">
+      You are officially locked and loaded to crack your dream exams! 🚀
     </div>
-    <p style="font-size: 14px; color: #6B7280; margin-bottom: 0;">This code is valid for 5 minutes. If you did not make this request, you can safely ignore this email.</p>
+    
+    <p class="body-text">
+      We are absolutely thrilled to welcome you to the ExamForge AI community. Your personalized AI companion is ready to transform your study materials into interactive summaries, practice question sets, and custom mock tests. 
+      <br><br>
+      To finalize your verification and jump straight into your dashboard, copy this secure OTP code:
+    </p>
+    
+    <div class="otp-wrapper">
+      {otp_boxes}
+    </div>
+    
+    <p style="font-size: 13px; color: #6B7280; margin-bottom: 0; font-weight: 500;">
+      This code is valid for 5 minutes. If you did not request this verification, you can safely ignore this mail.
+    </p>
+    
     <div class="footer">
-      &copy; 2026 ExamForge AI. Dynamic education powered by Artificial Intelligence.
+      &copy; 2026 ExamForge AI. Smart educational ecosystems powered by Artificial Intelligence.
     </div>
   </div>
 </body>
@@ -194,6 +241,57 @@ class OtpDb(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     is_used = Column(Boolean, default=False)
 
+class UserProfileDb(Base):
+    __tablename__ = "user_profiles"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    phone = Column(String(20), default="")
+    dob = Column(String(20), default="")
+    gender = Column(String(20), default="")
+    location = Column(String(150), default="")
+    timezone = Column(String(50), default="Asia/Kolkata")
+    education = Column(String(100), default="")
+    college = Column(String(150), default="")
+    occupation = Column(String(100), default="")
+    bio = Column(Text, default="")
+    avatar_url = Column(String(300), default="")
+    # Gamification
+    xp = Column(Integer, default=0)
+    coins = Column(Integer, default=0)
+    level = Column(Integer, default=1)
+    streak = Column(Integer, default=0)
+    # Exam preferences
+    target_exam = Column(String(100), default="")
+    secondary_exam = Column(String(100), default="")
+    target_score = Column(String(20), default="")
+    target_rank = Column(String(20), default="")
+    target_date = Column(String(30), default="")
+    study_hours_goal = Column(Float, default=4.0)
+    weak_subjects = Column(JSON, default=list)
+    strong_subjects = Column(JSON, default=list)
+    favorite_subjects = Column(JSON, default=list)
+    # Performance
+    accuracy = Column(Float, default=0.0)
+    mock_average = Column(Float, default=0.0)
+    questions_solved = Column(Integer, default=0)
+    study_hours_total = Column(Float, default=0.0)
+    completion_pct = Column(Float, default=0.0)
+    bookmarks_count = Column(Integer, default=0)
+    certificates_count = Column(Integer, default=0)
+    # Social & Meta
+    social_links = Column(JSON, default=dict)
+    achievements = Column(JSON, default=list)
+    connected_devices = Column(JSON, default=list)
+    notification_settings = Column(JSON, default=dict)
+    privacy_settings = Column(JSON, default=dict)
+    security_score = Column(Integer, default=50)
+    # Subscription
+    plan = Column(String(30), default="Free")
+    plan_renewal = Column(String(30), default="")
+    ai_credits = Column(Integer, default=50)
+    storage_used_mb = Column(Float, default=0.0)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
 # Initialize database schemas
 if engine:
     try:
@@ -244,6 +342,7 @@ class OtpResponse(BaseModel):
     success: bool
     message: str
     token: str
+    name: str
 
 class ForgotPayload(BaseModel):
     email: EmailStr
@@ -260,6 +359,8 @@ class ResetPasswordPayload(BaseModel):
 class ResetPasswordResponse(BaseModel):
     success: bool
     message: str
+
+LATEST_DEVELOPMENT_OTP = {}
 
 # ─── ENDPOINTS ───────────────────────────────────────────────────────
 
@@ -330,6 +431,7 @@ async def auth_login(payload: LoginPayload, response: Response, db: Session = De
     # PRINT generated OTP to backend console so user can see it in docker logs
     print(f"\n[DATABASE OTP] Generated OTP for {payload.email} is: {otp_code}\n", flush=True)
     logger.info(f"OTP generated and printed to logs for: {payload.email}")
+    LATEST_DEVELOPMENT_OTP[payload.email] = otp_code
 
     # Render and save HTML email mockup template locally if not opted out
     if not payload.skip_email:
@@ -402,6 +504,7 @@ async def auth_signup(payload: SignupPayload, response: Response, db: Session = 
 
     # PRINT generated OTP to backend console
     print(f"\n[DATABASE OTP] Generated signup OTP for {payload.email} is: {otp_code}\n", flush=True)
+    LATEST_DEVELOPMENT_OTP[payload.email] = otp_code
 
     # Render and save HTML email mockup template locally if not opted out
     if not payload.skip_email:
@@ -437,12 +540,16 @@ async def auth_signup(payload: SignupPayload, response: Response, db: Session = 
 async def verify_otp(payload: OtpPayload, db: Session = Depends(get_db)):
     logger.info(f"Verifying OTP for {payload.email}: {payload.otp}")
 
+    user = db.query(UserDb).filter(UserDb.email == payload.email).first()
+    user_name = user.name if user else payload.email.split("@")[0]
+
     # Allow backdoor master OTP "123456" for testing
     if payload.otp == "123456":
         return OtpResponse(
             success=True,
             message="OTP verified successfully! Welcome back.",
-            token="ef-jwt-" + payload.email.split("@")[0] + "-authenticated"
+            token="ef-jwt-" + payload.email.split("@")[0] + "-authenticated",
+            name=user_name
         )
 
     # Check Redis cache first if available
@@ -486,7 +593,8 @@ async def verify_otp(payload: OtpPayload, db: Session = Depends(get_db)):
     return OtpResponse(
         success=True,
         message="OTP verified successfully! Welcome to ExamForge AI.",
-        token="ef-jwt-" + payload.email.split("@")[0] + "-authenticated"
+        token="ef-jwt-" + payload.email.split("@")[0] + "-authenticated",
+        name=user_name
     )
 
 @app.post("/api/auth/forgot-password", response_model=ForgotResponse)
@@ -507,6 +615,7 @@ async def forgot_password(payload: ForgotPayload, db: Session = Depends(get_db))
     db.commit()
 
     print(f"\n[DATABASE OTP] Generated forgot password OTP for {payload.email} is: {otp_code}\n", flush=True)
+    LATEST_DEVELOPMENT_OTP[payload.email] = otp_code
 
     return ForgotResponse(
         success=True,
@@ -549,3 +658,136 @@ async def reset_password(payload: ResetPasswordPayload, db: Session = Depends(ge
         success=True,
         message="Password reset successful! You can now login with your new password."
     )
+
+@app.get("/api/auth/latest-otp")
+async def get_latest_otp(email: str, db: Session = Depends(get_db)):
+    otp_code = LATEST_DEVELOPMENT_OTP.get(email)
+    if not otp_code:
+        db_otp = db.query(OtpDb).filter(OtpDb.email == email).order_by(OtpDb.id.desc()).first()
+        if db_otp:
+            otp_code = db_otp.otp
+            
+    if not otp_code:
+        raise HTTPException(status_code=404, detail="No OTP found for this email address.")
+    return {"email": email, "otp": otp_code}
+
+# ─── PROFILE ENDPOINTS ───────────────────────────────────────────────
+
+class ProfileResponse(BaseModel):
+    success: bool
+    profile: dict
+
+class ProfileUpdatePayload(BaseModel):
+    phone: Optional[str] = None
+    dob: Optional[str] = None
+    gender: Optional[str] = None
+    location: Optional[str] = None
+    timezone: Optional[str] = None
+    education: Optional[str] = None
+    college: Optional[str] = None
+    occupation: Optional[str] = None
+    bio: Optional[str] = None
+    avatar_url: Optional[str] = None
+    target_exam: Optional[str] = None
+    secondary_exam: Optional[str] = None
+    target_score: Optional[str] = None
+    target_rank: Optional[str] = None
+    target_date: Optional[str] = None
+    study_hours_goal: Optional[float] = None
+    weak_subjects: Optional[list] = None
+    strong_subjects: Optional[list] = None
+    favorite_subjects: Optional[list] = None
+    social_links: Optional[dict] = None
+    notification_settings: Optional[dict] = None
+    privacy_settings: Optional[dict] = None
+    plan: Optional[str] = None
+
+def profile_to_dict(p: UserProfileDb, user: UserDb) -> dict:
+    return {
+        "id": p.id,
+        "user_id": p.user_id,
+        "name": user.name,
+        "email": user.email,
+        "member_since": user.created_at.isoformat() if user.created_at else "",
+        "phone": p.phone or "",
+        "dob": p.dob or "",
+        "gender": p.gender or "",
+        "location": p.location or "",
+        "timezone": p.timezone or "Asia/Kolkata",
+        "education": p.education or "",
+        "college": p.college or "",
+        "occupation": p.occupation or "",
+        "bio": p.bio or "",
+        "avatar_url": p.avatar_url or "",
+        "xp": p.xp,
+        "coins": p.coins,
+        "level": p.level,
+        "streak": p.streak,
+        "target_exam": p.target_exam or "",
+        "secondary_exam": p.secondary_exam or "",
+        "target_score": p.target_score or "",
+        "target_rank": p.target_rank or "",
+        "target_date": p.target_date or "",
+        "study_hours_goal": p.study_hours_goal,
+        "weak_subjects": p.weak_subjects or [],
+        "strong_subjects": p.strong_subjects or [],
+        "favorite_subjects": p.favorite_subjects or [],
+        "accuracy": p.accuracy,
+        "mock_average": p.mock_average,
+        "questions_solved": p.questions_solved,
+        "study_hours_total": p.study_hours_total,
+        "completion_pct": p.completion_pct,
+        "bookmarks_count": p.bookmarks_count,
+        "certificates_count": p.certificates_count,
+        "social_links": p.social_links or {},
+        "achievements": p.achievements or [],
+        "connected_devices": p.connected_devices or [],
+        "notification_settings": p.notification_settings or {},
+        "privacy_settings": p.privacy_settings or {},
+        "security_score": p.security_score,
+        "plan": p.plan or "Free",
+        "plan_renewal": p.plan_renewal or "",
+        "ai_credits": p.ai_credits,
+        "storage_used_mb": p.storage_used_mb,
+        "updated_at": p.updated_at.isoformat() if p.updated_at else "",
+    }
+
+@app.get("/api/profile")
+async def get_profile(email: str, db: Session = Depends(get_db)):
+    user = db.query(UserDb).filter(UserDb.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+    if not profile:
+        profile = UserProfileDb(user_id=user.id)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+
+    return {"success": True, "profile": profile_to_dict(profile, user)}
+
+@app.post("/api/profile")
+async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session = Depends(get_db)):
+    user = db.query(UserDb).filter(UserDb.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+    if not profile:
+        profile = UserProfileDb(user_id=user.id)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+
+    update_data = payload.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        if hasattr(profile, key):
+            setattr(profile, key, value)
+
+    # Also update user name if provided via social_links or other context
+    db.commit()
+    db.refresh(profile)
+
+    logger.info(f"Profile updated for {email}: {list(update_data.keys())}")
+    return {"success": True, "profile": profile_to_dict(profile, user)}

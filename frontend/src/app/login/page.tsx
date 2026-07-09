@@ -165,13 +165,47 @@ export default function LoginPage() {
 
   // OTP Timer countdown
   useEffect(() => {
-    if (step !== "verify-otp") return;
+    if (step !== "verify-otp" && step !== "reset-password") return;
     if (otpTimer <= 0) return;
     const interval = setInterval(() => {
       setOtpTimer((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [step, otpTimer]);
+
+  // Fetch latest OTP automatically in development when step is verify-otp or reset-password
+  useEffect(() => {
+    if (step !== "verify-otp" && step !== "reset-password") {
+      return;
+    }
+    if (!emailForVerification) return;
+
+    const fetchLatestOtp = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/auth/latest-otp?email=${encodeURIComponent(emailForVerification)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.otp) {
+            setOtpValues(data.otp.split(""));
+          }
+        }
+      } catch (e) {
+        console.warn("Could not retrieve latest dev OTP:", e);
+      }
+    };
+
+    fetchLatestOtp();
+    // Poll every 2.5 seconds to retrieve it as soon as backend saves it
+    const interval = setInterval(fetchLatestOtp, 2500);
+    return () => clearInterval(interval);
+  }, [step, emailForVerification]);
+
+  // Clear retrieved code when timer expires
+  useEffect(() => {
+    if (otpTimer <= 0) {
+      setOtpValues(Array(6).fill(""));
+    }
+  }, [otpTimer]);
 
   const formatTimer = (secs: number) => {
     const mins = Math.floor(secs / 60);
@@ -308,7 +342,7 @@ export default function LoginPage() {
         setAuthSuccess("✓ Verified! Redirecting...");
         // Login user → store in context
         login({
-          name: nameForSignup || emailForVerification.split("@")[0],
+          name: result.name || nameForSignup || emailForVerification.split("@")[0],
           email: emailForVerification,
         });
         setTimeout(() => {
