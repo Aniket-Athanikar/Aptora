@@ -1,119 +1,105 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
-
-const ThreeHero = dynamic(() => import("../../components/three/ThreeHero"), {
-  ssr: false,
-});
 import {
-  User,
-  Mail,
-  MapPin,
-  Calendar,
-  Edit3,
-  Share2,
   Sparkles,
-  Mic,
-  CalendarClock,
-  TrendingUp,
-  Zap,
-  Coins,
-  Flame,
-  Target,
-  Brain,
-  BookOpen,
-  Clock,
+  Calendar,
+  Compass,
   Award,
-  Trophy,
-  Star,
-  Crown,
-  Shield,
-  Lock,
-  Smartphone,
-  Eye,
-  CreditCard,
-  HardDrive,
-  ArrowUpRight,
-  X,
-  Phone,
-  GraduationCap,
-  Briefcase,
-  Globe,
-  FileText,
-  Save,
+  ChevronLeft,
   ChevronRight,
-  Loader2,
-  BadgeCheck,
+  TrendingUp,
+  Flame,
+  Bell,
+  Play,
+  Pause,
+  Brain,
+  ArrowLeft,
+  Search,
+  Settings,
+  User,
   Gem,
-  MessageSquare,
-  Sun,
-  Sunset,
-  Moon,
-  CircleDot,
+  RefreshCw,
+  Clock,
+  Check,
+  Trash2,
+  X,
+  Layers,
+  Trophy,
+  Camera,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/lib/ToastContext";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// ─── Types ───────────────────────────────────────────────────────────────
-interface ProfileData {
+// --- Types ---
+interface UserProfile {
   name: string;
   email: string;
-  member_since: string;
-  phone: string;
-  dob: string;
-  gender: string;
-  location: string;
-  timezone: string;
-  education: string;
-  college: string;
-  occupation: string;
-  bio: string;
-  avatar_url: string;
+  streak: number;
   xp: number;
   coins: number;
-  level: number;
-  streak: number;
-  target_exam: string;
-  secondary_exam: string;
-  target_score: number;
-  target_rank: number;
-  target_date: string;
-  study_hours_goal: number;
-  weak_subjects: string[];
-  strong_subjects: string[];
-  favorite_subjects: string[];
-  accuracy: number;
-  mock_average: number;
-  questions_solved: number;
-  study_hours_total: number;
-  completion_pct: number;
-  bookmarks_count: number;
-  certificates_count: number;
-  social_links: Record<string, string>;
-  achievements: string[];
-  connected_devices: string[];
-  notification_settings: Record<string, boolean>;
-  privacy_settings: Record<string, boolean>;
-  security_score: number;
-  plan: string;
-  plan_renewal: string;
-  ai_credits: number;
-  storage_used_mb: number;
+  avatar_url?: string;
+  target_exam?: string;
+  target_score?: string;
+  study_hours_goal?: number;
+  weak_subjects?: string[];
+  favorite_subjects?: string[];
+  phone?: string;
+  dob?: string;
+  gender?: string;
+  location?: string;
+  timezone?: string;
+  bio?: string;
+  education?: string;
+  occupation?: string;
+  college?: string;
+  security_score?: number;
+  notification_settings?: {
+    email?: boolean;
+    push?: boolean;
+    whatsapp?: boolean;
+    sms?: boolean;
+  };
+  privacy_settings?: {
+    profile_visibility?: boolean;
+    public_streaks?: boolean;
+    analytics_sharing?: boolean;
+  };
+  member_since?: string;
+  accuracy?: number;
+  questions_solved?: number;
+  mock_average?: number;
+  study_hours_total?: number;
+  completion_pct?: number;
+  connected_devices?: string[];
+  plan?: string;
+  plan_renewal?: string;
+  ai_credits?: number;
+  storage_used_mb?: number;
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────
-function getGreeting(): { text: string; icon: typeof Sun } {
-  const h = new Date().getHours();
-  if (h < 12) return { text: "Good Morning", icon: Sun };
-  if (h < 17) return { text: "Good Afternoon", icon: Sunset };
-  return { text: "Good Evening", icon: Moon };
+interface StudyLog {
+  id: string;
+  day: number;
+  subject: string;
+  hours: number;
+  mode: "Mock Test" | "Reading" | "Notes";
 }
+
+interface ChecklistItem {
+  id: string;
+  label: string;
+  done: boolean;
+}
+
+
 
 function getInitials(name: string): string {
+  if (!name) return "SC";
   return name
     .split(" ")
     .map((w) => w[0])
@@ -122,1441 +108,1322 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-function formatDate(d: string): string {
-  if (!d) return "—";
-  try {
-    return new Date(d).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return d;
-  }
-}
-
-// ─── Animated Counter ────────────────────────────────────────────────────
-function useAnimatedCounter(end: number, duration = 1200): number {
-  const [count, setCount] = useState(0);
-  const ref = useRef(false);
-
-  useEffect(() => {
-    if (ref.current) return;
-    ref.current = true;
-    let start = 0;
-    const startTime = performance.now();
-
-    function animate(now: number) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      start = Math.round(eased * end);
-      setCount(start);
-      if (progress < 1) requestAnimationFrame(animate);
-    }
-
-    requestAnimationFrame(animate);
-  }, [end, duration]);
-
-  return count;
-}
-
-// ─── Card Wrapper ────────────────────────────────────────────────────────
-function GlassCard({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`bg-white/80 backdrop-blur-xl border border-[#E9ECF8] rounded-3xl shadow-sm ${className}`}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── KPI Stat Card ───────────────────────────────────────────────────────
-function KpiCard({
-  icon: Icon,
-  label,
-  value,
-  suffix = "",
-  color,
-  delay,
-}: {
-  icon: typeof Zap;
-  label: string;
-  value: number;
-  suffix?: string;
-  color: string;
-  delay: number;
-}) {
-  const animatedValue = useAnimatedCounter(value);
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ scale: 1.03, y: -4 }}
-      className="bg-white/80 backdrop-blur-xl border border-[#E9ECF8] rounded-3xl p-5 shadow-sm cursor-default group transition-shadow hover:shadow-md hover:shadow-[#6D5DFB]/5"
-    >
-      <div
-        className="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110"
-        style={{ backgroundColor: `${color}14` }}
-      >
-        <Icon className="w-5 h-5" style={{ color }} />
-      </div>
-      <p className="text-[13px] font-medium text-gray-500 mb-1">{label}</p>
-      <p className="text-2xl font-extrabold text-gray-900 tracking-tight">
-        {animatedValue.toLocaleString()}
-        {suffix && (
-          <span className="text-sm font-semibold text-gray-400 ml-0.5">
-            {suffix}
-          </span>
-        )}
-      </p>
-    </motion.div>
-  );
-}
-
-// ─── SVG Circular Progress ──────────────────────────────────────────────
-function CircularProgress({
-  pct,
-  size = 140,
-  strokeWidth = 10,
-}: {
-  pct: number;
-  size?: number;
-  strokeWidth?: number;
-}) {
-  const r = (size - strokeWidth) / 2;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (pct / 100) * circ;
-
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg width={size} height={size} className="-rotate-90">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke="#E9ECF8"
-          strokeWidth={strokeWidth}
-        />
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke="url(#progressGrad)"
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circ}
-          initial={{ strokeDashoffset: circ }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        />
-        <defs>
-          <linearGradient id="progressGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#6D5DFB" />
-            <stop offset="100%" stopColor="#4F8CFF" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-extrabold text-gray-900">{pct}%</span>
-        <span className="text-[11px] font-medium text-gray-400">Complete</span>
-      </div>
-    </div>
-  );
-}
-
-// ─── Tag Pill ────────────────────────────────────────────────────────────
-function TagPill({ text, color }: { text: string; color: string }) {
-  return (
-    <span
-      className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
-      style={{
-        backgroundColor: `${color}14`,
-        color: color,
-      }}
-    >
-      {text}
-    </span>
-  );
-}
-
-// ─── Achievement Badge ───────────────────────────────────────────────────
-const achievementMeta: Record<
-  string,
-  { icon: typeof Trophy; gradient: string; glow: string }
-> = {
-  "Top Performer": {
-    icon: Trophy,
-    gradient: "from-amber-400 to-orange-500",
-    glow: "rgba(245,158,11,0.25)",
-  },
-  "Mock Master": {
-    icon: Target,
-    gradient: "from-blue-400 to-indigo-500",
-    glow: "rgba(79,140,255,0.25)",
-  },
-  "Consistency King": {
-    icon: Crown,
-    gradient: "from-purple-400 to-violet-500",
-    glow: "rgba(155,92,255,0.25)",
-  },
-  "Early Bird": {
-    icon: Sun,
-    gradient: "from-yellow-300 to-amber-400",
-    glow: "rgba(250,204,21,0.25)",
-  },
-  "Elite Learner": {
-    icon: GraduationCap,
-    gradient: "from-emerald-400 to-teal-500",
-    glow: "rgba(34,197,94,0.25)",
-  },
-};
-
-function AchievementBadge({ title }: { title: string }) {
-  const meta = achievementMeta[title] || {
-    icon: Star,
-    gradient: "from-gray-400 to-gray-500",
-    glow: "rgba(100,100,100,0.2)",
-  };
-  const Icon = meta.icon;
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.08 }}
-      className="flex-shrink-0 w-[140px] flex flex-col items-center gap-3 p-5 rounded-3xl bg-white/90 border border-[#E9ECF8] cursor-default transition-shadow"
-      style={{
-        boxShadow: `0 0 0 0 transparent`,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          `0 8px 32px ${meta.glow}`;
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 0 0 transparent`;
-      }}
-    >
-      <div
-        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${meta.gradient} flex items-center justify-center shadow-lg`}
-      >
-        <Icon className="w-7 h-7 text-white" />
-      </div>
-      <p className="text-xs font-bold text-gray-700 text-center leading-tight">
-        {title}
-      </p>
-    </motion.div>
-  );
-}
-
-// ─── Heatmap Cell ────────────────────────────────────────────────────────
-function HeatmapCell({ level }: { level: number }) {
-  const colors = [
-    "#EBEDF0",
-    "#D6CBFF",
-    "#B09EFF",
-    "#8A75FF",
-    "#6D5DFB",
-  ];
-  return (
-    <motion.div
-      whileHover={{ scale: 1.3 }}
-      className="w-6 h-6 rounded-md cursor-default transition-colors"
-      style={{ backgroundColor: colors[level] || colors[0] }}
-      title={`Activity level: ${level}`}
-    />
-  );
-}
-
-// ─── Field Input ─────────────────────────────────────────────────────────
-function FieldRow({
-  icon: Icon,
-  label,
-  value,
-  editing,
-  name,
-  onChange,
-  type = "text",
-}: {
-  icon: typeof User;
-  label: string;
-  value: string;
-  editing: boolean;
-  name: string;
-  onChange: (name: string, val: string) => void;
-  type?: string;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-        <Icon className="w-3.5 h-3.5" />
-        {label}
-      </label>
-      {editing ? (
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(name, e.target.value)}
-          className="w-full h-11 px-4 rounded-xl border border-[#E9ECF8] bg-white text-sm font-medium text-gray-900 outline-none focus:border-[#6D5DFB] focus:ring-2 focus:ring-[#6D5DFB]/10 transition-all"
-        />
-      ) : (
-        <p className="h-11 flex items-center px-4 rounded-xl bg-[#F4F5FA] text-sm font-medium text-gray-700">
-          {value || "—"}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// ═════════════════════════════════════════════════════════════════════════
-// ─── MAIN PAGE ───────────────────────────────────────────────────────────
-// ═════════════════════════════════════════════════════════════════════════
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, login } = useAuth();
+  const { toast } = useToast();
 
-  // ── State ──
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  // Page States
+  const [authLoading, setAuthLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  // Profile data state
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  // Layout States
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Edit State
   const [editingPersonal, setEditingPersonal] = useState(false);
-  const [editingExam, setEditingExam] = useState(false);
 
-  // Editable form fields
+  // Editable Form fields
   const [formPersonal, setFormPersonal] = useState({
     name: "",
-    dob: "",
-    gender: "",
-    email: "",
     phone: "",
     location: "",
-    timezone: "",
-    education: "",
-    college: "",
-    occupation: "",
     bio: "",
+    dob: "",
+    education: "",
+    occupation: "",
+    college: "",
+    gender: "",
+    timezone: "Asia/Kolkata",
+    avatar_url: "",
   });
 
-  const [formExam, setFormExam] = useState({
-    target_exam: "",
-    secondary_exam: "",
-    target_score: "",
-    target_rank: "",
-    target_date: "",
-    study_hours_goal: "",
-  });
+  // Pomodoro Widget State (Sidebar Footer)
+  const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
+  const [pomodoroActive, setPomodoroActive] = useState(false);
+  const [pomodoroMode, setPomodoroMode] = useState<"study" | "break">("study");
+  const pomodoroIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ── Auth guard ──
+  // Live Focus Session Timer (Stopwatch Card)
+  const [stopwatchTime, setStopwatchTime] = useState(0);
+  const [stopwatchActive, setStopwatchActive] = useState(false);
+  const stopwatchIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Interactive Heatmap / Real-Time Study Calendar State (July 2026)
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [studyLogs, setStudyLogs] = useState<StudyLog[]>([
+    { id: "1", day: 3, subject: "Quantitative Aptitude", hours: 2.5, mode: "Mock Test" },
+    { id: "2", day: 5, subject: "Reasoning & Analytical Logic", hours: 4.0, mode: "Reading" },
+    { id: "3", day: 8, subject: "English Comprehension", hours: 1.5, mode: "Notes" },
+    { id: "4", day: 10, subject: "General Awareness", hours: 5.5, mode: "Mock Test" },
+  ]);
+
+  // Log Form State
+  const [logSubject, setLogSubject] = useState("");
+  const [logHours, setLogHours] = useState<number>(1);
+  const [logMode, setLogMode] = useState<"Mock Test" | "Reading" | "Notes">("Mock Test");
+  const [editingLogId, setEditingLogId] = useState<string | null>(null);
+
+  // Daily Checklist State
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([
+    { id: "1", label: "Solve 50 MCQs", done: false },
+    { id: "2", label: "Revise Flashcards", done: false },
+    { id: "3", label: "Attempt Mock Drill", done: false },
+    { id: "4", label: "Read AI Coach Editorial", done: false },
+  ]);
+  const [streakAwardedToday, setStreakAwardedToday] = useState(false);
+
+  // Initialize Sidebar Toggle from LocalStorage
   useEffect(() => {
-    if (!isAuthenticated && !user) {
-      router.push("/login");
+    const saved = localStorage.getItem("ef_sidebar_expanded");
+    if (saved !== null) {
+      setIsSidebarExpanded(saved === "true");
     }
-  }, [isAuthenticated, user, router]);
+  }, []);
 
-  // ── Fetch profile ──
-  const fetchProfile = useCallback(async () => {
-    if (!user?.email) return;
-    try {
-      const res = await fetch(
-        `${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`
-      );
-      const data = await res.json();
-      if (data.success && data.profile) {
-        const p = data.profile as ProfileData;
-        setProfile(p);
-        setFormPersonal({
-          name: p.name || "",
-          dob: p.dob || "",
-          gender: p.gender || "",
-          email: p.email || "",
-          phone: p.phone || "",
-          location: p.location || "",
-          timezone: p.timezone || "",
-          education: p.education || "",
-          college: p.college || "",
-          occupation: p.occupation || "",
-          bio: p.bio || "",
-        });
-        setFormExam({
-          target_exam: p.target_exam || "",
-          secondary_exam: p.secondary_exam || "",
-          target_score: String(p.target_score || ""),
-          target_rank: String(p.target_rank || ""),
-          target_date: p.target_date || "",
-          study_hours_goal: String(p.study_hours_goal || ""),
-        });
-      }
-    } catch (err) {
-      console.error("Failed to fetch profile:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.email]);
-
+  // Check auth
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
-
-  // ── Save handlers ──
-  const savePersonal = async () => {
-    if (!user?.email) return;
-    setSaving(true);
-    try {
-      const res = await fetch(
-        `${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formPersonal),
+    if (!isAuthenticated) {
+      const timer = setTimeout(() => {
+        if (!localStorage.getItem("ef_user")) {
+          router.push("/login");
+        } else {
+          setAuthLoading(false);
         }
-      );
-      const data = await res.json();
-      if (data.success && data.profile) {
-        setProfile(data.profile);
-      }
-      setEditingPersonal(false);
-    } catch (err) {
-      console.error("Failed to save personal info:", err);
-    } finally {
-      setSaving(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setAuthLoading(false);
     }
+  }, [isAuthenticated, router]);
+
+  // Load profile from API and sync with local storage values
+  const loadProfile = useCallback(async () => {
+    if (!user?.email) return;
+    setProfileLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.profile) {
+          const prof = data.profile as UserProfile;
+          setUserProfile(prof);
+          setFormPersonal({
+            name: prof.name || "",
+            phone: prof.phone || "",
+            location: prof.location || "",
+            bio: prof.bio || "",
+            dob: prof.dob || "",
+            education: prof.education || "",
+            occupation: prof.occupation || "",
+            college: prof.college || "",
+            gender: prof.gender || "",
+            timezone: prof.timezone || "Asia/Kolkata",
+            avatar_url: prof.avatar_url || "",
+          });
+
+          // Sync basic auth info to local storage/state if name changes
+          if (prof.name && prof.name !== user.name) {
+            login({ name: prof.name, email: user.email });
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error loading profile:", err);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, [user?.email, user?.name, login]);
+
+  useEffect(() => {
+    if (!authLoading && user?.email) {
+      loadProfile();
+    }
+  }, [authLoading, user?.email, loadProfile]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 256;
+        const MAX_HEIGHT = 256;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+          setUserProfile((prev) => (prev ? { ...prev, avatar_url: compressedBase64 } : null));
+          setFormPersonal((prev) => ({ ...prev, avatar_url: compressedBase64 }));
+
+          if (user?.email) {
+            fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...formPersonal,
+                avatar_url: compressedBase64,
+              }),
+            })
+              .then((res) => {
+                if (res.ok) {
+                  toast("Profile picture updated successfully!", "success");
+                } else {
+                  toast("Server rejected image update.", "error");
+                }
+              })
+              .catch((err) => {
+                console.error("Network error saving avatar:", err);
+                toast("Could not connect to server.", "error");
+              });
+          }
+        }
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
-  const saveExam = async () => {
-    if (!user?.email) return;
-    setSaving(true);
-    try {
-      const res = await fetch(
-        `${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`,
-        {
+  // Pomodoro Timer Logic
+  useEffect(() => {
+    if (pomodoroActive) {
+      pomodoroIntervalRef.current = setInterval(() => {
+        setPomodoroTime((prev) => {
+          if (prev <= 1) {
+            if (pomodoroMode === "study") {
+              setPomodoroMode("break");
+              toast("Pomodoro Completed! Take a short 5-minute break.", "info");
+              return 5 * 60;
+            } else {
+              setPomodoroMode("study");
+              toast("Break over! Time to focus.", "success");
+              return 25 * 60;
+            }
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (pomodoroIntervalRef.current) {
+        clearInterval(pomodoroIntervalRef.current);
+      }
+    }
+    return () => {
+      if (pomodoroIntervalRef.current) clearInterval(pomodoroIntervalRef.current);
+    };
+  }, [pomodoroActive, pomodoroMode, toast]);
+
+  // Live Focus Session Timer (Stopwatch) Logic
+  useEffect(() => {
+    if (stopwatchActive) {
+      stopwatchIntervalRef.current = setInterval(() => {
+        setStopwatchTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (stopwatchIntervalRef.current) {
+        clearInterval(stopwatchIntervalRef.current);
+      }
+    }
+    return () => {
+      if (stopwatchIntervalRef.current) clearInterval(stopwatchIntervalRef.current);
+    };
+  }, [stopwatchActive]);
+
+  const formatPomodoroTime = (secs: number) => {
+    const m = Math.floor(secs / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+  const formatStopwatchTime = (secs: number) => {
+    const h = Math.floor(secs / 3600).toString().padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+
+  // Stopwatch Finish & Log Action
+  const handleFinishStopwatch = async () => {
+    if (stopwatchTime < 5) {
+      toast("Study session too short to log! Keep focusing.", "info");
+      return;
+    }
+    setStopwatchActive(false);
+    const sessionSeconds = stopwatchTime;
+    setStopwatchTime(0);
+
+    const studyHoursAdded = parseFloat((sessionSeconds / 3600).toFixed(3));
+    const currentTotalHours = userProfile?.study_hours_total || 0;
+    const currentXp = userProfile?.xp || 0;
+    const currentCoins = userProfile?.coins || 0;
+
+    const updatedTotalHours = parseFloat((currentTotalHours + studyHoursAdded).toFixed(3));
+    const updatedXp = currentXp + 10;
+    const updatedCoins = currentCoins + 5;
+
+    // Trigger local state updates
+    if (userProfile) {
+      setUserProfile({
+        ...userProfile,
+        study_hours_total: updatedTotalHours,
+        xp: updatedXp,
+        coins: updatedCoins,
+      });
+    }
+
+    toast(`Awesome focus session! Awarded +10 XP and +5 Coins.`, "success");
+
+    // Sync to database
+    if (user?.email) {
+      try {
+        await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            target_exam: formExam.target_exam,
-            secondary_exam: formExam.secondary_exam,
-            target_score: Number(formExam.target_score) || 0,
-            target_rank: Number(formExam.target_rank) || 0,
-            target_date: formExam.target_date,
-            study_hours_goal: Number(formExam.study_hours_goal) || 0,
+            study_hours_total: updatedTotalHours,
+            xp: updatedXp,
+            coins: updatedCoins,
           }),
-        }
-      );
-      const data = await res.json();
-      if (data.success && data.profile) {
-        setProfile(data.profile);
+        });
+      } catch (err) {
+        console.error("Failed to sync session stats:", err);
       }
-      setEditingExam(false);
-    } catch (err) {
-      console.error("Failed to save exam prefs:", err);
-    } finally {
-      setSaving(false);
     }
   };
 
-  const handlePersonalChange = (name: string, val: string) => {
-    setFormPersonal((prev) => ({ ...prev, [name]: val }));
-  };
-
-  const handleExamChange = (name: string, val: string) => {
-    setFormExam((prev) => ({ ...prev, [name]: val }));
-  };
-
-  // ── Loading / Auth check ──
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-[#FAFBFF] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#6D5DFB] animate-spin" />
-      </div>
+  // Checklist Check/Uncheck handler
+  const handleToggleChecklist = async (id: string) => {
+    const updated = checklist.map((item) =>
+      item.id === id ? { ...item, done: !item.done } : item
     );
-  }
+    setChecklist(updated);
 
-  if (loading) {
+    const allChecked = updated.every((item) => item.done);
+    if (allChecked && !streakAwardedToday) {
+      const nextStreak = (userProfile?.streak || 0) + 1;
+      const nextXp = (userProfile?.xp || 0) + 10;
+      setStreakAwardedToday(true);
+
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          streak: nextStreak,
+          xp: nextXp,
+        });
+      }
+
+      toast("Perfect Daily Habit Checklist! Streak extended & +10 XP awarded!", "success");
+
+      // Save to Database
+      if (user?.email) {
+        try {
+          await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              streak: nextStreak,
+              xp: nextXp,
+            }),
+          });
+        } catch (err) {
+          console.error("Failed to update streak:", err);
+        }
+      }
+    }
+  };
+
+  const getChecklistPercentage = () => {
+    const doneCount = checklist.filter((item) => item.done).length;
+    return Math.round((doneCount / checklist.length) * 100);
+  };
+
+  // Calendar Heatmap configuration for July 2026
+  // July 1, 2026 is a Wednesday.
+  // 3 empty grids at the beginning for Sun, Mon, Tue
+  const calendarPadding = 3;
+  const daysInJuly = 31;
+
+  const getDayTotalHours = (day: number) => {
+    return studyLogs
+      .filter((log) => log.day === day)
+      .reduce((sum, log) => sum + log.hours, 0);
+  };
+
+  const getDayIntensityColor = (day: number) => {
+    const hours = getDayTotalHours(day);
+    if (hours === 0) return "bg-neutral-100";
+    if (hours <= 2) return "bg-indigo-100 border-indigo-200/50 text-indigo-800";
+    if (hours <= 5) return "bg-indigo-300 border-indigo-400/50 text-indigo-900";
+    return "bg-indigo-600 border-indigo-700/50 text-white";
+  };
+
+  // CRUD handlers for study logs
+  const handleSaveStudyLog = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedDay === null) return;
+
+    if (!logSubject.trim()) {
+      toast("Please enter a subject name.", "error");
+      return;
+    }
+
+    if (editingLogId) {
+      // Edit mode
+      setStudyLogs((prev) =>
+        prev.map((log) =>
+          log.id === editingLogId
+            ? { ...log, subject: logSubject, hours: logHours, mode: logMode }
+            : log
+        )
+      );
+      toast("Study log updated!", "success");
+      setEditingLogId(null);
+    } else {
+      // Add mode
+      const newLog: StudyLog = {
+        id: Date.now().toString(),
+        day: selectedDay,
+        subject: logSubject,
+        hours: logHours,
+        mode: logMode,
+      };
+      setStudyLogs((prev) => [...prev, newLog]);
+      toast("Study log saved!", "success");
+    }
+
+    // Reset log inputs
+    setLogSubject("");
+    setLogHours(1);
+    setLogMode("Mock Test");
+  };
+
+  const handleDeleteLog = (id: string) => {
+    setStudyLogs((prev) => prev.filter((log) => log.id !== id));
+    toast("Study log deleted.", "info");
+    if (editingLogId === id) {
+      setEditingLogId(null);
+      setLogSubject("");
+      setLogHours(1);
+      setLogMode("Mock Test");
+    }
+  };
+
+  const handleEditLogStart = (log: StudyLog) => {
+    setEditingLogId(log.id);
+    setLogSubject(log.subject);
+    setLogHours(log.hours);
+    setLogMode(log.mode);
+  };
+
+  // Save Settings Changes (POST /api/profile)
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.email) return;
+    setSavingProfile(true);
+    try {
+      const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formPersonal),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.profile) {
+          setUserProfile(data.profile);
+          login({ name: data.profile.name, email: user.email });
+          toast("Profile saved successfully!", "success");
+          setEditingPersonal(false);
+        } else {
+          toast("Failed to update profile.", "error");
+        }
+      } else {
+        toast("Error saving profile details.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      toast("Connection error while saving profile.", "error");
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  if (authLoading || profileLoading) {
     return (
-      <div className="min-h-screen bg-[#FAFBFF] flex flex-col items-center justify-center gap-4">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-        >
-          <Loader2 className="w-10 h-10 text-[#6D5DFB]" />
-        </motion.div>
-        <p className="text-sm font-semibold text-gray-400">
-          Loading your profile...
+      <div className="min-h-screen bg-[#FAFBFF] flex flex-col items-center justify-center font-sans">
+        <div className="relative w-24 h-24 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full border-4 border-indigo-100 animate-pulse"></div>
+          <div className="absolute inset-0 rounded-full border-t-4 border-indigo-600 animate-spin"></div>
+          <Sparkles className="w-8 h-8 text-indigo-600 animate-bounce" />
+        </div>
+        <p className="mt-6 text-sm font-semibold tracking-wide text-neutral-600 animate-pulse">
+          Hydrating your AI Workspace...
         </p>
       </div>
     );
   }
 
-  const p = profile;
-  const greeting = getGreeting();
-  const GreetingIcon = greeting.icon;
-  const displayName = p?.name || user.name || "Student";
+  const displayName = userProfile?.name || user?.name || "Scholar";
+  const initials = getInitials(displayName);
 
-  // Study heatmap data (generated from mock weekly data)
-  const heatmapData: number[][] = [];
-  for (let week = 0; week < 4; week++) {
-    const row: number[] = [];
-    for (let day = 0; day < 7; day++) {
-      row.push(Math.floor(Math.random() * 5));
-    }
-    heatmapData.push(row);
-  }
-
-  const weeklyBarData = [65, 78, 52, 90, 44, 85, 72];
-  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const maxBar = Math.max(...weeklyBarData);
-
-  // ═══════════════════════════════════════════════════════════════════════
   return (
-    <main className="min-h-screen bg-[#FAFBFF] font-[var(--font-inter)]">
-      {/* Subtle background decorations with Three.js 3D Neural Particles */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute inset-0 opacity-[0.25]">
-          <ThreeHero />
-        </div>
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#6D5DFB]/5 to-[#4F8CFF]/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#9B5CFF]/5 to-[#6D5DFB]/5 blur-3xl" />
-      </div>
-
-      <div className="relative z-10 max-w-[1320px] mx-auto px-5 md:px-6 lg:px-8 py-8 md:py-12 flex flex-col gap-8">
-        {/* ─── Breadcrumb ─────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex items-center gap-2 text-xs font-semibold text-gray-400"
-        >
-          <button
-            onClick={() => router.push("/")}
-            className="hover:text-[#6D5DFB] transition-colors cursor-pointer"
-          >
-            Home
-          </button>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-gray-600">Profile</span>
-        </motion.div>
-
-        {/* ═══════════════════════════════════════════════════════
-            1. PROFILE HERO CARD
-        ═══════════════════════════════════════════════════════ */}
-        <GlassCard className="p-8 md:p-10" delay={0.05}>
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            {/* Avatar */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="relative flex-shrink-0"
+    <div className="min-h-screen bg-[#FAFBFF] text-neutral-800 flex font-sans">
+      {/* EXPANDABLE LEFT SIDEBAR NAVIGATION */}
+      <aside
+        className={cn(
+          "bg-white border-r border-[#E9ECF8] flex flex-col justify-between py-6 shrink-0 relative z-20 transition-all duration-300",
+          isSidebarExpanded ? "w-64 px-6" : "w-20 px-3 items-center"
+        )}
+      >
+        <div className="flex flex-col gap-8 w-full">
+          {/* Sidebar Logo & Toggle Button */}
+          <div className={cn("flex items-center justify-between w-full", isSidebarExpanded ? "px-2" : "flex-col gap-4")}>
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/10">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              {isSidebarExpanded && (
+                <span className="font-extrabold tracking-wider text-neutral-900 uppercase text-sm">
+                  EXAM FORGE<span className="text-indigo-600"> AI</span>
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                const nextVal = !isSidebarExpanded;
+                setIsSidebarExpanded(nextVal);
+                localStorage.setItem("ef_sidebar_expanded", String(nextVal));
+              }}
+              className="p-1.5 rounded-lg border border-[#E9ECF8] hover:bg-indigo-50 hover:text-indigo-600 text-neutral-400 transition-colors cursor-pointer bg-transparent"
             >
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[#6D5DFB] to-[#4F8CFF] flex items-center justify-center shadow-xl shadow-[#6D5DFB]/20">
-                <span className="text-3xl font-extrabold text-white">
-                  {getInitials(displayName)}
-                </span>
-              </div>
-              {/* Online dot */}
-              <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#22C55E] border-[3px] border-white" />
-            </motion.div>
-
-            {/* Info */}
-            <div className="flex-1 flex flex-col items-center md:items-start gap-3 text-center md:text-left">
-              <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {displayName}
-                </h1>
-                {/* Premium badge */}
-                {p?.plan && p.plan !== "Free" && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-[#6D5DFB] to-[#9B5CFF] text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
-                    <Gem className="w-3 h-3" />
-                    {p.plan}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-medium">
-                <span className="flex items-center gap-1.5">
-                  <Mail className="w-4 h-4 text-[#4F8CFF]" />
-                  {p?.email || user.email}
-                </span>
-                {p?.location && (
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-[#EF4444]" />
-                    {p.location}
-                  </span>
-                )}
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#9B5CFF]" />
-                  Joined {formatDate(p?.member_since || "")}
-                </span>
-              </div>
-
-              {p?.bio && (
-                <p className="text-sm text-gray-500 leading-relaxed max-w-xl mt-1">
-                  {p.bio}
-                </p>
-              )}
-
-              <div className="flex items-center gap-3 mt-2">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => setEditingPersonal(true)}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#6D5DFB] to-[#4F8CFF] text-white text-sm font-bold shadow-md shadow-[#6D5DFB]/20 hover:shadow-lg hover:shadow-[#6D5DFB]/30 transition-shadow cursor-pointer"
-                >
-                  <Edit3 className="w-4 h-4" />
-                  Edit Profile
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl border border-[#E9ECF8] text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Share Profile
-                </motion.button>
-              </div>
-            </div>
-
-            {/* Student ID chip (desktop) */}
-            <div className="hidden lg:flex flex-col items-end gap-2">
-              <div className="px-4 py-2 rounded-2xl bg-[#F4F5FA] text-xs font-bold text-gray-500">
-                Student ID:&nbsp;
-                <span className="text-gray-800">
-                  EF-{(p?.email || "").slice(0, 4).toUpperCase()}
-                  {String(p?.xp || 0).slice(-4)}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#22C55E]">
-                <CircleDot className="w-3 h-3" />
-                Online Now
-              </div>
-            </div>
+              {isSidebarExpanded ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
           </div>
-        </GlassCard>
 
-        {/* ═══════════════════════════════════════════════════════
-            2. AI PROFILE INSIGHTS CARD
-        ═══════════════════════════════════════════════════════ */}
-        <GlassCard
-          className="p-8 md:p-10 relative overflow-hidden"
-          delay={0.1}
-        >
-          {/* Decorative gradient orb */}
-          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-gradient-to-br from-[#6D5DFB]/10 to-[#9B5CFF]/5 blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-
-          <div className="relative flex flex-col md:flex-row items-start gap-6">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6D5DFB] to-[#9B5CFF] flex items-center justify-center shadow-lg shadow-[#6D5DFB]/25">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-
-            <div className="flex-1 flex flex-col gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <GreetingIcon className="w-5 h-5 text-amber-400" />
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {greeting.text}, {displayName.split(" ")[0]}!
-                  </h2>
+          {/* Nav Tabs */}
+          <nav className="flex flex-col gap-2 w-full">
+            {[
+              { id: "home", label: "Home / Workspace", icon: Compass, active: false, path: "/dashboard" },
+              { id: "analytics", label: "Analytics & Graphs", icon: TrendingUp, active: false, path: "/dashboard" },
+              { id: "planner", label: "Study Plan & Goals", icon: Calendar, active: false, path: "/dashboard" },
+              { id: "tutor", label: "AI Tutor Chat", icon: Brain, active: false, path: "/dashboard" },
+              { id: "revision", label: "Revision & Decks", icon: Layers, active: false, path: "/dashboard" },
+              { id: "mocktests", label: "Mock Test Suite", icon: Trophy, active: false, path: "/dashboard" },
+              { id: "settings", label: "Settings & Profile", icon: Settings, active: true, path: "/profile" },
+            ].map((tab) => {
+              const IconComp = tab.icon;
+              return (
+                <div key={tab.id} className="relative group w-full">
+                  <button
+                    onClick={() => {
+                      if (!tab.active) {
+                        router.push(tab.path);
+                      }
+                    }}
+                    className={cn(
+                      "w-full flex items-center gap-3.5 p-3 rounded-xl transition-all duration-200 cursor-pointer border-0 text-left",
+                      tab.active
+                        ? "bg-indigo-50 text-indigo-600 font-extrabold ring-1 ring-indigo-100"
+                        : "text-neutral-400 hover:bg-neutral-50 hover:text-neutral-600 font-medium"
+                    )}
+                  >
+                    <IconComp className="w-5 h-5 flex-shrink-0" />
+                    {isSidebarExpanded && <span className="text-xs">{tab.label}</span>}
+                  </button>
+                  {!isSidebarExpanded && (
+                    <span className="absolute left-24 top-3 px-2 py-1 text-[10px] font-extrabold text-white bg-neutral-900 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+                      {tab.label}
+                    </span>
+                  )}
                 </div>
-                <p className="text-sm text-gray-500 font-medium leading-relaxed max-w-2xl">
-                  {p?.streak && p.streak > 5
-                    ? `You're on a ${p.streak}-day streak! Keep the momentum going. Focus on your weak areas today to maximize growth.`
-                    : "Start strong today! Review your bookmarks and attempt a quick mock test to warm up your brain."}
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3 p-4 rounded-2xl bg-[#F4F5FA]/80 border border-[#E9ECF8]">
-                <MessageSquare className="w-5 h-5 text-[#6D5DFB] mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-gray-600 font-medium italic">
-                  &ldquo;The expert in anything was once a beginner. Every
-                  question you solve today brings you closer to your goal.&rdquo;
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3 mt-1">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#6D5DFB] to-[#4F8CFF] text-white text-sm font-bold shadow-md shadow-[#6D5DFB]/20 cursor-pointer"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Ask AI
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl border border-[#E9ECF8] text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Mic className="w-4 h-4" />
-                  Voice Chat
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl border border-[#E9ECF8] text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <CalendarClock className="w-4 h-4" />
-                  Generate Plan
-                </motion.button>
-              </div>
-            </div>
-          </div>
-        </GlassCard>
-
-        {/* ═══════════════════════════════════════════════════════
-            3. KPI STATS ROW
-        ═══════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-4">
-          <KpiCard
-            icon={TrendingUp}
-            label="Level"
-            value={p?.level || 0}
-            color="#6D5DFB"
-            delay={0.12}
-          />
-          <KpiCard
-            icon={Zap}
-            label="XP"
-            value={p?.xp || 0}
-            color="#4F8CFF"
-            delay={0.16}
-          />
-          <KpiCard
-            icon={Coins}
-            label="Coins"
-            value={p?.coins || 0}
-            color="#F59E0B"
-            delay={0.2}
-          />
-          <KpiCard
-            icon={Flame}
-            label="Streak"
-            value={p?.streak || 0}
-            suffix=" days"
-            color="#EF4444"
-            delay={0.24}
-          />
-          <KpiCard
-            icon={Target}
-            label="Accuracy"
-            value={p?.accuracy || 0}
-            suffix="%"
-            color="#22C55E"
-            delay={0.28}
-          />
-          <KpiCard
-            icon={Brain}
-            label="Questions"
-            value={p?.questions_solved || 0}
-            color="#9B5CFF"
-            delay={0.32}
-          />
-          <KpiCard
-            icon={BookOpen}
-            label="Mock Avg"
-            value={p?.mock_average || 0}
-            suffix="%"
-            color="#4F8CFF"
-            delay={0.36}
-          />
-          <KpiCard
-            icon={Clock}
-            label="Study Hrs"
-            value={p?.study_hours_total || 0}
-            suffix="h"
-            color="#6D5DFB"
-            delay={0.4}
-          />
+              );
+            })}
+          </nav>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════
-            4 & 5. PERSONAL INFO + EXAM PREFERENCES (Two column)
-        ═══════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 4. Personal Information */}
-          <GlassCard className="p-8" delay={0.15}>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#6D5DFB]/10 flex items-center justify-center">
-                  <User className="w-5 h-5 text-[#6D5DFB]" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">
-                  Personal Information
-                </h3>
-              </div>
-              {editingPersonal ? (
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setEditingPersonal(false)}
-                    className="p-2 rounded-xl border border-[#E9ECF8] text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={savePersonal}
-                    disabled={saving}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#6D5DFB] text-white text-sm font-bold hover:bg-[#5b4be0] transition-colors cursor-pointer disabled:opacity-50"
-                  >
-                    {saving ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Save className="w-4 h-4" />
-                    )}
-                    Save
-                  </motion.button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setEditingPersonal(true)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#E9ECF8] text-gray-500 text-sm font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Edit3 className="w-4 h-4" />
-                  Edit
-                </motion.button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FieldRow
-                icon={User}
-                label="Full Name"
-                value={formPersonal.name}
-                editing={editingPersonal}
-                name="name"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={Calendar}
-                label="Date of Birth"
-                value={formPersonal.dob}
-                editing={editingPersonal}
-                name="dob"
-                onChange={handlePersonalChange}
-                type="date"
-              />
-              <FieldRow
-                icon={User}
-                label="Gender"
-                value={formPersonal.gender}
-                editing={editingPersonal}
-                name="gender"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={Mail}
-                label="Email"
-                value={formPersonal.email}
-                editing={false}
-                name="email"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={Phone}
-                label="Phone"
-                value={formPersonal.phone}
-                editing={editingPersonal}
-                name="phone"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={MapPin}
-                label="Location"
-                value={formPersonal.location}
-                editing={editingPersonal}
-                name="location"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={Globe}
-                label="Timezone"
-                value={formPersonal.timezone}
-                editing={editingPersonal}
-                name="timezone"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={GraduationCap}
-                label="Education"
-                value={formPersonal.education}
-                editing={editingPersonal}
-                name="education"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={BookOpen}
-                label="College"
-                value={formPersonal.college}
-                editing={editingPersonal}
-                name="college"
-                onChange={handlePersonalChange}
-              />
-              <FieldRow
-                icon={Briefcase}
-                label="Occupation"
-                value={formPersonal.occupation}
-                editing={editingPersonal}
-                name="occupation"
-                onChange={handlePersonalChange}
-              />
-              <div className="sm:col-span-2">
-                <FieldRow
-                  icon={FileText}
-                  label="Bio"
-                  value={formPersonal.bio}
-                  editing={editingPersonal}
-                  name="bio"
-                  onChange={handlePersonalChange}
-                />
-              </div>
-            </div>
-          </GlassCard>
-
-          {/* 5. Exam Preferences */}
-          <GlassCard className="p-8" delay={0.2}>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#4F8CFF]/10 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-[#4F8CFF]" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">
-                  Exam Preferences
-                </h3>
-              </div>
-              {editingExam ? (
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setEditingExam(false)}
-                    className="p-2 rounded-xl border border-[#E9ECF8] text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={saveExam}
-                    disabled={saving}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4F8CFF] text-white text-sm font-bold hover:bg-[#3d7ae6] transition-colors cursor-pointer disabled:opacity-50"
-                  >
-                    {saving ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Save className="w-4 h-4" />
-                    )}
-                    Save
-                  </motion.button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setEditingExam(true)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#E9ECF8] text-gray-500 text-sm font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Edit3 className="w-4 h-4" />
-                  Edit
-                </motion.button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FieldRow
-                icon={Target}
-                label="Target Exam"
-                value={formExam.target_exam}
-                editing={editingExam}
-                name="target_exam"
-                onChange={handleExamChange}
-              />
-              <FieldRow
-                icon={BookOpen}
-                label="Secondary Exam"
-                value={formExam.secondary_exam}
-                editing={editingExam}
-                name="secondary_exam"
-                onChange={handleExamChange}
-              />
-              <FieldRow
-                icon={TrendingUp}
-                label="Target Score"
-                value={formExam.target_score}
-                editing={editingExam}
-                name="target_score"
-                onChange={handleExamChange}
-                type="number"
-              />
-              <FieldRow
-                icon={Award}
-                label="Target Rank"
-                value={formExam.target_rank}
-                editing={editingExam}
-                name="target_rank"
-                onChange={handleExamChange}
-                type="number"
-              />
-              <FieldRow
-                icon={Calendar}
-                label="Target Date"
-                value={formExam.target_date}
-                editing={editingExam}
-                name="target_date"
-                onChange={handleExamChange}
-                type="date"
-              />
-              <FieldRow
-                icon={Clock}
-                label="Daily Study Goal (hrs)"
-                value={formExam.study_hours_goal}
-                editing={editingExam}
-                name="study_hours_goal"
-                onChange={handleExamChange}
-                type="number"
-              />
-            </div>
-
-            {/* Subject Tags */}
-            {(p?.weak_subjects?.length ||
-              p?.strong_subjects?.length ||
-              p?.favorite_subjects?.length) && (
-              <div className="mt-6 flex flex-col gap-4">
-                {p?.strong_subjects && p.strong_subjects.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                      Strong Subjects
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {p.strong_subjects.map((s) => (
-                        <TagPill key={s} text={s} color="#22C55E" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {p?.weak_subjects && p.weak_subjects.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                      Weak Subjects
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {p.weak_subjects.map((s) => (
-                        <TagPill key={s} text={s} color="#EF4444" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {p?.favorite_subjects && p.favorite_subjects.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                      Favorite Subjects
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {p.favorite_subjects.map((s) => (
-                        <TagPill key={s} text={s} color="#6D5DFB" />
-                      ))}
-                    </div>
-                  </div>
-                )}
+        {/* Sidebar Footer Widget - Pomodoro Timer */}
+        <div className="flex flex-col gap-6 w-full items-center">
+          <div
+            className={cn(
+              "w-full bg-neutral-50/50 border border-neutral-100 rounded-2xl p-3 flex flex-col gap-2 shadow-sm transition-all",
+              !isSidebarExpanded && "items-center"
+            )}
+          >
+            {isSidebarExpanded && (
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Pomodoro Timer</span>
+                <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
+                  {pomodoroMode === "study" ? "Focus" : "Break"}
+                </span>
               </div>
             )}
-          </GlassCard>
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════
-            6. PERFORMANCE OVERVIEW
-        ═══════════════════════════════════════════════════════ */}
-        <GlassCard className="p-8 md:p-10" delay={0.25}>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-2xl bg-[#22C55E]/10 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-[#22C55E]" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900">
-              Performance Overview
-            </h3>
-          </div>
-
-          <div className="flex flex-col lg:flex-row items-center gap-10">
-            {/* Circular Progress */}
-            <div className="flex-shrink-0">
-              <CircularProgress pct={p?.completion_pct || 0} />
-            </div>
-
-            {/* Bar Chart */}
-            <div className="flex-1 w-full">
-              <p className="text-sm font-bold text-gray-600 mb-4">
-                Weekly Progress
-              </p>
-              <div className="flex items-end gap-3 h-40">
-                {weeklyBarData.map((val, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 flex flex-col items-center gap-2"
-                  >
-                    <motion.div
-                      className="w-full rounded-xl bg-gradient-to-t from-[#6D5DFB] to-[#4F8CFF]"
-                      initial={{ height: 0 }}
-                      animate={{ height: `${(val / maxBar) * 100}%` }}
-                      transition={{ duration: 0.8, delay: 0.3 + i * 0.08 }}
-                      style={{ minHeight: 8 }}
-                    />
-                    <span className="text-[10px] font-semibold text-gray-400">
-                      {dayLabels[i]}
-                    </span>
-                  </div>
-                ))}
+            <div className={cn("flex items-center gap-2.5", !isSidebarExpanded && "flex-col")}>
+              <span className="text-xs font-black text-indigo-600 tabular-nums font-mono">
+                {formatPomodoroTime(pomodoroTime)}
+              </span>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => setPomodoroActive((a) => !a)}
+                  className="p-1 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-colors cursor-pointer border-0"
+                >
+                  {pomodoroActive ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  onClick={() => {
+                    setPomodoroActive(false);
+                    setPomodoroTime(pomodoroMode === "study" ? 25 * 60 : 5 * 60);
+                  }}
+                  className="p-1 bg-neutral-200 text-neutral-600 hover:bg-neutral-300 rounded-lg transition-colors cursor-pointer border-0"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
-
-            {/* Compact Stats */}
-            <div className="flex flex-row lg:flex-col gap-6 flex-shrink-0">
-              {[
-                {
-                  label: "Accuracy",
-                  value: `${p?.accuracy || 0}%`,
-                  icon: Target,
-                  color: "#22C55E",
-                },
-                {
-                  label: "Solved",
-                  value: String(p?.questions_solved || 0),
-                  icon: Brain,
-                  color: "#6D5DFB",
-                },
-                {
-                  label: "Study Time",
-                  value: `${p?.study_hours_total || 0}h`,
-                  icon: Clock,
-                  color: "#4F8CFF",
-                },
-                {
-                  label: "Growth",
-                  value: "+12%",
-                  icon: TrendingUp,
-                  color: "#22C55E",
-                },
-              ].map((stat) => (
-                <div key={stat.label} className="flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${stat.color}14` }}
-                  >
-                    <stat.icon
-                      className="w-4 h-4"
-                      style={{ color: stat.color }}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-medium text-gray-400">
-                      {stat.label}
-                    </p>
-                    <p className="text-sm font-extrabold text-gray-900">
-                      {stat.value}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        </GlassCard>
 
-        {/* ═══════════════════════════════════════════════════════
-            7. ACHIEVEMENTS
-        ═══════════════════════════════════════════════════════ */}
-        <GlassCard className="p-8 md:p-10" delay={0.3}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-amber-500" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900">Achievements</h3>
-            {p?.achievements && (
-              <span className="ml-2 px-2.5 py-0.5 rounded-full bg-[#F4F5FA] text-xs font-bold text-gray-500">
-                {p.achievements.length} earned
+          {/* Reset/Refresh button */}
+          <div className="relative group w-full">
+            <button
+              onClick={() => {
+                loadProfile();
+                toast("Profile data reloaded from system", "success");
+              }}
+              className={cn(
+                "w-full flex items-center gap-3.5 p-3 text-neutral-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all cursor-pointer border-0 bg-transparent text-left",
+                !isSidebarExpanded && "justify-center"
+              )}
+            >
+              <RefreshCw className="w-5 h-5 flex-shrink-0" />
+              {isSidebarExpanded && <span className="text-xs font-semibold">Reset / Refresh data</span>}
+            </button>
+            {!isSidebarExpanded && (
+              <span className="absolute left-24 top-3 px-2 py-1 text-[10px] font-extrabold text-white bg-neutral-900 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+                Reload system data
               </span>
             )}
           </div>
-
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
-            {(
-              p?.achievements || [
-                "Top Performer",
-                "Mock Master",
-                "Consistency King",
-                "Early Bird",
-                "Elite Learner",
-              ]
-            ).map((title) => (
-              <AchievementBadge key={title} title={title} />
-            ))}
-          </div>
-        </GlassCard>
-
-        {/* ═══════════════════════════════════════════════════════
-            8 & 9. SUBSCRIPTION + SECURITY (Two column)
-        ═══════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 8. Subscription */}
-          <GlassCard className="p-8" delay={0.35}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[#9B5CFF]/10 flex items-center justify-center">
-                <CreditCard className="w-5 h-5 text-[#9B5CFF]" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Subscription</h3>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-[#6D5DFB]/5 to-[#9B5CFF]/5 border border-[#E9ECF8]">
-                <div>
-                  <p className="text-sm font-bold text-gray-900">
-                    {p?.plan || "Free"} Plan
-                  </p>
-                  <p className="text-xs text-gray-500 font-medium">
-                    Renews {formatDate(p?.plan_renewal || "")}
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#6D5DFB] to-[#9B5CFF] text-white text-[10px] font-bold uppercase">
-                  Active
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-500">
-                  AI Credits Remaining
-                </span>
-                <span className="text-sm font-extrabold text-gray-900">
-                  {p?.ai_credits || 0}
-                </span>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-500 flex items-center gap-1.5">
-                    <HardDrive className="w-4 h-4" />
-                    Storage Used
-                  </span>
-                  <span className="text-sm font-bold text-gray-700">
-                    {p?.storage_used_mb || 0} MB / 5000 MB
-                  </span>
-                </div>
-                <div className="h-2.5 rounded-full bg-[#F4F5FA] overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-[#6D5DFB] to-[#4F8CFF]"
-                    initial={{ width: 0 }}
-                    animate={{
-                      width: `${Math.min(
-                        ((p?.storage_used_mb || 0) / 5000) * 100,
-                        100
-                      )}%`,
-                    }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                  />
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#6D5DFB] to-[#9B5CFF] text-white text-sm font-bold shadow-md shadow-[#6D5DFB]/20 hover:shadow-lg hover:shadow-[#6D5DFB]/30 transition-shadow cursor-pointer"
-              >
-                <ArrowUpRight className="w-4 h-4" />
-                Upgrade Plan
-              </motion.button>
-            </div>
-          </GlassCard>
-
-          {/* 9. Security */}
-          <GlassCard className="p-8" delay={0.4}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[#22C55E]/10 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#22C55E]" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Security</h3>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              {/* Security Score */}
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-[#F4F5FA] border border-[#E9ECF8]">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-lg text-white"
-                    style={{
-                      backgroundColor:
-                        (p?.security_score || 0) >= 80
-                          ? "#22C55E"
-                          : (p?.security_score || 0) >= 50
-                            ? "#F59E0B"
-                            : "#EF4444",
-                    }}
-                  >
-                    {p?.security_score || 0}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">
-                      Security Score
-                    </p>
-                    <p className="text-xs text-gray-500 font-medium">
-                      {(p?.security_score || 0) >= 80
-                        ? "Excellent protection"
-                        : (p?.security_score || 0) >= 50
-                          ? "Room for improvement"
-                          : "Needs attention"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Lock className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-700">
-                      Password
-                    </p>
-                    <p className="text-xs text-gray-400 font-medium">
-                      Last changed 30 days ago
-                    </p>
-                  </div>
-                </div>
-                <button className="px-4 py-2 rounded-xl border border-[#E9ECF8] text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
-                  Change
-                </button>
-              </div>
-
-              {/* 2FA */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Smartphone className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-700">
-                      Two-Factor Auth
-                    </p>
-                    <p className="text-xs text-gray-400 font-medium">
-                      SMS-based verification
-                    </p>
-                  </div>
-                </div>
-                <div className="w-11 h-6 rounded-full bg-[#22C55E] flex items-center p-0.5 cursor-pointer">
-                  <motion.div
-                    className="w-5 h-5 rounded-full bg-white shadow-sm"
-                    animate={{ x: 20 }}
-                  />
-                </div>
-              </div>
-
-              {/* Login Activity */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Eye className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-700">
-                      Login Activity
-                    </p>
-                    <p className="text-xs text-gray-400 font-medium">
-                      {p?.connected_devices?.length || 1} active device(s)
-                    </p>
-                  </div>
-                </div>
-                <button className="px-4 py-2 rounded-xl border border-[#E9ECF8] text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
-                  View
-                </button>
-              </div>
-
-              {/* Verified badge */}
-              <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-[#22C55E]/5 border border-[#22C55E]/20">
-                <BadgeCheck className="w-5 h-5 text-[#22C55E]" />
-                <span className="text-sm font-semibold text-[#22C55E]">
-                  Email verified
-                </span>
-              </div>
-            </div>
-          </GlassCard>
         </div>
+      </aside>
 
-        {/* ═══════════════════════════════════════════════════════
-            10. STUDY HEATMAP
-        ═══════════════════════════════════════════════════════ */}
-        <GlassCard className="p-8 md:p-10" delay={0.45}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-2xl bg-[#6D5DFB]/10 flex items-center justify-center">
-              <Flame className="w-5 h-5 text-[#6D5DFB]" />
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-grow flex flex-col min-w-0">
+        {/* TOP NAVBAR CONTAINER */}
+        <header className="h-20 bg-white border-b border-[#E9ECF8] px-8 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-6 flex-grow max-w-xl">
+            {/* Go to Home (Back Button) */}
+            <button
+              onClick={() => router.push("/")}
+              className="flex items-center gap-2 text-xs font-bold text-neutral-600 hover:text-indigo-600 transition-colors border border-neutral-200/80 bg-white hover:bg-neutral-50 px-3.5 py-2 rounded-xl cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-neutral-500" />
+              <span>Go to Home</span>
+            </button>
+
+            {/* Global Search Input */}
+            <div className="relative flex-grow">
+              <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search modules, settings, target exams, achievements..."
+                className="w-full bg-neutral-50/50 border border-neutral-200 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+              />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">
-              Study Activity Heatmap
-            </h3>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {/* Day labels */}
-            <div className="flex items-center gap-6">
-              <div className="w-10 flex-shrink-0" />
-              <div className="flex-1 flex justify-between">
-                {dayLabels.map((d) => (
-                  <span
-                    key={d}
-                    className="text-[10px] font-semibold text-gray-400 w-6 text-center"
-                  >
-                    {d}
-                  </span>
-                ))}
-              </div>
+          {/* Gamified stats & User Info */}
+          <div className="flex items-center gap-4.5">
+            {/* Streak */}
+            <div className="group relative flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200/40 px-3.5 py-1.5 rounded-full font-extrabold text-xs">
+              <Flame className="w-4 h-4 fill-amber-500 text-amber-500 animate-pulse" />
+              <span>{userProfile?.streak || 0} Days</span>
             </div>
 
-            {/* Grid */}
-            {heatmapData.map((week, wi) => (
-              <div key={wi} className="flex items-center gap-6">
-                <span className="w-10 text-[10px] font-semibold text-gray-400 text-right flex-shrink-0">
-                  W{wi + 1}
-                </span>
-                <div className="flex-1 flex justify-between">
-                  {week.map((level, di) => (
-                    <HeatmapCell key={`${wi}-${di}`} level={level} />
+            {/* XP */}
+            <div className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200/40 px-3.5 py-1.5 rounded-full font-extrabold text-xs">
+              <TrendingUp className="w-4 h-4 text-indigo-600" />
+              <span>{userProfile?.xp || 0} XP</span>
+            </div>
+
+            {/* Coins */}
+            <div className="flex items-center gap-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200/40 px-3.5 py-1.5 rounded-full font-extrabold text-xs">
+              <Award className="w-4 h-4 text-yellow-600 animate-bounce" />
+              <span>{userProfile?.coins || 0} Coins</span>
+            </div>
+
+            {/* Notification Bell */}
+            <button className="p-2.5 rounded-full border border-[#E9ECF8] hover:bg-neutral-50 text-neutral-500 relative cursor-pointer bg-transparent">
+              <Bell className="w-4.5 h-4.5" />
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+
+            {/* User Dropdown / Avatar */}
+            <div className="flex items-center gap-2 border-l border-neutral-200 pl-4">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-sm cursor-pointer overflow-hidden">
+                {userProfile?.avatar_url ? (
+                  <img
+                    src={userProfile.avatar_url}
+                    alt={displayName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* PROFILE BODY */}
+        <main className="flex-grow p-8 overflow-y-auto space-y-8 bg-gradient-to-tr from-[#fbfbfe] to-[#f5f6ff]">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT / CENTER TWO-THIRD PANEL CONTAINER */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* PROFILE HERO CARD */}
+              <div className="p-6 md:p-8 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6 relative overflow-hidden">
+                <div className="relative flex-shrink-0">
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="group relative w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 text-white flex items-center justify-center font-black text-3xl shadow-lg cursor-pointer overflow-hidden"
+                  >
+                    {userProfile?.avatar_url ? (
+                      <img
+                        src={userProfile.avatar_url}
+                        alt={displayName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span>{initials}</span>
+                    )}
+                    {/* Camera / Edit Overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 text-[10px] font-bold">
+                      <Camera className="w-5.5 h-5.5 text-white" />
+                      <span>Edit</span>
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <div
+                    className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white animate-ping"
+                    title="Online Status"
+                  />
+                  <div
+                    className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white"
+                    title="Online Status"
+                  />
+                </div>
+
+                <div className="flex-grow text-center sm:text-left space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-center sm:justify-start">
+                    <h2 className="text-2xl font-black text-neutral-900 tracking-tight">{displayName}</h2>
+                    {userProfile?.plan && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black uppercase tracking-wider self-center shadow-sm">
+                        <Gem className="w-3 h-3 text-white" />
+                        {userProfile.plan} Member
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-neutral-400 font-bold">{userProfile?.email || user?.email}</p>
+                  <p className="text-xs text-neutral-500 font-semibold leading-relaxed max-w-lg">
+                    {userProfile?.bio ||
+                      "No bio added yet. Add a short description about yourself to customize your profile standing."}
+                  </p>
+                  <div className="pt-2 text-[11px] font-bold text-neutral-400 flex flex-wrap gap-x-4 gap-y-1 justify-center sm:justify-start">
+                    <span>
+                      Member Since:{" "}
+                      {userProfile?.member_since
+                        ? new Date(userProfile.member_since).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                          })
+                        : "Recently Joined"}
+                    </span>
+                    <span>•</span>
+                    <span className="text-emerald-600">Active online status enabled</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* LIVE FOCUS SESSION TIMER (STOPWATCH CARD) */}
+              <div className="p-6 md:p-8 bg-gradient-to-br from-indigo-600 to-purple-700 text-white rounded-[24px] shadow-lg relative overflow-hidden">
+                <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+                  <Clock className="w-64 h-64" />
+                </div>
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white border border-white/20 text-[10px] font-bold uppercase tracking-wider">
+                      <Clock className="w-3.5 h-3.5 animate-pulse" /> Live Focus Session Timer
+                    </span>
+                    <h3 className="text-xl font-extrabold tracking-tight">Active Learning Stopwatch</h3>
+                    <p className="text-xs text-indigo-100 max-w-md leading-relaxed">
+                      Track your live session in real-time. Finish your session to log study hours, and gain
+                      instant bonuses to your level standing!
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-center bg-white/10 border border-white/20 px-6 py-5 rounded-2xl min-w-[200px] text-center shadow-md">
+                    <span className="text-3xl font-black tracking-widest font-mono tabular-nums">
+                      {formatStopwatchTime(stopwatchTime)}
+                    </span>
+                    <span className="text-[10px] font-bold text-indigo-200 uppercase mt-2">
+                      {stopwatchActive ? "Session Running" : "Session Paused"}
+                    </span>
+
+                    <div className="flex gap-2.5 mt-4 w-full">
+                      {!stopwatchActive ? (
+                        <button
+                          onClick={() => setStopwatchActive(true)}
+                          className="flex-1 bg-white hover:bg-neutral-50 text-indigo-700 font-extrabold text-xs py-2 rounded-xl transition-all cursor-pointer border-0 shadow-sm"
+                        >
+                          Start Study Session
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setStopwatchActive(false)}
+                          className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs py-2 rounded-xl transition-all cursor-pointer border-0 shadow-sm"
+                        >
+                          Pause
+                        </button>
+                      )}
+                      <button
+                        onClick={handleFinishStopwatch}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-4 py-2 rounded-xl transition-all cursor-pointer border-0 shadow-sm"
+                      >
+                        Finish & Log
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* INTERACTIVE DAILY FOCUS CHECKLIST */}
+              <div className="p-6 md:p-8 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-neutral-100 pb-4 gap-4">
+                  <div className="space-y-1">
+                    <h3 className="font-extrabold text-neutral-900 text-base flex items-center gap-2">
+                      <Check className="w-5 h-5 text-indigo-600" /> Interactive Daily Focus Checklist
+                    </h3>
+                    <p className="text-xs text-neutral-400 font-medium">
+                      Complete all targets to secure your study habit loop and extend your active streak!
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+                      {getChecklistPercentage()}% Done
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full bg-neutral-100 h-2.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                    style={{ width: `${getChecklistPercentage()}%` }}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                  {checklist.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleToggleChecklist(item.id)}
+                      className={cn(
+                        "flex items-center gap-3 p-3.5 rounded-xl border transition-all cursor-pointer select-none",
+                        item.done
+                          ? "bg-indigo-50/40 border-indigo-100 text-neutral-400"
+                          : "bg-neutral-50 hover:bg-neutral-100/50 border-neutral-200/80 text-neutral-700 hover:border-neutral-300"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "w-5 h-5 rounded-md border flex items-center justify-center transition-all",
+                          item.done ? "bg-indigo-600 border-indigo-600 text-white" : "border-neutral-300 bg-white"
+                        )}
+                      >
+                        {item.done && <Check className="w-3.5 h-3.5" />}
+                      </div>
+                      <span className={cn("text-xs font-bold", item.done && "line-through")}>
+                        {item.label}
+                      </span>
+                    </div>
                   ))}
                 </div>
               </div>
-            ))}
 
-            {/* Legend */}
-            <div className="flex items-center gap-4 mt-2 justify-end">
-              <span className="text-[10px] font-semibold text-gray-400">
-                Less
-              </span>
-              {[0, 1, 2, 3, 4].map((l) => (
-                <div
-                  key={l}
-                  className="w-4 h-4 rounded"
-                  style={{
-                    backgroundColor: [
-                      "#EBEDF0",
-                      "#D6CBFF",
-                      "#B09EFF",
-                      "#8A75FF",
-                      "#6D5DFB",
-                    ][l],
-                  }}
-                />
-              ))}
-              <span className="text-[10px] font-semibold text-gray-400">
-                More
-              </span>
+              {/* PERSONAL INFORMATION CARD (EDITABLE FORM) */}
+              <div className="p-6 md:p-8 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-6">
+                <div className="flex justify-between items-center border-b border-neutral-100 pb-4">
+                  <h3 className="font-extrabold text-neutral-900 text-base flex items-center gap-2">
+                    <User className="w-5 h-5 text-indigo-600" /> Personal Information
+                  </h3>
+                  {!editingPersonal ? (
+                    <button
+                      onClick={() => setEditingPersonal(true)}
+                      className="px-4 py-2 border border-neutral-200 hover:bg-neutral-50 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Edit Information
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setEditingPersonal(false)}
+                        className="px-3 py-1.5 border border-neutral-200 hover:bg-neutral-50 rounded-lg text-xs font-bold transition-all cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleSaveSettings}
+                        disabled={savingProfile}
+                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {savingProfile ? "Saving..." : "Save Details"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Full Name</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.name}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, name: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Phone</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.phone}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, phone: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Location</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.location}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, location: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Date of Birth</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.dob}
+                      placeholder="YYYY-MM-DD"
+                      onChange={(e) => setFormPersonal({ ...formPersonal, dob: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Education Level</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.education}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, education: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Occupation</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.occupation}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, occupation: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/55 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">College / Institution</label>
+                    <input
+                      type="text"
+                      disabled={!editingPersonal}
+                      value={formPersonal.college}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, college: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Personal Bio</label>
+                    <textarea
+                      disabled={!editingPersonal}
+                      value={formPersonal.bio}
+                      rows={3}
+                      onChange={(e) => setFormPersonal({ ...formPersonal, bio: e.target.value })}
+                      className="w-full bg-neutral-50 disabled:bg-neutral-100/50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all font-bold resize-none"
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* RIGHT SIDEBAR PANEL CONTAINER */}
+            <div className="space-y-8">
+              {/* EXAM PREFERENCES CARD */}
+              <div className="p-6 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-4">
+                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Target Preferences</span>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-neutral-50 pb-2">
+                    <span className="text-xs font-bold text-neutral-500">Target Exam</span>
+                    <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded">
+                      {userProfile?.target_exam || "Not Configured"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-neutral-50 pb-2">
+                    <span className="text-xs font-bold text-neutral-500">Target Score</span>
+                    <span className="text-xs font-black text-neutral-800">
+                      {userProfile?.target_score || "80%"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-neutral-50 pb-2">
+                    <span className="text-xs font-bold text-neutral-500">Study Pace</span>
+                    <span className="text-xs font-black text-neutral-800">
+                      {userProfile?.study_hours_goal || "3.5"} Hours / Day
+                    </span>
+                  </div>
+                </div>
+
+                {/* Favorite Subjects Tag Pills */}
+                {userProfile?.favorite_subjects && userProfile.favorite_subjects.length > 0 && (
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Favorite Subjects</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {userProfile.favorite_subjects.map((sub, i) => (
+                        <span key={i} className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+                          {sub}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Weak Subjects Tag Pills */}
+                {userProfile?.weak_subjects && userProfile.weak_subjects.length > 0 && (
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Areas of Focus</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {userProfile.weak_subjects.map((sub, i) => (
+                        <span key={i} className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full">
+                          {sub}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* PERFORMANCE CHARTS CARD */}
+              <div className="p-6 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-4">
+                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Mock Progression Scores</span>
+                
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-neutral-700">
+                      <span>Mock Average</span>
+                      <span>{userProfile?.mock_average || 72}%</span>
+                    </div>
+                    <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-indigo-600 h-full rounded-full transition-all"
+                        style={{ width: `${userProfile?.mock_average || 72}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-neutral-700">
+                      <span>Syllabus Covered</span>
+                      <span>{userProfile?.completion_pct || 64}%</span>
+                    </div>
+                    <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-emerald-600 h-full rounded-full transition-all"
+                        style={{ width: `${userProfile?.completion_pct || 64}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-neutral-700">
+                      <span>Subject Accuracy</span>
+                      <span>{userProfile?.accuracy || 81}%</span>
+                    </div>
+                    <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-amber-500 h-full rounded-full transition-all"
+                        style={{ width: `${userProfile?.accuracy || 81}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <div className="flex justify-between text-xs font-bold text-neutral-700">
+                      <span>Total Hours Studied</span>
+                      <span>{userProfile?.study_hours_total ? userProfile.study_hours_total.toFixed(2) : 0} hrs</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* REAL-TIME STUDY CALENDAR (JULY 2026) */}
+              <div className="p-6 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">July 2026 Calendar</span>
+                  <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded uppercase">
+                    Study Heatmap
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-bold text-neutral-400 pb-1">
+                  <span>Su</span>
+                  <span>Mo</span>
+                  <span>Tu</span>
+                  <span>We</span>
+                  <span>Th</span>
+                  <span>Fr</span>
+                  <span>Sa</span>
+                </div>
+
+                <div className="grid grid-cols-7 gap-1.5 justify-center">
+                  {/* Calendar Padding Cells */}
+                  {Array.from({ length: calendarPadding }).map((_, i) => (
+                    <div key={`pad-${i}`} className="w-8 h-8 bg-transparent" />
+                  ))}
+
+                  {/* Calendar Day Blocks */}
+                  {Array.from({ length: daysInJuly }).map((_, i) => {
+                    const day = i + 1;
+                    const hours = getDayTotalHours(day);
+                    const isSelected = selectedDay === day;
+                    return (
+                      <div
+                        key={`day-${day}`}
+                        onClick={() => {
+                          setSelectedDay(day);
+                          // Reset input states when opening day log
+                          setEditingLogId(null);
+                          setLogSubject("");
+                          setLogHours(1);
+                          setLogMode("Mock Test");
+                        }}
+                        className={cn(
+                          "w-8 h-8 rounded-lg transition-all border flex items-center justify-center text-[10px] font-bold cursor-pointer hover:scale-105 select-none relative",
+                          getDayIntensityColor(day),
+                          isSelected ? "ring-2 ring-indigo-500 scale-105 border-indigo-600" : "border-neutral-200/50"
+                        )}
+                        title={`July ${day}, 2026: ${hours} study hours`}
+                      >
+                        <span>{day}</span>
+                        {hours > 0 && (
+                          <span className="absolute bottom-0.5 right-0.5 w-1.5 h-1.5 bg-rose-500 rounded-full" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex justify-between items-center text-[9px] font-bold text-neutral-400 pt-2 border-t border-neutral-100">
+                  <span>Less Active</span>
+                  <div className="flex gap-1">
+                    <span className="w-2.5 h-2.5 bg-neutral-100 rounded border border-neutral-200/40"></span>
+                    <span className="w-2.5 h-2.5 bg-indigo-100 rounded border border-indigo-200/40"></span>
+                    <span className="w-2.5 h-2.5 bg-indigo-300 rounded border border-indigo-300/40"></span>
+                    <span className="w-2.5 h-2.5 bg-indigo-600 rounded border border-indigo-600/40"></span>
+                  </div>
+                  <span>High Sprint</span>
+                </div>
+              </div>
+
+              {/* INTERACTIVE CALENDAR STUDY LOG SUB-CARD / MODAL */}
+              {selectedDay !== null && (
+                <div className="p-6 bg-white border border-[#E9ECF8] rounded-[24px] shadow-md space-y-4 animate-fade-in relative">
+                  <button
+                    onClick={() => setSelectedDay(null)}
+                    className="absolute top-4 right-4 p-1 rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 border-0 bg-transparent cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+
+                  <h3 className="font-extrabold text-neutral-900 text-sm text-left">
+                    Study Logs: July {selectedDay}, 2026
+                  </h3>
+
+                  {/* Display total day hours */}
+                  <div className="text-[11px] font-bold text-neutral-500 text-left">
+                    Total Hours for this day:{" "}
+                    <span className="text-indigo-600">{getDayTotalHours(selectedDay)} hrs</span>
+                  </div>
+
+                  {/* List of current logs for the day */}
+                  <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                    {studyLogs.filter((log) => log.day === selectedDay).length === 0 ? (
+                      <p className="text-[10px] text-neutral-400 italic text-left">No study logs tracked for today.</p>
+                    ) : (
+                      studyLogs
+                        .filter((log) => log.day === selectedDay)
+                        .map((log) => (
+                          <div
+                            key={log.id}
+                            className="flex items-center justify-between p-2.5 bg-neutral-50 rounded-xl border border-neutral-100"
+                          >
+                            <div className="space-y-0.5 text-left">
+                              <span className="block text-xs font-black text-neutral-800">{log.subject}</span>
+                              <div className="flex gap-2 text-[9px] font-bold text-neutral-400">
+                                <span>{log.mode}</span>
+                                <span>•</span>
+                                <span className="text-indigo-600">{log.hours} hours</span>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-1.5 shrink-0">
+                              <button
+                                onClick={() => handleEditLogStart(log)}
+                                className="p-1 hover:bg-indigo-50 hover:text-indigo-600 text-neutral-400 rounded transition-colors cursor-pointer border-0 bg-transparent"
+                              >
+                                <Settings className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLog(log.id)}
+                                className="p-1 hover:bg-rose-50 hover:text-rose-600 text-neutral-400 rounded transition-colors cursor-pointer border-0 bg-transparent"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                    )}
+                  </div>
+
+                  {/* Save Log Form */}
+                  <form onSubmit={handleSaveStudyLog} className="space-y-3 pt-3 border-t border-neutral-100 text-left">
+                    <span className="text-[10px] font-black text-neutral-400 uppercase tracking-wider block">
+                      {editingLogId ? "Edit Study Log" : "Add Study Log"}
+                    </span>
+
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-neutral-500 uppercase">Subject Name</label>
+                      <input
+                        type="text"
+                        value={logSubject}
+                        onChange={(e) => setLogSubject(e.target.value)}
+                        placeholder="e.g. Quantitative Formulas"
+                        className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-neutral-500 uppercase">Hours Studied</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0.1"
+                          max="24"
+                          value={logHours}
+                          onChange={(e) => setLogHours(parseFloat(e.target.value) || 0)}
+                          className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-neutral-500 uppercase">Study Mode</label>
+                        <select
+                          value={logMode}
+                          onChange={(e) => setLogMode(e.target.value as "Mock Test" | "Reading" | "Notes")}
+                          className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500"
+                        >
+                          <option value="Mock Test">Mock Test</option>
+                          <option value="Reading">Reading</option>
+                          <option value="Notes">Notes</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="submit"
+                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 rounded-lg transition-colors cursor-pointer border-0"
+                      >
+                        {editingLogId ? "Update Log" : "Save Log"}
+                      </button>
+                      {editingLogId && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingLogId(null);
+                            setLogSubject("");
+                            setLogHours(1);
+                            setLogMode("Mock Test");
+                          }}
+                          className="px-3 border border-neutral-200 hover:bg-neutral-50 text-neutral-600 rounded-lg text-xs font-bold cursor-pointer transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </form>
+                </div>
+              )}
             </div>
           </div>
-        </GlassCard>
 
-        {/* Footer spacing */}
-        <div className="h-8" />
+          <div className="h-8" />
+        </main>
       </div>
-    </main>
+    </div>
   );
 }

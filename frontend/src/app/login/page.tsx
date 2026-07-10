@@ -346,7 +346,7 @@ export default function LoginPage() {
           email: emailForVerification,
         });
         setTimeout(() => {
-          router.push("/");
+          router.push("/dashboard");
         }, 1200);
       } else {
         setAuthError(result.detail || "Invalid OTP code. Please try again.");

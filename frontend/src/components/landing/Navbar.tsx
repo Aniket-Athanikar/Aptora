@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import GlowButton from "../ui/GlowButton";
@@ -31,15 +31,41 @@ const formatDisplayName = (name: string) => {
   return clean || name;
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, login, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(pathname || "/");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Sync profile details (such as avatar_url) from DB to Navbar
+  useEffect(() => {
+    if (isAuthenticated && user?.email && !user.avatar) {
+      const syncProfile = async () => {
+        try {
+          const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.profile) {
+              login({
+                name: data.profile.name || user.name,
+                email: user.email,
+                avatar: data.profile.avatar_url || ""
+              });
+            }
+          }
+        } catch (err) {
+          console.error("Error syncing profile to navbar:", err);
+        }
+      };
+      syncProfile();
+    }
+  }, [isAuthenticated, user?.email, user?.avatar, login, user?.name]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,6 +93,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
+    // ...(isAuthenticated ? [{ name: "Dashboard", href: "/dashboard" }] : []),
     { name: "Features", href: "/features" },
     { name: "Exams", href: "/exams" },
     { name: "Pricing", href: "/pricing" },
@@ -152,13 +179,21 @@ export default function Navbar() {
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-[#ECECEC] bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
               >
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#ECECEC]">
-                  <Image
-                    src={getAvatarUrl(user.name)}
-                    alt={user.name}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#ECECEC] flex items-center justify-center bg-neutral-100">
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={getAvatarUrl(user.name)}
+                      alt={user.name}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <span className="text-sm font-bold text-neutral-800 max-w-[120px] truncate">
                   {formatDisplayName(user.name)}
@@ -189,6 +224,12 @@ export default function Navbar() {
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer"
                       >
                         <User className="w-4 h-4 text-neutral-400" /> MY PROFILE
+                      </button>
+                      <button
+                        onClick={() => { setUserMenuOpen(false); router.push("/dashboard"); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer"
+                      >
+                        <Compass className="w-4 h-4 text-neutral-400" /> MY DASHBOARD
                       </button>
                       <button
                         onClick={handleLogout}
@@ -261,13 +302,21 @@ export default function Navbar() {
           {isAuthenticated && user ? (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 px-4 py-3 bg-neutral-900/60 border border-neutral-800 rounded-xl">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-neutral-800">
-                  <Image
-                    src={getAvatarUrl(user.name)}
-                    alt={user.name}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-neutral-800 flex items-center justify-center bg-neutral-900">
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={getAvatarUrl(user.name)}
+                      alt={user.name}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">{formatDisplayName(user.name)}</p>

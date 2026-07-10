@@ -254,7 +254,7 @@ class UserProfileDb(Base):
     college = Column(String(150), default="")
     occupation = Column(String(100), default="")
     bio = Column(Text, default="")
-    avatar_url = Column(String(300), default="")
+    avatar_url = Column(Text, default="")
     # Gamification
     xp = Column(Integer, default=0)
     coins = Column(Integer, default=0)
@@ -486,15 +486,16 @@ async def auth_signup(payload: SignupPayload, response: Response, db: Session = 
     # Check if email is already registered
     existing_user = db.query(UserDb).filter(UserDb.email == payload.email).first()
     if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email address already registered."
-        )
-
-    # Create new user record
-    new_user = UserDb(name=payload.name, email=payload.email, password=payload.password)
-    db.add(new_user)
-    db.commit()
+        # If it was an auto-registered user, let them complete signup with their real name and password
+        existing_user.name = payload.name
+        existing_user.password = payload.password
+        db.commit()
+        db.refresh(existing_user)
+    else:
+        # Create new user record
+        new_user = UserDb(name=payload.name, email=payload.email, password=payload.password)
+        db.add(new_user)
+        db.commit()
 
     # Generate random 6-digit OTP
     otp_code = str(random.randint(100000, 999999))
@@ -678,6 +679,7 @@ class ProfileResponse(BaseModel):
     profile: dict
 
 class ProfileUpdatePayload(BaseModel):
+    name: Optional[str] = None
     phone: Optional[str] = None
     dob: Optional[str] = None
     gender: Optional[str] = None
@@ -781,11 +783,13 @@ async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session 
         db.refresh(profile)
 
     update_data = payload.dict(exclude_unset=True)
+    if "name" in update_data:
+        user.name = update_data["name"]
+        
     for key, value in update_data.items():
         if hasattr(profile, key):
             setattr(profile, key, value)
 
-    # Also update user name if provided via social_links or other context
     db.commit()
     db.refresh(profile)
 
