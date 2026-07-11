@@ -28,7 +28,7 @@ interface Exam {
   name: string;
   subtitle: string;
   category: string;
-  icon: any;
+  icon: React.ElementType<{ className?: string }>;
   color: string;
   bgColor: string;
   borderColor: string;

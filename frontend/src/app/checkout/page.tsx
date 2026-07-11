@@ -264,7 +264,7 @@ export default function CheckoutPage() {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setPaymentMethod(tab.id as any)}
+                      onClick={() => setPaymentMethod(tab.id as "phonepe" | "netbanking" | "cod")}
                       className={`py-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-xs font-black transition-all cursor-pointer ${
                         paymentMethod === tab.id
                           ? "bg-white border-[#6D4AFF] shadow-sm text-neutral-900 ring-2 ring-[#6D4AFF]/10"
@@ -329,7 +329,7 @@ export default function CheckoutPage() {
                                 key={app}
                                 type="button"
                                 onClick={() => {
-                                  setSelectedUpiApp(app as any);
+                                  setSelectedUpiApp(app as "phonepe" | "gpay" | "paytm");
                                   setUpiId(app === "phonepe" ? "user@ybl" : app === "gpay" ? "user@okaxis" : "user@paytm");
                                 }}
                                 className={`flex-1 py-2 border rounded-lg text-xs font-bold capitalize cursor-pointer transition-all ${

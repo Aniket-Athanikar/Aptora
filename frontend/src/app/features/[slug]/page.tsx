@@ -31,7 +31,7 @@ import GlowButton from "@/components/ui/GlowButton";
 const modulesData: Record<string, {
     num: string;
     title: string;
-    icon: any;
+    icon: React.ElementType<{ className?: string }>;
     badge: string;
     category: string;
     color: string;
