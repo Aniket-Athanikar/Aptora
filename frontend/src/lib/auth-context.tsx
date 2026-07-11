@@ -42,7 +42,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("ef_user", JSON.stringify(userData));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    try {
+      await fetch(`${API_URL}/api/auth/logout`, { method: "POST" });
+    } catch (e) {
+      console.warn("Could not sync logout state to backend server:", e);
+    }
     setUser(null);
     localStorage.removeItem("ef_user");
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -25,7 +25,6 @@ import * as z from "zod";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import ParticleBackground from "../../components/three/ParticleBackground";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import GlassCard from "../../components/ui/GlassCard";
@@ -139,7 +138,21 @@ const getPasswordStrength = (pass: string) => {
 // ─── Page Component ─────────────────────────────────────────────────
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const { login, isAuthenticated } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isAuthenticated) {
+      router.push(redirectTo);
+    }
+  }, [mounted, isAuthenticated, redirectTo, router]);
+
   const [step, setStep] = useState<AuthStep>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -346,7 +359,7 @@ export default function LoginPage() {
           email: emailForVerification,
         });
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push(redirectTo);
         }, 1200);
       } else {
         setAuthError(result.detail || "Invalid OTP code. Please try again.");
@@ -464,12 +477,10 @@ export default function LoginPage() {
   // ═══════════════════════════════════════════════════════════════════
   return (
     <main className="relative min-h-screen bg-white text-neutral-900 overflow-hidden font-sans flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <ParticleBackground />
-
-      {/* Three.js hero */}
-      <div className="absolute inset-0 pointer-events-none z-[1]">
-        <ThreeHero />
-      </div>
+      {/* Premium Clean Background Pattern (Dot Pattern & Soft Ambient Glows) */}
+      <div className="absolute inset-0 bg-dot-pattern bg-radial-gradient z-0 opacity-80" />
+      <div className="absolute top-[10%] left-[20%] w-[350px] h-[350px] bg-[#6D4AFF]/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[20%] w-[350px] h-[350px] bg-[#8B5CF6]/5 rounded-full filter blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-[460px]">
         <AnimatePresence mode="wait">

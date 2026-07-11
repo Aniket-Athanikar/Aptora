@@ -7,6 +7,7 @@ import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import GlowButton from "@/components/ui/GlowButton";
+import { useAuth } from "@/lib/auth-context";
 
 // High-Performance 3D Tilt Wrapper
 function PricingTiltCard({ children, className, isPopular }: { children: React.ReactNode; className?: string; isPopular?: boolean }) {
@@ -52,6 +53,7 @@ function PricingTiltCard({ children, className, isPopular }: { children: React.R
 }
 
 export default function PricingPage() {
+  const { isAuthenticated } = useAuth();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
 
   const plans = [
@@ -237,7 +239,13 @@ export default function PricingPage() {
                   </div>
 
                   <div style={{ transform: "translateZ(25px)" }} className="mt-auto pt-2">
-                    <Link href={`/login?plan=${plan.name.toLowerCase()}`}>
+                    <Link
+                      href={
+                        isAuthenticated
+                          ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}`
+                          : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}`
+                      }
+                    >
                       <GlowButton
                         variant={plan.popular ? "gradient" : "outline"}
                         className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-[#6D4AFF]/20 hover:shadow-[#6D4AFF]/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}

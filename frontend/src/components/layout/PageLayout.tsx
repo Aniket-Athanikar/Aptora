@@ -5,7 +5,6 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
-import ParticleBackground from "@/components/three/ParticleBackground";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -17,9 +16,11 @@ interface PageLayoutProps {
 export default function PageLayout({ children, title, description, breadcrumb }: PageLayoutProps) {
   return (
     <div className="relative min-h-screen bg-white text-neutral-900 overflow-x-hidden font-sans">
-      {/* Fixed background */}
+      {/* Premium Clean Background Pattern (Dot Pattern & Soft Ambient Glows) */}
+      <div className="absolute inset-0 bg-dot-pattern bg-radial-gradient z-0 opacity-80" />
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <ParticleBackground />
+        <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-[#6D4AFF]/5 rounded-full filter blur-[120px]" />
+        <div className="absolute bottom-[25%] right-[10%] w-[500px] h-[500px] bg-[#8B5CF6]/5 rounded-full filter blur-[120px]" />
       </div>
 
       {/* Navbar */}

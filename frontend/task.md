@@ -1,0 +1,10 @@
+- [x] Add `ContactDb` and `NewsletterDb` SQLAlchemy database models to `backend/app/main.py`.
+- [x] Connect transaction recording and email notification dispatches inside `/api/contact` and `/api/newsletter/subscribe` in `backend/app/main.py`.
+- [x] Add admin CRUD list/delete endpoints in `backend/app/main.py`.
+- [x] Generate and apply Alembic database schema migrations.
+- [x] Connect contact form submit handlers in `frontend/src/app/contact/page.tsx`.
+- [x] Connect newsletter form submit handlers in `frontend/src/components/landing/Footer.tsx`.
+- [x] Replace fictional help@examforge.ai support email addresses with active agentforge29@gmail.com.
+- [x] Implement invoice billing PUT/DELETE endpoints in `backend/app/main.py` and connect inline CRUD options sorted by date in the `/profile` dashboard.
+- [x] Verify compile checks.
+- [x] Update walkthrough.md.

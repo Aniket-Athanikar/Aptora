@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Sparkles,
   Calendar,
@@ -24,6 +25,7 @@ import {
   Clock,
   Check,
   Trash2,
+  Edit,
   X,
   Layers,
   Trophy,
@@ -143,6 +145,84 @@ export default function ProfilePage() {
     avatar_url: "",
   });
 
+  interface OrderHistoryItem {
+    id: number;
+    plan_name: string;
+    cycle: string;
+    amount: string;
+    txn_id: string;
+    created_at: string;
+  }
+
+  const [billingHistory, setBillingHistory] = useState<OrderHistoryItem[]>([]);
+
+  // Editing state for invoices
+  const [editingOrder, setEditingOrder] = useState<OrderHistoryItem | null>(null);
+  const [editPlanName, setEditPlanName] = useState("");
+  const [editCycle, setEditCycle] = useState("");
+  const [editAmount, setEditAmount] = useState("");
+  const [editTxnId, setEditTxnId] = useState("");
+
+  const handleEditClick = (order: OrderHistoryItem) => {
+    setEditingOrder(order);
+    setEditPlanName(order.plan_name);
+    setEditCycle(order.cycle);
+    setEditAmount(order.amount);
+    setEditTxnId(order.txn_id);
+  };
+
+  const handleSaveOrderEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingOrder) return;
+    try {
+      const res = await fetch(`${API_URL}/api/billing/orders/${editingOrder.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan_name: editPlanName,
+          cycle: editCycle,
+          amount: editAmount,
+          txn_id: editTxnId,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.order) {
+          toast("Invoice details updated successfully!", "success");
+          setBillingHistory((prev) =>
+            prev.map((item) => (item.id === editingOrder.id ? data.order : item))
+          );
+          setEditingOrder(null);
+        } else {
+          toast("Failed to save invoice changes.", "error");
+        }
+      } else {
+        toast("Server rejected invoice changes.", "error");
+      }
+    } catch (err) {
+      console.error("Error editing invoice:", err);
+      toast("Could not connect to the server.", "error");
+    }
+  };
+
+  const handleDeleteOrder = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this invoice record from the database?")) return;
+    try {
+      const res = await fetch(`${API_URL}/api/billing/orders/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        toast("Invoice deleted successfully!", "success");
+        setBillingHistory((prev) => prev.filter((item) => item.id !== id));
+      } else {
+        toast("Failed to delete invoice.", "error");
+      }
+    } catch (err) {
+      console.error("Error deleting invoice:", err);
+      toast("Could not connect to server.", "error");
+    }
+  };
+
   // Pomodoro Widget State (Sidebar Footer)
   const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
   const [pomodoroActive, setPomodoroActive] = useState(false);
@@ -245,6 +325,27 @@ export default function ProfilePage() {
       loadProfile();
     }
   }, [authLoading, user?.email, loadProfile]);
+
+  const loadBillingHistory = useCallback(async () => {
+    if (!user?.email) return;
+    try {
+      const res = await fetch(`${API_URL}/api/billing/history?email=${encodeURIComponent(user.email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.history) {
+          setBillingHistory(data.history);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading billing history:", err);
+    }
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (!authLoading && user?.email) {
+      loadBillingHistory();
+    }
+  }, [authLoading, user?.email, loadBillingHistory]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -1106,6 +1207,151 @@ export default function ProfilePage() {
                     />
                   </div>
                 </form>
+              </div>
+
+              {/* BILLING & INVOICES HISTORY CARD */}
+              <div className="p-6 md:p-8 bg-white border border-[#E9ECF8] rounded-[24px] shadow-sm space-y-6">
+                <div className="flex justify-between items-center border-b border-neutral-100 pb-4">
+                  <h3 className="font-extrabold text-neutral-900 text-base flex items-center gap-2">
+                    <Gem className="w-5 h-5 text-[#6D4AFF]" /> Billing & Invoices
+                  </h3>
+                  {userProfile?.plan && (
+                    <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider text-[9px]">
+                      Active: {userProfile.plan}
+                    </span>
+                  )}
+                </div>
+
+                {billingHistory.length === 0 ? (
+                  <div className="text-center py-6">
+                    <p className="text-xs text-neutral-400 font-bold">No past invoices recorded in database.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left border-collapse min-w-[550px]">
+                      <thead>
+                        <tr className="border-b border-neutral-100 text-[10px] font-black text-neutral-400 uppercase tracking-wider">
+                          <th className="pb-3">Date</th>
+                          <th className="pb-3">Plan Cycle</th>
+                          <th className="pb-3">Transaction ID</th>
+                          <th className="pb-3 text-right">Paid</th>
+                          <th className="pb-3 text-right">Receipt</th>
+                          <th className="pb-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {billingHistory.map((item, idx) => {
+                          const isEditing = editingOrder?.id === item.id;
+                          return (
+                            <tr key={idx} className="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/50 transition-colors">
+                              <td className="py-3.5 text-xs text-neutral-600 font-bold">
+                                {new Date(item.created_at).toLocaleDateString("en-IN", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric"
+                                })}
+                              </td>
+                              <td className="py-3.5 text-xs text-neutral-800 font-black capitalize">
+                                {isEditing ? (
+                                  <div className="flex flex-col gap-1">
+                                    <input
+                                      type="text"
+                                      value={editPlanName}
+                                      onChange={(e) => setEditPlanName(e.target.value)}
+                                      className="border border-neutral-200 rounded px-1.5 py-0.5 text-xs font-bold w-24"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={editCycle}
+                                      onChange={(e) => setEditCycle(e.target.value)}
+                                      className="border border-neutral-200 rounded px-1.5 py-0.5 text-[9px] font-bold text-[#6D4AFF] w-24"
+                                    />
+                                  </div>
+                                ) : (
+                                  <>
+                                    {item.plan_name}
+                                    <span className="block text-[9px] text-[#6D4AFF] font-bold uppercase tracking-wider">{item.cycle}</span>
+                                  </>
+                                )}
+                              </td>
+                              <td className="py-3.5 text-xs text-neutral-500 font-mono">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    value={editTxnId}
+                                    onChange={(e) => setEditTxnId(e.target.value)}
+                                    className="border border-neutral-200 rounded px-1.5 py-0.5 text-xs font-mono w-32"
+                                  />
+                                ) : (
+                                  item.txn_id
+                                )}
+                              </td>
+                              <td className="py-3.5 text-xs text-neutral-800 font-black text-right">
+                                {isEditing ? (
+                                  <div className="flex items-center justify-end gap-1">
+                                    <span>₹</span>
+                                    <input
+                                      type="text"
+                                      value={editAmount}
+                                      onChange={(e) => setEditAmount(e.target.value)}
+                                      className="border border-neutral-200 rounded px-1.5 py-0.5 text-xs font-black text-right w-16"
+                                    />
+                                  </div>
+                                ) : (
+                                  `₹${item.amount}`
+                                )}
+                              </td>
+                              <td className="py-3.5 text-xs text-right">
+                                <Link
+                                  href={`/checkout/invoice?plan=${item.plan_name}&cycle=${item.cycle}&amount=${item.amount}&txnId=${item.txn_id}&email=${user?.email || "user@examforge.ai"}`}
+                                  target="_blank"
+                                  className="inline-flex items-center gap-1 text-[10px] font-black text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100/50 px-2.5 py-1.5 rounded-lg transition-all"
+                                >
+                                  View Invoice
+                                </Link>
+                              </td>
+                              <td className="py-3.5 text-xs text-right">
+                                {isEditing ? (
+                                  <div className="flex justify-end gap-1.5">
+                                    <button
+                                      onClick={handleSaveOrderEdit}
+                                      className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-black transition-all cursor-pointer"
+                                    >
+                                      Save
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingOrder(null)}
+                                      className="px-2 py-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 rounded text-[10px] font-black transition-all cursor-pointer"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="flex justify-end gap-2">
+                                    <button
+                                      onClick={() => handleEditClick(item)}
+                                      className="p-1.5 hover:bg-neutral-100 rounded text-neutral-500 hover:text-indigo-600 transition-colors cursor-pointer"
+                                      title="Edit Order"
+                                    >
+                                      <Edit className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteOrder(item.id)}
+                                      className="p-1.5 hover:bg-red-50 rounded text-neutral-400 hover:text-red-600 transition-colors cursor-pointer"
+                                      title="Delete Order"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
 

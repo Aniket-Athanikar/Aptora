@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
 import GlowButton from "../ui/GlowButton";
@@ -52,7 +53,13 @@ function PricingTiltCard({ children, className, isPopular }: { children: React.R
 }
 
 export default function Pricing() {
+  const { isAuthenticated } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const plans = [
     {
@@ -258,15 +265,26 @@ export default function Pricing() {
                   </div>
 
                   <div style={{ transform: "translateZ(25px)" }} className="mt-auto pt-2">
-                    <Link href={`/login?plan=${plan.name.toLowerCase()}`}>
-                      <GlowButton
-                        variant={plan.popular ? "gradient" : "outline"}
-                        className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-[#6D4AFF]/20 hover:shadow-[#6D4AFF]/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
-                        magnetic={false}
-                      >
-                        {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}
-                      </GlowButton>
-                    </Link>
+                    {(() => {
+                      const planPrice = plan.price[billingCycle];
+                      const targetHref = !mounted
+                        ? `/login`
+                        : isAuthenticated
+                        ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}&amount=${planPrice}`
+                        : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}%26amount=${planPrice}`;
+
+                      return (
+                        <Link href={targetHref}>
+                          <GlowButton
+                            variant={plan.popular ? "gradient" : "outline"}
+                            className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-[#6D4AFF]/20 hover:shadow-[#6D4AFF]/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
+                            magnetic={false}
+                          >
+                            {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}
+                          </GlowButton>
+                        </Link>
+                      );
+                    })()}
                   </div>
                 </GlassCard>
               </PricingTiltCard>

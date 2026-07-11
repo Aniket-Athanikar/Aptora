@@ -27,9 +27,10 @@ export default function Home() {
         {/* Customized Cursor Follower ring */}
         <CursorFollower />
 
-        {/* Global Particles, Grid Layouts and Mesh Gradients */}
+        {/* Fixed Ambient Glow Highlights for Premium UI */}
         <div className="fixed inset-0 z-0 pointer-events-none">
-          <ParticleBackground />
+          <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-[#6D4AFF]/5 rounded-full filter blur-[120px]" />
+          <div className="absolute bottom-[25%] right-[10%] w-[500px] h-[500px] bg-[#8B5CF6]/5 rounded-full filter blur-[120px]" />
         </div>
 
         {/* Fixed Header */}

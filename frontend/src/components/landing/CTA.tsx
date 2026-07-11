@@ -4,10 +4,18 @@ import { motion } from "framer-motion";
 import { Sparkles, Play, Bot, BookOpen, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/ToastContext";
 
 export default function CTA() {
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <section className="py-16 md:py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden">
       {/* Reduced max-width to 1024px for a sleeker, medium-sized banner */}
@@ -83,7 +91,16 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-wrap gap-3 items-center justify-center mt-3 z-10">
-            <Link href="/login" onClick={() => toast("Redirecting to login portal...", "info")}>
+            <Link
+              href={!mounted ? "/login" : isAuthenticated ? "/dashboard" : "/login"}
+              onClick={() => {
+                if (mounted && isAuthenticated) {
+                  toast("Launching your study dashboard...", "success");
+                } else {
+                  toast("Redirecting to login portal...", "info");
+                }
+              }}
+            >
               <button className="bg-white hover:bg-neutral-50 text-neutral-900 text-sm font-bold px-6 py-3 rounded-full cursor-pointer shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
                 Start Free Now
               </button>

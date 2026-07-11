@@ -4,12 +4,18 @@ import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import Link from "next/link";
 import {
-  FileSpreadsheet,
-  Database,
-  CalendarRange,
-  GraduationCap,
-  HelpCircle,
-  LineChart
+  Key,
+  Target,
+  UploadCloud,
+  Languages,
+  Cpu,
+  BookOpen,
+  Brain,
+  ClipboardList,
+  Zap,
+  Clock,
+  MessageCircle,
+  BarChart3
 } from "lucide-react";
 import GlassCard from "../ui/GlassCard";
 import SectionHeading from "../ui/SectionHeading";
@@ -62,47 +68,89 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 export default function Features() {
   const list = [
     {
-      title: "AI Notes Generator",
-      description: "Get chapter-wise notes, summary, mindmaps & key points instantly from any book or source.",
-      icon: FileSpreadsheet,
+      title: "Secure Authentication",
+      description: "Dual OTP validation with CSRF verification and silent auto-pull interception.",
+      icon: Key,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.25)] hover:border-[#6D4AFF]/40",
       iconColor: "text-[#6D4AFF] bg-[#6D4AFF]/5 border-[#6D4AFF]/20 group-hover:bg-[#6D4AFF]/10",
     },
     {
-      title: "Question Bank",
-      description: "Unlimited MCQs, PYQs, subjective questions with deep detailed conceptual explanations.",
-      icon: Database,
+      title: "Exam Selection & Mapping",
+      description: "Custom syllabus weighting and topic mapping for UPSC, SSC, Banking, and GATE.",
+      icon: Target,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(34,197,94,0.25)] hover:border-emerald-500/40",
       iconColor: "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 group-hover:bg-emerald-500/10",
     },
+    // {
+    //   title: "Smart Book Selection",
+    //   description: "Select exam books for PDF, image, ZIP, or directory structures with version control.",
+    //   icon: UploadCloud,
+    //   glow: "hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.25)] hover:border-amber-500/40",
+    //   iconColor: "text-amber-500 bg-amber-500/5 border-amber-500/20 group-hover:bg-amber-500/10",
+    // },
     {
-      title: "Daily Practice",
-      description: "100 Questions every day based on your weak areas and actual board/exam patterns.",
-      icon: CalendarRange,
-      glow: "hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.25)] hover:border-amber-500/40",
-      iconColor: "text-amber-500 bg-amber-500/5 border-amber-500/20 group-hover:bg-amber-500/10",
-    },
-    {
-      title: "Mock Tests",
-      description: "Full-length mock tests with real-time analysis, rankings, and standard percentile scoring.",
-      icon: GraduationCap,
+      title: "Deep OCR Engine",
+      description: "Deskewing and table extraction for English, Hindi, Marathi, and mixed languages.",
+      icon: Languages,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.25)] hover:border-[#4F46E5]/40",
       iconColor: "text-[#4F46E5] bg-[#4F46E5]/5 border-[#4F46E5]/20 group-hover:bg-[#4F46E5]/10",
     },
     {
-      title: "AI Tutor",
-      description: "Ask any question from your uploaded material and get instant contextual chat explanation.",
-      icon: HelpCircle,
+      title: "Knowledge Base Processing",
+      description: "Semantic chunking and high-performance vector indexing stored in Qdrant DB.",
+      icon: Cpu,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.25)] hover:border-[#A855F7]/40",
       iconColor: "text-[#A855F7] bg-[#A855F7]/5 border-[#A855F7]/20 group-hover:bg-[#A855F7]/10",
     },
     {
-      title: "Smart Analytics",
-      description: "Daily practice tracker, accuracy maps, weak topics identification, and smart study recommendations.",
-      icon: LineChart,
+      title: "AI Study Material",
+      description: "Generate summaries, long/short notes, mindmaps, formula sheets, and flashcards.",
+      icon: BookOpen,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.25)] hover:border-pink-500/40",
       iconColor: "text-pink-500 bg-pink-500/5 border-pink-500/20 group-hover:bg-pink-500/10",
     },
+    {
+      title: "Smart Question Generator",
+      description: "Creates custom MCQs, fill-in-the-blanks, true/false, and assertion-reasoning.",
+      icon: Brain,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(14,165,233,0.25)] hover:border-sky-500/40",
+      iconColor: "text-sky-500 bg-sky-500/5 border-sky-500/20 group-hover:bg-sky-500/10",
+    },
+    {
+      title: "Daily Practice Generator",
+      description: "Personalized practice questions generated every morning based on recent mistakes.",
+      icon: ClipboardList,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.25)] hover:border-emerald-500/40",
+      iconColor: "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 group-hover:bg-emerald-500/10",
+    },
+    {
+      title: "AI Question Prediction",
+      description: "Matches books and PYQs to forecast upcoming high-probability exam topics.",
+      icon: Zap,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(234,179,8,0.25)] hover:border-yellow-500/40",
+      iconColor: "text-yellow-500 bg-yellow-500/5 border-yellow-500/20 group-hover:bg-yellow-500/10",
+    },
+    {
+      title: "Mock Test Engine",
+      description: "Simulates test timers, negative marking rules, percentiles, and live leaderboards.",
+      icon: Clock,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.25)] hover:border-indigo-500/40",
+      iconColor: "text-indigo-500 bg-indigo-500/5 border-indigo-500/20 group-hover:bg-indigo-500/10",
+    },
+    {
+      title: "AI Coach & Tutor",
+      description: "Grounded chat over your uploaded books with page-level document citations.",
+      icon: MessageCircle,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.25)] hover:border-purple-500/40",
+      iconColor: "text-purple-500 bg-purple-500/5 border-purple-500/20 group-hover:bg-purple-500/10",
+    },
+    {
+      title: "Progress Analytics",
+      description: "Streak calendar tracking, strengths heatmap, levels XP, and readiness index.",
+      icon: BarChart3,
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(244,63,94,0.25)] hover:border-rose-500/40",
+      iconColor: "text-rose-500 bg-rose-500/5 border-rose-500/20 group-hover:bg-rose-500/10",
+    }
   ];
 
   // Duplicating the array to create a seamless infinite loop for the marquee
@@ -128,7 +176,7 @@ export default function Features() {
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10 mb-12">
         <SectionHeading
           badge="Product Features"
-          title="Powerful Features to Boost Your"
+          title="Features to Boost Your"
           gradientTitle="Preparation"
           description="Everything you need in one intelligent platform to maximize your scores."
         />
@@ -146,7 +194,7 @@ export default function Features() {
           animate={{ x: ["0%", "-50%"] }}
           transition={{
             ease: "linear",
-            duration: 45, // Slow, comfortable reading speed
+            duration: 50, // Comfortable reading speed for 12 items
             repeat: Infinity
           }}
           className="flex gap-6 md:gap-8 px-4 md:px-8 w-max"

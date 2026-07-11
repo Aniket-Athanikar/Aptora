@@ -30,7 +30,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-// Exam datasets for rich dynamic details
+// Exam datasets for all 12 dynamic details keys
 const examDetailsData: Record<
   string,
   {
@@ -46,17 +46,39 @@ const examDetailsData: Record<
     syllabus: { name: string; topics: string[] }[];
   }
 > = {
-  ssc: {
+  "ssc-cgl": {
     title: "SSC CGL & CHSL Prep Center",
     description: "Master Quantitative Aptitude, English, Reasoning, and General Awareness tailored for Staff Selection Commission exams.",
     emoji: "🏛️",
-    color: "#6D4AFF",
+    color: "#EF4444",
     papers: "150+ Mock Tests",
     subjects: "4 Main Subjects",
     duration: "60-120 Mins / Paper",
     learners: "45K+ Aspirants",
     highlights: [
-      "Latest 2024 Tier 1 & Tier 2 exam patterns",
+      "Latest Tier 1 & Tier 2 exam patterns",
+      "Topic-wise daily quizzes and sectional analysis",
+      "Previous years solved question papers (2018-2023)",
+      "Speed-math tricks & formula cheat sheets",
+    ],
+    syllabus: [
+      { name: "Quantitative Aptitude", topics: ["Arithmetic", "Algebra", "Geometry", "Trigonometry", "Data Interpretation"] },
+      { name: "English Comprehension", topics: ["Grammar Rules", "Vocabulary & Idioms", "Reading Comprehension", "Cloze Test"] },
+      { name: "General Intelligence & Reasoning", topics: ["Syllogism", "Blood Relations", "Coding-Decoding", "Analogy", "Non-Verbal"] },
+      { name: "General Awareness", topics: ["History", "Polity", "Geography", "Science", "Current Affairs"] },
+    ],
+  },
+  ssc: {
+    title: "SSC CGL & CHSL Prep Center",
+    description: "Master Quantitative Aptitude, English, Reasoning, and General Awareness tailored for Staff Selection Commission exams.",
+    emoji: "🏛️",
+    color: "#EF4444",
+    papers: "150+ Mock Tests",
+    subjects: "4 Main Subjects",
+    duration: "60-120 Mins / Paper",
+    learners: "45K+ Aspirants",
+    highlights: [
+      "Latest Tier 1 & Tier 2 exam patterns",
       "Topic-wise daily quizzes and sectional analysis",
       "Previous years solved question papers (2018-2023)",
       "Speed-math tricks & formula cheat sheets",
@@ -72,7 +94,7 @@ const examDetailsData: Record<
     title: "UPSC CSE (IAS/IPS) Guidance Portal",
     description: "Deep content analytics and contextual descriptive notes for Prelims, GS Papers, and CSAT preparation.",
     emoji: "🎓",
-    color: "#4F46E5",
+    color: "#A855F7",
     papers: "200+ Essay & GS Papers",
     subjects: "12 Subjects",
     duration: "120 Mins / Prelims Paper",
@@ -94,7 +116,7 @@ const examDetailsData: Record<
     title: "State PSC Exam Preparation Hub",
     description: "State-specific general knowledge, administration, and historical mock tests tailored to regional commissions.",
     emoji: "🏢",
-    color: "#8B5CF6",
+    color: "#6366F1",
     papers: "100+ Full-Length Tests",
     subjects: "10 Core Subjects",
     duration: "120 Mins / Exam",
@@ -114,7 +136,7 @@ const examDetailsData: Record<
     title: "Defence Services Academy (NDA / CDS)",
     description: "Train for NDA, CDS, and AFCAT written examinations with focused physics, mathematics, and general English modules.",
     emoji: "🛡️",
-    color: "#22C55E",
+    color: "#F43F5E",
     papers: "80+ Practice Papers",
     subjects: "6 Subject Domains",
     duration: "150 Mins / Exam",
@@ -134,7 +156,7 @@ const examDetailsData: Record<
     title: "Banking & Insurance Officer Academy",
     description: "Speed & accuracy training for IBPS, SBI PO, and RBI Grade B prelims & mains exams.",
     emoji: "🏦",
-    color: "#F59E0B",
+    color: "#3B82F6",
     papers: "120+ Speed Mock Exams",
     subjects: "5 Main Modules",
     duration: "60-120 Mins / Paper",
@@ -151,31 +173,11 @@ const examDetailsData: Record<
       { name: "Financial Awareness", topics: ["Banking Terminology", "Economic News", "RBI Policies", "Government Schemes"] },
     ],
   },
-  teaching: {
-    title: "Teacher Eligibility Test (TET) Academy",
-    description: "Pedagogy, child development, and language courses for CTET, State TETs, and KVS recruiter tests.",
-    emoji: "👨‍🏫",
-    color: "#EC4899",
-    papers: "90+ Pedagogy Papers",
-    subjects: "4 Core Subjects",
-    duration: "150 Mins / Exam",
-    learners: "25K+ Aspirants",
-    highlights: [
-      "Child Development and Pedagogy (CDP) modules",
-      "Subject pedagogy (Maths, Science, EVS, Social Studies)",
-      "Language pedagogy and language comprehension practice",
-      "KVS & NVS previous recruitment exam solutions",
-    ],
-    syllabus: [
-      { name: "Child Development & Pedagogy", topics: ["Concept of Development", "Inclusive Education", "Learning & Pedagogy theories"] },
-      { name: "Language 1 & 2", topics: ["Language Comprehension", "Pedagogy of Language Development"] },
-    ],
-  },
-  engineering: {
-    title: "GATE & ESE Engineering Prep",
+  gate: {
+    title: "GATE Engineering Entrance Prep",
     description: "High-yield engineering mathematics, general aptitude, and branch-specific technical mocks.",
     emoji: "⚙️",
-    color: "#06B6D4",
+    color: "#0284C7",
     papers: "60+ Gate Mock Papers",
     subjects: "8 Core Branches",
     duration: "180 Mins / Exam",
@@ -191,11 +193,53 @@ const examDetailsData: Record<
       { name: "General Aptitude", topics: ["Verbal Ability", "Numerical Ability & Spatial Aptitude"] },
     ],
   },
+  cat: {
+    title: "CAT Management Entrance Hub",
+    description: "Preparation for entrance into IIMs and elite business schools with quantitative aptitude and data interpretation.",
+    emoji: "🎯",
+    color: "#7C3AED",
+    papers: "75+ Full Length CAT mocks",
+    subjects: "3 Core Sections",
+    duration: "120 Mins / Paper",
+    learners: "22K+ Aspirants",
+    highlights: [
+      "High level Quantitative Aptitude exercises",
+      "Detailed Data Interpretation & Logical Reasoning (DILR) sets",
+      "Verbal Ability & Reading Comprehension (VARC) guides",
+      "Live mock percentile estimation maps"
+    ],
+    syllabus: [
+      { name: "VARC", topics: ["Reading Comprehension", "Para Jumbles", "Paragraph Summary", "Odd-one-out"] },
+      { name: "DILR", topics: ["Seating Arrangements", "Matrix Grids", "Logical Grouping", "Charts & Graphs", "Set Theory"] },
+      { name: "Quantitative Aptitude", topics: ["Arithmetic", "Algebra", "Geometry & Mensuration", "Number Systems", "Modern Maths"] }
+    ]
+  },
+  railway: {
+    title: "Railway Recruitment Board (RRB) Prep",
+    description: "Prep modules for RRB NTPC, ALP, Group D, and other national railway service examinations.",
+    emoji: "🚆",
+    color: "#06B6D4",
+    papers: "95+ Practice Exams",
+    subjects: "4 Main Subjects",
+    duration: "90 Mins / Exam",
+    learners: "40K+ Aspirants",
+    highlights: [
+      "General Science & General Awareness compiler notes",
+      "Basic mathematics and reasoning shortcuts sheet",
+      "Sectional mock tests and speed benchmarks checks",
+      "Previous years solved question banks"
+    ],
+    syllabus: [
+      { name: "Mathematics", topics: ["Number System", "Decimals & Fractions", "Ratio & Proportion", "Percentage", "Time & Work"] },
+      { name: "General Intelligence & Reasoning", topics: ["Analogies", "Alphabetical & Number Series", "Coding & Decoding", "Mathematical Operations"] },
+      { name: "General Awareness", topics: ["Current Events", "Sports & Culture", "General Science", "History & Geography"] }
+    ]
+  },
   police: {
-    title: "Police Force Recruit Academy",
+    title: "Police Recruit Academy (SI & Constable)",
     description: "Focused preparation for Sub-Inspector (SI) and Constable written tests including physical standard guidelines.",
     emoji: "👮",
-    color: "#EF4444",
+    color: "#10B981",
     papers: "70+ Recruitment Exams",
     subjects: "5 Core Subjects",
     duration: "90-120 Mins / Paper",
@@ -211,6 +255,67 @@ const examDetailsData: Record<
       { name: "Mental Ability & Arithmetic", topics: ["Logical Diagrams", "Numerical Ability", "Coding & Analogy", "Space Visualization"] },
     ],
   },
+  "cuet-ug": {
+    title: "CUET UG (Undergraduate Admission) Hub",
+    description: "Master domain-specific subjects, general test metrics, and language comprehensions for Central Universities entrance.",
+    emoji: "📈",
+    color: "#F59E0B",
+    papers: "110+ Domain Mock sets",
+    subjects: "15 Domain Options",
+    duration: "45-60 Mins / Subject",
+    learners: "28K+ Aspirants",
+    highlights: [
+      "NCERT-grounded content summaries index",
+      "Domain specific MCQ practice tests (Physics, Chemistry, History, etc.)",
+      "General Test quant and logical reasoning exercises",
+      "Detailed English/Hindi grammar logic guidelines"
+    ],
+    syllabus: [
+      { name: "Language Test", topics: ["Reading Comprehension", "Vocabulary check", "Synonyms & Antonyms", "Literary Aptitude"] },
+      { name: "Domain Specific Subjects", topics: ["Physics NCERT topics", "Chemistry NCERT topics", "Mathematics NCERT topics", "History & Polity"] },
+      { name: "General Test", topics: ["General Knowledge", "Current Affairs", "General Mental Ability", "Numerical Ability"] }
+    ]
+  },
+  ielts: {
+    title: "IELTS Academic & General Portal",
+    description: "Comprehensive English language proficiency diagnostics testing Reading, Writing, Listening, and Speaking.",
+    emoji: "🗣️",
+    color: "#E11D48",
+    papers: "50+ Band 8-9 Mock papers",
+    subjects: "4 Core Modules",
+    duration: "165 Mins / Full Test",
+    learners: "12K+ Aspirants",
+    highlights: [
+      "AI evaluation and feedback on written essays",
+      "Realistic academic reading passages with answer keys",
+      "Listening audio mock guidelines and transcription sets",
+      "Speaking topic suggestions and sample model answers"
+    ],
+    syllabus: [
+      { name: "Reading & Writing", topics: ["Academic Reading passages", "Graph description Writing Task 1", "Opinion Essay Writing Task 2"] },
+      { name: "Listening & Speaking", topics: ["Audio comprehension quizzes", "One-on-one speaking topic templates", "Speaking cue-card notes"] }
+    ]
+  },
+  frm: {
+    title: "FRM Financial Risk Management Academy",
+    description: "Advanced quant, risk models, market calculations, and valuation mocks grounded in GARP curriculum guidelines.",
+    emoji: "🛡️",
+    color: "#059669",
+    papers: "40+ Risk valuation papers",
+    subjects: "8 Core Books",
+    duration: "240 Mins / Exam",
+    learners: "8K+ Aspirants",
+    highlights: [
+      "Value at Risk (VaR) calculation guidelines",
+      "Quantitative risk analysis equations models",
+      "Financial markets and valuation simulation tests",
+      "Ethics and risk management code practices"
+    ],
+    syllabus: [
+      { name: "FRM Part I Core", topics: ["Foundations of Risk Management", "Quantitative Analysis", "Financial Markets & Products", "Valuation Models"] },
+      { name: "FRM Part II Core", topics: ["Market Risk Measurement", "Credit Risk Measurement", "Operational Risk Management", "Investment Risk Management"] }
+    ]
+  }
 };
 
 export default function ExamDetail() {

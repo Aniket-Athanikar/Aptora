@@ -15,9 +15,11 @@ import {
   Youtube,
   Phone as WhatsAppIcon,
   ArrowRight,
+  Loader2
 } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import Link from "next/link";
+import { useToast } from "@/lib/ToastContext";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -74,6 +76,8 @@ const socialLinks = [
 ];
 
 export default function ContactPage() {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -85,9 +89,27 @@ export default function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        toast("Message sent successfully! We will get back to you shortly.", "success");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        toast("Failed to transmit message. Please try again.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      toast("Could not connect to the server.", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -202,10 +224,20 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all disabled:opacity-50"
               >
-                <Send className="w-4 h-4" />
-                Send Message
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
           </motion.div>

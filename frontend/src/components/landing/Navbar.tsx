@@ -42,6 +42,11 @@ export default function Navbar() {
   const [activeLink, setActiveLink] = useState(pathname || "/");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Sync profile details (such as avatar_url) from DB to Navbar
   useEffect(() => {
@@ -109,10 +114,10 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-4 left-4 right-4 z-[999] max-w-[1280px] md:mx-auto rounded-[24px] transition-all duration-500 border pointer-events-auto",
+        "fixed top-0 left-0 right-0 z-[999] w-full transition-all duration-500 border-b pointer-events-auto",
         scrolled
-          ? "bg-white/75 backdrop-blur-xl border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] py-2.5"
-          : "bg-white/30 backdrop-blur-md border-white/20 shadow-sm py-4"
+          ? "bg-white/80 backdrop-blur-xl border-neutral-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3"
+          : "bg-white/30 backdrop-blur-md border-neutral-200/20 shadow-none py-5"
       )}
     >
       <div className="layout-container max-w-[1320px] px-6 mx-auto flex items-center justify-between">
@@ -172,7 +177,7 @@ export default function Navbar() {
 
         {/* Right Actions */}
         <div className="hidden lg:flex items-center gap-4 mt-1">
-          {isAuthenticated && user ? (
+          {mounted && isAuthenticated && user ? (
             /* ── Logged-in User Menu ── */
             <div className="relative" ref={userMenuRef}>
               <button
@@ -299,7 +304,7 @@ export default function Navbar() {
 
           <hr className="border-neutral-900" />
 
-          {isAuthenticated && user ? (
+          {mounted && isAuthenticated && user ? (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 px-4 py-3 bg-neutral-900/60 border border-neutral-800 rounded-xl">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-neutral-800 flex items-center justify-center bg-neutral-900">

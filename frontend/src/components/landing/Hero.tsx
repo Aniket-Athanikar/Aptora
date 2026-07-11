@@ -153,14 +153,11 @@ export default function Hero() {
             <GlassCard className="relative p-6 bg-white/70 border border-white/80 rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 rounded-full blur-xl pointer-events-none" />
 
-              <div className="relative w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500">
-                <Image
+              <div className="relative w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+                <img
                   src="/ai-avatar.png"
                   alt="AI Exam Coach Avatar"
-                  width={288}
-                  height={288}
                   className="w-full h-full object-cover"
-                  priority
                 />
               </div>
 
