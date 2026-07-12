@@ -8,7 +8,7 @@ from alembic import context
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.database import Base, engine
-import app.main  # Import main to register all models on Base.metadata
+import app.models  # Import models to register all models on Base.metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

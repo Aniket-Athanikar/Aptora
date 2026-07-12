@@ -40,9 +40,6 @@ const ThreeHero = dynamic(() => import("../../components/three/ThreeHero"), {
 // ─── Validation Schemas ─────────────────────────────────────────────
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
 });
 
 const forgotSchema = z.object({
@@ -154,7 +151,7 @@ export default function LoginPage() {
   }, [mounted, isAuthenticated, redirectTo, router]);
 
   const [step, setStep] = useState<AuthStep>("login");
-  const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
@@ -268,7 +265,7 @@ export default function LoginPage() {
           "Content-Type": "application/json",
           "X-CSRF-Token": csrfToken,
         },
-        body: JSON.stringify({ email: data.email, password: data.password, skip_email: false }),
+        body: JSON.stringify({ email: data.email, skip_email: false }),
       });
       const result = await response.json();
       if (response.ok && result.success) {
@@ -533,46 +530,7 @@ export default function LoginPage() {
                     )}
                   </div>
 
-                  {/* Password */}
-                  <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                    <Input
-                      {...registerLogin("password")}
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      className="pl-10 pr-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                    {loginErrors.password && (
-                      <p className="text-[10px] text-red-500 font-bold mt-1">
-                        {loginErrors.password.message}
-                      </p>
-                    )}
-                  </div>
 
-                  {/* Forgot password link */}
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAuthError(null);
-                        setStep("forgot-password");
-                      }}
-                      className="text-[11px] font-bold text-[#6D4AFF] hover:underline cursor-pointer"
-                    >
-                      Forgot Password?
-                    </button>
-                  </div>
 
 
                   <Button

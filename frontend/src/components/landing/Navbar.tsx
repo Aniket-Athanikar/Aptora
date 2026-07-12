@@ -3,12 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, LogOut, User, ChevronDown, Compass } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import GlowButton from "../ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
+import DeleteAccountModal from "@/components/DeleteAccountModal";
 
 const getAvatarUrl = (name: string) => {
   const femaleNames = ["mrunal", "priya", "sneha", "neha", "reddy", "sharma", "puja", "pooja", "anita", "sunita", "rekha", "kiran", "chaudhari"];
@@ -43,6 +44,7 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -242,6 +244,12 @@ export default function Navbar() {
                       >
                         <LogOut className="w-4 h-4" /> LOGOUT
                       </button>
+                      <button
+                        onClick={() => { setUserMenuOpen(false); setDeleteModalOpen(true); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-neutral-100 mt-1 pt-3"
+                      >
+                        <Trash2 className="w-4 h-4" /> DELETE ACCOUNT
+                      </button>
                     </div>
                   </motion.div>
                 )}
@@ -341,6 +349,12 @@ export default function Navbar() {
               >
                 Logout
               </button>
+              <button
+                onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
+                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all cursor-pointer text-sm"
+              >
+                Delete Account
+              </button>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
@@ -365,6 +379,9 @@ export default function Navbar() {
 
       {/* Glowing Bottom Border of the capsule */}
       <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_12px_2px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
+
+      {/* Delete Account Modal */}
+      <DeleteAccountModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} />
     </header>
   );
 }

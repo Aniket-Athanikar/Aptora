@@ -24,10 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased overflow-x-hidden`}>
         <AuthProvider>
           <ToastProvider>
-            {children}
+            <div className="relative w-full">
+              {children}
+            </div>
           </ToastProvider>
         </AuthProvider>
       </body>

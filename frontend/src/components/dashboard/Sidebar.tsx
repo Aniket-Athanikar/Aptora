@@ -110,6 +110,23 @@ export const Sidebar: React.FC = () => {
             );
           })}
         </nav>
+
+        {/* Logout Button */}
+        <div className="pt-4 mt-4 border-t border-[#E9ECF8] w-full">
+          <button
+            onClick={async () => {
+              await logout();
+              router.push("/login");
+            }}
+            className={cn(
+              "w-full flex items-center gap-3.5 p-3 rounded-xl transition-all duration-200 cursor-pointer border-0 text-left hover:scale-[1.03]",
+              "text-red-500 hover:bg-red-50 hover:text-red-600 font-medium"
+            )}
+          >
+            <LogOut className="w-5 h-5 flex-shrink-0" />
+            {isSidebarExpanded && <span className="text-sm font-semibold">Logout</span>}
+          </button>
+        </div>
       </div>
     </aside>
   );
