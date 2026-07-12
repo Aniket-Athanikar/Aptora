@@ -7,7 +7,8 @@ from alembic import context
 # Add root folder path to import App modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.database import Base, engine
+from app.db.base import Base
+from app.db.session import engine
 import app.models  # Import models to register all models on Base.metadata
 
 # this is the Alembic Config object, which provides

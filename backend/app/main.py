@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 # Load database connections and Base metadata
-from app.database import Base, engine, redis_client, qdrant_client
+from app.db import Base, engine, redis_client, qdrant_client
 # Import models to ensure they register on Base.metadata before create_all
 import app.models
 
@@ -42,16 +42,9 @@ if engine:
     except Exception as e:
         logger.error(f"Error creating database tables: {e}")
 
-# Include routers
-from app.routers import auth, profile, billing, newsletter, admin, contact, account
-
-app.include_router(auth.router)
-app.include_router(profile.router)
-app.include_router(billing.router)
-app.include_router(newsletter.router)
-app.include_router(admin.router)
-app.include_router(contact.router)
-app.include_router(account.router)
+# Include all API routes via the central router
+from app.api.router import api_router
+app.include_router(api_router)
 
 @app.get("/", status_code=status.HTTP_200_OK)
 async def read_root():

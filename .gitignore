@@ -1,6 +1,7 @@
 # Python virtual environments & cache
 venv/
 .venv/
+ef_env/
 __pycache__/
 *.pyc
 *.pyo
@@ -32,3 +33,15 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Development artifacts
+backend/dev.db
+backend/last_email.html
+*.sqlite3
+
+# Docker
+docker-compose.override.yml
+
+# Coverage & Test reports
+coverage/
+*.lcov

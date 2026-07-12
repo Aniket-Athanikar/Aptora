@@ -1,0 +1,6 @@
+"""
+ExamForge AI — SQLAlchemy Declarative Base
+"""
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
