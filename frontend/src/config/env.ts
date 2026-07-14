@@ -8,3 +8,7 @@ export const env = {
   IS_DEV: process.env.NODE_ENV === "development",
   IS_PROD: process.env.NODE_ENV === "production",
 } as const;
+
+export const envConfig = env;
+export type EnvConfig = typeof env;
+

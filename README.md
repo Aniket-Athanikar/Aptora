@@ -1,91 +1,320 @@
-# ExamForge AI — Premium AI-Powered Exam Preparation Platform
+🚀 ExamForge AI
+Enterprise AI-Powered Exam Preparation Platform
 
-An enterprise-grade, high-fidelity SaaS application built with a FastAPI backend and a Next.js 15 App Router frontend. ExamForge AI is engineered to help students crack competitive exams (SSC, UPSC, GATE, Banking, etc.) using customized study guides, AI-generated questions, and adaptive performance tracking.
+<p align="center">
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
+![License](https://img.shields.io/badge/License-MIT-success)
+</p>
 
----
+📖 Overview
+ExamForge AI is a next-generation AI-powered examination platform designed to help students prepare smarter using intelligent learning, adaptive assessments, personalized study plans, AI tutors, and enterprise-grade analytics.
 
-## 🌟 Key Features
+Unlike traditional exam portals, ExamForge AI creates an adaptive learning ecosystem where AI continuously analyzes performance, identifies weak topics, generates personalized content, and guides students toward better results.
 
-### 1. Authentication & Security
-- **Dual OTP Validation:** Custom signup/login flows utilizing OTP code verification with CSRF protection and dynamic password strength metrics.
-- **Light-Theme HTML Email Verification:** Generates beautiful light-themed welcome emails containing centered grid-box OTP codes and geometric pulsing node graphs ( Three.js geometry style ).
-- **Silent Dev Interception:** In development mode, the frontend automatically intercepts, pulls, and auto-populates verification codes into inputs without cluttering the UI.
 
-### 2. Premium User Profile Dashboard
-- **Linear & Stripe Style Glassmorphism:** Clean, light-themed premium OS dashboard (`/profile`) supporting aurora gradients, soft shadows, and micro-interactions.
-- **KPI Gamification Stats:** Animated count-up displays tracking levels, XP, coins, streak calendar, and mock test scores.
-- **Interactive SVG Performance Charts:** Native SVG progression graphs showing weekly studies, solved questions, and overall completions.
-- **AI Coach Recommendations:** Time-based greetings and motivational summaries based on strong and weak subjects.
-- **Connected Devices & Sessions:** Live session management, device tracking, and security strength scoring.
 
-### 3. Dynamic Database Failover
-- **Multi-Port Fallback Connection:** Built-in connection loop checking PostgreSQL ports (scans host `5432` first, fails over to Docker mapped `5433` if native instance blocks auth).
-- **Clear Console Logging:** Suppresses verbose connection warning tracebacks, logging only clean status updates.
+✨ Key Features
+🎯 AI Personal Goal Engine
+- 7-Step Intelligent Goal Setup
+- Personalized Learning Journey
+- AI Career Guidance
+- Dynamic Learning Roadmap
+- Progress Tracking
+- Editable Goal Planning
+- Smart Milestones
 
-### 4. Smart UI Gender-Specific Avatars
-- **Client-Side Profile Mapping:** Injects Next.js optimized gender-inferred stock avatars dynamically into desktop and mobile layouts based on user registration names.
+🤖 AI Learning Assistant
+- AI Study Mentor
+- AI Question Generator
+- AI Doubt Solver
+- AI Concept Explainer
+- AI Revision Planner
+- AI Smart Notes
+- AI Flashcards
+- AI Mind Maps
 
----
+📚 Smart Exam Preparation
+- Mock Tests
+- Previous Year Papers
+- Topic-wise Practice
+- Difficulty Levels
+- Adaptive Tests
+- Timed Assessments
+- Instant Feedback
+- Performance Analytics
 
-## 🛠️ Tech Stack
+📊 Student Dashboard
+- Personalized Dashboard
+- Daily Progress
+- Weekly Reports
+- Learning Streak
+- Goal Tracking
+- AI Recommendations
+- Performance Graphs
+- Study Calendar
 
-### Frontend
-- **Framework:** Next.js 15 (App Router) + TypeScript
-- **Styling:** Tailwind CSS v4 + Glassmorphic components
-- **Animations:** Framer Motion + Motion One
-- **Visuals:** Three.js / React Three Fiber (floating particles hero canvas)
-- **Icons & Controls:** Lucide React, React Hook Form + Zod validation
+👨‍🏫 AI Dashboard
+- Student Analytics
+- Batch Management
+- Live Tests
+- Assignment Management
+- Attendance
+- Leaderboards
+- Reports
+- AI Performance Insights
 
-### Backend
-- **Framework:** FastAPI (Asynchronous) + Uvicorn
-- **Object Relational Mapper:** SQLAlchemy (PostgreSQL storage layer)
-- **Cache:** Redis integration
-- **Search Engine:** Qdrant Vector DB (semantic search)
-- **Email Delivery:** SMTP Transport layer
+🏢 Admin Dashboard
+- User Management
+- Role Based Access Control
+- Institute Management
+- Payment Management
+- Subscription Plans
+- Analytics
+- Notifications
+- Audit Logs
 
----
+🧠 AI Capabilities
+- GPT Integration
+- Personalized AI Tutor
+- AI Roadmaps
+- Adaptive Learning
+- Smart Recommendations
+- AI Performance Prediction
+- AI Career Suggestions
+- AI Progress Analysis
+- AI Goal Planning
+- AI Learning Path Optimization
 
-## 🚀 Getting Started
 
-### Method 1: Running with Docker Compose (Recommended)
+🏗 Enterprise Architecture
 
-1. Clone or navigate to the project directory.
-2. Build and launch all services (PostgreSQL, Redis, Qdrant, Backend, and Frontend):
-   ```bash
-   docker-compose up --build
-   ```
-3. Access the services:
-   - **Frontend App:** [http://localhost:3000](http://localhost:3000)
-   - **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+                     Internet
+                         │
+                         ▼
+                  Nginx Reverse Proxy
+                         │
+        ┌────────────────┼────────────────┐
+        ▼                ▼                ▼
+    Next.js         FastAPI API      WebSocket
+    Frontend         Backend          Server
+        │                │
+        ├────────────────┤
+        ▼
+    Authentication Service
+        │
+        ▼
+    Business Logic Layer
+        │
+ ┌──────┼──────────┬───────────┐
+ ▼      ▼          ▼           ▼
+ AI     Exams    Analytics   Notifications
+ Engine Engine    Engine        Engine
+         │
+         ▼
+    PostgreSQL + Redis + Qdrant
 
-### Method 2: Running Locally
 
-#### 1. Setup Backend
-1. Navigate to `/backend`.
-2. Create and activate a Python virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Start the backend:
-   ```bash
-   uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-   ```
+🏛 Project Structure
+ExamForge/
 
-#### 2. Setup Frontend
-1. Navigate to `/frontend`.
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+├── backend/
+│   ├── app/
+│   ├── api/
+│   ├── core/
+│   ├── db/
+│   ├── modules/
+│   ├── services/
+│   └── main.py
+│
+├── frontend/
+│   ├── src/
+│   ├── app/
+│   ├── components/
+│   ├── dashboard/
+│   ├── services/
+│   └── public/
+│
+├── nginx/
+├── docker-compose.yml
+├── README.md
+└── .gitignore
+
+
+🛠 Technology Stack
+Frontend
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Three.js
+- GSAP
+- React Hook Form
+
+Backend
+- FastAPI
+- SQLAlchemy
+- Alembic
+- JWT Authentication
+- OAuth2
+- Pydantic
+- Uvicorn
+
+Database
+- PostgreSQL
+- Redis
+- Qdrant
+- Vector Search
+
+AI
+- OpenAI
+- LangGraph
+- LangChain
+- RAG
+- Ollama
+- Embeddings
+- AI Agents
+
+DevOps
+- Docker
+- Docker Compose
+- Nginx
+- GitHub Actions
+- Linux
+- Ubuntu
+- AWS
+- Vercel
+
+🚀 Getting Started
+Clone Repository
+bash
+git clone https://github.com/Aniket-Athanikar/Exam_Forge.git
+
+cd Exam_Forge
+Docker Setup
+bash
+docker compose up --build
+
+Application:
+Frontend
+http://localhost:3000
+
+Backend
+http://localhost:8000
+
+Swagger
+http://localhost:8000/docs
+
+
+Backend Setup
+bash
+cd backend
+python -m venv af_env
+source af_env/bin/activate
+
+Windows bash
+af_env\Scripts\activate
+
+
+Install bash
+pip install -r requirements.txt
+Run bash
+py -m uvicorn app.main:app --reload
+
+
+Frontend Setup
+bash
+cd frontend
+npm install
+npm run dev
+
+
+🔐 Security
+- JWT Authentication
+- Refresh Tokens
+- Email Verification
+- Password Reset
+- RBAC
+- CORS Protection
+- SQL Injection Protection
+- XSS Protection
+- CSRF Protection
+- Rate Limiting
+
+
+📊 Platform Modules
+✅ Authentication
+✅ Landing Website
+✅ Student Dashboard
+✅ AI Dashboard
+✅ Admin Dashboard
+✅ AI Goal Engine
+✅ AI Mentor
+✅ AI Mock Tests
+✅ AI Analytics
+✅ Payments
+✅ Notifications
+✅ Reports
+
+📈 Roadmap
+Phase 1
+- Authentication
+- Landing Page
+- Dashboard
+
+Phase 2
+- AI Goal Engine
+- AI Mentor
+- AI Study Planner
+
+Phase 3
+- AI Mock Tests
+- Adaptive Learning
+- AI Analytics
+
+Phase 4
+- Marketplace
+- Mobile App
+- Enterprise Features
+
+🤝 Contributing
+# bash
+Fork Repository
+Create Feature Branch
+git checkout -b feature/amazing-feature
+
+Commit Changes
+git commit -m "Add amazing feature"
+
+Push Branch
+git push origin feature/amazing-feature
+Create Pull Request
+
+
+📄 License
+Licensed under the MIT License.
+
+
+👨‍💻 Authors
+---Mrunal Chaudhari---
+• Full Stack AI Engineer
+•Backend •AI •FastAPI •Next.js
+
+---Aniket Athanikar---
+• Frontend Engineer
+•UI|UX •React •Next.js •Enterprise Frontend
+
+
+🌟 Vision
+Our mission is to build India's most intelligent AI-powered examination platform that transforms the way students learn, prepare, and achieve success through adaptive learning, personalized AI guidance, and enterprise-grade technology.
+
+
+<p align="center">
+⭐ If you like this project, please consider giving it a star!
+Built with  using Next.js, FastAPI, AI, and modern cloud technologies.❤️
+</p>

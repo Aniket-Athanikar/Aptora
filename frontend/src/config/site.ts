@@ -23,3 +23,6 @@ export const siteConfig = {
     "competitive exams",
   ],
 } as const;
+
+export type SiteConfig = typeof siteConfig;
+

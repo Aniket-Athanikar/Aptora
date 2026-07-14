@@ -1,113 +1,157 @@
 "use client";
 
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Brain } from "lucide-react";
-import { DashboardProvider, useDashboard } from "@/components/dashboard/DashboardContext";
-import { Sidebar } from "@/components/dashboard/Sidebar";
-import { Header } from "@/components/dashboard/Header";
-import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
-import { WorkspaceTab } from "@/components/dashboard/tabs/WorkspaceTab";
-import { AnalyticsTab } from "@/components/dashboard/tabs/AnalyticsTab";
-import { CalendarTab } from "@/components/dashboard/tabs/CalendarTab";
-import { TutorTab } from "@/components/dashboard/tabs/TutorTab";
-import { RevisionTab } from "@/components/dashboard/tabs/RevisionTab";
-import { MockTestsTab } from "@/components/dashboard/tabs/MockTestsTab";
-import { SettingsTab } from "@/components/dashboard/tabs/SettingsTab";
-import { NotesTab } from "@/components/dashboard/tabs/NotesTab";
-import { BookmarkedTab } from "@/components/dashboard/tabs/BookmarkedTab";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
+import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
+import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { GoalCard } from "@/components/dashboard/goal-card";
+import { RoadmapTimeline } from "@/components/dashboard/roadmap-timeline";
+import { DailyPlanner } from "@/components/dashboard/daily-planner";
+import { Recommendations } from "@/components/dashboard/recommendations";
+import { Calendar2026 } from "@/components/dashboard/calendar-2026";
+import { HistoryVersioning } from "@/components/dashboard/history-versioning";
+import { StudyTimer } from "@/components/dashboard/study-timer";
+import { AnimatedWizard } from "@/components/dashboard/wizard/animated-wizard";
+import { GoalPlanPanel } from "@/components/dashboard/goal-plan-panel";
+import { Sparkles, Compass } from "lucide-react";
 
-// Inner shell executing under the DashboardProvider context
-const DashboardShell: React.FC = () => {
-  const {
-    authLoading,
-    isOnboardingCompleted,
-    activeTab
-  } = useDashboard();
+function DashboardContent() {
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { activeGoal, wizardState, startWizard } = useGoalEngine();
+  const [showWizard, setShowWizard] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
 
-  // Authentication Loading view
-  if (authLoading) {
+  // Redirect to login if user is not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
+
+  // Show onboarding wizard if no active goal is configured
+  useEffect(() => {
+    if (activeGoal === null && wizardState.isCompleted === false) {
+      setShowWizard(true);
+      setIsEditMode(false);
+    } else {
+      setShowWizard(false);
+    }
+  }, [activeGoal, wizardState.isCompleted]);
+
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#FAFBFF] flex flex-col justify-center items-center font-sans gap-5">
-        <div className="relative w-16 h-16 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-4 border-indigo-100 animate-pulse" />
-          <div className="absolute inset-0 rounded-full border-t-4 border-indigo-600 animate-spin" />
-          <Brain className="w-7 h-7 text-indigo-600 animate-pulse" />
-        </div>
-        <div className="space-y-1 text-center">
-          <h4 className="font-extrabold text-neutral-800 text-sm">Synchronizing Secure Session</h4>
-          <span className="block text-[10px] text-neutral-400 font-semibold">Calibrating workspace databases...</span>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-indigo-600" />
       </div>
     );
   }
 
+  // Active dashboard view
   return (
-    <div className="min-h-screen bg-[#FAFBFF] text-neutral-800 flex font-sans overflow-hidden w-full">
-      {/* Main Sidebar is always rendered */}
-      <Sidebar />
+    <div className="relative min-h-screen bg-gray-50">
+      <div className={showWizard ? "blur-md select-none pointer-events-none" : ""}>
+        <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+          {activeTab === "goal-plan" ? (
+            <GoalPlanPanel onLaunchWizard={() => {
+              startWizard();
+              setIsEditMode(true);
+              setShowWizard(true);
+            }} />
+          ) : activeGoal ? (
+            <div className="space-y-6">
+              {/* Header Title */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-black text-gray-900 flex items-center gap-2">
+                    Success Engine: <span className="gradient-text">{activeGoal.targetExam}</span> <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
+                  </h1>
+                  <p className="text-xs text-gray-500 font-semibold mt-0.5">Welcome back, {activeGoal.profile.fullName}! Monitor your calibration progress.</p>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    startWizard();
+                    setIsEditMode(true);
+                    setShowWizard(true);
+                  }}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-1.5 transition-all shadow-sm"
+                >
+                  <Sparkles className="w-4 h-4" /> Recalibrate Success Goal
+                </button>
+              </div>
 
-      {/* Core Panel Content Wrapper */}
-      <div className="flex-grow flex flex-col min-w-0 h-screen overflow-hidden">
-        <AnimatePresence mode="wait">
-          {!isOnboardingCompleted ? (
-            <motion.div
-              key="onboarding"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.4 }}
-              className="w-full h-full overflow-y-auto"
-            >
-              <OnboardingWizard />
-            </motion.div>
+              {/* Grid Widgets layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left Columns */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Goal Card & Recommendation */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <GoalCard 
+                      goal={activeGoal} 
+                      onEdit={() => {
+                        startWizard();
+                        setIsEditMode(true);
+                        setShowWizard(true);
+                      }} 
+                    />
+                    <StudyTimer />
+                  </div>
+
+                  <Recommendations />
+
+                  <RoadmapTimeline goal={activeGoal} />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <DailyPlanner />
+                    <Calendar2026 goal={activeGoal} />
+                  </div>
+                </div>
+
+                {/* Right Column: Version History & Stats */}
+                <div className="space-y-6">
+                  <HistoryVersioning />
+                </div>
+              </div>
+            </div>
           ) : (
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.4 }}
-              className="w-full h-full flex flex-col overflow-hidden"
-            >
-              {/* Main top navigation */}
-              <Header />
-
-              {/* Content view routing */}
-              <main className="flex-grow overflow-y-auto p-6 md:p-10 bg-[#FAFBFF]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.25 }}
-                    className="w-full h-full"
-                  >
-                    {activeTab === "home" && <WorkspaceTab />}
-                    {activeTab === "analytics" && <AnalyticsTab />}
-                    {activeTab === "planner" && <CalendarTab />}
-                    {activeTab === "tutor" && <TutorTab />}
-                    {activeTab === "revision" && <RevisionTab />}
-                    {activeTab === "mocktests" && <MockTestsTab />}
-                    {activeTab === "settings" && <SettingsTab />}
-                    {activeTab === "notes-pdfs" && <NotesTab />}
-                    {activeTab === "bookmarked" && <BookmarkedTab />}
-                  </motion.div>
-                </AnimatePresence>
-              </main>
-            </motion.div>
+            // Fallback dashboard display if wizard is dismissed or loading
+            <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+              <Compass className="w-16 h-16 text-indigo-200 animate-spin-slow" />
+              <h2 className="text-xl font-bold text-gray-800">Success journey not yet calibrated</h2>
+              <p className="text-sm text-gray-500 max-w-sm">Please launch the Success Wizard to personalize your goals, planner, and daily timeline tracker.</p>
+              <button
+                onClick={() => {
+                  startWizard();
+                  setIsEditMode(false);
+                  setShowWizard(true);
+                }}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-2.5 rounded-2xl"
+              >
+                Launch Success Engine
+              </button>
+            </div>
           )}
-        </AnimatePresence>
+        </DashboardLayout>
       </div>
+
+      {/* Onboarding / Edit wizard overlay */}
+      {showWizard && (
+        <AnimatedWizard 
+          isEditMode={isEditMode}
+          onClose={activeGoal ? () => setShowWizard(false) : undefined} 
+        />
+      )}
     </div>
   );
-};
+}
 
 export default function DashboardPage() {
   return (
-    <DashboardProvider>
-      <DashboardShell />
-    </DashboardProvider>
+    <GoalEngineProvider>
+      <DashboardContent />
+    </GoalEngineProvider>
   );
 }

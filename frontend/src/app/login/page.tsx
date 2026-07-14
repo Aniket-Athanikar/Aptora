@@ -155,6 +155,7 @@ export default function LoginPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [emailForVerification, setEmailForVerification] = useState("");
   const [nameForSignup, setNameForSignup] = useState("");
   const phoneForOTP = "+91 98765 43210";
