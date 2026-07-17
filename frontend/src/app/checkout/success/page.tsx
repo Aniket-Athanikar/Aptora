@@ -108,14 +108,14 @@ export default function CheckoutSuccessPage() {
       ]}
     >
       <div className="layout-container max-w-[800px] px-4 mx-auto relative z-10 py-6">
-        
+
         {/* Main Grid: Details + Included Features */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
-          
+
           {/* Left Side: Order Confirmation Receipt */}
           <div className="md:col-span-7 flex w-full">
             <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-xl text-center w-full flex flex-col justify-between relative overflow-hidden">
-              
+
               {/* Confetti Animation Elements */}
               <div className="absolute top-0 inset-x-0 h-40 flex justify-center overflow-hidden pointer-events-none z-0">
                 {mounted && [...Array(20)].map((_, i) => {
@@ -228,7 +228,7 @@ export default function CheckoutSuccessPage() {
           <div className="md:col-span-5 flex w-full">
             <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-lg w-full flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-xl pointer-events-none" />
-              
+
               <div>
                 <h4 className="text-sm font-black text-neutral-950 uppercase tracking-wider mb-6 pb-3 border-b border-[#ECECEC] flex items-center gap-2">
                   <Zap className="w-4 h-4 text-[#6D4AFF]" /> Active Benefits

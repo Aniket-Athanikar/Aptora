@@ -39,11 +39,11 @@ interface Exam {
 }
 
 const examsList: Exam[] = [
-  { 
-    name: "UPSC", 
+  {
+    name: "UPSC",
     subtitle: "Civil Services, CAPF, CDS",
-    icon: Globe2, 
-    color: "text-purple-500", 
+    icon: Globe2,
+    color: "text-purple-500",
     bgColor: "bg-purple-50/50",
     borderColor: "border-purple-200/50",
     category: "civil-gov",
@@ -56,11 +56,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "SSC CGL", 
+  {
+    name: "SSC CGL",
     subtitle: "CGL, CHSL, Selection Posts",
-    icon: Award, 
-    color: "text-red-500", 
+    icon: Award,
+    color: "text-red-500",
     bgColor: "bg-red-50/50",
     borderColor: "border-red-200/50",
     category: "civil-gov",
@@ -73,11 +73,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "Banking", 
+  {
+    name: "Banking",
     subtitle: "SBI PO, IBPS Clerk, RBI Grade B",
-    icon: Building2, 
-    color: "text-blue-500", 
+    icon: Building2,
+    color: "text-blue-500",
     bgColor: "bg-blue-50/50",
     borderColor: "border-blue-200/50",
     category: "ug-general",
@@ -90,11 +90,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "GATE", 
+  {
+    name: "GATE",
     subtitle: "Engineering Entrance & PSUs",
-    icon: Cpu, 
-    color: "text-sky-600", 
+    icon: Cpu,
+    color: "text-sky-600",
     bgColor: "bg-sky-50/50",
     borderColor: "border-sky-200/50",
     category: "tech-business",
@@ -107,11 +107,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "CAT", 
+  {
+    name: "CAT",
     subtitle: "IIMs & Top Business Schools",
-    icon: Target, 
-    color: "text-violet-600", 
+    icon: Target,
+    color: "text-violet-600",
     bgColor: "bg-violet-50/50",
     borderColor: "border-violet-200/50",
     category: "tech-business",
@@ -124,11 +124,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "Railway", 
+  {
+    name: "Railway",
     subtitle: "NTPC, Group D, ALP",
-    icon: FileCheck, 
-    color: "text-cyan-500", 
+    icon: FileCheck,
+    color: "text-cyan-500",
     bgColor: "bg-cyan-50/50",
     borderColor: "border-cyan-200/50",
     category: "civil-gov",
@@ -141,11 +141,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "State PSC", 
+  {
+    name: "State PSC",
     subtitle: "State Civil Services, MPSC, UPPSC",
-    icon: Briefcase, 
-    color: "text-indigo-500", 
+    icon: Briefcase,
+    color: "text-indigo-500",
     bgColor: "bg-indigo-50/50",
     borderColor: "border-indigo-200/50",
     category: "civil-gov",
@@ -158,11 +158,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "Police", 
+  {
+    name: "Police",
     subtitle: "SI, Constable Exams",
-    icon: Fingerprint, 
-    color: "text-emerald-500", 
+    icon: Fingerprint,
+    color: "text-emerald-500",
     bgColor: "bg-emerald-50/50",
     borderColor: "border-emerald-200/50",
     category: "civil-gov",
@@ -171,15 +171,15 @@ const examsList: Exam[] = [
       features: [
         "Law, Constitution, and GK summary card packs",
         "Daily practice set generator targeting general awareness",
-        "Bilingual test sheets translation (English/Hindi)"
+        "High-yield mocks and sample papers in English"
       ]
     }
   },
-  { 
-    name: "Defence", 
+  {
+    name: "Defence",
     subtitle: "NDA, CDS, AFCAT",
-    icon: GraduationCap, 
-    color: "text-rose-500", 
+    icon: GraduationCap,
+    color: "text-rose-500",
     bgColor: "bg-rose-50/50",
     borderColor: "border-rose-200/50",
     category: "civil-gov",
@@ -192,11 +192,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "CUET UG", 
+  {
+    name: "CUET UG",
     subtitle: "Central Universities Entrance Test",
-    icon: TrendingUp, 
-    color: "text-amber-500", 
+    icon: TrendingUp,
+    color: "text-amber-500",
     bgColor: "bg-amber-50/50",
     borderColor: "border-amber-200/50",
     category: "ug-general",
@@ -209,11 +209,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "IELTS", 
+  {
+    name: "IELTS",
     subtitle: "English Proficiency Test",
-    icon: Languages, 
-    color: "text-rose-600", 
+    icon: Languages,
+    color: "text-rose-600",
     bgColor: "bg-rose-50/50",
     borderColor: "border-rose-200/50",
     category: "ug-general",
@@ -226,11 +226,11 @@ const examsList: Exam[] = [
       ]
     }
   },
-  { 
-    name: "FRM", 
+  {
+    name: "FRM",
     subtitle: "Financial Risk Manager",
-    icon: ShieldCheck, 
-    color: "text-green-600", 
+    icon: ShieldCheck,
+    color: "text-green-600",
     bgColor: "bg-green-50/50",
     borderColor: "border-green-200/50",
     category: "tech-business",
@@ -267,7 +267,7 @@ export default function ExamsPage() {
       breadcrumb={[{ label: "Exams", href: "/exams" }]}
     >
       <div className="layout-container max-w-[1240px] px-4 mx-auto py-10 relative z-10">
-        
+
         {/* Category Filters */}
         <div className="flex flex-wrap items-center justify-start gap-2 mb-12 max-w-4xl">
           {categories.map((cat) => (
@@ -298,10 +298,10 @@ export default function ExamsPage() {
             {filteredExams.map((exam) => {
               const ExamIcon = exam.icon;
               const examSlug = exam.name.toLowerCase().replace(/ /g, "-");
-              const targetHref = isAuthenticated 
-                ? `/exams/${examSlug}` 
+              const targetHref = isAuthenticated
+                ? `/exams/${examSlug}`
                 : `/login?exam=${exam.name.toLowerCase()}`;
-              
+
               return (
                 <Link
                   href={targetHref}

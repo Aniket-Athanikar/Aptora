@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ const getAvatarUrl = (name: string) => {
   const femaleNames = ["mrunal", "priya", "sneha", "neha", "reddy", "sharma", "puja", "pooja", "anita", "sunita", "rekha", "kiran", "chaudhari"];
   const cleanName = name.toLowerCase().trim();
   const isFemale = femaleNames.some(fName => cleanName.includes(fName));
-  return isFemale 
+  return isFemale
     ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
     : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120";
 };
@@ -180,7 +180,7 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="hidden lg:flex items-center gap-4 mt-1">
           {mounted && isAuthenticated && user ? (
-            /* ── Logged-in User Menu ── */
+            /* â”€â”€ Logged-in User Menu â”€â”€ */
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -256,7 +256,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
           ) : (
-            /* ── Guest Actions ── */
+            /* â”€â”€ Guest Actions â”€â”€ */
             <>
               <Link href="/login" className="text-sm font-bold text-neutral-600 hover:text-[#6D4AFF] cursor-pointer transition-colors px-4 py-2">
                 LOGIN

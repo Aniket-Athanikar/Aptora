@@ -5,4 +5,3 @@ export { billingService } from "./billing.service";
 export { goalService, GoalService } from "./goal.service";
 export { LocalStorageAdapter } from "./storage-adapter";
 export type { StorageAdapter } from "./storage-adapter";
-

@@ -89,11 +89,11 @@ const categories = [
                 title: "Deep OCR Engine",
                 icon: Languages,
                 badge: "AI Extraction",
-                description: "Processes low-quality scans and old textbooks in English, Hindi, Marathi, Tamil, Telugu, Gujarati, Bengali, or mixed languages.",
+                description: "Processes low-quality scans and old textbooks in English.",
                 features: [
                     "Low-quality print deskew & noise filtering",
                     "Advanced table, chart, and multi-column layout parsing",
-                    "Mixed language (Hinglish/code-switching) parser models",
+                    "High-fidelity English layout parsing",
                     "Post-OCR automated spell and syntax corrections"
                 ]
             },
@@ -377,7 +377,7 @@ export default function FeaturesPage() {
                                                                         </li>
                                                                     ))}
                                                                 </ul>
-                                                                
+
                                                                 <div className="flex items-center text-[10px] font-black text-[#6D4AFF] gap-1 group-hover:underline">
                                                                     View Module Details
                                                                     <ChevronRight className="w-3 h-3" />

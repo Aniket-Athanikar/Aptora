@@ -50,10 +50,10 @@ type GoalAction =
   | { type: "CLEAR_ALL_NOTIFICATIONS" };
 
 const initialAchievements: AchievementItem[] = [
-  { id: "1", title: "Dreamer", description: "Created your first success goal", unlocked: false, icon: "🎯", color: "from-blue-400 to-indigo-500" },
-  { id: "2", title: "Disciplined", description: "Configured 10+ daily study hours", unlocked: false, icon: "⚡", color: "from-purple-400 to-pink-500" },
-  { id: "3", title: "Focused Subject", description: "Identified syllabus weaknesses", unlocked: false, icon: "🧠", color: "from-amber-400 to-orange-500" },
-  { id: "4", title: "Timer Master", description: "Completed a study session via the timer", unlocked: false, icon: "⏱️", color: "from-emerald-400 to-teal-500" },
+  { id: "1", title: "Dreamer", description: "Created your first success goal", unlocked: false, icon: "Target", color: "from-blue-400 to-indigo-500" },
+  { id: "2", title: "Disciplined", description: "Configured 10+ daily study hours", unlocked: false, icon: "Zap", color: "from-purple-400 to-pink-500" },
+  { id: "3", title: "Focused Subject", description: "Identified syllabus weaknesses", unlocked: false, icon: "Brain", color: "from-amber-400 to-orange-500" },
+  { id: "4", title: "Timer Master", description: "Completed a study session via the timer", unlocked: false, icon: "Timer", color: "from-emerald-400 to-teal-500" },
 ];
 
 const initialWizardState: WizardState = {
@@ -87,12 +87,12 @@ function generateDailyMissions(goal: GoalData | null): DailyMissionItem[] {
   if (!goal) return [];
   const missions: DailyMissionItem[] = [];
   const hours = goal.timeline.dailyStudyHours || 8;
-  
+
   // Allocate hours dynamically based on profile, weakness and study preference
   const weakSubjects = [...goal.weaknesses].sort((a, b) => b.weaknessScore - a.weaknessScore);
-  
+
   let currentHoursAllocated = 0;
-  
+
   // Add core study slot
   if (weakSubjects.length > 0) {
     const mainWeakness = weakSubjects[0].subject;
@@ -256,10 +256,10 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
 
     case "UPDATE_WIZARD_DRAFT": {
       const newDraft = { ...state.wizardState.draft, ...action.payload };
-      
+
       // Maintain undo stack
       const updatedUndo = [...state.wizardState.undoStack, JSON.parse(JSON.stringify(state.wizardState.draft))];
-      
+
       const updatedWizard = {
         ...state.wizardState,
         draft: newDraft,
@@ -614,7 +614,7 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
 
   const startWizard = () => dispatch({ type: "START_WIZARD" });
   const updateWizardDraft = (draft: Partial<GoalData>) => dispatch({ type: "UPDATE_WIZARD_DRAFT", payload: draft });
-  
+
   const nextStep = () => {
     const nextS = Math.min(state.wizardState.currentStep + 1, 7);
     dispatch({ type: "SET_WIZARD_STEP", payload: nextS });
@@ -652,7 +652,7 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
   };
 
   const toggleMission = (id: string) => dispatch({ type: "TOGGLE_MISSION", payload: id });
-  
+
   const startTimer = (subject: string) => dispatch({ type: "START_TIMER", payload: subject });
   const pauseTimer = () => dispatch({ type: "PAUSE_TIMER" });
   const resetTimer = () => dispatch({ type: "RESET_TIMER" });

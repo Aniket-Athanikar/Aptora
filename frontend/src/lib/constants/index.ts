@@ -1,6 +1,6 @@
 import type { PlanType } from '@/types/billing';
 
-export const APP_NAME = 'ExampForge';
+export const APP_NAME = 'ExamForge';
 export const APP_DESCRIPTION = 'Creating better exam experiences for students and educators worldwide';
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';

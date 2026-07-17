@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -37,7 +38,6 @@ const ThreeHero = dynamic(() => import("../../components/three/ThreeHero"), {
   ssr: false,
 });
 
-// ─── Validation Schemas ─────────────────────────────────────────────
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
 });
@@ -85,12 +85,7 @@ type AuthStep =
   | "reset-password"
   | "reset-success";
 
-// ─── Brand Header Component ────────────────────────────────────────
-function BrandHeader({
-  onHome,
-}: {
-  onHome: () => void;
-}) {
+function BrandHeader() {
   return (
     <div className="w-full flex items-center justify-between">
       <div className="flex items-center gap-2.5">
@@ -99,20 +94,19 @@ function BrandHeader({
           alt="Logo"
           width={36}
           height={36}
-          className="rounded-full animate-spin-slow glow-avatar object-cover border border-[#ECECEC]"
+          className="rounded-full animate-spin-slow glow-avatar object-cover border border-[var(--border)]"
           priority
         />
-        <span className="font-extrabold tracking-wider text-neutral-950 uppercase text-base">
-          EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
+        <span className="font-black text-xl tracking-tight text-neutral-950">
+          Exam<span className="gradient-text-animated">Forge</span>
         </span>
       </div>
-      <button
-        type="button"
-        onClick={onHome}
-        className="inline-flex items-center gap-1 text-[10px] font-bold text-neutral-500 hover:text-neutral-900 border border-[#ECECEC] hover:bg-neutral-50/50 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-indigo-600 px-3.5 py-1.5 rounded-xl border border-gray-150 hover:bg-slate-50 transition-all cursor-pointer shadow-2xs hover:scale-[1.02]"
       >
-        <ArrowLeft className="w-3 h-3" /> Home
-      </button>
+        <ArrowLeft className="w-3.5 h-3.5" /> Home
+      </Link>
     </div>
   );
 }
@@ -125,14 +119,26 @@ const getPasswordStrength = (pass: string) => {
   if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score += 1;
   if (/[0-9]/.test(pass)) score += 1;
   if (/[^A-Za-z0-9]/.test(pass)) score += 1;
-  
+
   if (score <= 1) return { score: 1, label: "Weak", color: "bg-red-500", text: "text-red-500" };
   if (score === 2) return { score: 2, label: "Fair", color: "bg-orange-500", text: "text-orange-500" };
   if (score === 3) return { score: 3, label: "Good", color: "bg-yellow-500", text: "text-yellow-500" };
   return { score: 4, label: "Strong", color: "bg-green-500", text: "text-green-500" };
 };
 
-// ─── Page Component ─────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+// â”€â”€â”€ Page Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -224,7 +230,7 @@ export default function LoginPage() {
     return `${mins.toString().padStart(2, "0")}:${rem.toString().padStart(2, "0")}`;
   };
 
-  // ── Forms ──
+  // â”€â”€ Forms â”€â”€
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
@@ -254,7 +260,7 @@ export default function LoginPage() {
   const watchedSignupPassword = watchSignup("password") || "";
   const watchedResetPassword = watchReset("password") || "";
 
-  // ── Handlers ──
+  // â”€â”€ Handlers â”€â”€
   const onLogin = async (data: LoginValues) => {
     setIsLoading(true);
     setAuthError(null);
@@ -350,8 +356,8 @@ export default function LoginPage() {
       );
       const result = await response.json();
       if (response.ok && result.success) {
-        setAuthSuccess("✓ Verified! Redirecting...");
-        // Login user → store in context
+        setAuthSuccess("âœ“ Verified! Redirecting...");
+        // Login user â†’ store in context
         login({
           name: result.name || nameForSignup || emailForVerification.split("@")[0],
           email: emailForVerification,
@@ -472,13 +478,14 @@ export default function LoginPage() {
     exit: { opacity: 0, y: -15, scale: 0.98 },
   };
 
-  // ═══════════════════════════════════════════════════════════════════
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   return (
-    <main className="relative min-h-screen bg-white text-neutral-900 overflow-hidden font-sans flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <main className="relative min-h-screen bg-[var(--background)] text-neutral-900 overflow-hidden font-sans flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       {/* Premium Clean Background Pattern (Dot Pattern & Soft Ambient Glows) */}
-      <div className="absolute inset-0 bg-dot-pattern bg-radial-gradient z-0 opacity-80" />
-      <div className="absolute top-[10%] left-[20%] w-[350px] h-[350px] bg-[#6D4AFF]/5 rounded-full filter blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[20%] w-[350px] h-[350px] bg-[#8B5CF6]/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute inset-0 bg-dot z-0 opacity-80" />
+      <div className="absolute inset-0 bg-noise z-0 pointer-events-none" />
+      <div className="absolute top-[10%] left-[20%] w-[350px] h-[350px] bg-[var(--primary)]/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[20%] w-[350px] h-[350px] bg-[var(--accent)]/5 rounded-full filter blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-[460px]">
         <AnimatePresence mode="wait">
@@ -493,7 +500,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 <div className="flex flex-col items-center text-center gap-1">
                   <h2 className="text-2xl font-black text-neutral-900 leading-none">
@@ -530,9 +537,6 @@ export default function LoginPage() {
                       </p>
                     )}
                   </div>
-
-
-
 
                   <Button
                     type="submit"
@@ -586,7 +590,7 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* ═══════════════════ SIGNUP STEP ═══════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• SIGNUP STEP â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {step === "signup" && (
             <motion.div
               key="signup"
@@ -597,7 +601,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 <div className="flex flex-col items-center text-center gap-1">
                   <h2 className="text-2xl font-black text-neutral-900 leading-none">
@@ -761,7 +765,7 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* ═══════════════════ VERIFY OTP STEP ═══════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• VERIFY OTP STEP â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {step === "verify-otp" && (
             <motion.div
               key="verify-otp"
@@ -772,7 +776,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 {/* Phone icon */}
                 <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
@@ -869,7 +873,7 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* ═══════════════════ FORGOT PASSWORD STEP ═══════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FORGOT PASSWORD STEP â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {step === "forgot-password" && (
             <motion.div
               key="forgot-password"
@@ -880,7 +884,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
                   <KeyRound className="w-10 h-10 text-[#6D4AFF]" />
@@ -959,7 +963,7 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* ═══════════════════ RESET PASSWORD (OTP + New Password) ═══════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RESET PASSWORD (OTP + New Password) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {step === "reset-password" && (
             <motion.div
               key="reset-password"
@@ -970,7 +974,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
                   <Lock className="w-10 h-10 text-[#6D4AFF]" />
@@ -1132,7 +1136,7 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* ═══════════════════ RESET SUCCESS ═══════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RESET SUCCESS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {step === "reset-success" && (
             <motion.div
               key="reset-success"
@@ -1143,7 +1147,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
-                <BrandHeader onHome={goHome} />
+                <BrandHeader />
 
                 {/* Success animation */}
                 <motion.div

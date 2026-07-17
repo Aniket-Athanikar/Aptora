@@ -59,4 +59,3 @@ export interface NotificationPreferencesInput {
 export interface TimezoneInput {
   timezone: string;
 }
-

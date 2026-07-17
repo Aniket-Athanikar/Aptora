@@ -11,4 +11,3 @@ export const env = {
 
 export const envConfig = env;
 export type EnvConfig = typeof env;
-

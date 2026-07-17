@@ -28,7 +28,7 @@ class ApiClient {
 
   private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
     const url = new URL(`${this.baseURL}${endpoint}`, window.location.origin);
-    
+
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         url.searchParams.append(key, String(value));
@@ -41,7 +41,7 @@ class ApiClient {
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       let error: ApiError;
-      
+
       try {
         const errorData = await response.json();
         error = {

@@ -1,4 +1,4 @@
-// Exam Types
+﻿// Exam Types
 export interface Exam {
   id: string;
   title: string;
@@ -165,5 +165,3 @@ export interface ExamSubmitInput {
     answer: string | string[];
   }[];
 }
-
-

@@ -39,7 +39,7 @@ export default function InvoicePrintPage() {
 
   return (
     <div className="min-h-screen bg-neutral-100 py-12 px-4 print:bg-white print:py-0 print:px-0">
-      
+
       {/* Back button and Print Action bar - Hidden on print */}
       <div className="max-w-[700px] mx-auto mb-6 flex items-center justify-between print:hidden">
         <Link
@@ -58,7 +58,7 @@ export default function InvoicePrintPage() {
 
       {/* Invoice Sheet */}
       <div className="max-w-[700px] mx-auto bg-white border border-neutral-200 shadow-lg rounded-[24px] p-8 md:p-12 print:border-none print:shadow-none print:rounded-none print:p-0">
-        
+
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start justify-between border-b-2 border-neutral-100 pb-8 gap-4">
           <div>

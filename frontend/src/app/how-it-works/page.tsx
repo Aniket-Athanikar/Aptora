@@ -58,7 +58,7 @@ const stages = [
     output: "Semantic text segments and embedding vectors stored inside Qdrant DB.",
     details: "Low-quality scans undergo noise cleaning, deskewing, and column sorting. Clean layouts are parsed into semantic chunks and stored in Qdrant DB to prevent hallucinations.",
     bullets: [
-      "Multi-language parser (Hindi, English, Marathi, Tamil, etc.)",
+      "High-accuracy English language parser",
       "Table grid detection and mathematical layouts parsing",
       "Semantic-aware text paragraph chunk boundaries",
       "Qdrant high-speed vector cluster indexing"
@@ -155,7 +155,7 @@ export default function HowItWorksPage() {
         <div className="absolute bottom-[300px] left-[5%] w-[400px] h-[400px] bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none" />
 
         <div className="layout-container max-w-[1240px] px-4 mx-auto relative z-10">
-          
+
           {/* Section Heading */}
           <div className="text-center mb-12">
             <motion.span
@@ -198,7 +198,7 @@ export default function HowItWorksPage() {
 
           {/* Expanded Interactive Detail Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-20">
-            
+
             {/* Left 2 Cols: Stage Info */}
             <div className="lg:col-span-2 space-y-6">
               <AnimatePresence mode="wait">
@@ -275,7 +275,7 @@ export default function HowItWorksPage() {
                       <div className={`absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full transition-colors ${
                         st.id === activeStage ? `bg-gradient-to-br ${st.color}` : "bg-neutral-200"
                       }`} />
-                      
+
                       <div className="flex items-center justify-between">
                         <h4 className={`text-xs font-black uppercase tracking-wider ${
                           st.id === activeStage ? "text-[#6D4AFF]" : "text-neutral-500"

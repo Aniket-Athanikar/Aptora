@@ -31,7 +31,7 @@ export class GoalService {
 
   saveActiveGoal(goal: GoalData, changeDescription: string): void {
     const currentGoal = this.getActiveGoal();
-    
+
     // Save to local storage active goal
     this.storage.setItem(this.GOAL_KEY, goal);
 
@@ -53,7 +53,7 @@ export class GoalService {
   private addHistorySnapshot(goal: GoalData, changeDescription: string): void {
     const history = this.getHistory();
     const nextVersion = history.length > 0 ? Math.max(...history.map(h => h.version)) + 1 : 1;
-    
+
     const newSnapshot: HistorySnapshot = {
       version: nextVersion,
       timestamp: new Date().toISOString(),
@@ -74,10 +74,10 @@ export class GoalService {
     const history = this.getHistory();
     const snapshot = history.find((h) => h.version === version);
     if (!snapshot) return null;
-    
+
     const restoredGoal = JSON.parse(JSON.stringify(snapshot.goalData));
     restoredGoal.updatedAt = new Date().toISOString();
-    
+
     // Set restored goal as active and push a history log for restoration
     this.storage.setItem(this.GOAL_KEY, restoredGoal);
     this.addHistorySnapshot(restoredGoal, `Restored Version #${version}`);

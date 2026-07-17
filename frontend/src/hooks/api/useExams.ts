@@ -20,7 +20,7 @@ export function useExams() {
   }) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.getExams(params);
       setExams(response.data.data);
@@ -38,7 +38,7 @@ export function useExams() {
   const fetchExam = useCallback(async (id: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.getExam(id);
       setCurrentExam(response.data);
@@ -55,7 +55,7 @@ export function useExams() {
   const createExam = useCallback(async (data: ExamCreateInput) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.createExam(data);
       return response;
@@ -71,7 +71,7 @@ export function useExams() {
   const updateExam = useCallback(async (data: ExamUpdateInput) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.updateExam(data);
       setCurrentExam((prev) => prev ? { ...prev, ...response.data } : null);
@@ -88,7 +88,7 @@ export function useExams() {
   const deleteExam = useCallback(async (id: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await examService.deleteExam(id);
       setExams((prev) => prev.filter((exam) => exam.id !== id));
@@ -125,7 +125,7 @@ export function useExamAttempt(examId: string) {
   const startAttempt = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.startAttempt(examId);
       setAttempt(response.data);
@@ -141,10 +141,10 @@ export function useExamAttempt(examId: string) {
 
   const submitAttempt = useCallback(async (answers: { questionId: string; answer: string | string[] }[]) => {
     if (!attempt) throw new Error('No active attempt');
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await examService.submitAttempt({
         attemptId: attempt.id,

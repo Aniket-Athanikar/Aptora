@@ -1,5 +1,8 @@
 🚀 ExamForge AI
+
 Enterprise AI-Powered Exam Preparation Platform
+
+
 
 <p align="center">
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
@@ -11,10 +14,12 @@ Enterprise AI-Powered Exam Preparation Platform
 ![License](https://img.shields.io/badge/License-MIT-success)
 </p>
 
+
 📖 Overview
 ExamForge AI is a next-generation AI-powered examination platform designed to help students prepare smarter using intelligent learning, adaptive assessments, personalized study plans, AI tutors, and enterprise-grade analytics.
 
 Unlike traditional exam portals, ExamForge AI creates an adaptive learning ecosystem where AI continuously analyzes performance, identifies weak topics, generates personalized content, and guides students toward better results.
+
 
 
 

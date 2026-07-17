@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -95,7 +95,7 @@ export default function SitemapPage() {
       breadcrumb={[{ label: "Sitemap", href: "/sitemap" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto space-y-16">
-        
+
         {/* Search Bar section */}
         <div className="relative max-w-xl mx-auto">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-neutral-400">

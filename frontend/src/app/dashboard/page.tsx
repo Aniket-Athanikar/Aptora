@@ -1,28 +1,40 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { GoalCard } from "@/components/dashboard/goal-card";
-import { RoadmapTimeline } from "@/components/dashboard/roadmap-timeline";
-import { DailyPlanner } from "@/components/dashboard/daily-planner";
+import { RoadmapTimeline } from "@/features/planner/components/RoadmapTimeline";
+import { DailyPlanner } from "@/features/planner/components/DailyPlanner";
 import { Recommendations } from "@/components/dashboard/recommendations";
-import { Calendar2026 } from "@/components/dashboard/calendar-2026";
 import { HistoryVersioning } from "@/components/dashboard/history-versioning";
-import { StudyTimer } from "@/components/dashboard/study-timer";
+import { FocusTimer } from "@/features/planner/components/FocusTimer";
 import { AnimatedWizard } from "@/components/dashboard/wizard/animated-wizard";
 import { GoalPlanPanel } from "@/components/dashboard/goal-plan-panel";
 import { Sparkles, Compass } from "lucide-react";
+import { AIPlanner } from "@/features/planner/components/AIPlanner";
+import { Calendar2026 } from "@/components/dashboard/calendar-2026";
+import { RealtimeHub } from "@/components/dashboard/RealtimeHub";
+import { usePlanner } from "@/features/planner/hooks/usePlanner";
 
 function DashboardContent() {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
   const { activeGoal, wizardState, startWizard } = useGoalEngine();
   const [showWizard, setShowWizard] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(tabParam || "dashboard");
+  const { todayTasks, updateTaskStatus, rescheduleTask } = usePlanner();
+
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   // Redirect to login if user is not authenticated
   useEffect(() => {
@@ -51,17 +63,21 @@ function DashboardContent() {
 
   // Active dashboard view
   return (
-    <div className="relative min-h-screen bg-gray-50">
-      <div className={showWizard ? "blur-md select-none pointer-events-none" : ""}>
-        <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <>
+      <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+        <div className={showWizard ? "blur-md select-none pointer-events-none" : ""}>
           {activeTab === "goal-plan" ? (
             <GoalPlanPanel onLaunchWizard={() => {
               startWizard();
               setIsEditMode(true);
               setShowWizard(true);
             }} />
+          ) : activeTab === "planner" ? (
+            <AIPlanner />
+          ) : activeTab === "calendar" ? (
+            <Calendar2026 goal={activeGoal!} />
           ) : activeGoal ? (
-            <div className="space-y-6">
+            <div className="space-y-4.5">
               {/* Header Title */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -70,7 +86,7 @@ function DashboardContent() {
                   </h1>
                   <p className="text-xs text-gray-500 font-semibold mt-0.5">Welcome back, {activeGoal.profile.fullName}! Monitor your calibration progress.</p>
                 </div>
-                
+
                 <button
                   onClick={() => {
                     startWizard();
@@ -84,34 +100,32 @@ function DashboardContent() {
               </div>
 
               {/* Grid Widgets layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4.5">
                 {/* Left Columns */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-4.5">
                   {/* Goal Card & Recommendation */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <GoalCard 
-                      goal={activeGoal} 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4.5">
+                    <GoalCard
+                      goal={activeGoal}
                       onEdit={() => {
                         startWizard();
                         setIsEditMode(true);
                         setShowWizard(true);
-                      }} 
+                      }}
                     />
-                    <StudyTimer />
+                    <FocusTimer defaultSubject={todayTasks[0]?.subject} defaultTaskId={todayTasks[0]?.id} />
                   </div>
 
                   <Recommendations />
 
-                  <RoadmapTimeline goal={activeGoal} />
+                  <RoadmapTimeline />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <DailyPlanner />
-                    <Calendar2026 goal={activeGoal} />
-                  </div>
+                  <DailyPlanner tasks={todayTasks} onStatusChange={updateTaskStatus} onReschedule={rescheduleTask} />
                 </div>
 
                 {/* Right Column: Version History & Stats */}
-                <div className="space-y-6">
+                <div className="space-y-4.5">
+                  <RealtimeHub />
                   <HistoryVersioning />
                 </div>
               </div>
@@ -134,17 +148,17 @@ function DashboardContent() {
               </button>
             </div>
           )}
-        </DashboardLayout>
-      </div>
+        </div>
+      </DashboardLayout>
 
       {/* Onboarding / Edit wizard overlay */}
       {showWizard && (
-        <AnimatedWizard 
+        <AnimatedWizard
           isEditMode={isEditMode}
-          onClose={activeGoal ? () => setShowWizard(false) : undefined} 
+          onClose={activeGoal ? () => setShowWizard(false) : undefined}
         />
       )}
-    </div>
+    </>
   );
 }
 

@@ -31,7 +31,7 @@ export default function ParticleBackground() {
       {/* Floating purple energy blobs */}
       <div className="absolute top-[20%] left-[10%] w-[35rem] h-[35rem] rounded-full bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 blur-[120px] animate-soft-pulse" />
       <div className="absolute bottom-[10%] right-[15%] w-[40rem] h-[40rem] rounded-full bg-gradient-to-br from-[#4F46E5]/10 to-[#A855F7]/5 blur-[160px] animate-soft-pulse [animation-delay:3s]" />
-      
+
       {/* Soft Lines */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.03] stroke-[#6D4AFF]" xmlns="http://www.w3.org/2000/svg">
         <defs>

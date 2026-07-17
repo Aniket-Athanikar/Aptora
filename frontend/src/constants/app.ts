@@ -1,5 +1,5 @@
 // App-wide constants
-export const APP_NAME = 'ExampForge';
+export const APP_NAME = 'ExamForge';
 export const APP_VERSION = '1.0.0';
 
 // Pagination

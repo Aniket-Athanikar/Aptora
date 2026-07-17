@@ -46,7 +46,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const addToast = useCallback((toast: Omit<Toast, 'id'>): string => {
     const id = `toast-${++toastId}`;
     const newToast: Toast = { ...toast, id };
-    
+
     setToasts((prev) => [...prev, newToast]);
 
     // Auto-remove after duration (default 5000ms)

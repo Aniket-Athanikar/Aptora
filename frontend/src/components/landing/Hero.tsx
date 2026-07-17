@@ -38,7 +38,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 text-[#6D4AFF] text-xs font-bold rounded-full w-fit"
+            className="highlight-pill"
           >
             <span>AI Powered Exam Preparation Platform</span>
             <ArrowRight className="w-3 h-3" />
@@ -49,12 +49,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-black tracking-tight text-[#111827] leading-[1.05]"
+            className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 leading-[1.05]"
           >
             Your Personal <br />
-            <span className="bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] bg-clip-text text-transparent">
-              AI Exam Coach
-            </span>
+            <span className="gradient-text-animated">AI Exam Coach</span>
           </motion.h1>
 
           {/* Description */}
@@ -62,9 +60,13 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-base sm:text-lg text-neutral-500 font-medium leading-relaxed max-w-lg"
+            className="text-base sm:text-lg text-slate-500 font-medium leading-relaxed max-w-lg"
           >
-            Select Books + Previous Year Papers → AI Creates Personalized Study Material, Daily Training, Mock Tests, Weakness Analysis, and Predicts Important Topics!
+            Select <span className="text-accent">Books</span> +{" "}
+            <span className="text-accent">Previous Year Papers</span> → AI Creates
+            <span className="underline-accent"> Personalized Study Material</span>,
+            Daily Training, Mock Tests, Weakness Analysis, and Predicts{" "}
+            <span className="text-accent-mid">Important Topics</span>!
           </motion.p>
 
           {/* Checkmarks */}
@@ -132,8 +134,8 @@ export default function Hero() {
                   <Star key={i} className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />
                 ))}
               </div>
-              <span className="text-xs font-semibold text-neutral-600 mt-1">
-                4.8/5 from <span className="font-bold text-neutral-800">10,000+</span> Students
+              <span className="text-xs font-semibold text-slate-600 mt-1">
+                4.8/5 from <span className="text-accent">10,000+</span> Students
               </span>
             </div>
           </motion.div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
@@ -219,7 +219,7 @@ export default function Pricing() {
 
                     <div style={{ transform: "translateZ(35px)" }} className="my-6">
                       <div className="flex items-baseline gap-1 text-neutral-900">
-                        <span className="text-base font-bold text-neutral-400">₹</span>
+                        <span className="text-base font-bold text-neutral-400">â‚¹</span>
                         <AnimatePresence mode="popLayout">
                           <motion.span
                             key={billingCycle}
@@ -245,7 +245,7 @@ export default function Pricing() {
                               exit={{ opacity: 0 }}
                               className="text-[9px] font-bold text-emerald-600"
                             >
-                              Billed ₹{plan.yearlyTotal} yearly
+                              Billed â‚¹{plan.yearlyTotal} yearly
                             </motion.p>
                           )}
                         </AnimatePresence>

@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
-import { CheckSquare, Square, Clock, BookOpen, PenTool, CheckCircle } from "lucide-react";
+import { CheckSquare, Square, Clock, BookOpen, PenTool, CheckCircle, Flame } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function DailyPlanner() {
   const { dailyMissions, toggleMission, activeGoal } = useGoalEngine();
@@ -15,66 +16,73 @@ export function DailyPlanner() {
     .reduce((acc, cur) => acc + cur.durationMinutes, 0);
 
   const completedCount = dailyMissions.filter((m) => m.completed).length;
+  const progressRatio = dailyMissions.length > 0 ? (completedCount / dailyMissions.length) * 100 : 0;
 
   return (
-    <div className="glass-panel p-6 space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="p-6 glass border border-white/20 rounded-3xl space-y-6 shadow-sm">
+      <div className="flex justify-between items-center border-b border-slate-100/50 pb-3">
         <div>
-          <h3 className="font-extrabold text-gray-900 text-base flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-indigo-600" /> Today&apos;s AI Study Planner
+          <h3 className="font-black text-slate-800 text-sm flex items-center gap-1.5 uppercase tracking-wider">
+            <CheckCircle className="w-4 h-4 text-indigo-650" /> Today&apos;s Study Planner
           </h3>
-          <p className="text-xs text-gray-400">Targeting weaknesses & preferred formats.</p>
+          <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wide">
+            Targeting weaknesses & study formats.
+          </p>
         </div>
         <div className="text-right">
-          <span className="text-xs font-bold text-gray-800">
+          <span className="text-[10px] font-black text-slate-700 bg-slate-150/40 px-2.5 py-1 rounded-xl uppercase tracking-wider">
             {completedCount}/{dailyMissions.length} Complete
           </span>
-          <p className="text-[10px] text-indigo-600 font-semibold mt-0.5">
-            {completedTime} / {totalTime} minutes logged
+          <p className="text-[10px] text-indigo-600 font-bold mt-1">
+            {completedTime} / {totalTime} mins logged
           </p>
         </div>
       </div>
 
-      {/* Progress Line */}
-      <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-        <div 
-          className="bg-indigo-600 h-full transition-all duration-300"
-          style={{ width: `${dailyMissions.length > 0 ? (completedCount / dailyMissions.length) * 100 : 0}%` }}
+      {/* Progress Bar with glowing indicator */}
+      <div className="w-full bg-slate-100/60 h-2 rounded-full overflow-hidden relative">
+        <motion.div
+          className="bg-indigo-600 h-full rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${progressRatio}%` }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         />
       </div>
 
       {/* Missions checklist */}
-      <div className="space-y-2.5">
+      <div className="space-y-3">
         {dailyMissions.map((item) => (
           <button
             key={item.id}
             onClick={() => toggleMission(item.id)}
-            className={`w-full p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all group ${
-              item.completed 
-                ? "bg-gray-50 border-gray-100 text-gray-400 line-through" 
-                : "bg-white border-gray-200/80 hover:border-indigo-300 text-gray-800"
+            className={`w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all group cursor-pointer ${
+              item.completed
+                ? "bg-slate-50/20 border-slate-100/20 text-slate-400 line-through opacity-85"
+                : "bg-white/40 border-white/20 hover:border-indigo-350 hover:shadow-xs text-slate-700"
             }`}
           >
             <div className="flex items-center gap-3">
-              {item.completed ? (
-                <CheckSquare className="w-5 h-5 text-indigo-600" />
-              ) : (
-                <Square className="w-5 h-5 text-gray-300 group-hover:text-indigo-400" />
-              )}
+              <div className="shrink-0 transition-transform group-hover:scale-108">
+                {item.completed ? (
+                  <CheckSquare className="w-5 h-5 text-indigo-600" />
+                ) : (
+                  <Square className="w-5 h-5 text-slate-300 group-hover:text-indigo-400" />
+                )}
+              </div>
               <div>
-                <span className="text-xs font-bold block">{item.title}</span>
-                <span className="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5 font-bold uppercase">
-                  {item.type === "study" && <BookOpen className="w-3 h-3 text-indigo-500" />}
-                  {item.type === "practice" && <PenTool className="w-3 h-3 text-amber-500" />}
-                  {item.type === "revision" && <Clock className="w-3 h-3 text-emerald-500" />}
-                  {item.durationMinutes} Minutes allocation
+                <span className="text-xs font-black tracking-tight block">{item.title}</span>
+                <span className="text-[9px] text-slate-400 flex items-center gap-1 mt-1 font-black uppercase tracking-wider">
+                  {item.type === "study" && <BookOpen className="w-3.5 h-3.5 text-indigo-500" />}
+                  {item.type === "practice" && <PenTool className="w-3.5 h-3.5 text-amber-500" />}
+                  {item.type === "revision" && <Clock className="w-3.5 h-3.5 text-emerald-500" />}
+                  <span>{item.durationMinutes} Minutes Session</span>
                 </span>
               </div>
             </div>
 
             {item.subject && (
-              <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                item.completed ? "bg-gray-100 text-gray-400" : "bg-indigo-50 text-indigo-600"
+              <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shrink-0 ${
+                item.completed ? "bg-slate-100 text-slate-400" : "bg-indigo-50 text-indigo-650"
               }`}>
                 {item.subject}
               </span>

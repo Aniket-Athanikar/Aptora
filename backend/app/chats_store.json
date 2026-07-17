@@ -1,0 +1,78 @@
+{
+  "agentforge29@gmail.com": [
+    {
+      "id": 1784106776013,
+      "title": "Solve an MCQ",
+      "preview": "Solve an MCQ",
+      "pinned": false,
+      "messages": [
+        {
+          "id": 1784106830952,
+          "role": "user",
+          "content": "Solve an MCQ",
+          "time": "14:43"
+        },
+        {
+          "id": 1784106830953,
+          "role": "assistant",
+          "content": "Understood. Let's master this topic for **NEET UG**.\n\nHere is a structured explanation:\n\n1. **Core Concept**: Understanding this area is vital for NEET UG.\n2. **Common Exam Pattern**: Questions usually test application-level details rather than pure theory.\n3. **Quick Check**: What is the most critical component of this topic? Let me know, or ask me for a practice quiz on this!",
+          "time": "14:43"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "title": "UPSC Polity revision plan",
+      "preview": "A focused 7-day revision schedule",
+      "pinned": true,
+      "messages": [
+        {
+          "id": 1,
+          "role": "user",
+          "content": "Create a focused 7-day UPSC Polity revision plan.",
+          "time": "10:24 AM"
+        },
+        {
+          "id": 2,
+          "role": "assistant",
+          "content": "Here’s a high-yield plan built around the Constitution, governance, and answer practice. Start each day with 90 minutes of active recall, then solve 25 PYQs.\n\n**Day 1 — Constitutional foundations**\nPreamble, salient features, citizenship, Fundamental Rights and DPSP.\n\n**Day 2 — Parliament & executive**\nWork through parliamentary procedures, President, PM and Council of Ministers.\n\nFinish each evening by writing down three weak areas; I’ll turn them into tomorrow’s quick revision cards.",
+          "time": "10:24 AM"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Quantum mechanics notes",
+      "preview": "Wave functions and uncertainty",
+      "pinned": false,
+      "messages": []
+    },
+    {
+      "id": 3,
+      "title": "Make revision notes",
+      "preview": "Make revision notes",
+      "pinned": false,
+      "messages": [
+        {
+          "id": 1784106804288,
+          "role": "user",
+          "content": "Make revision notes",
+          "time": "14:43"
+        },
+        {
+          "id": 1784106804299,
+          "role": "assistant",
+          "content": "Understood. Let's master this topic for **NEET UG**.\n\nHere is a structured explanation:\n\n1. **Core Concept**: Understanding this area is vital for NEET UG.\n2. **Common Exam Pattern**: Questions usually test application-level details rather than pure theory.\n3. **Quick Check**: What is the most critical component of this topic? Let me know, or ask me for a practice quiz on this!",
+          "time": "14:43"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Essay feedback",
+      "preview": "Climate resilience draft",
+      "pinned": false,
+      "messages": []
+    }
+  ]
+}
