@@ -121,15 +121,15 @@ const modulesData: Record<string, {
     },
     "deep-ocr-engine": {
         num: "Module 04",
-        title: "Deep Multilingual OCR Engine",
+        title: "Deep English OCR Engine",
         icon: Languages,
         badge: "AI Extraction",
         category: "Core AI Pipeline",
         color: "from-blue-600 to-indigo-600",
-        description: "Processes low-quality scans and old textbooks in English, Hindi, Marathi, and mixed languages.",
-        longDescription: "Designed for competitive exam books which are often poorly scanned or printed on low-quality paper. The engine automatically filters noise, corrects page skew, maps multi-column layouts, extracts mathematical tables, and runs a multilingual spell checker supporting regional Indian languages.",
+        description: "Processes low-quality scans and old textbooks in English.",
+        longDescription: "Designed for competitive exam books which are often poorly scanned or printed on low-quality paper. The engine automatically filters noise, corrects page skew, maps multi-column layouts, extracts mathematical tables, and runs an English spell checker.",
         specs: [
-            "Languages: Hindi, English, Marathi, Tamil, Telugu, Gujarati, Bengali, mixed codes",
+            "Languages: English only",
             "Pre-processing: Advanced contrast deskewing, noise filtering, and table grid parsing",
             "Post-processing: LLM-based OCR typo correction and contextual layout mapping"
         ],
@@ -410,7 +410,7 @@ export default function FeatureSlugPage() {
 
                 {/* Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    
+
                     {/* Left 2 Cols: Main Info */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Summary Header */}

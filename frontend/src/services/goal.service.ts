@@ -15,7 +15,10 @@ const optional = async <T>(request: Promise<T>): Promise<T | null> => {
 };
 
 function daysRemaining(examDate: string) {
-  return Math.max(0, Math.ceil((new Date(examDate).getTime() - Date.now()) / 86_400_000));
+  return Math.max(
+    0,
+    Math.ceil((new Date(examDate).getTime() - Date.now()) / 86_400_000)
+  );
 }
 
 function toGoal(workspace: WorkspaceDto, profile: ProfileDto, timeline: TimelineDto, lifestyle: LifestyleDto, slots: SlotDto[], modes: ModeDto[], gaps: GapDto[]): GoalData {

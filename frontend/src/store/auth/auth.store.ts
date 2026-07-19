@@ -7,7 +7,7 @@ export interface AuthState {
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   // Actions
   setUser: (user: User | null) => void;
   setToken: (token: string | null, refreshToken?: string | null) => void;

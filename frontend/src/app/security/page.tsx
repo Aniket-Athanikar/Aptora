@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Shield, Lock, Eye, Server, RefreshCw, Key, ArrowRight, UserCheck } from "lucide-react";
@@ -59,7 +59,7 @@ export default function SecurityPage() {
       breadcrumb={[{ label: "Security", href: "/security" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto space-y-20">
-        
+
         {/* Intro Banner */}
         <motion.section
           variants={containerVariants}
@@ -73,8 +73,8 @@ export default function SecurityPage() {
               Enterprise-Grade Security Built Into Every Layer
             </h2>
             <p className="text-neutral-500 font-semibold leading-relaxed">
-              At ExamForge AI, we understand that your notes, textbooks, and prep history are precious assets. 
-              Our priority is to protect your information through rigorous security controls, ongoing system scans, 
+              At ExamForge AI, we understand that your notes, textbooks, and prep history are precious assets.
+              Our priority is to protect your information through rigorous security controls, ongoing system scans,
               and state-of-the-art encryption algorithms.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -152,7 +152,7 @@ export default function SecurityPage() {
         >
           <h3 className="text-2xl font-black text-neutral-900">Your Privacy, Guaranteed</h3>
           <p className="text-neutral-500 font-semibold max-w-2xl mx-auto leading-relaxed">
-            We will never sell or trade your personal files, mock test outputs, or notes with third-party advertising companies. 
+            We will never sell or trade your personal files, mock test outputs, or notes with third-party advertising companies.
             All insights generated are strictly for your personalized education metrics.
           </p>
         </motion.section>

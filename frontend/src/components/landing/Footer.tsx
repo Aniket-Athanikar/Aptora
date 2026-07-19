@@ -64,7 +64,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="text-neutral-700 py-16 border-t border-neutral-200 relative z-10 overflow-hidden bg-white">
+    <footer className="text-neutral-700 py-16 border-t border-white/20 relative z-10 overflow-hidden glass rounded-none backdrop-blur-3xl">
       {/* Brand Ambient background glows - Matching Navbar Purple Accent */}
       <div className="absolute top-0 left-[25%] w-[50%] h-[120px] bg-gradient-to-b from-[#6D4AFF]/5 via-[#A855F7]/5 to-transparent blur-[80px] rounded-full pointer-events-none z-0" />
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] z-0 pointer-events-none" />
@@ -75,7 +75,7 @@ export default function Footer() {
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-neutral-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-neutral-200/50">
 
           {/* Col 1: Logo & Info */}
           <div className="lg:col-span-2 flex flex-col gap-6">
@@ -95,7 +95,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-neutral-500 text-sm font-semibold leading-relaxed max-w-sm">
-              AI-powered platform to help students prepare smarter, not harder. Upload, learn, practice, and achieve your dreams.
+              AI-powered platform to help students prepare smarter, not harder. Select, learn, practice, and achieve your dreams.
             </p>
 
             {/* Social Icons */}

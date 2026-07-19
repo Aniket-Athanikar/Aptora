@@ -1,19 +1,25 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
 import { GoalData, SubjectWeakness } from "@/types/goal.types";
-import { Flame, Clock, BookOpen, AlertCircle, CheckCircle } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
-const PRESET_EXAMS = [
-  "UPSC CSE",
-  "State PSC (UPPSC/BPSC/MPSC)",
-  "JEE Main & Advanced",
-  "NEET UG",
-  "GATE Exam",
-  "CAT (Common Admission Test)",
-  "Custom Target Exam"
+const {
+  Flame, Clock, BookOpen, AlertCircle, CheckCircle, ChevronDown,
+  Sun, Sunrise, Moon, Laptop, Smartphone, Monitor, BookOpenCheck,
+  FileText, Building, Atom, Activity, Settings, TrendingUp, Target
+} = LucideIcons;
+
+const EXAMS_LIST = [
+  { name: "UPSC CSE", icon: "FileText", desc: "Civil Services Examination" },
+  { name: "State PSC (UPPSC/BPSC/MPSC)", icon: "Building", desc: "Provincial Civil Services" },
+  { name: "JEE Main & Advanced", icon: "Atom", desc: "Joint Entrance Examination" },
+  { name: "NEET UG", icon: "Activity", desc: "Medical Entrance Exam" },
+  { name: "GATE Exam", icon: "Settings", desc: "Graduate Aptitude Test in Engineering" },
+  { name: "CAT (Common Admission Test)", icon: "TrendingUp", desc: "Management Aptitude Test" },
+  { name: "Custom Target Exam", icon: "Target", desc: "Custom Syllabus Blueprint" }
 ];
+
+const PRESET_EXAMS = EXAMS_LIST.map(e => e.name);
 
 const PRESET_SUBJECTS: Record<string, string[]> = {
   "UPSC CSE": ["Polity & Governance", "History & Culture", "Geography", "Economy", "Environment & Ecology", "International Relations", "Science & Technology", "CSAT (Aptitude)"],
@@ -46,6 +52,11 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
   const [modes, setModes] = useState<string[]>(["Flashcards", "Practice Loops"]);
   const [weaknesses, setWeaknesses] = useState<SubjectWeakness[]>([]);
 
+  // Dropdown UI state variables
+  const [examDropdownOpen, setExamDropdownOpen] = useState(false);
+  const [slotDropdownOpen, setSlotDropdownOpen] = useState(false);
+  const [deviceDropdownOpen, setDeviceDropdownOpen] = useState(false);
+
   // Hydrate local state when activeGoal is loaded or changes
   useEffect(() => {
     const defaultGoal = activeGoal || (history && history.length > 0 ? history[0].goalData : null);
@@ -55,16 +66,16 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
       setAge(defaultGoal.profile.age);
       setExamDate(defaultGoal.timeline.examDate);
       setDailyHours(defaultGoal.timeline.dailyStudyHours);
-      
+
       const primarySlot = defaultGoal.lifestyle.slots[0] || "Morning";
       setPreferredSlot(
-        primarySlot === "Morning" 
-          ? "Morning (6 AM - 12 PM)" 
-          : primarySlot === "Afternoon" 
-          ? "Afternoon (12 PM - 5 PM)" 
+        primarySlot === "Morning"
+          ? "Morning (6 AM - 12 PM)"
+          : primarySlot === "Afternoon"
+          ? "Afternoon (12 PM - 5 PM)"
           : "Late Night (10 PM - 3 AM)"
       );
-      
+
       setPrimaryDevice(defaultGoal.lifestyle.preferredDevice || "Laptop & Tablet");
       setStudyEnv(defaultGoal.lifestyle.learningEnvironment || "Quiet Study Room");
       setInternet(defaultGoal.lifestyle.internetAvailability || "Always Connected (High Speed WiFi)");
@@ -123,7 +134,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
       ? (weaknesses.reduce((acc, w) => acc + w.confidence, 0) / weaknesses.length) * 10
       : 50;
     const dateFactor = Math.min(100, (calculateDaysRemaining() / 365) * 50);
-    
+
     return Math.min(99, Math.round(hoursFactor + confidenceAvg * 0.6 + dateFactor * 0.4));
   };
 
@@ -197,6 +208,19 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
     setTimeout(() => setSuccessMsg(null), 4000);
   };
 
+  const getSlotIcon = (slot: string) => {
+    if (slot.includes("Morning")) return <Sun className="w-4 h-4 text-amber-500" />;
+    if (slot.includes("Afternoon")) return <Sunrise className="w-4 h-4 text-orange-500" />;
+    return <Moon className="w-4 h-4 text-indigo-400" />;
+  };
+
+  const getDeviceIcon = (device: string) => {
+    if (device.includes("Phone")) return <Smartphone className="w-4 h-4 text-emerald-500" />;
+    if (device.includes("Laptop")) return <Laptop className="w-4 h-4 text-indigo-500" />;
+    if (device.includes("Desktop")) return <Monitor className="w-4 h-4 text-blue-500" />;
+    return <BookOpenCheck className="w-4 h-4 text-amber-500" />;
+  };
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-10">
       {/* Top Welcome Title */}
@@ -205,8 +229,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
           Success Goal <span className="gradient-text">Configuration</span>
         </h1>
         <p className="text-xs text-gray-500 font-semibold mt-0.5">
-          {activeGoal 
-            ? "View, select, and recalibrate your exam preparation settings directly." 
+          {activeGoal
+            ? "View, select, and recalibrate your exam preparation settings directly."
             : "Establish your custom success model by tailoring your schedule, targets, and study metrics."}
         </p>
       </div>
@@ -220,10 +244,10 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
 
       {/* Main Form Split */}
       <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
+
         {/* Settings Columns */}
         <div className="md:col-span-2 space-y-6">
-          
+
           {/* Card 1: Exam & Basics */}
           <div className="bg-white border border-gray-150 rounded-3xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-gray-800 border-b border-gray-100 pb-2 flex items-center gap-2">
@@ -231,17 +255,52 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="relative">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Target Exam</label>
-                <select
-                  value={targetExam}
-                  onChange={(e) => handleExamChange(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold"
+                <button
+                  type="button"
+                  onClick={() => setExamDropdownOpen(!examDropdownOpen)}
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                 >
-                  {PRESET_EXAMS.map((exam) => (
-                    <option key={exam} value={exam}>{exam}</option>
-                  ))}
-                </select>
+                  <span className="flex items-center gap-2">
+                    {(() => {
+                      const iconName = EXAMS_LIST.find((e) => e.name === targetExam)?.icon || "Target";
+                      const Icon = (LucideIcons as any)[iconName] || Target;
+                      return <Icon className="w-4 h-4 text-indigo-550" />;
+                    })()}
+                    <span>{targetExam}</span>
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${examDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+                {examDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setExamDropdownOpen(false)} />
+                    <div className="absolute left-0 mt-1 w-full bg-white border border-gray-150 rounded-2xl shadow-xl p-2 z-50 space-y-0.5 max-h-[220px] overflow-y-auto">
+                      {EXAMS_LIST.map((exam) => (
+                        <button
+                          key={exam.name}
+                          type="button"
+                          onClick={() => {
+                            handleExamChange(exam.name);
+                            setExamDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-indigo-50/50 transition-colors cursor-pointer ${
+                            targetExam === exam.name ? "bg-indigo-50 text-indigo-600 font-bold" : "text-gray-700"
+                          }`}
+                        >
+                          {(() => {
+                            const Icon = (LucideIcons as any)[exam.icon] || Target;
+                            return <Icon className="w-4 h-4 text-slate-450" />;
+                          })()}
+                          <div>
+                            <p className="text-[11px] font-bold leading-tight">{exam.name}</p>
+                            <p className="text-[9px] text-gray-400 mt-0.5">{exam.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <div>
@@ -305,31 +364,80 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="relative">
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Preferred Study Slot</label>
-                  <select
-                    value={preferredSlot}
-                    onChange={(e) => setPreferredSlot(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold"
+                  <button
+                    type="button"
+                    onClick={() => setSlotDropdownOpen(!slotDropdownOpen)}
+                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
-                    <option value="Morning (6 AM - 12 PM)">Morning (6 AM - 12 PM)</option>
-                    <option value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
-                    <option value="Late Night (10 PM - 3 AM)">Late Night (10 PM - 3 AM)</option>
-                  </select>
+                    <span className="flex items-center gap-2">
+                      {getSlotIcon(preferredSlot)}
+                      <span>{preferredSlot}</span>
+                    </span>
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </button>
+                  {slotDropdownOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setSlotDropdownOpen(false)} />
+                      <div className="absolute left-0 mt-1 w-full bg-white border border-gray-150 rounded-2xl shadow-xl p-2 z-50 space-y-0.5">
+                        {["Morning (6 AM - 12 PM)", "Afternoon (12 PM - 5 PM)", "Late Night (10 PM - 3 AM)"].map((slot) => (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => {
+                              setPreferredSlot(slot);
+                              setSlotDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-indigo-50/50 transition-colors text-xs font-bold cursor-pointer ${
+                              preferredSlot === slot ? "bg-indigo-50 text-indigo-600" : "text-gray-700"
+                            }`}
+                          >
+                            {getSlotIcon(slot)}
+                            <span>{slot}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Primary Study Device</label>
-                  <select
-                    value={primaryDevice}
-                    onChange={(e) => setPrimaryDevice(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold"
+                  <button
+                    type="button"
+                    onClick={() => setDeviceDropdownOpen(!deviceDropdownOpen)}
+                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
-                    <option value="Laptop & Tablet">Laptop & Tablet</option>
-                    <option value="Smart Phone only">Smart Phone only</option>
-                    <option value="Desktop Computer">Desktop Computer</option>
-                    <option value="Paper & Books only">Paper & Books only</option>
-                  </select>
+                    <span className="flex items-center gap-2">
+                      {getDeviceIcon(primaryDevice)}
+                      <span>{primaryDevice}</span>
+                    </span>
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </button>
+                  {deviceDropdownOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setDeviceDropdownOpen(false)} />
+                      <div className="absolute left-0 mt-1 w-full bg-white border border-gray-150 rounded-2xl shadow-xl p-2 z-50 space-y-0.5">
+                        {["Laptop & Tablet", "Smart Phone only", "Desktop Computer", "Paper & Books only"].map((device) => (
+                          <button
+                            key={device}
+                            type="button"
+                            onClick={() => {
+                              setPrimaryDevice(device);
+                              setDeviceDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-indigo-50/50 transition-colors text-xs font-bold cursor-pointer ${
+                              primaryDevice === device ? "bg-indigo-50 text-indigo-600" : "text-gray-700"
+                            }`}
+                          >
+                            {getDeviceIcon(device)}
+                            <span>{device}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -348,8 +456,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <div className="space-y-0.5">
                     <span className="text-xs font-bold text-gray-800">{item.subject}</span>
                     <span className={`text-[9px] font-bold block px-1.5 py-0.5 rounded-full w-max ${
-                      item.priority === "High" 
-                        ? "bg-red-50 text-red-600" 
+                      item.priority === "High"
+                        ? "bg-red-50 text-red-600"
                         : item.priority === "Medium"
                         ? "bg-amber-50 text-amber-600"
                         : "bg-emerald-50 text-emerald-600"
@@ -387,7 +495,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
             >
               Save Calibration
             </button>
-            
+
             <button
               type="button"
               onClick={onLaunchWizard || startWizard}
@@ -401,12 +509,12 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
 
         {/* Dynamic Sidebar Predictions */}
         <div className="space-y-6">
-          
+
           {/* Card: Projections */}
           <div className="bg-gradient-to-br from-gray-900 to-indigo-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20 pointer-events-none" />
             <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-widest mb-4">Goal Engine Projections</h3>
-            
+
             <div className="space-y-5">
               <div>
                 <span className="text-[10px] text-gray-400 block font-semibold">SUCCESS PREDICTION</span>
@@ -415,8 +523,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <span className="text-xs text-indigo-400 font-bold">Accuracy</span>
                 </div>
                 <div className="w-full h-1.5 bg-white/10 rounded-full mt-2 overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-500" 
+                  <div
+                    className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-500"
                     style={{ width: `${calculateSuccessPrediction()}%` }}
                   />
                 </div>
@@ -445,7 +553,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
           {/* Card: Study Modes selection */}
           <div className="bg-white border border-gray-150 rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider border-b border-gray-100 pb-2">Active Study Modes</h3>
-            
+
             <div className="space-y-2.5">
               {["Flashcards", "Practice Loops", "Mock Exams", "PYQ Retrieval"].map((mode) => {
                 const isActive = modes.includes(mode);
@@ -455,8 +563,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                     type="button"
                     onClick={() => handleToggleMode(mode)}
                     className={`w-full flex items-center justify-between p-3 rounded-2xl border text-xs font-bold text-left transition-all ${
-                      isActive 
-                        ? "bg-indigo-50/50 border-indigo-200 text-indigo-600" 
+                      isActive
+                        ? "bg-indigo-50/50 border-indigo-200 text-indigo-600"
                         : "bg-white border-gray-150 text-gray-600 hover:bg-gray-50"
                     }`}
                   >

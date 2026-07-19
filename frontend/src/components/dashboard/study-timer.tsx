@@ -22,7 +22,7 @@ export function StudyTimer() {
   };
 
   return (
-    <div className="glass-panel p-6 space-y-4 relative overflow-hidden">
+    <div className="glass border border-white/20 p-6 space-y-4 relative overflow-hidden">
       {/* Background soft glow when active */}
       {studyTimer.isActive && (
         <span className="absolute -top-10 -right-10 w-24 h-24 bg-emerald-100 rounded-full blur-2xl animate-soft-pulse" />
@@ -35,7 +35,7 @@ export function StudyTimer() {
           </h3>
           <p className="text-xs text-gray-400">Log focused revision sessions instantly.</p>
         </div>
-        
+
         {studyTimer.isActive && (
           <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> Focusing
@@ -43,7 +43,7 @@ export function StudyTimer() {
         )}
       </div>
 
-      <div className="flex flex-col items-center justify-center py-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
+      <div className="flex flex-col items-center justify-center py-4 bg-white/40 border border-white/20 rounded-2xl space-y-4">
         {/* Timer display */}
         <p className="text-3xl font-black text-gray-800 tracking-wider">
           {formatTime(studyTimer.seconds)}

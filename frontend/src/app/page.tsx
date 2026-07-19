@@ -13,65 +13,31 @@ import Pricing from "@/components/landing/Pricing";
 import Testimonials from "@/components/landing/Testimonials";
 import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
-import ParticleBackground from "@/components/three/ParticleBackground";
 
 export default function Home() {
   return (
     <SmoothScroll>
-      {/* 
-        Global wrapper with custom text selection highlighting matching the brand theme.
-        Set base background to the off-white #faf9ff to blend seamlessly with the components.
-      */}
-      <main className="relative min-h-screen bg-[#faf9ff] text-neutral-900 overflow-hidden font-sans selection:bg-[#6D4AFF]/20 selection:text-[#6D4AFF]">
-
-        {/* Customized Cursor Follower ring */}
+      <main className="relative min-h-screen bg-[var(--background)] text-slate-900 overflow-hidden font-sans selection:bg-indigo-500/15 selection:text-indigo-700">
         <CursorFollower />
 
-        {/* Fixed Ambient Glow Highlights for Premium UI */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-[#6D4AFF]/5 rounded-full filter blur-[120px]" />
-          <div className="absolute bottom-[25%] right-[10%] w-[500px] h-[500px] bg-[#8B5CF6]/5 rounded-full filter blur-[120px]" />
-        </div>
+        {/* Ambient glow highlights — soft, premium */}
+        <div className="fixed inset-0 -z-10 pointer-events-none bg-mesh opacity-70" />
+        <div className="fixed inset-0 -z-10 pointer-events-none bg-grid opacity-30" />
 
-        {/* Fixed Header */}
         <Navbar />
 
-        {/* 
-          Page Content Wrapper
-          Z-10 ensures the physical components sit above the fixed particle background.
-        */}
         <div className="relative z-10 flex flex-col w-full">
-          {/* Hero Area */}
           <Hero />
-
-          {/* How It Works (4 Steps) */}
           <HowItWorks />
-
-          {/* Powerful Features Auto-Carousel */}
           <Features />
-
-          {/* Gradient Stats Section */}
           <Stats />
-
-          {/* Exams Coverage Grid */}
           <Exams />
-
-          {/* Target Users Segmentation */}
           <Users />
-
-          {/* Price Package Plans */}
           <Pricing />
-
-          {/* Student Testimonials Auto-Carousel */}
           <Testimonials />
-
-          {/* Call To Action Banner */}
           <CTA />
+          <Footer />
         </div>
-
-        {/* Footer info links */}
-        <Footer />
-
       </main>
     </SmoothScroll>
   );

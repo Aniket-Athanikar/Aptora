@@ -22,10 +22,10 @@ const categories = [
 ];
 
 const allExams = [
-  { 
-    name: "UPSC", 
-    icon: Globe2, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "UPSC",
+    icon: Globe2,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -38,10 +38,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "SSC CGL", 
-    icon: Award, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "SSC CGL",
+    icon: Award,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -54,10 +54,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "Banking", 
-    icon: Building2, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "Banking",
+    icon: Building2,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "ug-general",
@@ -70,10 +70,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "GATE", 
-    icon: Cpu, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "GATE",
+    icon: Cpu,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "tech-business",
@@ -86,10 +86,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "CAT", 
-    icon: Target, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "CAT",
+    icon: Target,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "tech-business",
@@ -102,10 +102,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "Railway", 
-    icon: FileCheck, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "Railway",
+    icon: FileCheck,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -118,10 +118,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "State PSC", 
-    icon: Briefcase, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "State PSC",
+    icon: Briefcase,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -134,10 +134,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "Police", 
-    icon: Fingerprint, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "Police",
+    icon: Fingerprint,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -146,14 +146,14 @@ const allExams = [
       features: [
         "Law, Constitution, and GK summary card packs",
         "Daily practice set generator targeting general awareness",
-        "Bilingual test sheets translation (English/Hindi)"
+        "High-yield mocks and sample papers in English"
       ]
     }
   },
-  { 
-    name: "Defence", 
-    icon: GraduationCap, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "Defence",
+    icon: GraduationCap,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "civil-gov",
@@ -166,10 +166,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "CUET UG", 
-    icon: TrendingUp, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "CUET UG",
+    icon: TrendingUp,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "ug-general",
@@ -182,10 +182,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "IELTS", 
-    icon: Languages, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "IELTS",
+    icon: Languages,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "ug-general",
@@ -198,10 +198,10 @@ const allExams = [
       ]
     }
   },
-  { 
-    name: "FRM", 
-    icon: ShieldCheck, 
-    color: "text-[#6D4AFF]", 
+  {
+    name: "FRM",
+    icon: ShieldCheck,
+    color: "text-[#6D4AFF]",
     bgColor: "bg-[#6D4AFF]/5",
     borderColor: "border-[#6D4AFF]/10",
     category: "tech-business",
@@ -230,13 +230,13 @@ export default function Exams() {
 
   return (
     <section id="exams" className="py-20 bg-neutral-50/50 relative overflow-hidden border-t border-[#ECECEC]">
-      
+
       {/* Background decoration elements */}
       <div className="absolute top-[200px] left-[5%] w-[350px] h-[350px] bg-purple-500/5 rounded-full filter blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[200px] right-[5%] w-[350px] h-[350px] bg-blue-500/5 rounded-full filter blur-[100px] pointer-events-none" />
 
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
-        
+
         <SectionHeading
           badge="Exams Covered"
           title="Study Tools For Your"
@@ -267,7 +267,7 @@ export default function Exams() {
 
         {/* Main Grid: Exams List + Selected Exam AI Toolkit Detail */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-5xl mx-auto">
-          
+
           {/* Left Panel: Selected Exam AI Toolkit Details */}
           <div className="lg:col-span-5 flex w-full">
             <AnimatePresence mode="wait">
@@ -280,7 +280,7 @@ export default function Exams() {
                 className="w-full flex h-full"
               >
                 <GlassCard className="p-6 md:p-8 flex flex-col justify-between w-full rounded-3xl border-[#ECECEC] bg-white shadow-md relative overflow-hidden">
-                  
+
                   {/* Glowing background decor */}
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-transparent blur-[30px] rounded-full pointer-events-none" />
 
@@ -342,8 +342,8 @@ export default function Exams() {
 
           {/* Right Panel: Available Exams Selection */}
           <div className="lg:col-span-7">
-            <motion.div 
-              layout 
+            <motion.div
+              layout
               className="grid grid-cols-2 sm:grid-cols-3 gap-4"
             >
               <AnimatePresence>

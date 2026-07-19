@@ -49,14 +49,14 @@ export default function ThreeScene() {
         <directionalLight position={[10, 10, 5]} intensity={1.5} />
         <pointLight position={[-10, -10, -5]} intensity={1} />
         <spotLight position={[5, 10, 5]} angle={0.3} penumbra={1} intensity={2} />
-        
+
         <Float speed={2} rotationIntensity={1.5} floatIntensity={1.5}>
           <InteractiveShape />
         </Float>
-        
+
         <OrbitControls enableZoom={false} autoRotate={false} />
       </Canvas>
-      
+
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full text-xs text-neutral-300 pointer-events-none select-none text-center">
         Hover to distort • Click to scale • Drag to orbit
       </div>

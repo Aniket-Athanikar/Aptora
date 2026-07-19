@@ -21,7 +21,7 @@ export function useAuth() {
   const login = useCallback(async (data: LoginInput) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = (await authService.login(data)) as { data: { user: Parameters<typeof storeLogin>[0]; token: string } };
       storeLogin(response.data.user, response.data.token);
@@ -37,7 +37,7 @@ export function useAuth() {
   const register = useCallback(async (data: RegisterInput) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = (await authService.signup({
         name: data.name,
@@ -57,7 +57,7 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     setLoading(true);
-    
+
     try {
       await authService.logout();
     } catch (err) {
@@ -71,7 +71,7 @@ export function useAuth() {
   const forgotPassword = useCallback(async (data: ForgotPasswordInput) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       return await authService.forgotPassword(data.email);
     } catch (err) {
@@ -85,7 +85,7 @@ export function useAuth() {
   const changePassword = useCallback(async (data: ChangePasswordInput) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       return await authService.changePassword(data);
     } catch (err) {

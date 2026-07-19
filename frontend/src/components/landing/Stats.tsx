@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import AnimatedCounter from "../ui/AnimatedCounter";
@@ -17,7 +17,7 @@ export default function Stats() {
     <section className="py-10 px-4">
       {/* Container Box */}
       <div className="layout-container max-w-[1000px] mx-auto bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] rounded-[32px] p-8 md:p-12 relative overflow-hidden shadow-2xl border border-white/10">
-        
+
         {/* Background Image texture */}
         <div className="absolute inset-0 z-0 opacity-25">
           <Image
@@ -31,9 +31,9 @@ export default function Stats() {
 
         {/* Background Student Illustration - Using a reliable placeholder to prevent 404 */}
         <div className="absolute right-0 bottom-0 opacity-20 pointer-events-none hidden md:block z-0">
-           <Image 
-             src="/student-study.png" 
-             alt="Student studying" 
+           <Image
+             src="/student-study.png"
+             alt="Student studying"
              width={256}
              height={170}
              className="w-64 h-auto object-contain"

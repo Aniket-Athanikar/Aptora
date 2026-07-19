@@ -67,4 +67,3 @@ export type LoginInput = AuthCredentials;
 export type RegisterInput = RegisterData;
 export type ForgotPasswordInput = PasswordResetRequest;
 export type ChangePasswordInput = ChangePassword;
-

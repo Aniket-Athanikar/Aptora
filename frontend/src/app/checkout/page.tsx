@@ -42,16 +42,16 @@ export default function CheckoutPage() {
 
   // Payment Tabs: phonepe (UPI), netbanking, cod (Pay on Delivery)
   const [paymentMethod, setPaymentMethod] = useState<"phonepe" | "netbanking" | "cod">("phonepe");
-  
+
   // PhonePe-specific states
   const [phonepeMethod, setPhonepeMethod] = useState<"app" | "qr">("app");
   const [selectedUpiApp, setSelectedUpiApp] = useState<"phonepe" | "gpay" | "paytm">("phonepe");
   const [upiId, setUpiId] = useState("");
-  
+
   // Interactive PIN states
   const [showPinPad, setShowPinPad] = useState(false);
   const [enteredPin, setEnteredPin] = useState("");
-  
+
   // Netbanking states
   const [selectedBank, setSelectedBank] = useState("");
 
@@ -128,7 +128,7 @@ export default function CheckoutPage() {
       ]}
     >
       <div className="layout-container max-w-[1050px] px-4 mx-auto relative z-10 py-6">
-        
+
         {/* UPI Secure PIN Entry Modal (PhonePe Purple overlay) */}
         <AnimatePresence>
           {showPinPad && (
@@ -245,7 +245,7 @@ export default function CheckoutPage() {
 
         {/* Main Interface Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left panel: Payment form inputs */}
           <div className="lg:col-span-7">
             <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-md">
@@ -281,7 +281,7 @@ export default function CheckoutPage() {
               </div>
 
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
-                
+
                 {/* Method 1: PhonePe / UPI */}
                 {paymentMethod === "phonepe" && (
                   <div className="space-y-6">
@@ -430,7 +430,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-5">
             <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-md space-y-6">
               <h3 className="text-lg font-black text-neutral-900 pb-3 border-b border-[#ECECEC] uppercase tracking-tight">Order Details</h3>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>

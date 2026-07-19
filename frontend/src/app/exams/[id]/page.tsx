@@ -268,7 +268,7 @@ const examDetailsData: Record<
       "NCERT-grounded content summaries index",
       "Domain specific MCQ practice tests (Physics, Chemistry, History, etc.)",
       "General Test quant and logical reasoning exercises",
-      "Detailed English/Hindi grammar logic guidelines"
+      "Detailed English grammar logic guidelines"
     ],
     syllabus: [
       { name: "Language Test", topics: ["Reading Comprehension", "Vocabulary check", "Synonyms & Antonyms", "Literary Aptitude"] },
@@ -351,7 +351,7 @@ export default function ExamDetail() {
       ]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto space-y-16">
-        
+
         {/* Breadcrumb Back Button */}
         <div>
           <Link
@@ -398,7 +398,7 @@ export default function ExamDetail() {
 
         {/* Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column: Syllabus Structure */}
           <motion.div
             variants={containerVariants}

@@ -3,4 +3,3 @@ export type { LoginPayload, SignupPayload, OtpPayload, AuthResponse } from "./au
 export type { ApiResponse, PaginatedResponse, ApiError } from "./api.types";
 export * from "./goal.types";
 export type { ContactInput, BugReportInput, FeedbackInput, NewsletterInput } from '../validators/contact/contact.validator';
-

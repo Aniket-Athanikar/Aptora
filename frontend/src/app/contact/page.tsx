@@ -243,8 +243,6 @@ export default function ContactPage() {
           </motion.div>
         </motion.section>
 
-        
-
         {/* Social Icons */}
         <motion.section
           variants={containerVariants}

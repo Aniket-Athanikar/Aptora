@@ -90,7 +90,7 @@ export default function Features() {
     // },
     {
       title: "Deep OCR Engine",
-      description: "Deskewing and table extraction for English, Hindi, Marathi, and mixed languages.",
+      description: "Deskewing and table extraction for high-fidelity English text documents.",
       icon: Languages,
       glow: "hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.25)] hover:border-[#4F46E5]/40",
       iconColor: "text-[#4F46E5] bg-[#4F46E5]/5 border-[#4F46E5]/20 group-hover:bg-[#4F46E5]/10",
