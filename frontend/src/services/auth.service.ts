@@ -45,6 +45,9 @@ export const authService = {
   logout: () =>
     apiClient.post(API_ENDPOINTS.AUTH.LOGOUT),
 
+  me: () =>
+    apiClient.get("/api/auth/me"),
+
   changePassword: (payload: unknown) =>
     apiClient.post("/api/auth/change-password", payload),
 };

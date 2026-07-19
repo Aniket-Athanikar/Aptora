@@ -17,19 +17,8 @@ export const userService = {
     return apiClient.patch<User>('/users/me/profile', data);
   },
 
-  async updateAvatar(file: File): Promise<ApiResponse<User>> {
-    const formData = new FormData();
-    formData.append('avatar', file);
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/avatar`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('auth-token')}`,
-      },
-      body: formData,
-    });
-
-    return response.json();
+  async updateAvatar(_file: File): Promise<ApiResponse<User>> {
+    throw new Error('Avatar upload endpoint is not implemented by this backend.');
   },
 
   async deleteAvatar(): Promise<ApiResponse<void>> {

@@ -6,7 +6,6 @@ export interface PrepProfile {
   city: string;
   occupation: string;
   age: number;
-  gender: string;
   syllabusPercent: number;
   currentConfidence: number;
 }
@@ -42,20 +41,16 @@ export interface GoalData {
   id: string;
   targetExam: string;
   examCategory: string;
-  customExamName?: string;
   profile: PrepProfile;
   timeline: GoalTimeline;
   lifestyle: StudyLifestyle;
   preferences: string[];
   weaknesses: SubjectWeakness[];
-  summary: string;
-  isPinned: boolean;
-  isArchived: boolean;
-  isFavorite: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
+/** Runtime-only comparison data; the normalized API does not persist versions. */
 export interface HistorySnapshot {
   version: number;
   timestamp: string;
@@ -104,6 +99,7 @@ export interface WizardState {
   currentStep: number;
   isCompleted: boolean;
   draft: Partial<GoalData>;
+  /** Runtime-only undo/redo state; it is never sent to PostgreSQL. */
   historyIndex: number;
   undoStack: Partial<GoalData>[];
   redoStack: Partial<GoalData>[];

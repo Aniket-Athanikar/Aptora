@@ -1,6 +1,8 @@
 import os
 import logging
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, HTTPException, Request
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -21,6 +23,14 @@ app = FastAPI(
     description="Full-stack containerized backend API for ExamForge AI with DB integrations",
     version="2.1.0"
 )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(_: Request, exc: HTTPException):
+    return JSONResponse(status_code=exc.status_code, content={"success": False, "message": str(exc.detail), "error": {"status": exc.status_code, "detail": exc.detail}})
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(_: Request, exc: RequestValidationError):
+    return JSONResponse(status_code=422, content={"success": False, "message": "Request validation failed.", "error": {"status": 422, "details": exc.errors()}})
 
 # CORS middleware configuration
 allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")

@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
 from app.db.redis import redis_client
-from app.models.user import UserDb, UserProfileDb, OtpDb, AccountDeletionRequestDb
+from app.models.user import UserDb, OtpDb
+from app.models.user_profile import UserProfileDb
+from app.models.account import AccountDeletionRequestDb
 from app.models.billing import OrderDb
 from app.schemas.account import (
     DeleteAccountRequestPayload,

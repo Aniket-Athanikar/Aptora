@@ -83,7 +83,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
           city: "Delhi",
           occupation: "Student",
           age: 21,
-          gender: "Male",
           syllabusPercent: 20,
           currentConfidence: 3,
         },
@@ -107,10 +106,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         weaknesses: [],
         targetExam: "UPSC CSE",
         examCategory: "Civil Services",
-        summary: "",
-        isPinned: true,
-        isArchived: false,
-        isFavorite: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
@@ -253,7 +248,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               city: draft.profile?.city || "New Delhi",
               occupation: draft.profile?.occupation || "Aspirant",
               age: draft.profile?.age || 22,
-              gender: draft.profile?.gender || "Male",
               syllabusPercent: draft.profile?.syllabusPercent || 20,
               currentConfidence: draft.profile?.currentConfidence || 3,
             },
@@ -275,10 +269,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             },
             preferences: draft.preferences || ["PYQs", "Mock Tests"],
             weaknesses: draft.weaknesses || [],
-            summary: finalSummary,
-            isPinned: true,
-            isArchived: false,
-            isFavorite: true,
             createdAt: draft.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString()
           };

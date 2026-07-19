@@ -53,7 +53,7 @@ for port in ports_to_try:
     if db_verified:
         try:
             # Test actual connection to target DB
-            test_engine = create_engine(temp_db_url, connect_args={"connect_timeout": 2})
+            test_engine = create_engine(temp_db_url, echo=True, connect_args={"connect_timeout": 2})
             with test_engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
             engine = test_engine
@@ -66,6 +66,6 @@ for port in ports_to_try:
 if not engine:
     fallback_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     logger.error("All PostgreSQL database connection attempts failed. Falling back to default URL structure.")
-    engine = create_engine(fallback_url)
+    engine = create_engine(fallback_url, echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

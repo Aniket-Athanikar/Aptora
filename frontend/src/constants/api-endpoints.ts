@@ -16,6 +16,15 @@ export const API_ENDPOINTS = {
     GET: "/api/profile",
     UPDATE: "/api/profile",
   },
+  WORKSPACE: {
+    GET: "/workspace",
+    PROFILE: "/profile/",
+    TIMELINE: "/timeline/",
+    LIFESTYLE: "/lifestyle/",
+    STUDY_SLOTS: "/study-slots/",
+    LEARNING_MODES: "/learning-modes/",
+    GAP_ANALYSIS: "/gap-analysis/",
+  },
   BILLING: {
     SEND_INVOICE: "/api/billing/send-invoice",
     HISTORY: "/api/billing/history",

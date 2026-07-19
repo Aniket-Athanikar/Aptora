@@ -23,6 +23,8 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
+    const startedAt = performance.now();
+    const payload = options.body ? JSON.parse(String(options.body)) : undefined;
     const config: RequestInit = {
       headers: {
         "Content-Type": "application/json",
@@ -31,14 +33,37 @@ class ApiClient {
       ...options,
     };
 
-    const response = await fetch(url, config);
+    console.group("==========================\nAPI REQUEST\n==========================");
+    console.log("Method:", config.method || "GET");
+    console.log("URL:", url);
+    console.log("Headers:", config.headers);
+    console.log("Payload:", payload);
+    if (payload && typeof payload === "object") console.table(payload);
+    console.log("Time:", new Date().toISOString());
+    console.groupEnd();
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: "Request failed" }));
-      throw new Error(error.detail || `HTTP ${response.status}`);
+    try {
+      const response = await fetch(url, { ...config, credentials: "include" });
+      const body = await response.json().catch(() => null);
+      console.group("==========================\nAPI RESPONSE\n==========================");
+      console.log("Status:", response.status);
+      console.log("Response:", body);
+      console.log("Time Taken:", `${(performance.now() - startedAt).toFixed(1)}ms`);
+      console.groupEnd();
+
+      if (!response.ok) {
+        throw new Error(body?.message || body?.detail || `HTTP ${response.status}`);
+      }
+
+      return body as T;
+    } catch (error) {
+      console.group("==========================\nAPI ERROR\n==========================");
+      console.error("Status:", error instanceof Error ? error.message : "Network error");
+      console.error("Message:", error instanceof Error ? error.message : error);
+      console.error("Stack:", error instanceof Error ? error.stack : undefined);
+      console.groupEnd();
+      throw error;
     }
-
-    return response.json();
   }
 
   async get<T>(endpoint: string): Promise<T> {
@@ -55,6 +80,13 @@ class ApiClient {
   async put<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
       method: "PUT",
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  async patch<T>(endpoint: string, body?: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: "PATCH",
       body: body ? JSON.stringify(body) : undefined,
     });
   }

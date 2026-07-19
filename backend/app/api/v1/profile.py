@@ -3,7 +3,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
-from app.models.user import UserDb, UserProfileDb
+from app.models.user import UserDb
+from app.models.user_profile import UserProfileDb
 from app.schemas.user import ProfileResponse, ProfileUpdatePayload
 
 logger = logging.getLogger("backend")

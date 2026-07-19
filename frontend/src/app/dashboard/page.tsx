@@ -10,7 +10,6 @@ import { RoadmapTimeline } from "@/components/dashboard/roadmap-timeline";
 import { DailyPlanner } from "@/components/dashboard/daily-planner";
 import { Recommendations } from "@/components/dashboard/recommendations";
 import { Calendar2026 } from "@/components/dashboard/calendar-2026";
-import { HistoryVersioning } from "@/components/dashboard/history-versioning";
 import { StudyTimer } from "@/components/dashboard/study-timer";
 import { AnimatedWizard } from "@/components/dashboard/wizard/animated-wizard";
 import { GoalPlanPanel } from "@/components/dashboard/goal-plan-panel";
@@ -110,10 +109,6 @@ function DashboardContent() {
                   </div>
                 </div>
 
-                {/* Right Column: Version History & Stats */}
-                <div className="space-y-6">
-                  <HistoryVersioning />
-                </div>
               </div>
             </div>
           ) : (

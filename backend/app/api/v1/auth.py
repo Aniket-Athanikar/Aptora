@@ -1,7 +1,7 @@
 import random
 import logging
 from typing import Optional
-from fastapi import APIRouter, HTTPException, status, Response, Depends
+from fastapi import APIRouter, HTTPException, status, Response, Depends, Request
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
@@ -149,7 +149,7 @@ async def auth_signup(payload: SignupPayload, response: Response, db: Session = 
     )
 
 @router.post("/verify-otp", response_model=OtpResponse)
-async def verify_otp(payload: OtpPayload, db: Session = Depends(get_db)):
+async def verify_otp(payload: OtpPayload, response: Response, db: Session = Depends(get_db)):
     logger.info(f"Verifying OTP for {payload.email}: {payload.otp}")
 
     user = db.query(UserDb).filter(UserDb.email == payload.email).first()
@@ -157,6 +157,7 @@ async def verify_otp(payload: OtpPayload, db: Session = Depends(get_db)):
 
     # Allow backdoor master OTP "123456" for testing
     if payload.otp == "123456":
+        response.set_cookie("ef_user_email", payload.email, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24 * 7)
         return OtpResponse(
             success=True,
             message="OTP verified successfully! Welcome back.",
@@ -202,6 +203,7 @@ async def verify_otp(payload: OtpPayload, db: Session = Depends(get_db)):
             except:
                 pass
 
+    response.set_cookie("ef_user_email", payload.email, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24 * 7)
     return OtpResponse(
         success=True,
         message="OTP verified successfully! Welcome to ExamForge AI.",
@@ -286,4 +288,37 @@ async def get_latest_otp(email: str, db: Session = Depends(get_db)):
 @router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("csrf_token")
-    return {"success": True, "message": "Logged out successfully from session."}
+    response.delete_cookie("ef_user_email")
+    return {"success": True, "message": "Logged out successfully from session.", "data": {}}
+
+@router.get("/me")
+async def current_user(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    email = request.cookies.get("ef_user_email")
+
+    if not email:
+        return {
+            "success": False,
+            "authenticated": False,
+            "data": None,
+        }
+
+    user = db.query(UserDb).filter(UserDb.email == email).first()
+
+    if not user:
+        return {
+            "success": False,
+            "authenticated": False,
+            "data": None,
+        }
+
+    return {
+        "success": True,
+        "authenticated": True,
+        "data": {
+            "name": user.name,
+            "email": user.email,
+        },
+    }

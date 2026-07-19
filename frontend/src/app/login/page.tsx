@@ -337,6 +337,7 @@ export default function LoginPage() {
         `${API_URL}/api/auth/verify-otp`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": csrfToken,

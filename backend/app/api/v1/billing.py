@@ -4,7 +4,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
-from app.models.user import UserDb, UserProfileDb
+from app.models.user import UserDb
+from app.models.user_profile import UserProfileDb
 from app.models.billing import OrderDb
 from app.schemas.billing import InvoiceEmailPayload, OrderUpdatePayload
 from app.services.email_service import send_real_email

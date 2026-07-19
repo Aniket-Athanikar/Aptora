@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { GoalData } from "@/types/goal.types";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
 import { motion } from "framer-motion";
-import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock } from "lucide-react";
+import { Edit2, Trash2, Share2, Award, Clock } from "lucide-react";
 
 interface GoalCardProps {
   goal: GoalData;
@@ -12,23 +12,8 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal, onEdit }: GoalCardProps) {
-  const { deleteGoal, updateWizardDraft, completeWizard } = useGoalEngine();
+  const { deleteGoal } = useGoalEngine();
   const [copied, setCopied] = useState(false);
-
-  const toggleFavorite = () => {
-    const updated = { ...goal, isFavorite: !goal.isFavorite };
-    completeWizard(updated, `Toggled Favorite status to ${updated.isFavorite}`);
-  };
-
-  const togglePin = () => {
-    const updated = { ...goal, isPinned: !goal.isPinned };
-    completeWizard(updated, `Toggled Pin status to ${updated.isPinned}`);
-  };
-
-  const toggleArchive = () => {
-    const updated = { ...goal, isArchived: !goal.isArchived };
-    completeWizard(updated, `Toggled Archive status to ${updated.isArchived}`);
-  };
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -46,9 +31,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`glass-panel p-6 relative overflow-hidden flex flex-col justify-between min-h-[300px] border-l-4 ${
-        goal.isPinned ? "border-l-indigo-600" : "border-l-indigo-200"
-      }`}
+      className="glass-panel p-6 relative overflow-hidden flex flex-col justify-between min-h-[300px] border-l-4 border-l-indigo-200"
     >
       {/* Background radial highlight */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-100/30 rounded-full blur-3xl -z-10" />
@@ -68,7 +51,6 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
               <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
                 {goal.examCategory}
               </span>
-              {goal.isFavorite && <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />}
             </div>
             <h2 className="text-xl font-extrabold text-gray-900 mt-1">{goal.targetExam}</h2>
             <p className="text-xs text-gray-500 font-semibold mt-0.5">Success Target for {goal.profile.fullName}</p>
@@ -77,33 +59,6 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
 
         {/* Toolbar Controls */}
         <div className="flex items-center gap-1.5 bg-gray-100/60 p-1 rounded-xl">
-          <button
-            onClick={togglePin}
-            className={`p-1.5 rounded-lg transition-colors ${
-              goal.isPinned ? "bg-white text-indigo-600 shadow-sm" : "text-gray-400 hover:text-gray-700"
-            }`}
-            title="Pin Goal"
-          >
-            <Pin className="w-4 h-4" />
-          </button>
-          <button
-            onClick={toggleFavorite}
-            className={`p-1.5 rounded-lg transition-colors ${
-              goal.isFavorite ? "bg-white text-amber-500 shadow-sm" : "text-gray-400 hover:text-gray-700"
-            }`}
-            title="Favorite Goal"
-          >
-            <Star className="w-4 h-4" />
-          </button>
-          <button
-            onClick={toggleArchive}
-            className={`p-1.5 rounded-lg transition-colors ${
-              goal.isArchived ? "bg-white text-gray-800 shadow-sm" : "text-gray-400 hover:text-gray-700"
-            }`}
-            title="Archive Goal"
-          >
-            <Archive className="w-4 h-4" />
-          </button>
           <button
             onClick={onEdit}
             className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-white transition-all"
@@ -121,12 +76,6 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
         </div>
       </div>
 
-      {/* Summary Descriptive */}
-      <div className="my-5 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-        <p className="text-xs text-gray-600 leading-relaxed italic">
-          &ldquo;{goal.summary || "Success journey generated. Build your Daily study habits to unlock success roadmap."}&rdquo;
-        </p>
-      </div>
 
       {/* Metrics Row */}
       <div className="grid grid-cols-3 gap-4 border-t border-gray-100 pt-4">

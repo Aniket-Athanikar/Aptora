@@ -267,9 +267,6 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
         redoStack: [] // Clear redo on new action
       };
 
-      // Save to localStorage draft state periodically
-      goalService.saveWizardState(updatedWizard);
-
       return {
         ...state,
         wizardState: updatedWizard
@@ -290,8 +287,6 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
         undoStack: newUndo,
         redoStack: newRedo
       };
-
-      goalService.saveWizardState(updatedWizard);
 
       return {
         ...state,
@@ -314,8 +309,6 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
         redoStack: newRedo
       };
 
-      goalService.saveWizardState(updatedWizard);
-
       return {
         ...state,
         wizardState: updatedWizard
@@ -327,8 +320,6 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
         ...state.wizardState,
         currentStep: action.payload
       };
-      goalService.saveWizardState(updatedWizard);
-
       return {
         ...state,
         wizardState: updatedWizard
@@ -337,7 +328,7 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
 
     case "COMPLETE_WIZARD": {
       const goal = action.payload;
-      const nextHistory = goalService.getHistory();
+      const nextHistory = state.history;
 
       // Unlock Achievements
       const achievements = state.achievements.map((ach) => {
@@ -375,7 +366,6 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
     }
 
     case "DELETE_GOAL": {
-      goalService.deleteActiveGoal();
       return {
         ...state,
         activeGoal: null,
@@ -408,7 +398,7 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
           isCompleted: true,
           draft: JSON.parse(JSON.stringify(goal))
         },
-        history: goalService.getHistory(),
+        history: state.history,
         dailyMissions: generateDailyMissions(goal),
         recommendations: generateRecommendations(goal),
         notifications: [
@@ -427,10 +417,9 @@ function goalEngineReducer(state: GoalEngineState, action: GoalAction): GoalEngi
 
     case "DELETE_VERSION": {
       const versionId = action.payload;
-      goalService.deleteHistoryVersion(versionId);
       return {
         ...state,
-        history: goalService.getHistory(),
+        history: state.history.filter((snapshot) => snapshot.version !== versionId),
         notifications: [
           {
             id: `n_delver_${Date.now()}`,
@@ -587,16 +576,11 @@ const GoalEngineContext = createContext<GoalEngineContextType | undefined>(undef
 export function GoalEngineProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(goalEngineReducer, initialState);
 
-  // Load from services on mount
+  // Hydrate all dashboard business data from PostgreSQL.
   useEffect(() => {
-    const activeGoal = goalService.getActiveGoal();
-    const history = goalService.getHistory();
-    const wizardState = goalService.getWizardState();
-
-    dispatch({
-      type: "HYDRATE_STATE",
-      payload: { activeGoal, history, wizardState }
-    });
+    goalService.getWorkspace()
+      .then(({ activeGoal, history, wizardState }) => dispatch({ type: "HYDRATE_STATE", payload: { activeGoal, history, wizardState } }))
+      .catch((error) => console.error("API Error", error));
   }, []);
 
   // Tick study timer
@@ -630,25 +614,26 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
   const undoWizardDraft = () => dispatch({ type: "WIZARD_UNDO" });
   const redoWizardDraft = () => dispatch({ type: "WIZARD_REDO" });
 
-  const completeWizard = (goal: GoalData, changeDesc: string) => {
-    goalService.saveActiveGoal(goal, changeDesc);
-    goalService.clearWizardState();
-    dispatch({ type: "COMPLETE_WIZARD", payload: goal });
+  const completeWizard = async (goal: GoalData, changeDesc: string) => {
+    try {
+      const workspace = await goalService.saveActiveGoal(goal, changeDesc);
+      dispatch({ type: "HYDRATE_STATE", payload: workspace });
+    } catch (error) { console.error("API Error", error); }
   };
 
-  const deleteGoal = () => {
-    dispatch({ type: "DELETE_GOAL" });
+  const deleteGoal = async () => {
+    try { const workspace = await goalService.deleteActiveGoal(); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
+    catch (error) { console.error("API Error", error); }
   };
 
-  const restoreVersion = (version: number) => {
-    const restored = goalService.restoreVersion(version);
-    if (restored) {
-      dispatch({ type: "RESTORE_VERSION", payload: restored });
-    }
+  const restoreVersion = async (version: number) => {
+    try { const workspace = await goalService.restoreVersion(version); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
+    catch (error) { console.error("API Error", error); }
   };
 
-  const deleteVersion = (version: number) => {
-    dispatch({ type: "DELETE_VERSION", payload: version });
+  const deleteVersion = async (version: number) => {
+    try { const workspace = await goalService.deleteHistoryVersion(version); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
+    catch (error) { console.error("API Error", error); }
   };
 
   const toggleMission = (id: string) => dispatch({ type: "TOGGLE_MISSION", payload: id });

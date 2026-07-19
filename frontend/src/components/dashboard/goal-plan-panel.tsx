@@ -162,7 +162,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         city: activeGoal?.profile.city || "New Delhi",
         occupation: activeGoal?.profile.occupation || "Student",
         age: Number(age),
-        gender: activeGoal?.profile.gender || "Not Specified",
         syllabusPercent: activeGoal?.profile.syllabusPercent || 0,
         currentConfidence: activeGoal?.profile.currentConfidence || 3
       },
@@ -189,10 +188,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         weaknessScore: w.weaknessScore || (100 - w.confidence * 20),
         aiRecommendation: w.aiRecommendation || `Reinforce study loops for ${w.subject}`
       })),
-      summary: `Calibrated goal configuration for ${targetExam}`,
-      isPinned: activeGoal?.isPinned || false,
-      isArchived: activeGoal?.isArchived || false,
-      isFavorite: activeGoal?.isFavorite || false,
       createdAt: activeGoal?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
