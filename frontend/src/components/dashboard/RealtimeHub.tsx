@@ -158,7 +158,7 @@ export function RealtimeHub() {
   };
 
   return (
-    <div className="premium-card premium-card-hover p-6 space-y-6 relative overflow-hidden">
+    <div className="premium-card premium-card-hover rounded-3xl p-6 space-y-6 relative overflow-hidden">
       {/* Dynamic Top Ambient Glow */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 

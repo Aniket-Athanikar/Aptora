@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -18,9 +18,10 @@ import { AIPlanner } from "@/features/planner/components/AIPlanner";
 import { Calendar2026 } from "@/components/dashboard/calendar-2026";
 import { RealtimeHub } from "@/components/dashboard/RealtimeHub";
 import { usePlanner } from "@/features/planner/hooks/usePlanner";
+import { KnowledgeEngine } from "@/features/knowledge-engine";
 
 function DashboardContent() {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
@@ -76,6 +77,8 @@ function DashboardContent() {
             <AIPlanner />
           ) : activeTab === "calendar" ? (
             <Calendar2026 goal={activeGoal!} />
+          ) : activeTab === "knowledge" ? (
+            <KnowledgeEngine />
           ) : activeGoal ? (
             <div className="space-y-4.5">
               {/* Header Title */}
@@ -99,34 +102,35 @@ function DashboardContent() {
                 </button>
               </div>
 
-              {/* Grid Widgets layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4.5">
-                {/* Left Columns */}
-                <div className="lg:col-span-2 space-y-4.5">
-                  {/* Goal Card & Recommendation */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4.5">
-                    <GoalCard
-                      goal={activeGoal}
-                      onEdit={() => {
-                        startWizard();
-                        setIsEditMode(true);
-                        setShowWizard(true);
-                      }}
-                    />
-                    <FocusTimer defaultSubject={todayTasks[0]?.subject} defaultTaskId={todayTasks[0]?.id} />
-                  </div>
-
-                  <Recommendations />
-
-                  <RoadmapTimeline />
-
-                  <DailyPlanner tasks={todayTasks} onStatusChange={updateTaskStatus} onReschedule={rescheduleTask} />
+              {/* Restructured Grid Widgets layout */}
+              <div className="space-y-6">
+                {/* Row 1: Focus & Active Goal (3 Columns) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <GoalCard
+                    goal={activeGoal}
+                    onEdit={() => {
+                      startWizard();
+                      setIsEditMode(true);
+                      setShowWizard(true);
+                    }}
+                  />
+                  <FocusTimer defaultSubject={todayTasks[0]?.subject} defaultTaskId={todayTasks[0]?.id} />
+                  <RealtimeHub />
                 </div>
 
-                {/* Right Column: Version History & Stats */}
-                <div className="space-y-4.5">
-                  <RealtimeHub />
-                  <HistoryVersioning />
+                {/* Row 2: Action Planner & Recommendations (2 Columns) */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left (2/3): Timeline & Planner */}
+                  <div className="lg:col-span-2 space-y-6">
+                    <RoadmapTimeline />
+                    <DailyPlanner tasks={todayTasks} onStatusChange={updateTaskStatus} onReschedule={rescheduleTask} />
+                  </div>
+
+                  {/* Right (1/3): AI Recommendations & History */}
+                  <div className="space-y-6">
+                    <Recommendations />
+                    <HistoryVersioning />
+                  </div>
                 </div>
               </div>
             </div>

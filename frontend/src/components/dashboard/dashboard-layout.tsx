@@ -30,7 +30,6 @@ export function DashboardLayout({
   const { notifications, markNotificationRead, clearAllNotifications } = useGoalEngine();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -77,8 +76,6 @@ export function DashboardLayout({
     <div className="h-screen flex flex-row overflow-hidden bg-[var(--background)]">
       <Sidebar
         activeTab={activeTab}
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
         openProfileModal={openProfileModal}
@@ -96,13 +93,6 @@ export function DashboardLayout({
             <button
               onClick={() => setMobileOpen(true)}
               className="lg:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-50"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsCollapsed((v) => !v)}
-              className="hidden lg:flex p-2 rounded-lg text-slate-500 hover:bg-slate-50"
-              title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <Menu className="w-5 h-5" />
             </button>

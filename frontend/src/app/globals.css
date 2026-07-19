@@ -413,6 +413,25 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
   }
+
+  .premium-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(90, 54, 238, 0.05), var(--shadow-xs);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease,
+                background 0.3s ease;
+  }
+
+  .premium-card-hover:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(90, 54, 238, 0.25);
+    box-shadow: 0 20px 40px -15px rgba(90, 54, 238, 0.12), var(--shadow-md);
+  }
 }
 
 /* ---------------------------------------------------------------------------

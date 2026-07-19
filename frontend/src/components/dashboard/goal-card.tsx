@@ -54,7 +54,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`relative p-6 min-h-[320px] rounded-3xl glass flex flex-col justify-between overflow-hidden ${
+      className={`relative p-6 min-h-[320px] rounded-3xl premium-card premium-card-hover flex flex-col justify-between overflow-hidden ${
         goal.isPinned
           ? "ring-2 ring-indigo-500/10 shadow-indigo-100/50"
           : ""

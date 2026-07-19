@@ -16,14 +16,14 @@ const {
 
 // Standard UPSC and other target exams
 const PRESET_EXAMS = [
-  { name: "UPSC CSE", category: "Civil Services", color: "from-amber-500 to-orange-600", icon: "FileText" },
-  { name: "State PSC", category: "Civil Services", color: "from-orange-500 to-red-600", icon: "Building" },
-  { name: "JEE Advanced", category: "Engineering", color: "from-blue-500 to-indigo-600", icon: "Atom" },
-  { name: "NEET UG", category: "Medical", color: "from-emerald-500 to-teal-600", icon: "Activity" },
-  { name: "CAT", category: "Management", color: "from-pink-500 to-rose-600", icon: "TrendingUp" },
-  { name: "GATE", category: "Engineering", color: "from-purple-500 to-violet-600", icon: "Settings" },
-  { name: "SSC CGL", category: "Government", color: "from-cyan-500 to-blue-600", icon: "Briefcase" },
-  { name: "Banking PO", category: "Government", color: "from-sky-500 to-indigo-600", icon: "Landmark" },
+  { name: "UPSC CSE", category: "Civil Services", color: "from-amber-500 to-orange-600", icon: "FileText", glow: "rgba(245, 158, 11, 0.1)" },
+  { name: "State PSC", category: "Civil Services", color: "from-orange-500 to-red-600", icon: "Building", glow: "rgba(239, 68, 68, 0.1)" },
+  { name: "JEE Advanced", category: "Engineering", color: "from-blue-500 to-indigo-600", icon: "Atom", glow: "rgba(79, 70, 229, 0.1)" },
+  { name: "NEET UG", category: "Medical", color: "from-emerald-500 to-teal-600", icon: "Activity", glow: "rgba(16, 185, 129, 0.1)" },
+  { name: "CAT", category: "Management", color: "from-pink-500 to-rose-600", icon: "TrendingUp", glow: "rgba(244, 63, 94, 0.1)" },
+  { name: "GATE", category: "Engineering", color: "from-purple-500 to-violet-600", icon: "Settings", glow: "rgba(139, 92, 246, 0.1)" },
+  { name: "SSC CGL", category: "Government", color: "from-cyan-500 to-blue-600", icon: "Briefcase", glow: "rgba(6, 182, 212, 0.1)" },
+  { name: "Banking PO", category: "Government", color: "from-sky-500 to-indigo-600", icon: "Landmark", glow: "rgba(14, 165, 233, 0.1)" },
 ];
 
 const PRESET_SUBJECTS: Record<string, string[]> = {
@@ -74,20 +74,20 @@ function CustomSelect({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="relative flex flex-col gap-1 w-full text-left">
-      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</label>
+    <div className="relative flex flex-col gap-1.5 w-full text-left">
+      <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider pl-1">{label}</label>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full bg-gray-50 border border-gray-250 text-gray-800 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:border-indigo-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+        className="w-full bg-white border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-semibold flex items-center justify-between cursor-pointer"
       >
         <span>{value}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 mt-1 w-full bg-white border border-gray-150 rounded-2xl shadow-xl p-2 z-50 space-y-0.5 max-h-[160px] overflow-y-auto">
+          <div className="absolute left-0 mt-1.5 w-full bg-white/95 backdrop-blur-md border border-slate-200/60 rounded-2xl shadow-xl p-2.5 z-50 space-y-1 max-h-[160px] overflow-y-auto">
             {options.map((opt) => (
               <button
                 key={opt}
@@ -96,8 +96,8 @@ function CustomSelect({
                   onChange(opt);
                   setOpen(false);
                 }}
-                className={`w-full p-2 text-xs font-bold rounded-xl text-left hover:bg-indigo-50/50 transition-colors cursor-pointer ${
-                  value === opt ? "bg-indigo-50 text-indigo-600" : "text-gray-700"
+                className={`w-full p-2 px-3 text-xs font-bold rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${
+                  value === opt ? "bg-indigo-50/60 text-indigo-650" : "text-slate-600"
                 }`}
               >
                 {opt}
@@ -121,7 +121,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
     undoWizardDraft,
     redoWizardDraft,
     completeWizard,
-    activeGoal
   } = useGoalEngine();
 
   const { currentStep, draft, undoStack, redoStack } = wizardState;
@@ -273,7 +272,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         }
       }
       if (draft.timeline?.dailyStudyHours && (draft.timeline.dailyStudyHours < 1 || draft.timeline.dailyStudyHours > 15)) {
-        stepErrors.dailyStudyHours = "Daily study hours must be between 1 and 15 hours (leaving at least 8 hours for sleep/rest).";
+        stepErrors.dailyStudyHours = "Daily study hours must be between 1 and 15 hours.";
       }
     }
 
@@ -453,20 +452,20 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
   if (isThinking) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xl">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
+          initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-lg p-8 rounded-3xl bg-white border border-gray-100 shadow-2xl text-center flex flex-col items-center"
+          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center"
         >
           <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
             <span className="absolute inset-0 border-4 border-indigo-100 rounded-full animate-pulse"></span>
-            <span className="absolute inset-0 border-4 border-t-indigo-600 rounded-full animate-spin"></span>
-            <Sparkles className="w-8 h-8 text-indigo-600" />
+            <span className="absolute inset-0 border-4 border-t-indigo-650 rounded-full animate-spin"></span>
+            <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
           </div>
 
-          <h2 className="text-2xl font-bold mb-1 text-gray-900">Calibrating Success Engine</h2>
-          <p className="text-gray-500 mb-8 text-sm">Building personalized roadmap blueprints...</p>
+          <h2 className="text-2xl font-black mb-1 text-slate-900">Calibrating Success Engine</h2>
+          <p className="text-slate-500 mb-8 text-xs font-semibold">Building personalized roadmap blueprints...</p>
 
           <div className="w-full space-y-3.5 max-w-sm">
             {[
@@ -478,21 +477,21 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               "Formulating Success Prediction Metrics",
               "Launching Success Dashboard Engine"
             ].map((text, idx) => (
-              <div key={idx} className="flex items-center text-left text-sm gap-3">
-                <div className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
+              <div key={idx} className="flex items-center text-left text-xs gap-3">
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
                   thinkingStep > idx
-                    ? "bg-emerald-500 text-white"
+                    ? "bg-emerald-500 text-white shadow-sm"
                     : thinkingStep === idx
                       ? "bg-indigo-600 text-white animate-pulse"
-                      : "bg-gray-100 text-gray-400"
+                      : "bg-slate-100 text-slate-400 border border-slate-200/50"
                 }`}>
                   {thinkingStep > idx ? (
-                    <LucideIcons.Check className="w-3 h-3 text-white" />
+                    <LucideIcons.Check className="w-3.5 h-3.5 text-white" />
                   ) : (
                     <span>{idx + 1}</span>
                   )}
                 </div>
-                <span className={`font-medium ${thinkingStep >= idx ? "text-gray-800" : "text-gray-400"}`}>
+                <span className={`font-bold ${thinkingStep >= idx ? "text-slate-800" : "text-slate-400"}`}>
                   {text}
                 </span>
               </div>
@@ -504,42 +503,42 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 15 }}
+        initial={{ opacity: 0, scale: 0.97, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 15 }}
-        transition={{ type: "spring", damping: 25, stiffness: 220 }}
-        className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl glass border border-white/20 shadow-2xl overflow-hidden backdrop-blur-xl"
+        exit={{ opacity: 0, scale: 0.97, y: 15 }}
+        transition={{ type: "spring", damping: 30, stiffness: 250 }}
+        className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white border border-slate-200/60 shadow-2xl overflow-hidden backdrop-blur-2xl"
       >
         {/* Top Header Navigation */}
-        <div className="p-5 border-b border-gray-150 flex items-center justify-between bg-white/40 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-xs">
-              <StepIcon className="w-5 h-5 animate-pulse-subtle" />
+        <div className="p-6 border-b border-slate-200/50 flex items-center justify-between bg-white/50">
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+              <StepIcon className="w-5.5 h-5.5 text-indigo-600" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50/80 px-2.5 py-0.5 rounded-full">
                   Step {currentStep} of 7
                 </span>
                 {isEditMode && (
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full">
                     Edit Mode
                   </span>
                 )}
               </div>
-              <h3 className="font-bold text-gray-900">{currentMeta.title}</h3>
+              <h3 className="font-extrabold text-slate-800 tracking-tight">{currentMeta.title}</h3>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             {/* Undo/Redo Buttons */}
-            <div className="flex items-center gap-1.5 bg-gray-150/55 p-1 rounded-xl">
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/40">
               <button
                 onClick={undoWizardDraft}
                 disabled={undoStack.length === 0}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer"
                 title="Undo"
               >
                 <Undo2 className="w-4 h-4" />
@@ -547,7 +546,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               <button
                 onClick={redoWizardDraft}
                 disabled={redoStack.length === 0}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer"
                 title="Redo"
               >
                 <Redo2 className="w-4 h-4" />
@@ -557,7 +556,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 rounded-full transition-colors"
+                className="p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -566,7 +565,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Step Indicator Badges Strip */}
-        <div className="hidden md:flex items-center justify-between px-6 py-3 bg-white/30 border-b border-gray-150 text-[9px] font-extrabold uppercase tracking-wider text-gray-400">
+        <div className="hidden md:flex items-center justify-between px-6 py-4 bg-slate-50/50 border-b border-slate-200/50 text-[10px] font-black uppercase tracking-wider text-slate-400">
           {STEP_HEADERS.map((s) => {
             const isActive = currentStep === s.id;
             const isCompleted = currentStep > s.id;
@@ -581,69 +580,69 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             };
             const StepIconComponent = IconMap[s.id];
             return (
-              <div key={s.id} className="flex items-center gap-1.5">
-                <span className={`w-7 h-7 rounded-full flex items-center justify-center border transition-all ${
+              <div key={s.id} className="flex items-center gap-2">
+                <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
                   isActive
-                    ? "bg-[var(--primary)] border-[var(--primary)] text-white shadow-md animate-pulse-subtle"
+                    ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-100 animate-pulse-subtle"
                     : isCompleted
-                    ? "bg-emerald-50 border-emerald-250 text-emerald-600 font-bold"
-                    : "bg-white border-gray-200 text-gray-400"
+                      ? "bg-emerald-50 border-emerald-250 text-emerald-600 font-bold"
+                      : "bg-white border-slate-200 text-slate-400"
                 }`}>
-                  {isCompleted ? <LucideIcons.Check className="w-3.5 h-3.5" /> : StepIconComponent ? <StepIconComponent className="w-3.5 h-3.5" /> : s.id}
+                  {isCompleted ? <LucideIcons.Check className="w-4 h-4" /> : StepIconComponent ? <StepIconComponent className="w-4 h-4" /> : s.id}
                 </span>
-                <span className={isActive ? "text-indigo-600 font-black text-[10px]" : isCompleted ? "text-emerald-600 text-[10px]" : "text-[10px]"}>
+                <span className={isActive ? "text-indigo-650 font-black" : isCompleted ? "text-emerald-600" : ""}>
                   {s.label}
                 </span>
-                {s.id < 7 && <LucideIcons.ChevronRight className="w-3.5 h-3.5 text-gray-300 ml-1 shrink-0" />}
+                {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-300 ml-1 shrink-0" />}
               </div>
             );
           })}
         </div>
 
         {/* Step Progress Bar */}
-        <div className="w-full bg-gray-150 h-1.5">
+        <div className="w-full bg-slate-100 h-1">
           <motion.div
-            className="bg-[var(--primary)] h-full"
+            className="bg-gradient-to-r from-indigo-500 to-violet-650 h-full"
             initial={{ width: `${((currentStep - 1) / 7) * 100}%` }}
             animate={{ width: `${(currentStep / 7) * 100}%` }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           />
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, x: 10 }}
+              initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, x: -15 }}
+              transition={{ duration: 0.25 }}
             >
               {/* STEP 1: Target Exam */}
               {currentStep === 1 && (
                 <div className="space-y-6">
-                  <div className="flex flex-col gap-3 bg-gray-50 border border-gray-200/60 p-4.5 rounded-2xl">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Add custom Target Exam details</h4>
-                    <div className="flex flex-col md:flex-row gap-3">
-                      <div className="flex-1 flex flex-col gap-1">
-                        <label className="text-[9px] font-black text-gray-500 uppercase">Exam Name</label>
+                  <div className="flex flex-col gap-4 bg-slate-50 border border-slate-200/60 p-5 rounded-2xl">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pl-1">Add custom Target Exam details</h4>
+                    <div className="flex flex-col md:flex-row gap-4 items-end">
+                      <div className="flex-1 flex flex-col gap-1.5 w-full">
+                        <label className="text-[9px] font-black text-slate-500 uppercase pl-1">Exam Name</label>
                         <input
                           type="text"
                           placeholder="e.g. GRE, TOEFL, IELTS..."
                           value={customExam}
                           onChange={(e) => setCustomExam(e.target.value)}
-                          className="w-full border border-gray-250 rounded-xl px-3 py-2 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 font-semibold"
+                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
                         />
                       </div>
-                      <div className="flex-1 flex flex-col gap-1">
-                        <label className="text-[9px] font-black text-gray-500 uppercase">Exam Category</label>
+                      <div className="flex-1 flex flex-col gap-1.5 w-full">
+                        <label className="text-[9px] font-black text-slate-500 uppercase pl-1">Exam Category</label>
                         <input
                           type="text"
                           placeholder="e.g. Higher Studies, Lang Proficiency..."
                           value={customCategory}
                           onChange={(e) => setCustomCategory(e.target.value)}
-                          className="w-full border border-gray-250 rounded-xl px-3 py-2 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 font-semibold"
+                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
                         />
                       </div>
                       <button
@@ -655,53 +654,65 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             setCustomCategory("");
                           }
                         }}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl self-end cursor-pointer transition-all hover:scale-102 flex items-center justify-center h-[34px]"
+                        className="bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-black px-5 py-3 rounded-xl cursor-pointer transition-all hover:scale-[1.02] shadow-sm flex items-center justify-center shrink-0 w-full md:w-auto"
                       >
                         Set Exam
                       </button>
                     </div>
-                    {errors.targetExam && <p className="text-red-500 text-xs mt-1">{errors.targetExam}</p>}
+                    {errors.targetExam && <p className="text-red-500 text-xs mt-1 pl-1">{errors.targetExam}</p>}
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {PRESET_EXAMS.map((item) => (
-                      <button
-                        key={item.name}
-                        onClick={() => handleSelectExam(item.name, item.category)}
-                        className={`p-4 rounded-2xl border text-left flex flex-col justify-between h-32 transition-all relative overflow-hidden group ${
-                          draft.targetExam === item.name
-                            ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
-                            : "border-gray-200 hover:border-indigo-300 hover:bg-gray-50"
-                        }`}
-                      >
-                        <div className="text-indigo-650 mb-2">
-                          {(() => {
-                            const Icon = (LucideIcons as any)[item.icon] || LucideIcons.Award;
-                            return <Icon className="w-6 h-6" />;
-                          })()}
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 font-semibold">{item.category}</p>
-                          <h4 className="font-bold text-gray-800 text-sm group-hover:text-indigo-600">{item.name}</h4>
-                        </div>
-                        {draft.targetExam === item.name && (
-                          <div className="absolute right-2 top-2 bg-indigo-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">✓</div>
-                        )}
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {PRESET_EXAMS.map((item) => {
+                      const selected = draft.targetExam === item.name;
+                      return (
+                        <button
+                          key={item.name}
+                          onClick={() => handleSelectExam(item.name, item.category)}
+                          className={`p-5 rounded-2xl border text-left flex flex-col justify-between h-36 transition-all relative overflow-hidden group cursor-pointer ${
+                            selected
+                              ? "border-indigo-600 bg-indigo-50/40 shadow-[0_4px_16px_rgba(79,70,229,0.08)] scale-[1.02]"
+                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]"
+                          }`}
+                          style={{
+                            boxShadow: selected ? `0 6px 20px ${item.glow}` : undefined
+                          }}
+                        >
+                          <div className={`mb-2 p-2 rounded-xl w-10 h-10 flex items-center justify-center transition-colors ${selected ? "bg-white text-indigo-600 shadow-xs" : "bg-slate-50 text-slate-400 group-hover:bg-white"}`}>
+                            {(() => {
+                              const Icon = (LucideIcons as any)[item.icon] || LucideIcons.Award;
+                              return <Icon className="w-5.5 h-5.5" />;
+                            })()}
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase">{item.category}</p>
+                            <h4 className="font-extrabold text-slate-800 text-sm group-hover:text-indigo-600 transition-colors">{item.name}</h4>
+                          </div>
+                          {selected && (
+                            <div className="absolute right-3.5 top-3.5 bg-indigo-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow-sm">✓</div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {draft.targetExam && (
-                    <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <LucideIcons.Target className="w-6 h-6 text-indigo-600" />
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="p-2 bg-white rounded-xl shadow-xs">
+                          <LucideIcons.Target className="w-6 h-6 text-indigo-600" />
+                        </div>
                         <div>
-                          <p className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">Active Choice</p>
-                          <p className="font-bold text-gray-800 text-sm">{draft.targetExam} ({draft.examCategory})</p>
+                          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-wider">Active Choice</p>
+                          <p className="font-black text-slate-800 text-sm">{draft.targetExam} ({draft.examCategory})</p>
                         </div>
                       </div>
-                      <span className="text-xs text-indigo-600 bg-indigo-100/50 px-3 py-1 rounded-full font-semibold">Subject metrics populated</span>
-                    </div>
+                      <span className="text-xs text-indigo-600 bg-white border border-indigo-100 px-3 py-1 rounded-full font-bold shadow-xs">Syllabus Matrix Populated</span>
+                    </motion.div>
                   )}
                 </div>
               )}
@@ -710,16 +721,19 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-1 flex flex-col items-center gap-3 bg-gray-50 p-6 rounded-2xl border border-gray-100 justify-center">
-                      <img
-                        src={draft.profile?.avatar || AVATAR_OPTIONS[0]}
-                        alt="Avatar"
-                        className="w-24 h-24 rounded-full border-4 border-indigo-200 p-1 object-cover bg-white shadow-xs"
-                      />
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block text-center">Aspirant Profile Image</label>
+                    <div className="md:col-span-1 flex flex-col items-center gap-4 bg-slate-50 border border-slate-200/50 p-6 rounded-3xl justify-center">
+                      <div className="relative group shrink-0">
+                        <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 blur-md opacity-40 group-hover:opacity-75 transition-opacity" />
+                        <img
+                          src={draft.profile?.avatar || AVATAR_OPTIONS[0]}
+                          alt="Avatar"
+                          className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
+                        />
+                      </div>
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block text-center">Aspirant Profile Image</label>
 
                       {/* File Uploader system */}
-                      <label className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-2.5 rounded-xl cursor-pointer transition-all shadow-xs hover:-translate-y-0.5">
+                      <label className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-750 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl cursor-pointer transition-all shadow-md hover:-translate-y-0.5">
                         <Upload className="w-3.5 h-3.5" /> Upload JPG/PNG
                         <input
                           type="file"
@@ -740,10 +754,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         />
                       </label>
 
-                      <div className="w-full border-t border-gray-200/60 my-2" />
+                      <div className="w-full border-t border-slate-200/60 my-2" />
 
-                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Or Choose Preset</span>
-                      <div className="flex gap-1.5 justify-center flex-wrap">
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Or Choose Preset</span>
+                      <div className="flex gap-2 justify-center flex-wrap">
                         {AVATAR_OPTIONS.map((av, idx) => (
                           <button
                             key={idx}
@@ -751,8 +765,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             onClick={() => updateWizardDraft({
                               profile: { ...draft.profile!, avatar: av }
                             })}
-                            className={`w-7 h-7 rounded-full overflow-hidden border-2 transition-all ${
-                              draft.profile?.avatar === av ? "border-indigo-600 scale-110 shadow-xs" : "border-transparent opacity-70 hover:opacity-100"
+                            className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
+                              draft.profile?.avatar === av ? "border-indigo-600 scale-110 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
                             }`}
                           >
                             <img src={av} alt="" className="w-full h-full object-cover" />
@@ -761,24 +775,24 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       </div>
                     </div>
 
-                    <div className="md:col-span-2 space-y-4">
+                    <div className="md:col-span-2 space-y-5">
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-gray-600 uppercase">Full Name</label>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Full Name</label>
                           <input
                             type="text"
                             value={draft.profile?.fullName || ""}
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, fullName: e.target.value }
                             })}
-                            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-600"
+                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
                             placeholder="John Doe"
                           />
-                          {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
+                          {errors.fullName && <p className="text-red-500 text-xs pl-1">{errors.fullName}</p>}
                         </div>
 
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-gray-600 uppercase">Age Range (16-40)</label>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Age Range (16-40)</label>
                           <input
                             type="number"
                             min="16"
@@ -787,9 +801,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, age: parseInt(e.target.value) || 21 }
                             })}
-                            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-600"
+                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
                           />
-                          {errors.age && <p className="text-red-500 text-xs">{errors.age}</p>}
+                          {errors.age && <p className="text-red-500 text-xs pl-1">{errors.age}</p>}
                         </div>
                       </div>
 
@@ -814,18 +828,18 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Target Exam City</label>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-black text-slate-650 uppercase pl-1">Target Exam City</label>
                           <input
                             type="text"
                             value={draft.profile?.city || ""}
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, city: e.target.value }
                             })}
-                            className="border border-gray-250 bg-gray-50 rounded-xl px-3 py-2 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 transition-all font-semibold"
+                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
                             placeholder="e.g. Delhi, Mumbai"
                           />
-                          {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
+                          {errors.city && <p className="text-red-500 text-xs pl-1">{errors.city}</p>}
                         </div>
 
                         <CustomSelect
@@ -841,37 +855,41 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                   </div>
 
                   {/* Confidence and syllabus coverage */}
-                  <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-50 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-2">
-                      <div className="flex justify-between">
-                        <label className="text-xs font-bold text-indigo-700 uppercase">Syllabus Covered (%): {draft.profile?.syllabusPercent || 0}%</label>
+                  <div className="bg-indigo-50/30 p-6 rounded-3xl border border-indigo-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex justify-between pl-1">
+                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Syllabus Covered (%): {draft.profile?.syllabusPercent || 0}%</label>
                       </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={draft.profile?.syllabusPercent || 0}
-                        onChange={(e) => updateWizardDraft({
-                          profile: { ...draft.profile!, syllabusPercent: parseInt(e.target.value) }
-                        })}
-                        className="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                      />
+                      <div className="relative">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={draft.profile?.syllabusPercent || 0}
+                          onChange={(e) => updateWizardDraft({
+                            profile: { ...draft.profile!, syllabusPercent: parseInt(e.target.value) }
+                          })}
+                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        />
+                      </div>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                      <div className="flex justify-between">
-                        <label className="text-xs font-bold text-indigo-700 uppercase">Current Confidence Level: {draft.profile?.currentConfidence || 3}/5</label>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex justify-between pl-1">
+                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Current Confidence Level: {draft.profile?.currentConfidence || 3}/5</label>
                       </div>
-                      <input
-                        type="range"
-                        min="1"
-                        max="5"
-                        value={draft.profile?.currentConfidence || 3}
-                        onChange={(e) => updateWizardDraft({
-                          profile: { ...draft.profile!, currentConfidence: parseInt(e.target.value) }
-                        })}
-                        className="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                      />
+                      <div className="relative">
+                        <input
+                          type="range"
+                          min="1"
+                          max="5"
+                          value={draft.profile?.currentConfidence || 3}
+                          onChange={(e) => updateWizardDraft({
+                            profile: { ...draft.profile!, currentConfidence: parseInt(e.target.value) }
+                          })}
+                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -881,9 +899,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex flex-col gap-1">
-                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                    <div className="space-y-5">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-black text-slate-650 uppercase flex items-center gap-1.5 pl-1">
                           <Calendar className="w-4 h-4 text-indigo-600" /> Exam Date
                         </label>
                         <input
@@ -892,16 +910,16 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           onChange={(e) => updateWizardDraft({
                             timeline: { ...draft.timeline!, examDate: e.target.value }
                           })}
-                          className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-600 bg-white"
+                          className="border border-slate-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold bg-white"
                         />
-                        {errors.examDate && <p className="text-red-500 text-xs">{errors.examDate}</p>}
+                        {errors.examDate && <p className="text-red-500 text-xs pl-1">{errors.examDate}</p>}
                       </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-slate-650 uppercase flex items-center gap-1.5 pl-1">
                           <Clock className="w-4 h-4 text-indigo-600" /> Target Study Hours (Daily)
                         </label>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-4 mt-1.5">
                           <input
                             type="range"
                             min="2"
@@ -910,57 +928,57 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             onChange={(e) => updateWizardDraft({
                               timeline: { ...draft.timeline!, dailyStudyHours: parseInt(e.target.value) }
                             })}
-                            className="flex-1 h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                            className="flex-1 h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                           />
-                          <span className="w-16 text-center font-bold text-gray-800 text-sm bg-gray-100 py-1 px-2.5 rounded-lg border border-gray-200">
+                          <span className="w-20 text-center font-black text-indigo-700 text-xs bg-indigo-50 border border-indigo-100 py-2 px-3 rounded-xl shrink-0 shadow-xs">
                             {draft.timeline?.dailyStudyHours || 8} Hrs
                           </span>
                         </div>
-                        {errors.dailyStudyHours && <p className="text-red-500 text-xs">{errors.dailyStudyHours}</p>}
+                        {errors.dailyStudyHours && <p className="text-red-500 text-xs pl-1">{errors.dailyStudyHours}</p>}
                       </div>
                     </div>
 
                     {/* Timeline calculations output */}
-                    <div className="bg-gray-50 border border-gray-100 p-6 rounded-2xl space-y-4">
-                      <h4 className="font-bold text-gray-900 flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" /> AI Calculator Projections
+                    <div className="bg-slate-50/50 border border-slate-200/60 p-6 rounded-3xl space-y-4">
+                      <h4 className="font-extrabold text-slate-800 text-sm flex items-center gap-2">
+                        <Sparkles className="w-4.5 h-4.5 text-amber-500 animate-pulse" /> AI Calculator Projections
                       </h4>
 
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-3.5 rounded-xl border border-gray-200/60">
-                          <span className="text-[10px] uppercase font-bold text-gray-500">Days Remaining</span>
-                          <p className="text-xl font-extrabold text-indigo-600 mt-1">{draft.timeline?.remainingDays || 0} Days</p>
+                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-400">Days Remaining</span>
+                          <p className="text-lg font-black text-indigo-600 mt-1">{draft.timeline?.remainingDays || 0} Days</p>
                         </div>
 
-                        <div className="bg-white p-3.5 rounded-xl border border-gray-200/60">
-                          <span className="text-[10px] uppercase font-bold text-gray-500">Total study allocation</span>
-                          <p className="text-xl font-extrabold text-indigo-600 mt-1">
+                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-400">Total Study Hours</span>
+                          <p className="text-lg font-black text-indigo-600 mt-1">
                             {((draft.timeline?.remainingDays || 0) * (draft.timeline?.dailyStudyHours || 8)).toLocaleString()} Hrs
                           </p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-3.5 rounded-xl border border-gray-200/60">
-                          <span className="text-[10px] uppercase font-bold text-gray-500">Burnout Risk</span>
-                          <div className="flex items-center gap-1.5 mt-1.5">
+                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-400">Burnout Risk</span>
+                          <div className="flex items-center gap-2 mt-1.5">
                             <span className={`w-2.5 h-2.5 rounded-full ${
-                              draft.timeline?.burnoutRisk === "High" ? "bg-red-500" : draft.timeline?.burnoutRisk === "Moderate" ? "bg-amber-500" : "bg-emerald-500"
+                              draft.timeline?.burnoutRisk === "High" ? "bg-rose-500" : draft.timeline?.burnoutRisk === "Moderate" ? "bg-amber-500" : "bg-emerald-500"
                             }`} />
-                            <span className="text-xs font-bold text-gray-800">{draft.timeline?.burnoutRisk || "Low"}</span>
+                            <span className="text-xs font-extrabold text-slate-800">{draft.timeline?.burnoutRisk || "Low"}</span>
                           </div>
                         </div>
 
-                        <div className="bg-white p-3.5 rounded-xl border border-gray-200/60">
-                          <span className="text-[10px] uppercase font-bold text-gray-500">Curriculum Difficulty</span>
-                          <p className="text-xs font-bold text-gray-800 mt-2">{draft.timeline?.difficulty || "Medium"}</p>
+                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-400">Difficulty Level</span>
+                          <p className="text-xs font-extrabold text-slate-800 mt-2">{draft.timeline?.difficulty || "Medium"}</p>
                         </div>
                       </div>
 
-                      <div className="bg-indigo-600 text-white p-4 rounded-xl flex items-center justify-between">
+                      <div className="bg-gradient-to-r from-indigo-600 to-violet-650 text-white p-4.5 rounded-2xl flex items-center justify-between shadow-md">
                         <div>
-                          <p className="text-[10px] font-semibold opacity-85 uppercase">Success Prediction Probability</p>
-                          <p className="text-xs opacity-75 mt-0.5">Based on hours, coverage, date</p>
+                          <p className="text-[10px] font-black uppercase tracking-wider opacity-90">Success Prediction Rate</p>
+                          <p className="text-[10px] opacity-75 mt-0.5">Based on hours, coverage, target date</p>
                         </div>
                         <span className="text-2xl font-black">{draft.timeline?.successPrediction || 65}%</span>
                       </div>
@@ -973,9 +991,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                       <div>
-                        <label className="text-sm font-bold text-gray-700 block mb-2">Preferred Study Time Slots</label>
+                        <label className="text-xs font-black text-slate-650 uppercase block mb-3 pl-1">Preferred Study Time Slots</label>
                         <div className="flex flex-wrap gap-2">
                           {(["Morning", "Afternoon", "Night", "Weekend"] as const).map((slot) => {
                             const active = draft.lifestyle?.slots?.includes(slot) || false;
@@ -997,19 +1015,19 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                                     lifestyle: { ...draft.lifestyle!, slots: nextSlots }
                                   });
                                 }}
-                                className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 cursor-pointer hover:scale-[1.02] ${
+                                className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] ${
                                   active
-                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-xs"
-                                    : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"
+                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
                                 }`}
                               >
-                                {SlotIcon && <SlotIcon className="w-3.5 h-3.5" />}
+                                {SlotIcon && <SlotIcon className="w-4 h-4" />}
                                 <span>{slot}</span>
                               </button>
                             );
                           })}
                         </div>
-                        {errors.slots && <p className="text-red-500 text-[10px] font-bold mt-1.5">{errors.slots}</p>}
+                        {errors.slots && <p className="text-rose-500 text-[10px] font-black mt-2 pl-1">{errors.slots}</p>}
                       </div>
 
                       <CustomSelect
@@ -1031,7 +1049,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                       <CustomSelect
                         label="Internet Access / Availability"
                         value={draft.lifestyle?.internetAvailability || "High-speed Wi-Fi (Continuous)"}
@@ -1042,8 +1060,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       />
 
                       <div>
-                        <label className="text-sm font-bold text-gray-700 block mb-2">Consistency Commits</label>
-                        <div className="grid grid-cols-2 gap-2">
+                        <label className="text-xs font-black text-slate-650 uppercase block mb-3 pl-1">Consistency Commits</label>
+                        <div className="grid grid-cols-2 gap-2.5">
                           {["Everyday", "Weekdays Only", "Weekends Intensive", "Skip Festivals/Holidays"].map((item) => {
                             const selected = draft.lifestyle?.consistency?.includes(item) || false;
                             const CommitIcon = {
@@ -1064,14 +1082,14 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                                     lifestyle: { ...draft.lifestyle!, consistency: nextCon }
                                   });
                                 }}
-                                className={`p-3 rounded-xl border text-left text-xs font-semibold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${
+                                className={`p-3.5 rounded-xl border text-left text-xs font-bold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${
                                   selected
-                                    ? "bg-indigo-50 border-indigo-600 text-indigo-800 shadow-2xs"
-                                    : "bg-white border-gray-200 hover:border-indigo-300"
+                                    ? "bg-indigo-50/50 border-indigo-650 text-indigo-700 shadow-sm"
+                                    : "bg-white border-slate-200 hover:border-indigo-300"
                                 }`}
                               >
-                                <div className="flex items-center gap-1.5">
-                                  {CommitIcon && <CommitIcon className={`w-4.5 h-4.5 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-gray-400"}`} />}
+                                <div className="flex items-center gap-2">
+                                  {CommitIcon && <CommitIcon className={`w-4.5 h-4.5 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-slate-400"}`} />}
                                   <span>{item}</span>
                                 </div>
                                 {selected && <LucideIcons.Check className="w-3.5 h-3.5 text-indigo-600 shrink-0" />}
@@ -1079,7 +1097,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             );
                           })}
                         </div>
-                        {errors.consistency && <p className="text-red-500 text-[10px] font-bold mt-1.5">{errors.consistency}</p>}
+                        {errors.consistency && <p className="text-rose-500 text-[10px] font-black mt-2 pl-1">{errors.consistency}</p>}
                       </div>
                     </div>
                   </div>
@@ -1089,25 +1107,25 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {/* STEP 5: Learning Preferences */}
               {currentStep === 5 && (
                 <div className="space-y-6">
-                  <div className="flex flex-col">
-                    <label className="text-sm font-bold text-gray-800 mb-1">Select Study & Revision preferences</label>
-                    <p className="text-xs text-gray-500 mb-2">Our study blueprint generator configures daily goals tailored to these learning formats.</p>
-                    {errors.preferences && <p className="text-red-500 text-[10px] font-bold mb-3">{errors.preferences}</p>}
+                  <div className="flex flex-col pl-1">
+                    <label className="text-sm font-black text-slate-800 mb-1">Select Study & Revision preferences</label>
+                    <p className="text-xs text-slate-450 font-medium">Our study blueprint generator configures daily goals tailored to these learning formats.</p>
+                    {errors.preferences && <p className="text-rose-500 text-[10px] font-black mt-2">{errors.preferences}</p>}
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                      { name: "Video lectures", icon: "Video" },
-                      { name: "Reading books", icon: "BookOpen" },
-                      { name: "Practice Questions", icon: "PenTool" },
-                      { name: "PYQs (Previous Years)", icon: "Calendar" },
-                      { name: "Mock Tests", icon: "Award" },
-                      { name: "Flashcards", icon: "Layers" },
-                      { name: "Mind Maps", icon: "Brain" },
-                      { name: "AI Tutor sessions", icon: "Bot" },
-                      { name: "Revision Notes", icon: "FileText" },
-                      { name: "Discussion Forums", icon: "Users" },
-                      { name: "Live Classes", icon: "Radio" }
+                      { name: "Video lectures", icon: "Video", color: "rgba(99, 102, 241, 0.08)" },
+                      { name: "Reading books", icon: "BookOpen", color: "rgba(16, 185, 129, 0.08)" },
+                      { name: "Practice Questions", icon: "PenTool", color: "rgba(245, 158, 11, 0.08)" },
+                      { name: "PYQs (Previous Years)", icon: "Calendar", color: "rgba(239, 68, 68, 0.08)" },
+                      { name: "Mock Tests", icon: "Award", color: "rgba(139, 92, 246, 0.08)" },
+                      { name: "Flashcards", icon: "Layers", color: "rgba(244, 63, 94, 0.08)" },
+                      { name: "Mind Maps", icon: "Brain", color: "rgba(6, 182, 212, 0.08)" },
+                      { name: "AI Tutor sessions", icon: "Bot", color: "rgba(79, 70, 229, 0.08)" },
+                      { name: "Revision Notes", icon: "FileText", color: "rgba(100, 116, 139, 0.08)" },
+                      { name: "Discussion Forums", icon: "Users", color: "rgba(79, 70, 229, 0.08)" },
+                      { name: "Live Classes", icon: "Radio", color: "rgba(217, 70, 239, 0.08)" }
                     ].map((pref) => {
                       const selected = draft.preferences?.includes(pref.name) || false;
                       const Icon = (LucideIcons as any)[pref.icon] || LucideIcons.Award;
@@ -1121,16 +1139,19 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                               : [...currentPrefs, pref.name];
                             updateWizardDraft({ preferences: nextPrefs });
                           }}
-                          className={`p-4 rounded-2xl border text-center flex flex-col items-center justify-center gap-2 transition-all ${
+                          className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2.5 transition-all cursor-pointer hover:scale-[1.02] ${
                             selected
-                              ? "border-indigo-600 bg-indigo-50/50 shadow-sm"
-                              : "border-gray-200 hover:bg-gray-50 hover:border-indigo-300"
+                              ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
+                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50"
                           }`}
+                          style={{
+                            boxShadow: selected ? `0 6px 16px ${pref.color}` : undefined
+                          }}
                         >
-                          <Icon className={`w-6 h-6 ${selected ? "text-indigo-600" : "text-gray-500"}`} />
-                          <span className="text-xs font-bold text-gray-700">{pref.name}</span>
+                          <Icon className={`w-6 h-6 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-slate-400"}`} />
+                          <span className="text-xs font-extrabold text-slate-700">{pref.name}</span>
                           {selected && (
-                            <span className="text-[10px] text-white bg-indigo-600 px-2 py-0.5 rounded-full">Active</span>
+                            <span className="text-[9px] font-black text-white bg-indigo-650 px-2 py-0.5 rounded-full shadow-xs">Active</span>
                           )}
                         </button>
                       );
@@ -1142,56 +1163,56 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {/* STEP 6: Weakness Analysis */}
               {currentStep === 6 && (
                 <div className="space-y-6">
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4 pl-1">
                     <div className="flex flex-col gap-1">
-                      <label className="text-sm font-bold text-gray-800">Review Subject Competencies for {draft.targetExam || "Selected Exam"}</label>
-                      <p className="text-xs text-gray-500">Rate your active confidence (1 = No confidence, 5 = High mastery) to automatically program AI focus revisions.</p>
+                      <label className="text-sm font-black text-slate-800">Review Subject Competencies for {draft.targetExam || "Selected Exam"}</label>
+                      <p className="text-xs text-slate-450 font-medium">Rate your active confidence (1 = No confidence, 5 = High mastery) to automatically program AI focus revisions.</p>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <input
                         type="text"
                         placeholder="Add custom subject/module name..."
                         value={customSubjectName}
                         onChange={(e) => setCustomSubjectName(e.target.value)}
-                        className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-indigo-600 bg-white"
+                        className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 bg-white font-semibold"
                       />
                       <button
                         onClick={handleAddCustomSubject}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 rounded-xl"
+                        className="bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-black px-5 rounded-xl cursor-pointer transition-all hover:scale-102 shrink-0 shadow-sm"
                       >
                         Add Subject
                       </button>
                     </div>
-                    {errors.weaknesses && <p className="text-red-500 text-[10px] font-bold mt-1.5">{errors.weaknesses}</p>}
+                    {errors.weaknesses && <p className="text-rose-500 text-[10px] font-black mt-1.5">{errors.weaknesses}</p>}
                   </div>
 
-                  <div className="space-y-3.5">
+                  <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
                     {draft.weaknesses?.map((w, idx) => (
-                      <div key={idx} className="bg-white border border-gray-200/80 p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div key={idx} className="bg-white border border-slate-200/80 p-4.5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-3xs">
                         <div className="flex-1 min-w-[180px]">
                           <div className="flex items-center gap-2">
                             <span className={`w-2.5 h-2.5 rounded-full ${
-                              w.priority === "High" ? "bg-red-500" : w.priority === "Medium" ? "bg-amber-500" : "bg-emerald-500"
+                              w.priority === "High" ? "bg-rose-500" : w.priority === "Medium" ? "bg-amber-500" : "bg-emerald-500"
                             }`} />
-                            <h5 className="font-extrabold text-gray-800 text-sm">{w.subject}</h5>
+                            <h5 className="font-extrabold text-slate-800 text-sm">{w.subject}</h5>
                           </div>
-                          <span className="text-[10px] text-gray-400 font-bold uppercase block mt-1">
-                            Weakness Score: {w.weaknessScore}% &bull; Priority: {w.priority}
+                          <span className="text-[10px] text-slate-400 font-bold uppercase block mt-1.5">
+                            Weakness: {w.weaknessScore}% &bull; Priority: {w.priority}
                           </span>
                         </div>
 
-                        <div className="flex flex-1 items-center gap-3">
-                          <label className="text-xs font-bold text-gray-500 uppercase">Confidence</label>
-                          <div className="flex gap-1">
+                        <div className="flex flex-1 items-center gap-3 justify-start md:justify-center">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Confidence</label>
+                          <div className="flex gap-1 bg-slate-55 p-0.5 rounded-xl border border-slate-200/60 bg-slate-50">
                             {[1, 2, 3, 4, 5].map((stars) => (
                               <button
                                 key={stars}
                                 onClick={() => handleWeaknessConfidenceChange(idx, stars)}
-                                className={`w-7 h-7 rounded-lg text-xs font-extrabold transition-all ${
+                                className={`w-7 h-7 rounded-lg text-xs font-black transition-all cursor-pointer ${
                                   w.confidence >= stars
-                                    ? "bg-indigo-600 text-white"
-                                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                    ? "bg-indigo-600 text-white shadow-xs"
+                                    : "text-slate-400 hover:text-slate-650"
                                 }`}
                               >
                                 {stars}
@@ -1201,16 +1222,16 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <label className="text-xs font-bold text-gray-500 uppercase">Difficulty</label>
-                          <div className="flex bg-gray-100 p-0.5 rounded-xl border border-gray-200">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Difficulty</label>
+                          <div className="flex bg-slate-50 p-0.5 rounded-xl border border-slate-200/60">
                             {(["Easy", "Medium", "Hard"] as const).map((diff) => (
                               <button
                                 key={diff}
                                 onClick={() => handleWeaknessDifficultyChange(idx, diff)}
-                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                   w.difficulty === diff
-                                    ? "bg-white text-gray-900 shadow-sm"
-                                    : "text-gray-500 hover:text-gray-700"
+                                    ? "bg-white text-slate-900 shadow-xs"
+                                    : "text-slate-400 hover:text-slate-700"
                                 }`}
                               >
                                 {diff}
@@ -1221,9 +1242,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
                         <button
                           onClick={() => handleRemoveSubject(idx)}
-                          className="p-1 text-gray-400 hover:text-red-500 rounded-lg"
+                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-rose-50/50 transition-all cursor-pointer"
                         >
-                          <X className="w-4.5 h-4.5" />
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
@@ -1234,19 +1255,18 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {/* STEP 7: Review summary */}
               {currentStep === 7 && (
                 <div className="space-y-6">
-
                   {/* Performance projection panel */}
-                  <div className="bg-indigo-600 text-white p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="bg-gradient-to-r from-indigo-600 to-violet-650 text-white p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none" />
                     <div className="space-y-2 relative z-10">
-                      <span className="text-[9px] font-extrabold uppercase tracking-widest bg-indigo-500/80 border border-indigo-400 px-3 py-1 rounded-full">
+                      <span className="text-[9px] font-black uppercase tracking-widest bg-indigo-500/80 border border-indigo-400/50 px-3 py-1 rounded-full">
                         Calibration Forecast Established
                       </span>
                       <h4 className="text-xl font-black">Calibration Projections Calculated!</h4>
-                      <p className="text-indigo-100 text-xs max-w-md">The ExamForge engine combined your inputs from all  steps to calibrate target metrics</p>
+                      <p className="text-indigo-100 text-xs max-w-md">The ExamForge engine combined your inputs from all steps to calibrate target metrics</p>
                     </div>
 
-                    <div className="flex items-center gap-4 bg-indigo-700/60 p-4.5 rounded-2xl border border-indigo-500/50 relative z-10 shrink-0">
+                    <div className="flex items-center gap-4 bg-indigo-700/40 p-4.5 rounded-2xl border border-indigo-500/40 relative z-10 shrink-0">
                       <div className="text-center">
                         <span className="text-[9px] text-indigo-200 uppercase font-black tracking-wider">Success Prediction</span>
                         <p className="text-3xl font-black mt-1">{draft.timeline?.successPrediction || 65}%</p>
@@ -1255,105 +1275,105 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                   </div>
 
                   {/* Calculations math breakdown (Aesthetics/Predict correct analysis) */}
-                  <div className="bg-white border border-gray-150 rounded-3xl p-5.5 space-y-4">
-                    <h5 className="font-extrabold text-gray-800 text-xs uppercase tracking-wider border-b border-gray-100 pb-2 flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-amber-500" /> Success Predictor Calculation Math
+                  <div className="bg-white border border-slate-200/60 rounded-3xl p-6 space-y-4">
+                    <h5 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
+                      <Sparkles className="w-4.5 h-4.5 text-amber-500 animate-pulse" /> Success Predictor Calculation Math
                     </h5>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-medium text-gray-600">
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <span className="text-[9px] text-gray-400 uppercase font-bold block">1. Baseline Level</span>
-                        <span className="text-sm font-extrabold text-slate-800 mt-1 block">50.0%</span>
-                        <p className="text-[9px] text-gray-400 mt-0.5">Base probability chance</p>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-semibold text-slate-500">
+                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
+                        <span className="text-[9px] text-slate-400 uppercase font-bold block">1. Baseline Level</span>
+                        <span className="text-sm font-black text-slate-800 mt-1 block">50.0%</span>
+                        <p className="text-[9px] text-slate-400 mt-1">Base probability chance</p>
                       </div>
 
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <span className="text-[9px] text-gray-400 uppercase font-bold block">2. Hours Multiplier</span>
-                        <span className="text-sm font-extrabold text-indigo-600 mt-1 block">+{((draft.timeline?.dailyStudyHours || 8) * 2.5).toFixed(1)}%</span>
-                        <p className="text-[9px] text-gray-400 mt-0.5">Based on {draft.timeline?.dailyStudyHours || 8} study hrs</p>
+                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
+                        <span className="text-[9px] text-slate-400 uppercase font-bold block">2. Hours Multiplier</span>
+                        <span className="text-sm font-black text-indigo-650 mt-1 block">+{((draft.timeline?.dailyStudyHours || 8) * 2.5).toFixed(1)}%</span>
+                        <p className="text-[9px] text-slate-400 mt-1">Based on {draft.timeline?.dailyStudyHours || 8} study hrs</p>
                       </div>
 
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <span className="text-[9px] text-gray-400 uppercase font-bold block">3. Study Formats Bonus</span>
-                        <span className="text-sm font-extrabold text-emerald-600 mt-1 block">+{((draft.preferences?.length || 0) * 1.5).toFixed(1)}%</span>
-                        <p className="text-[9px] text-gray-400 mt-0.5">Based on {draft.preferences?.length || 0} active modes</p>
+                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
+                        <span className="text-[9px] text-slate-400 uppercase font-bold block">3. Study Formats Bonus</span>
+                        <span className="text-sm font-black text-emerald-600 mt-1 block">+{((draft.preferences?.length || 0) * 1.5).toFixed(1)}%</span>
+                        <p className="text-[9px] text-slate-400 mt-1">Based on {draft.preferences?.length || 0} active modes</p>
                       </div>
 
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <span className="text-[9px] text-gray-400 uppercase font-bold block">4. Weakness Buffer</span>
-                        <span className="text-sm font-extrabold text-amber-600 mt-1 block">
+                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
+                        <span className="text-[9px] text-slate-400 uppercase font-bold block">4. Weakness Buffer</span>
+                        <span className="text-sm font-black text-amber-605 mt-1 block">
                           -{(Math.max(0, 10 - ((draft.weaknesses || []).reduce((acc, w) => acc + w.confidence, 0) / ((draft.weaknesses || []).length || 1)) * 2)).toFixed(1)}%
                         </span>
-                        <p className="text-[9px] text-gray-400 mt-0.5">Average weakness ratings drag</p>
+                        <p className="text-[9px] text-slate-400 mt-1">Average weakness ratings drag</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Left Column: Profile, Timeline & Environment */}
-                    <div className="md:col-span-2 space-y-5 bg-white border border-gray-150 rounded-3xl p-5.5 shadow-xs">
-                      <h5 className="font-extrabold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-100 pb-2">Profile & Logistics</h5>
-                      <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-gray-700">
+                    <div className="md:col-span-2 space-y-5 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-3xs">
+                      <h5 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-3">Profile & Logistics</h5>
+                      <div className="grid grid-cols-2 gap-5 text-xs font-semibold text-slate-700">
                         <div className="space-y-1">
-                          <span className="text-[9px] text-gray-400 uppercase font-bold block">Aspirant Name</span>
-                          <p>{draft.profile?.fullName || "Student"}</p>
+                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Aspirant Name</span>
+                          <p className="font-black text-slate-800">{draft.profile?.fullName || "Student"}</p>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[9px] text-gray-400 uppercase font-bold block">Target Exam Category</span>
-                          <p>{draft.targetExam} ({draft.examCategory || "Custom"})</p>
+                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Exam Category</span>
+                          <p className="font-black text-slate-800">{draft.targetExam} ({draft.examCategory || "Custom"})</p>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[9px] text-gray-400 uppercase font-bold block">Syllabus Status</span>
-                          <p>{draft.profile?.syllabusPercent || 0}% Complete</p>
+                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Syllabus Status</span>
+                          <p className="font-black text-slate-800">{draft.profile?.syllabusPercent || 0}% Complete</p>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[9px] text-gray-400 uppercase font-bold block">Target Exam Date</span>
-                          <p>{draft.timeline?.examDate} ({draft.timeline?.remainingDays} Days Left)</p>
+                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Exam Date</span>
+                          <p className="font-black text-slate-800">{draft.timeline?.examDate} ({draft.timeline?.remainingDays} Days Left)</p>
                         </div>
-                        <div className="space-y-1 col-span-2 border-t border-slate-100 pt-2.5 grid grid-cols-2 gap-2.5">
+                        <div className="space-y-2 col-span-2 border-t border-slate-100 pt-4.5 grid grid-cols-2 gap-4">
                           <div>
-                            <span className="text-[9px] text-gray-400 uppercase font-bold block">Study Environment</span>
-                            <p className="font-medium">{draft.lifestyle?.learningEnvironment || "Quiet Study Room"}</p>
+                            <span className="text-[9px] text-slate-400 uppercase font-bold block">Study Environment</span>
+                            <p className="font-bold text-slate-700">{draft.lifestyle?.learningEnvironment || "Quiet Study Room"}</p>
                           </div>
                           <div>
-                            <span className="text-[9px] text-gray-400 uppercase font-bold block">Study Slots / Device</span>
-                            <p className="font-medium">{draft.lifestyle?.slots?.join(", ")} via {draft.lifestyle?.preferredDevice}</p>
+                            <span className="text-[9px] text-slate-400 uppercase font-bold block">Study Slots / Device</span>
+                            <p className="font-bold text-slate-700">{draft.lifestyle?.slots?.join(", ")} via {draft.lifestyle?.preferredDevice}</p>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Right Column: Step 6 selections list (Subject Confidence Model) */}
-                    <div className="space-y-5 bg-white border border-gray-150 rounded-3xl p-5.5 shadow-xs">
-                      <h5 className="font-extrabold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-100 pb-2">Weak Subjects</h5>
-                      <div className="space-y-3 max-h-[190px] overflow-y-auto pr-1">
+                    <div className="space-y-5 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-3xs">
+                      <h5 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-3">Weak Subjects</h5>
+                      <div className="space-y-3 max-h-[190px] overflow-y-auto pr-1 custom-scrollbar">
                         {(draft.weaknesses || [])
                           .filter((w) => w.confidence <= 3 || w.priority === "High" || w.priority === "Medium")
                           .map((w, index) => (
-                            <div key={index} className="flex flex-col gap-1.5 bg-slate-50 border border-slate-100 p-3 rounded-xl text-xs font-bold">
+                            <div key={index} className="flex flex-col gap-2 bg-slate-50 border border-slate-200/40 p-3.5 rounded-xl text-xs font-bold">
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                  <Star className={`w-3.5 h-3.5 shrink-0 ${
+                                  <Star className={`w-4 h-4 shrink-0 ${
                                     w.priority === "High"
-                                      ? "fill-red-500 text-red-500 animate-pulse"
+                                      ? "fill-rose-500 text-rose-500 animate-pulse"
                                       : w.priority === "Medium"
-                                      ? "fill-amber-500 text-amber-500"
-                                      : "fill-emerald-500 text-emerald-500"
+                                        ? "fill-amber-500 text-amber-500"
+                                        : "fill-emerald-500 text-emerald-500"
                                   }`} />
-                                  <span className="text-gray-800 font-extrabold truncate max-w-[125px]">{w.subject}</span>
+                                  <span className="text-slate-800 font-extrabold truncate max-w-[125px]">{w.subject}</span>
                                 </div>
-                                <span className="text-[9px] text-gray-400 font-black uppercase tracking-wider">{w.difficulty}</span>
+                                <span className="text-[9px] text-slate-400 font-black uppercase tracking-wider">{w.difficulty}</span>
                               </div>
 
-                              <div className="flex justify-between items-center border-t border-gray-100 pt-1.5 mt-1">
-                                <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest">Confidence</span>
+                              <div className="flex justify-between items-center border-t border-slate-200/50 pt-2.5 mt-1">
+                                <span className="text-[8px] text-slate-400 font-black uppercase tracking-widest">Confidence</span>
                                 <span className="flex items-center gap-0.5">
                                   {[...Array(5)].map((_, i) => {
                                     const isFilled = i < w.confidence;
                                     return (
                                       <Star
                                         key={i}
-                                        className={`w-3 h-3 ${isFilled ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+                                        className={`w-3.5 h-3.5 ${isFilled ? "fill-amber-400 text-amber-400" : "text-slate-355"}`}
                                       />
                                     );
                                   })}
@@ -1364,7 +1384,6 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       </div>
                     </div>
                   </div>
-
                 </div>
               )}
             </motion.div>
@@ -1372,11 +1391,11 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Footer Navigation Buttons */}
-        <div className="p-5 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+        <div className="p-6 border-t border-slate-200/50 flex items-center justify-between bg-slate-55/60 bg-slate-50">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="p-3 bg-white border border-gray-200 hover:border-gray-300 text-gray-600 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 cursor-pointer shadow-3xs flex items-center justify-center"
+            className="p-3 bg-white border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-800 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer shadow-xs flex items-center justify-center"
             title="Previous Step"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -1384,7 +1403,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
           <button
             onClick={handleNext}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm cursor-pointer hover:scale-[1.02]"
+            className="bg-indigo-600 hover:bg-indigo-750 text-white font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl flex items-center gap-2 transition-all shadow-md cursor-pointer hover:scale-[1.02] hover:shadow-lg"
             title={currentStep === 7 ? "Launch success engine" : "Save & Continue"}
           >
             <span>{currentStep === 7 ? "Launch Engine" : "Next Step"}</span>

@@ -13,7 +13,7 @@ export function HistoryVersioning() {
 
   if (history.length === 0) {
     return (
-      <div className="p-8 text-center premium-card rounded-3xl space-y-3.5">
+      <div className="p-8 text-center premium-card premium-card-hover rounded-3xl space-y-3.5">
         <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto text-slate-400">
           <History className="w-6 h-6" />
         </div>
@@ -37,7 +37,7 @@ export function HistoryVersioning() {
   const g2 = compareVersion2 ? getGoalData(compareVersion2) : null;
 
   return (
-    <div className="p-6 premium-card rounded-3xl space-y-6">
+    <div className="p-6 premium-card premium-card-hover rounded-3xl space-y-6">
       <div className="flex justify-between items-center border-b border-slate-100 pb-3">
         <div className="space-y-0.5">
           <h3 className="font-black text-slate-800 text-sm flex items-center gap-1.5 uppercase tracking-wider">
