@@ -38,6 +38,7 @@ interface SidebarProps {
 const NAV_ITEMS = [
   { key: "home", label: "Home", icon: Home, color: "text-slate-500", glowColor: "rgba(100, 116, 139, 0.15)" },
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, color: "text-indigo-500", glowColor: "rgba(99, 102, 241, 0.15)" },
+  { key: "ai", label: "AI Study", icon: Sparkles, color: "text-purple-500", glowColor: "rgba(168, 85, 247, 0.15)" },
   { key: "knowledge", label: "Knowledge Engine", icon: BookOpen, color: "text-amber-605", glowColor: "rgba(217, 119, 6, 0.15)" },
   { key: "goal-plan", label: "Goal Plan", icon: Compass, color: "text-violet-500", glowColor: "rgba(139, 92, 246, 0.15)" },
   { key: "planner", label: "Planner", icon: ListTodo, color: "text-sky-500", glowColor: "rgba(14, 165, 233, 0.15)" },
@@ -60,6 +61,7 @@ const QUOTES = [
 function navigate(router: ReturnType<typeof useRouter>, tab: string, sub?: string) {
   if (tab === "home") return router.push("/");
   if (tab === "dashboard") return router.push("/dashboard");
+  if (tab === "ai") return router.push("/dashboard/ai");
   if (tab === "progress") return router.push("/dashboard/progress");
   if (tab === "analytics") return router.push("/dashboard/analytics");
   if (tab === "achievements") return router.push("/dashboard/achievements");
