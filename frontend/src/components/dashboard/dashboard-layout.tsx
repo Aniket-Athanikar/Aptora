@@ -33,41 +33,8 @@ export function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const [profileModalOpen, setProfileModalOpen] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
-  const [editAvatar, setEditAvatar] = useState("");
-
   const openProfileModal = () => {
-    setEditName(user?.name || "");
-    setEditEmail(user?.email || "");
-    setEditAvatar(user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix");
-    setProfileModalOpen(true);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setEditAvatar(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = () => {
-    login({ name: editName, email: editEmail, avatar: editAvatar });
-    try {
-      const stored = localStorage.getItem("ef_profile_data");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        parsed.fullName = editName;
-        parsed.email = editEmail;
-        localStorage.setItem("ef_profile_data", JSON.stringify(parsed));
-      }
-    } catch {
-      /* noop */
-    }
-    setProfileModalOpen(false);
+    router.push("/profile");
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -187,111 +154,6 @@ export function DashboardLayout({
           {children}
         </main>
       </div>
-
-      {/* Profile modal */}
-      {profileModalOpen && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-3xl bg-white border border-slate-200 shadow-2xl p-6 space-y-5">
-            <button
-              onClick={() => setProfileModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="text-center space-y-1">
-              <h3 className="text-lg font-extrabold text-slate-800 flex items-center justify-center gap-1.5">
-                <Camera className="w-5 h-5 text-indigo-500" />
-                Customize Profile
-              </h3>
-              <p className="text-xs text-slate-500">
-                Update your avatar, name and email.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative group">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-70 blur" />
-                <img
-                  src={editAvatar}
-                  alt="preview"
-                  className="relative w-24 h-24 rounded-full object-cover border-4 border-white"
-                />
-                <label className="absolute bottom-0 right-0 p-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full cursor-pointer shadow-md transition">
-                  <Upload className="w-3.5 h-3.5" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-              <div className="space-y-1.5 w-full text-center">
-                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.18em]">
-                  Seed Presets
-                </span>
-                <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                  {["Felix", "Aneka", "Jack", "Sophia", "Zoe", "Buster", "Luna"].map((seed) => (
-                    <button
-                      key={seed}
-                      type="button"
-                      onClick={() => setEditAvatar(`https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`)}
-                      className="px-2.5 py-1 text-[10px] font-bold bg-slate-50 border border-slate-200 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition"
-                    >
-                      {seed}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-[0.18em]">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  className="input"
-                  placeholder="e.g. Aniket Athanikar"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-[0.18em]">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={editEmail}
-                  onChange={(e) => setEditEmail(e.target.value)}
-                  className="input"
-                  placeholder="e.g. aniket@examforge.ai"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={() => setProfileModalOpen(false)}
-                className="flex-1 py-2.5 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl text-xs font-bold text-slate-600 transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="btn-primary flex-1 py-2.5 text-xs"
-              >
-                Save Updates
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
