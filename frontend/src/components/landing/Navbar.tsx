@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -116,13 +116,30 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-[999] w-full transition-all duration-500 border-b pointer-events-auto",
+        "absolute top-0 left-0 right-0 z-[999] w-full transition-all duration-500 border-b pointer-events-auto",
         scrolled
-          ? "bg-white/80 backdrop-blur-xl border-neutral-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3"
-          : "bg-white/30 backdrop-blur-md border-neutral-200/20 shadow-none py-5"
+          ? "bg-[var(--surface)]/80 backdrop-blur-xl border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3"
+          : "bg-[var(--surface)]/30 backdrop-blur-md border-white/20 shadow-none py-5"
       )}
     >
-      <div className="layout-container max-w-[1320px] px-6 mx-auto flex items-center justify-between">
+      {/* 3D perspective wireframe pattern simulating Three.js grid floor */}
+      <div
+        className="absolute inset-x-0 top-0 h-28 overflow-hidden opacity-25 pointer-events-none z-0"
+        style={{ perspective: "150px" }}
+      >
+        <div
+          className="w-full h-[200%] origin-top"
+          style={{
+            transform: "rotateX(65deg)",
+            backgroundImage: "linear-gradient(rgba(109, 74, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 74, 255, 0.1) 1px, transparent 1px)",
+            backgroundSize: "16px 16px"
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--surface)] to-transparent" />
+      </div>
+      <div className="absolute top-0 left-[35%] w-[30%] h-full bg-gradient-to-r from-[#6D4AFF]/5 to-[#A855F7]/5 blur-[50px] pointer-events-none z-0" />
+
+      <div className="w-full px-8 md:px-12 flex items-center justify-between relative z-10">
 
         {/* Logo */}
         <Link
@@ -130,16 +147,24 @@ export default function Navbar() {
           onClick={() => setActiveLink("/")}
           className="flex items-center gap-3 font-black text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
         >
-          <Image
-            src="/favicon.ico"
-            alt="ExamForge AI Logo"
-            width={56}
-            height={56}
-            className="w-12 h-12 md:w-14 md:h-14 rounded-full animate-spin-slow glow-avatar object-cover border-2 border-[#ECECEC]"
-            priority
-          />
-          <span className="font-black tracking-tight text-neutral-950 uppercase text-2xl md:text-3xl mt-1">
-            EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
+          <div className="relative shrink-0" style={{ perspective: 1000 }}>
+            <motion.div
+              whileHover={{ rotateY: 180, scale: 1.05 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="relative w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-slate-150 shadow-md flex items-center justify-center bg-white"
+            >
+              <Image
+                src="/favicon.ico"
+                alt="ExamForge AI Vision Logo"
+                width={56}
+                height={56}
+                className="w-full h-full rounded-full object-cover"
+                priority
+              />
+            </motion.div>
+          </div>
+          <span className="font-black tracking-tight text-neutral-950 text-2xl md:text-3xl mt-1">
+            ExamForge-<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-600 bg-clip-text text-transparent">AI</span>
           </span>
         </Link>
 
@@ -156,7 +181,7 @@ export default function Navbar() {
                 href={link.href}
                 onClick={() => setActiveLink(link.href)}
                 className={cn(
-                  "relative text-sm font-black uppercase tracking-wider transition-colors py-2 block",
+                  "relative text-sm font-black tracking-wider transition-colors py-2 block",
                   activeLink === link.href
                     ? "text-[#6D4AFF]"
                     : "text-neutral-600 hover:text-neutral-900"
@@ -219,7 +244,7 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-[#ECECEC] rounded-2xl shadow-xl overflow-hidden"
+                    className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-[#ECECEC] rounded-2xl shadow-xl overflow-hidden z-50"
                   >
                     <div className="p-4 border-b border-[#ECECEC]">
                       <p className="text-sm font-black text-neutral-900 truncate">{formatDisplayName(user.name)}</p>
@@ -259,11 +284,11 @@ export default function Navbar() {
             /* â”€â”€ Guest Actions â”€â”€ */
             <>
               <Link href="/login" className="text-sm font-bold text-neutral-600 hover:text-[#6D4AFF] cursor-pointer transition-colors px-4 py-2">
-                LOGIN
+                Login
               </Link>
               <Link href="/login">
                 <GlowButton variant="gradient" className="text-xs px-6 py-3 font-bold" magnetic={false}>
-                  GET STARTED
+                  Get Started
                 </GlowButton>
               </Link>
             </>
@@ -378,7 +403,7 @@ export default function Navbar() {
       )}
 
       {/* Glowing Bottom Border of the capsule */}
-      <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_12px_2px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-[4.5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.9)] z-50 pointer-events-none" />
 
       {/* Delete Account Modal */}
       <DeleteAccountModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} />

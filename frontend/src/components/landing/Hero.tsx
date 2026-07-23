@@ -27,7 +27,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden min-h-screen flex items-center">
+    <section className="relative pt-32 pb-20 overflow-hidden flex items-center">
       {/* Dynamic Animated particle & neural background */}
       <HeroBackground />
 
@@ -152,7 +152,7 @@ export default function Hero() {
             {/* Pulsing light rings */}
             <div className="absolute -inset-4 bg-gradient-to-r from-[#6D4AFF]/20 via-[#A855F7]/25 to-[#4F46E5]/20 rounded-full blur-3xl opacity-80 animate-pulse pointer-events-none" />
 
-            <GlassCard className="relative p-6 bg-white/70 border border-white/80 rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center overflow-hidden">
+            <GlassCard className="relative p-6 bg-[var(--surface)]/70 border border-white/20 rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 rounded-full blur-xl pointer-events-none" />
 
               <div className="relative w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500 flex items-center justify-center">

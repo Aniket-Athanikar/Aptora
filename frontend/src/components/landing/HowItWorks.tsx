@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
@@ -115,7 +115,7 @@ export default function HowItWorks() {
           badge="Workflow"
           title="How ExamForge"
           gradientTitle="AI Works?"
-          description="Simple 4-step process to transform your preparation."
+          description="Simple step process to transform your preparation."
         />
 
         {/* Steps Grid */}
@@ -130,7 +130,7 @@ export default function HowItWorks() {
               className="relative flex"
             >
               <TiltCard className="flex">
-                <GlassCard className="flex flex-col items-center text-center p-8 bg-white/60 backdrop-blur-md border-[#ECECEC]/80 rounded-[32px] relative w-full justify-between gap-6 shadow-sm hover:shadow-2xl hover:border-[#6D4AFF]/40 transition-shadow duration-500 bg-gradient-to-b from-white to-neutral-50/50">
+                <GlassCard className="flex flex-col items-center text-center p-8 bg-[var(--surface)]/60 backdrop-blur-md border-[#ECECEC]/80 rounded-[32px] relative w-full justify-between gap-6 shadow-sm hover:shadow-2xl hover:border-[#6D4AFF]/40 transition-shadow duration-500 bg-gradient-to-b from-[var(--surface)] to-[var(--background)]/50">
 
                   {/* Connecting arrow for larger screens */}
                   {idx < 3 && (
@@ -145,7 +145,7 @@ export default function HowItWorks() {
                   )}
 
                   {/* Step Badge */}
-                  <span style={{ transform: "translateZ(30px)" }} className="inline-flex px-3 py-1 text-[10px] font-bold tracking-wider text-neutral-500 uppercase bg-neutral-100/80 border border-[#ECECEC] rounded-full shadow-inner transition-colors group-hover:bg-white group-hover:text-[#6D4AFF]">
+                  <span style={{ transform: "translateZ(30px)" }} className="inline-flex px-3 py-1 text-[10px] font-bold tracking-wider text-neutral-500 uppercase bg-neutral-100/80 border border-[#ECECEC] rounded-full shadow-inner transition-colors group-hover:bg-[var(--surface)] group-hover:text-[#6D4AFF]">
                     {item.step}
                   </span>
 

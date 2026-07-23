@@ -186,8 +186,8 @@ export default function Features() {
       <div className="relative w-full flex overflow-hidden group">
 
         {/* Left and Right Gradient Masks for a clean fade-out effect */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-r from-[#faf9ff] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-l from-[#faf9ff] to-transparent z-20 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-r from-[var(--background)] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-40 bg-gradient-to-l from-[var(--background)] to-transparent z-20 pointer-events-none" />
 
         {/* Scrolling Track */}
         <motion.div
@@ -203,7 +203,7 @@ export default function Features() {
             <div key={idx} className="w-[300px] md:w-[400px] flex-shrink-0 py-10">
               <TiltCard className="h-full">
                 <GlassCard
-                  className={`flex flex-col items-start p-8 h-full bg-white/70 backdrop-blur-xl border-[#ECECEC] rounded-[32px] gap-6 transition-all duration-500 shadow-sm ${item.glow}`}
+                  className={`flex flex-col items-start p-8 h-full bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[32px] gap-6 transition-all duration-500 shadow-sm ${item.glow}`}
                 >
                   {/* Icon Wrapper with Z-Depth */}
                   <div

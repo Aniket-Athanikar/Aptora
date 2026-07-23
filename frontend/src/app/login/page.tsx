@@ -97,8 +97,8 @@ function BrandHeader() {
           className="rounded-full animate-spin-slow glow-avatar object-cover border border-[var(--border)]"
           priority
         />
-        <span className="font-black text-xl tracking-tight text-neutral-950">
-          Exam<span className="gradient-text-animated">Forge</span>
+        <span className="font-black text-xl tracking-tight text-slate-900">
+          ExamForge-<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-600 bg-clip-text text-transparent">AI</span>
         </span>
       </div>
       <Link

@@ -19,8 +19,8 @@ export default function ParticleBackground() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
       {/* Light Theme Background Mesh */}
-      <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.4]" />
-      <div className="absolute top-0 left-0 w-full h-full bg-dot-pattern opacity-[0.5]" />
+      <div className="absolute top-0 left-0 w-full h-full bg-grid opacity-[0.4]" />
+      <div className="absolute top-0 left-0 w-full h-full bg-dot opacity-[0.5]" />
       <div className="absolute top-0 left-0 w-full h-full bg-radial-gradient" />
 
       {/* Interactive WebGL Neural Network canvas */}

@@ -1,8 +1,12 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
+import { 
+  Check, CheckCircle2, Sparkles, BookOpen, FileText, HelpCircle, 
+  Calendar, BarChart3, UploadCloud, LineChart, Zap, Clock, 
+  Users, Cpu, ClipboardList, MessageSquare, ShieldCheck 
+} from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import GlassCard from "../ui/GlassCard";
@@ -68,11 +72,11 @@ export default function Pricing() {
       price: { monthly: 299, yearly: 249 },
       yearlyTotal: 2999,
       features: [
-        "10 Book Selected",
-        "AI Notes",
-        "10,000 Questions",
-        "Daily Practice",
-        "Basic Analytics",
+        { text: "10 Books Selected", icon: BookOpen },
+        { text: "AI Notes Generator", icon: FileText },
+        { text: "10,000 Practice Questions", icon: HelpCircle },
+        { text: "Daily Practice Sets", icon: Calendar },
+        { text: "Basic Performance Analytics", icon: BarChart3 },
       ],
       popular: false,
     },
@@ -82,12 +86,12 @@ export default function Pricing() {
       price: { monthly: 599, yearly: 499 },
       yearlyTotal: 5999,
       features: [
-        "Everything in Basic",
-        "Unlimited Book Selected",
-        "Advanced Analytics",
-        "Priority Support",
-        "Mock Tests (Unlimited)",
-        "Personalized Mentoring",
+        { text: "Everything in Basic", icon: CheckCircle2 },
+        { text: "Unlimited Books Selected", icon: UploadCloud },
+        { text: "Advanced Performance Analytics", icon: LineChart },
+        { text: "Priority Support (24/7)", icon: Zap },
+        { text: "Mock Tests (Unlimited)", icon: Clock },
+        { text: "Personalized Mentoring", icon: Users },
       ],
       popular: true,
     },
@@ -97,12 +101,11 @@ export default function Pricing() {
       price: { monthly: 999, yearly: 833 },
       yearlyTotal: 9999,
       features: [
-        "Everything in Premium",
-        "Advanced Analytics",
-        "Dedicated AI Mentor",
-        "Custom Study Plans",
-        "1-on-1 Live Mentoring",
-        "Priority Support",
+        { text: "Everything in Premium", icon: CheckCircle2 },
+        { text: "Dedicated AI Mentor (1-on-1)", icon: Cpu },
+        { text: "Custom Study Plans", icon: ClipboardList },
+        { text: "1-on-1 Live Mentoring", icon: MessageSquare },
+        { text: "VIP Priority Support", icon: ShieldCheck },
       ],
       popular: false,
     },
@@ -193,9 +196,9 @@ export default function Pricing() {
               <PricingTiltCard isPopular={plan.popular} className="w-full flex h-full">
 
                 <GlassCard
-                  className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-white/70 backdrop-blur-2xl ${plan.popular
-                    ? "border-[#6D4AFF]/40 ring-4 ring-[#6D4AFF]/10 shadow-[0_25px_50px_-12px_rgba(109,74,255,0.2)] bg-gradient-to-b from-white to-[#6D4AFF]/[0.02] transform lg:-translate-y-3"
-                    : "border-[#ECECEC] hover:shadow-lg hover:border-neutral-300 shadow-sm"
+                  className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-[var(--surface)]/70 backdrop-blur-2xl ${plan.popular
+                    ? "border-[#6D4AFF]/40 ring-4 ring-[#6D4AFF]/10 shadow-[0_25px_50px_-12px_rgba(109,74,255,0.2)] bg-gradient-to-b from-[var(--surface)] to-[#6D4AFF]/[0.02] transform lg:-translate-y-3"
+                    : "border-white/20 hover:shadow-lg hover:border-neutral-300 shadow-sm"
                     }`}
                 >
 
@@ -219,7 +222,7 @@ export default function Pricing() {
 
                     <div style={{ transform: "translateZ(35px)" }} className="my-6">
                       <div className="flex items-baseline gap-1 text-neutral-900">
-                        <span className="text-base font-bold text-neutral-400">â‚¹</span>
+                        <span className="text-base font-bold text-neutral-400">₹</span>
                         <AnimatePresence mode="popLayout">
                           <motion.span
                             key={billingCycle}
@@ -245,7 +248,7 @@ export default function Pricing() {
                               exit={{ opacity: 0 }}
                               className="text-[9px] font-bold text-emerald-600"
                             >
-                              Billed â‚¹{plan.yearlyTotal} yearly
+                              Billed ₹{plan.yearlyTotal} yearly
                             </motion.p>
                           )}
                         </AnimatePresence>
@@ -253,14 +256,15 @@ export default function Pricing() {
                     </div>
 
                     <ul className="flex flex-col gap-3 mb-6">
-                      {plan.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
-                          <div className={`mt-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? "bg-[#6D4AFF]/10 text-[#6D4AFF]" : "bg-emerald-50 text-emerald-500"}`}>
-                            <Check className="w-2 h-2" />
-                          </div>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
+                      {plan.features.map((feature, fIdx) => {
+                        const IconComponent = feature.icon;
+                        return (
+                          <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
+                            <IconComponent className={`w-3.5 h-3.5 ${plan.popular ? "text-[#6D4AFF]" : "text-neutral-400"} shrink-0 mt-0.5`} />
+                            <span>{feature.text}</span>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
 
@@ -271,7 +275,7 @@ export default function Pricing() {
                         ? `/login`
                         : isAuthenticated
                         ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}&amount=${planPrice}`
-                        : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}%26amount=${planPrice}`;
+                        : `/login?redirect=${encodeURIComponent(`/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}&amount=${planPrice}`)}`;
 
                       return (
                         <Link href={targetHref}>

@@ -229,11 +229,11 @@ export default function Exams() {
   const SelectedIcon = selectedExam.icon;
 
   return (
-    <section id="exams" className="py-20 bg-neutral-50/50 relative overflow-hidden border-t border-[#ECECEC]">
+    <section id="exams" className="py-20 bg-transparent relative overflow-hidden border-t border-[#ECECEC]">
 
       {/* Background decoration elements */}
-      <div className="absolute top-[200px] left-[5%] w-[350px] h-[350px] bg-purple-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[200px] right-[5%] w-[350px] h-[350px] bg-blue-500/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute top-[200px] left-[5%] w-[350px] h-[350px] bg-[#6D4AFF]/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[200px] right-[5%] w-[350px] h-[350px] bg-[#A855F7]/5 rounded-full filter blur-[100px] pointer-events-none" />
 
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
 
@@ -257,7 +257,7 @@ export default function Exams() {
               className={`px-4 py-2.5 rounded-full text-xs font-black transition-all duration-300 cursor-pointer shadow-sm ${
                 activeCategory === cat.id
                   ? "bg-neutral-900 text-white border-neutral-900"
-                  : "bg-white border border-[#ECECEC] text-neutral-600 hover:bg-neutral-50"
+                  : "bg-[var(--surface)] border border-white/20 text-neutral-600 hover:bg-[var(--surface-soft)]"
               }`}
             >
               {cat.label}
@@ -279,7 +279,7 @@ export default function Exams() {
                 transition={{ duration: 0.3 }}
                 className="w-full flex h-full"
               >
-                <GlassCard className="p-6 md:p-8 flex flex-col justify-between w-full rounded-3xl border-[#ECECEC] bg-white shadow-md relative overflow-hidden">
+                <GlassCard className="p-6 md:p-8 flex flex-col justify-between w-full rounded-3xl border-white/20 bg-[var(--surface)] shadow-md relative overflow-hidden">
 
                   {/* Glowing background decor */}
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-transparent blur-[30px] rounded-full pointer-events-none" />
@@ -360,8 +360,8 @@ export default function Exams() {
                       onClick={() => setSelectedExamName(exam.name)}
                       className={`p-4 rounded-2xl border text-center transition-all duration-300 flex flex-col items-center justify-center gap-2.5 cursor-pointer hover:-translate-y-1 hover:shadow-md ${
                         isSelected
-                          ? "bg-white border-[#6D4AFF] shadow-[0_8px_20px_-8px_rgba(109,74,255,0.15)] ring-2 ring-[#6D4AFF]/10"
-                          : "bg-white/70 backdrop-blur-xl border-[#ECECEC] text-neutral-700 hover:border-neutral-300"
+                          ? "bg-[var(--surface)] border-[#6D4AFF] shadow-[0_8px_20px_-8px_rgba(109,74,255,0.15)] ring-2 ring-[#6D4AFF]/10"
+                          : "bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 text-neutral-700 hover:border-neutral-300"
                       }`}
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isSelected ? "bg-[#6D4AFF]/10 border-[#6D4AFF]/20 text-[#6D4AFF]" : "bg-neutral-50 border-neutral-100 text-neutral-500"} border shadow-inner transition-colors duration-300`}>

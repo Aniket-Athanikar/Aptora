@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
@@ -105,8 +105,8 @@ export default function Testimonials() {
       <div className="relative w-full flex overflow-hidden group py-8">
 
         {/* Left and Right Gradient Masks for the vignette fade effect */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-r from-[#faf9ff] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-l from-[#faf9ff] to-transparent z-20 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-r from-[var(--background)] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-l from-[var(--background)] to-transparent z-20 pointer-events-none" />
 
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
@@ -121,7 +121,7 @@ export default function Testimonials() {
             <div key={idx} className="w-[320px] sm:w-[380px] flex-shrink-0">
               <TiltCard className="h-full">
                 <GlassCard
-                  className="relative flex flex-col justify-between p-8 bg-white/70 backdrop-blur-xl border-[#ECECEC] rounded-[32px] min-h-[240px] shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.15)] hover:border-[#6D4AFF]/30 transition-all duration-500 overflow-hidden"
+                  className="relative flex flex-col justify-between p-8 bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[32px] min-h-[240px] shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.15)] hover:border-[#6D4AFF]/30 transition-all duration-500 overflow-hidden"
                 >
                   {/* Decorative Background Quote Icon */}
                   <Quote className="absolute top-6 right-6 w-16 h-16 text-[#6D4AFF]/5 -z-10 transform -scale-x-100" />

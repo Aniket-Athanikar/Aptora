@@ -26,8 +26,10 @@ import {
   MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/lib/ToastContext";
 
 export function AIChatStepFlow() {
+  const { toast } = useToast();
   const {
     activeWorkspace,
     flowStep,
@@ -373,7 +375,7 @@ export function AIChatStepFlow() {
                     Start Chat with this {activeResource.type}
                   </button>
                   <button
-                    onClick={() => alert("Document preview modal opened!")}
+                    onClick={() => toast("Document preview modal opened!", "info")}
                     className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />

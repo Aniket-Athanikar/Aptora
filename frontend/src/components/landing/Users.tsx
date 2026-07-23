@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
@@ -117,7 +117,7 @@ export default function Users() {
             >
               <TiltCard className="flex w-full">
                 <GlassCard
-                  className={`flex items-center gap-5 p-5 pr-6 bg-white/70 backdrop-blur-xl border-[#ECECEC] rounded-[24px] w-full transition-all duration-500 shadow-sm overflow-hidden ${item.glow}`}
+                  className={`flex items-center gap-5 p-5 pr-6 bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[24px] w-full transition-all duration-500 shadow-sm overflow-hidden ${item.glow}`}
                 >
 
                   {/* Decorative corner glow inside the card */}

@@ -13,6 +13,14 @@ function CoachChatContent() {
 
   useEffect(() => {
     loadCoachData();
+    // Refresh state when local storage undergoes CRUD operations
+    const handleSync = () => {
+      loadCoachData();
+    };
+    window.addEventListener("storage", handleSync);
+    return () => {
+      window.removeEventListener("storage", handleSync);
+    };
   }, [loadCoachData]);
 
   return (

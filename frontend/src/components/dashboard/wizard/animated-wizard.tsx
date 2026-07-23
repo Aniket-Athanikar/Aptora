@@ -65,12 +65,16 @@ function CustomSelect({
   value,
   onChange,
   options,
-  label
+  label,
+  focusClass = "focus:border-indigo-500 focus:ring-indigo-500/10",
+  activeClass = "bg-indigo-50/60 text-indigo-650"
 }: {
   value: string;
   onChange: (val: string) => void;
   options: string[];
   label: string;
+  focusClass?: string;
+  activeClass?: string;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -79,7 +83,7 @@ function CustomSelect({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full bg-white border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-semibold flex items-center justify-between cursor-pointer"
+        className={`w-full bg-white border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none transition-all font-semibold flex items-center justify-between cursor-pointer focus:ring-4 ${focusClass}`}
       >
         <span>{value}</span>
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
@@ -96,9 +100,8 @@ function CustomSelect({
                   onChange(opt);
                   setOpen(false);
                 }}
-                className={`w-full p-2 px-3 text-xs font-bold rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${
-                  value === opt ? "bg-indigo-50/60 text-indigo-650" : "text-slate-600"
-                }`}
+                className={`w-full p-2 px-3 text-xs font-bold rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${value === opt ? activeClass : "text-slate-655"
+                  }`}
               >
                 {opt}
               </button>
@@ -478,13 +481,12 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               "Launching Success Dashboard Engine"
             ].map((text, idx) => (
               <div key={idx} className="flex items-center text-left text-xs gap-3">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
-                  thinkingStep > idx
-                    ? "bg-emerald-500 text-white shadow-sm"
-                    : thinkingStep === idx
-                      ? "bg-indigo-600 text-white animate-pulse"
-                      : "bg-slate-100 text-slate-400 border border-slate-200/50"
-                }`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${thinkingStep > idx
+                  ? "bg-emerald-500 text-white shadow-sm"
+                  : thinkingStep === idx
+                    ? "bg-indigo-600 text-white animate-pulse"
+                    : "bg-slate-100 text-slate-400 border border-slate-200/50"
+                  }`}>
                   {thinkingStep > idx ? (
                     <LucideIcons.Check className="w-3.5 h-3.5 text-white" />
                   ) : (
@@ -502,28 +504,96 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
     );
   }
 
+  const STEP_COLORS: Record<number, { glowLeft: string; glowRight: string; shadow: string }> = {
+    1: { glowLeft: "bg-[#6D4AFF]/12", glowRight: "bg-[#A855F7]/12", shadow: "shadow-[0_24px_85px_rgba(109,74,255,0.18)]" },
+    2: { glowLeft: "bg-[#10B981]/12", glowRight: "bg-[#14B8A6]/12", shadow: "shadow-[0_24px_85px_rgba(16,185,129,0.15)]" },
+    3: { glowLeft: "bg-[#F59E0B]/12", glowRight: "bg-[#F97316]/12", shadow: "shadow-[0_24px_85px_rgba(245,158,11,0.15)]" },
+    4: { glowLeft: "bg-[#F43F5E]/12", glowRight: "bg-[#D946EF]/12", shadow: "shadow-[0_24px_85px_rgba(244,63,94,0.15)]" },
+    5: { glowLeft: "bg-[#0EA5E9]/12", glowRight: "bg-[#06B6D4]/12", shadow: "shadow-[0_24px_85px_rgba(14,165,233,0.15)]" },
+    6: { glowLeft: "bg-[#EF4444]/12", glowRight: "bg-[#F43F5E]/12", shadow: "shadow-[0_24px_85px_rgba(239,68,68,0.15)]" },
+    7: { glowLeft: "bg-[#EAB308]/15", glowRight: "bg-[#F59E0B]/15", shadow: "shadow-[0_24px_85px_rgba(234,179,8,0.2)]" }
+  };
+
+  const theme = STEP_COLORS[currentStep] || STEP_COLORS[1];
+
+  const stepStyles = {
+    cardBg: currentStep === 1 ? "bg-indigo-50/30 border-indigo-200/40"
+      : currentStep === 2 ? "bg-emerald-50/30 border-emerald-200/40"
+        : currentStep === 3 ? "bg-amber-50/30 border-amber-200/40"
+          : currentStep === 4 ? "bg-rose-50/30 border-rose-200/40"
+            : currentStep === 5 ? "bg-sky-50/30 border-sky-200/40"
+              : currentStep === 6 ? "bg-red-50/30 border-red-200/40"
+                : "bg-yellow-50/30 border-yellow-250/40",
+
+    badgeBg: currentStep === 1 ? "bg-indigo-100/60 text-indigo-750 border-indigo-200/40"
+      : currentStep === 2 ? "bg-emerald-100/60 text-emerald-750 border-emerald-200/40"
+        : currentStep === 3 ? "bg-amber-100/60 text-amber-750 border-amber-200/40"
+          : currentStep === 4 ? "bg-rose-100/60 text-rose-750 border-rose-200/40"
+            : currentStep === 5 ? "bg-sky-100/60 text-sky-750 border-sky-200/40"
+              : currentStep === 6 ? "bg-red-100/60 text-red-750 border-red-200/40"
+                : "bg-yellow-100/60 text-yellow-800 border-yellow-250/40",
+
+    accentText: currentStep === 1 ? "text-indigo-650"
+      : currentStep === 2 ? "text-emerald-700"
+        : currentStep === 3 ? "text-amber-700"
+          : currentStep === 4 ? "text-rose-700"
+            : currentStep === 5 ? "text-sky-700"
+              : currentStep === 6 ? "text-red-700"
+                : "text-yellow-750",
+
+    focusBorder: currentStep === 1 ? "focus:border-indigo-500 focus:ring-indigo-500/10"
+      : currentStep === 2 ? "focus:border-emerald-500 focus:ring-emerald-500/10"
+        : currentStep === 3 ? "focus:border-amber-500 focus:ring-amber-500/10"
+          : currentStep === 4 ? "focus:border-rose-500 focus:ring-rose-500/10"
+            : currentStep === 5 ? "focus:border-sky-500 focus:ring-sky-500/10"
+              : currentStep === 6 ? "focus:border-red-500 focus:ring-red-500/10"
+                : "focus:border-yellow-500 focus:ring-yellow-500/10",
+
+    btnBg: currentStep === 1 ? "bg-indigo-600 hover:bg-indigo-750 text-white"
+      : currentStep === 2 ? "bg-emerald-600 hover:bg-emerald-750 text-white"
+        : currentStep === 3 ? "bg-amber-600 hover:bg-amber-750 text-white"
+          : currentStep === 4 ? "bg-rose-600 hover:bg-rose-750 text-white"
+            : currentStep === 5 ? "bg-sky-600 hover:bg-sky-750 text-white"
+              : currentStep === 6 ? "bg-red-600 hover:bg-red-750 text-white"
+                : "bg-gradient-to-r from-yellow-500 to-amber-600 text-white hover:brightness-105",
+
+    activeSelectionCard: currentStep === 1 ? "border-indigo-600 bg-indigo-50/50 text-indigo-900 shadow-[0_4px_20px_rgba(99,102,241,0.08)] scale-[1.01]"
+      : currentStep === 2 ? "border-emerald-600 bg-emerald-50/50 text-emerald-900 shadow-[0_4px_20px_rgba(16,185,129,0.08)] scale-[1.01]"
+        : currentStep === 3 ? "border-amber-600 bg-amber-50/50 text-amber-900 shadow-[0_4px_20px_rgba(245,158,11,0.08)] scale-[1.01]"
+          : currentStep === 4 ? "border-rose-600 bg-rose-50/50 text-rose-900 shadow-[0_4px_20px_rgba(244,63,94,0.08)] scale-[1.01]"
+            : currentStep === 5 ? "border-sky-600 bg-sky-50/50 text-sky-900 shadow-[0_4px_20px_rgba(14,165,233,0.08)] scale-[1.01]"
+              : currentStep === 6 ? "border-red-650 bg-red-50/50 text-red-900 shadow-[0_4px_20px_rgba(239,68,68,0.08)] scale-[1.01]"
+                : "border-yellow-500 bg-yellow-50/50 text-yellow-955 shadow-[0_4px_20px_rgba(234,179,8,0.1)] scale-[1.01]"
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 15 }}
         transition={{ type: "spring", damping: 30, stiffness: 250 }}
-        className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white border border-slate-200/60 shadow-2xl overflow-hidden backdrop-blur-2xl"
+        className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white/75 glass border border-white/30 overflow-hidden backdrop-blur-3xl transition-all duration-700 ${theme.shadow}`}
       >
+        {/* Ambient background glows inside the modal */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className={`absolute top-[-25%] left-[-15%] w-[400px] h-[400px] ${theme.glowLeft} rounded-full filter blur-[120px] animate-pulse transition-all duration-700`} style={{ animationDuration: '8s' }} />
+          <div className={`absolute bottom-[-25%] right-[-15%] w-[400px] h-[400px] ${theme.glowRight} rounded-full filter blur-[120px] animate-pulse transition-all duration-700`} style={{ animationDuration: '8s', animationDelay: '2s' }} />
+        </div>
+
         {/* Top Header Navigation */}
-        <div className="p-6 border-b border-slate-200/50 flex items-center justify-between bg-white/50">
+        <div className="p-6 border-b border-white/20 flex items-center justify-between bg-white/40 backdrop-blur-sm relative z-10">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
-              <StepIcon className="w-5.5 h-5.5 text-indigo-600" />
+            <div className="w-11 h-11 rounded-2xl bg-indigo-50/80 border border-indigo-100 flex items-center justify-center text-[#6D4AFF] shadow-sm shrink-0">
+              <StepIcon className="w-5.5 h-5.5 text-[#6D4AFF]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50/80 px-2.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#6D4AFF] bg-indigo-50/90 px-2.5 py-0.5 rounded-full border border-indigo-100/40">
                   Step {currentStep} of 7
                 </span>
                 {isEditMode && (
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/40">
                     Edit Mode
                   </span>
                 )}
@@ -565,7 +635,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Step Indicator Badges Strip */}
-        <div className="hidden md:flex items-center justify-between px-6 py-4 bg-slate-50/50 border-b border-slate-200/50 text-[10px] font-black uppercase tracking-wider text-slate-400">
+        <div className="hidden md:flex items-center justify-between px-6 py-4 bg-white/30 border-b border-white/20 text-[10px] font-black uppercase tracking-wider text-slate-400 relative z-10">
           {STEP_HEADERS.map((s) => {
             const isActive = currentStep === s.id;
             const isCompleted = currentStep > s.id;
@@ -581,28 +651,27 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             const StepIconComponent = IconMap[s.id];
             return (
               <div key={s.id} className="flex items-center gap-2">
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
-                  isActive
-                    ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-100 animate-pulse-subtle"
-                    : isCompleted
-                      ? "bg-emerald-50 border-emerald-250 text-emerald-600 font-bold"
-                      : "bg-white border-slate-200 text-slate-400"
-                }`}>
+                <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isActive
+                  ? "bg-gradient-to-r from-[#6D4AFF] to-[#A855F7] border-white/10 text-white shadow-[0_0_14px_rgba(109,74,255,0.4)] scale-105"
+                  : isCompleted
+                    ? "bg-emerald-500 border-emerald-400 text-white font-bold shadow-[0_0_10px_rgba(16,185,129,0.25)]"
+                    : "bg-white/40 border-white/20 text-slate-500"
+                  }`}>
                   {isCompleted ? <LucideIcons.Check className="w-4 h-4" /> : StepIconComponent ? <StepIconComponent className="w-4 h-4" /> : s.id}
                 </span>
-                <span className={isActive ? "text-indigo-650 font-black" : isCompleted ? "text-emerald-600" : ""}>
+                <span className={isActive ? "text-[#6D4AFF] font-black tracking-wide" : isCompleted ? "text-emerald-600 font-bold" : "text-slate-500"}>
                   {s.label}
                 </span>
-                {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-300 ml-1 shrink-0" />}
+                {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-400/60 ml-1 shrink-0" />}
               </div>
             );
           })}
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="w-full bg-slate-100 h-1">
+        {/* Step Progress Bar with Glowing Line Effect */}
+        <div className="w-full bg-white/25 h-1.5 relative z-10 border-b border-white/10">
           <motion.div
-            className="bg-gradient-to-r from-indigo-500 to-violet-650 h-full"
+            className="bg-gradient-to-r from-[#6D4AFF] via-[#A855F7] to-[#4F46E5] h-full shadow-[0_0_15px_rgba(109,74,255,0.6)]"
             initial={{ width: `${((currentStep - 1) / 7) * 100}%` }}
             animate={{ width: `${(currentStep / 7) * 100}%` }}
             transition={{ duration: 0.4 }}
@@ -622,7 +691,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               {/* STEP 1: Target Exam */}
               {currentStep === 1 && (
                 <div className="space-y-6">
-                  <div className="flex flex-col gap-4 bg-slate-50 border border-slate-200/60 p-5 rounded-2xl">
+                  <div className={`flex flex-col gap-4 p-5 rounded-2xl border ${stepStyles.cardBg}`}>
                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pl-1">Add custom Target Exam details</h4>
                     <div className="flex flex-col md:flex-row gap-4 items-end">
                       <div className="flex-1 flex flex-col gap-1.5 w-full">
@@ -632,7 +701,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           placeholder="e.g. GRE, TOEFL, IELTS..."
                           value={customExam}
                           onChange={(e) => setCustomExam(e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
+                          className={`w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold ${stepStyles.focusBorder}`}
                         />
                       </div>
                       <div className="flex-1 flex flex-col gap-1.5 w-full">
@@ -642,7 +711,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           placeholder="e.g. Higher Studies, Lang Proficiency..."
                           value={customCategory}
                           onChange={(e) => setCustomCategory(e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
+                          className={`w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold ${stepStyles.focusBorder}`}
                         />
                       </div>
                       <button
@@ -654,7 +723,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             setCustomCategory("");
                           }
                         }}
-                        className="bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-black px-5 py-3 rounded-xl cursor-pointer transition-all hover:scale-[1.02] shadow-sm flex items-center justify-center shrink-0 w-full md:w-auto"
+                        className={`text-xs font-black px-5 py-3 rounded-xl cursor-pointer transition-all hover:scale-[1.02] shadow-sm flex items-center justify-center shrink-0 w-full md:w-auto ${stepStyles.btnBg}`}
                       >
                         Set Exam
                       </button>
@@ -669,11 +738,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         <button
                           key={item.name}
                           onClick={() => handleSelectExam(item.name, item.category)}
-                          className={`p-5 rounded-2xl border text-left flex flex-col justify-between h-36 transition-all relative overflow-hidden group cursor-pointer ${
-                            selected
-                              ? "border-indigo-600 bg-indigo-50/40 shadow-[0_4px_16px_rgba(79,70,229,0.08)] scale-[1.02]"
-                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]"
-                          }`}
+                          className={`p-5 rounded-2xl border text-left flex flex-col justify-between h-36 transition-all relative overflow-hidden group cursor-pointer ${selected
+                              ? stepStyles.activeSelectionCard
+                              : "border-slate-250/60 bg-white/40 hover:bg-slate-50/50 hover:scale-[1.01]"
+                            }`}
                           style={{
                             boxShadow: selected ? `0 6px 20px ${item.glow}` : undefined
                           }}
@@ -697,10 +765,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                   </div>
 
                   {draft.targetExam && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between"
+                      className={`p-5 rounded-2xl border flex items-center justify-between ${stepStyles.cardBg}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className="p-2 bg-white rounded-xl shadow-xs">
@@ -716,12 +784,11 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                   )}
                 </div>
               )}
-
               {/* STEP 2: Prep Profile */}
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-1 flex flex-col items-center gap-4 bg-slate-50 border border-slate-200/50 p-6 rounded-3xl justify-center">
+                    <div className={`md:col-span-1 flex flex-col items-center gap-4 p-6 rounded-3xl justify-center border ${stepStyles.cardBg}`}>
                       <div className="relative group shrink-0">
                         <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 blur-md opacity-40 group-hover:opacity-75 transition-opacity" />
                         <img
@@ -730,11 +797,11 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
                         />
                       </div>
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block text-center">Aspirant Profile Image</label>
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block text-center">Aspirant Profile</label>
 
                       {/* File Uploader system */}
-                      <label className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-750 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl cursor-pointer transition-all shadow-md hover:-translate-y-0.5">
-                        <Upload className="w-3.5 h-3.5" /> Upload JPG/PNG
+                      <label className={`flex items-center gap-1.5 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl cursor-pointer transition-all shadow-md hover:-translate-y-0.5 ${stepStyles.btnBg}`}>
+                        <Upload className="w-3.5 h-3.5" /> Upload
                         <input
                           type="file"
                           accept="image/*"
@@ -754,25 +821,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         />
                       </label>
 
-                      <div className="w-full border-t border-slate-200/60 my-2" />
-
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Or Choose Preset</span>
-                      <div className="flex gap-2 justify-center flex-wrap">
-                        {AVATAR_OPTIONS.map((av, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => updateWizardDraft({
-                              profile: { ...draft.profile!, avatar: av }
-                            })}
-                            className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
-                              draft.profile?.avatar === av ? "border-indigo-600 scale-110 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
-                            }`}
-                          >
-                            <img src={av} alt="" className="w-full h-full object-cover" />
-                          </button>
-                        ))}
-                      </div>
+                      {/* <div className="w-full border-t border-slate-200/60 my-2" /> */}
+                      {/* <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Or Choose Preset</span> */}
                     </div>
 
                     <div className="md:col-span-2 space-y-5">
@@ -785,14 +835,14 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, fullName: e.target.value }
                             })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
+                            className={`border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none font-semibold ${stepStyles.focusBorder}`}
                             placeholder="John Doe"
                           />
                           {errors.fullName && <p className="text-red-500 text-xs pl-1">{errors.fullName}</p>}
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Age Range (16-40)</label>
+                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Age</label>
                           <input
                             type="number"
                             min="16"
@@ -801,7 +851,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, age: parseInt(e.target.value) || 21 }
                             })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
+                            className={`border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none font-semibold ${stepStyles.focusBorder}`}
                           />
                           {errors.age && <p className="text-red-500 text-xs pl-1">{errors.age}</p>}
                         </div>
@@ -811,10 +861,12 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         <CustomSelect
                           label="Education / Degree"
                           value={draft.profile?.education || "Bachelor of Arts"}
-                          options={["Bachelor of Technology", "Bachelor of Science", "Bachelor of Arts", "Master of Business Admin", "High School"]}
+                          options={["Bachelor of Technology", "Bachelor of Science", "Bachelor of Arts", "Bachelor of Comerce", "Master of Business Admin", "High School", "Any Diploma", "Others"]}
                           onChange={(val) => updateWizardDraft({
                             profile: { ...draft.profile!, education: val }
                           })}
+                          focusClass={stepStyles.focusBorder}
+                          activeClass={stepStyles.badgeBg}
                         />
 
                         <CustomSelect
@@ -824,19 +876,21 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           onChange={(val) => updateWizardDraft({
                             profile: { ...draft.profile!, stream: val }
                           })}
+                          focusClass={stepStyles.focusBorder}
+                          activeClass={stepStyles.badgeBg}
                         />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-black text-slate-650 uppercase pl-1">Target Exam City</label>
+                          <label className="text-xs font-black text-slate-655 uppercase pl-1">Target Exam City</label>
                           <input
                             type="text"
                             value={draft.profile?.city || ""}
                             onChange={(e) => updateWizardDraft({
                               profile: { ...draft.profile!, city: e.target.value }
                             })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
+                            className={`border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none font-semibold ${stepStyles.focusBorder}`}
                             placeholder="e.g. Delhi, Mumbai"
                           />
                           {errors.city && <p className="text-red-500 text-xs pl-1">{errors.city}</p>}
@@ -849,16 +903,18 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           onChange={(val) => updateWizardDraft({
                             profile: { ...draft.profile!, occupation: val }
                           })}
+                          focusClass={stepStyles.focusBorder}
+                          activeClass={stepStyles.badgeBg}
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Confidence and syllabus coverage */}
-                  <div className="bg-indigo-50/30 p-6 rounded-3xl border border-indigo-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className={`p-6 rounded-3xl border grid grid-cols-1 md:grid-cols-2 gap-6 ${stepStyles.cardBg}`}>
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-between pl-1">
-                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Syllabus Covered (%): {draft.profile?.syllabusPercent || 0}%</label>
+                        <label className={`text-xs font-extrabold uppercase ${stepStyles.accentText}`}>Syllabus Covered (%): {draft.profile?.syllabusPercent || 0}%</label>
                       </div>
                       <div className="relative">
                         <input
@@ -869,14 +925,14 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           onChange={(e) => updateWizardDraft({
                             profile: { ...draft.profile!, syllabusPercent: parseInt(e.target.value) }
                           })}
-                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                          className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                         />
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-between pl-1">
-                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Current Confidence Level: {draft.profile?.currentConfidence || 3}/5</label>
+                        <label className={`text-xs font-extrabold uppercase ${stepStyles.accentText}`}>Current Confidence Level: {draft.profile?.currentConfidence || 3}/5</label>
                       </div>
                       <div className="relative">
                         <input
@@ -887,7 +943,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                           onChange={(e) => updateWizardDraft({
                             profile: { ...draft.profile!, currentConfidence: parseInt(e.target.value) }
                           })}
-                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                          className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                         />
                       </div>
                     </div>
@@ -962,9 +1018,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                         <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
                           <span className="text-[10px] uppercase font-bold text-slate-400">Burnout Risk</span>
                           <div className="flex items-center gap-2 mt-1.5">
-                            <span className={`w-2.5 h-2.5 rounded-full ${
-                              draft.timeline?.burnoutRisk === "High" ? "bg-rose-500" : draft.timeline?.burnoutRisk === "Moderate" ? "bg-amber-500" : "bg-emerald-500"
-                            }`} />
+                            <span className={`w-2.5 h-2.5 rounded-full ${draft.timeline?.burnoutRisk === "High" ? "bg-rose-500" : draft.timeline?.burnoutRisk === "Moderate" ? "bg-amber-500" : "bg-emerald-500"
+                              }`} />
                             <span className="text-xs font-extrabold text-slate-800">{draft.timeline?.burnoutRisk || "Low"}</span>
                           </div>
                         </div>
@@ -1015,11 +1070,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                                     lifestyle: { ...draft.lifestyle!, slots: nextSlots }
                                   });
                                 }}
-                                className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] ${
-                                  active
-                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
-                                }`}
+                                className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] ${active
+                                  ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                                  : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+                                  }`}
                               >
                                 {SlotIcon && <SlotIcon className="w-4 h-4" />}
                                 <span>{slot}</span>
@@ -1082,11 +1136,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                                     lifestyle: { ...draft.lifestyle!, consistency: nextCon }
                                   });
                                 }}
-                                className={`p-3.5 rounded-xl border text-left text-xs font-bold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${
-                                  selected
-                                    ? "bg-indigo-50/50 border-indigo-650 text-indigo-700 shadow-sm"
-                                    : "bg-white border-slate-200 hover:border-indigo-300"
-                                }`}
+                                className={`p-3.5 rounded-xl border text-left text-xs font-bold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${selected
+                                  ? "bg-indigo-50/50 border-indigo-650 text-indigo-700 shadow-sm"
+                                  : "bg-white border-slate-200 hover:border-indigo-300"
+                                  }`}
                               >
                                 <div className="flex items-center gap-2">
                                   {CommitIcon && <CommitIcon className={`w-4.5 h-4.5 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-slate-400"}`} />}
@@ -1139,11 +1192,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                               : [...currentPrefs, pref.name];
                             updateWizardDraft({ preferences: nextPrefs });
                           }}
-                          className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2.5 transition-all cursor-pointer hover:scale-[1.02] ${
-                            selected
-                              ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
-                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50"
-                          }`}
+                          className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2.5 transition-all cursor-pointer hover:scale-[1.02] ${selected
+                            ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
+                            : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50"
+                            }`}
                           style={{
                             boxShadow: selected ? `0 6px 16px ${pref.color}` : undefined
                           }}
@@ -1192,9 +1244,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                       <div key={idx} className="bg-white border border-slate-200/80 p-4.5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-3xs">
                         <div className="flex-1 min-w-[180px]">
                           <div className="flex items-center gap-2">
-                            <span className={`w-2.5 h-2.5 rounded-full ${
-                              w.priority === "High" ? "bg-rose-500" : w.priority === "Medium" ? "bg-amber-500" : "bg-emerald-500"
-                            }`} />
+                            <span className={`w-2.5 h-2.5 rounded-full ${w.priority === "High" ? "bg-rose-500" : w.priority === "Medium" ? "bg-amber-500" : "bg-emerald-500"
+                              }`} />
                             <h5 className="font-extrabold text-slate-800 text-sm">{w.subject}</h5>
                           </div>
                           <span className="text-[10px] text-slate-400 font-bold uppercase block mt-1.5">
@@ -1209,11 +1260,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                               <button
                                 key={stars}
                                 onClick={() => handleWeaknessConfidenceChange(idx, stars)}
-                                className={`w-7 h-7 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                                  w.confidence >= stars
-                                    ? "bg-indigo-600 text-white shadow-xs"
-                                    : "text-slate-400 hover:text-slate-650"
-                                }`}
+                                className={`w-7 h-7 rounded-lg text-xs font-black transition-all cursor-pointer ${w.confidence >= stars
+                                  ? "bg-indigo-600 text-white shadow-xs"
+                                  : "text-slate-400 hover:text-slate-650"
+                                  }`}
                               >
                                 {stars}
                               </button>
@@ -1228,11 +1278,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                               <button
                                 key={diff}
                                 onClick={() => handleWeaknessDifficultyChange(idx, diff)}
-                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                  w.difficulty === diff
-                                    ? "bg-white text-slate-900 shadow-xs"
-                                    : "text-slate-400 hover:text-slate-700"
-                                }`}
+                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${w.difficulty === diff
+                                  ? "bg-white text-slate-900 shadow-xs"
+                                  : "text-slate-400 hover:text-slate-700"
+                                  }`}
                               >
                                 {diff}
                               </button>
@@ -1353,13 +1402,12 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                             <div key={index} className="flex flex-col gap-2 bg-slate-50 border border-slate-200/40 p-3.5 rounded-xl text-xs font-bold">
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                  <Star className={`w-4 h-4 shrink-0 ${
-                                    w.priority === "High"
-                                      ? "fill-rose-500 text-rose-500 animate-pulse"
-                                      : w.priority === "Medium"
-                                        ? "fill-amber-500 text-amber-500"
-                                        : "fill-emerald-500 text-emerald-500"
-                                  }`} />
+                                  <Star className={`w-4 h-4 shrink-0 ${w.priority === "High"
+                                    ? "fill-rose-500 text-rose-500 animate-pulse"
+                                    : w.priority === "Medium"
+                                      ? "fill-amber-500 text-amber-500"
+                                      : "fill-emerald-500 text-emerald-500"
+                                    }`} />
                                   <span className="text-slate-800 font-extrabold truncate max-w-[125px]">{w.subject}</span>
                                 </div>
                                 <span className="text-[9px] text-slate-400 font-black uppercase tracking-wider">{w.difficulty}</span>

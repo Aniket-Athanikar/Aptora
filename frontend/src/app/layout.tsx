@@ -11,14 +11,14 @@ const inter = Inter({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#5a36ee",
+  themeColor: "#6D4AFF",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  title: "ExamForge AI",
+  title: "ExamForge-AI | Premium Cognitive Exam Prep",
   description:
     "Upload books, notes & PYQs. Our AI generates tailored study guides, mock tests, and provides personalized tracking to ensure you ace your exams.",
   keywords: [
@@ -36,17 +36,17 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "ExamForge AI",
+    title: "ExamForge-AI | Premium Cognitive Exam Prep",
     description:
       "Convert your textbooks, notes & study materials into personalized mock tests and automated summary cards.",
     url: "https://examforge.ai",
-    siteName: "ExamForge AI",
+    siteName: "ExamForge-AI",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ExamForge AI",
+    title: "ExamForge-AI",
     description: "AI-Powered Personalized Exam Prep and Study Platform.",
   },
 };
@@ -59,14 +59,19 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} antialiased min-h-screen text-slate-900 bg-[var(--background)] selection:bg-indigo-500/15 selection:text-indigo-700`}
+        className={`${inter.variable} antialiased min-h-screen text-slate-800 bg-slate-50 selection:bg-indigo-500/15 selection:text-[#6D4AFF]`}
       >
         <AuthProvider>
           <ToastProvider>
             <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
-              <div className="pointer-events-none fixed inset-0 -z-10 bg-mesh opacity-60" />
-              <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-30" />
-              {children}
+              {/* Premium Background Mesh Glows */}
+              <div className="pointer-events-none fixed inset-0 -z-10 bg-mesh opacity-45" />
+              <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-25" />
+              
+              {/* Main Content Tree */}
+              <div className="flex-grow w-full flex flex-col">
+                {children}
+              </div>
             </div>
           </ToastProvider>
         </AuthProvider>

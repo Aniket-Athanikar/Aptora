@@ -21,11 +21,11 @@ export function RealtimeHub() {
 
   // Connect to websocket backend endpoint
   useEffect(() => {
-    let socketUrl = "ws://localhost:8080/ws/dashboard";
+    let socketUrl = "ws://localhost:8000/ws/dashboard";
 
     // Resolve dynamic WebSocket URL based on config/window
     if (typeof window !== "undefined") {
-      const apiHost = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+      const apiHost = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const cleanHost = apiHost.replace("http://", "").replace("https://", "");
       const protocol = apiHost.startsWith("https") ? "wss://" : "ws://";
       socketUrl = `${protocol}${cleanHost}/ws/dashboard`;

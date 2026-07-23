@@ -21,7 +21,7 @@ export function Header() {
   const { user, isAuthenticated } = useAuthStore();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.03)]">
+    <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-[var(--surface)]/70 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.03)]">
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         {/* Brand/Logo */}
         <div className="flex items-center gap-10">

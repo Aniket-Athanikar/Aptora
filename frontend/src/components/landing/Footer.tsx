@@ -67,12 +67,27 @@ export default function Footer() {
     <footer className="text-neutral-700 py-16 border-t border-white/20 relative z-10 overflow-hidden glass rounded-none backdrop-blur-3xl">
       {/* Brand Ambient background glows - Matching Navbar Purple Accent */}
       <div className="absolute top-0 left-[25%] w-[50%] h-[120px] bg-gradient-to-b from-[#6D4AFF]/5 via-[#A855F7]/5 to-transparent blur-[80px] rounded-full pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] z-0 pointer-events-none" />
+
+      {/* 3D perspective wireframe pattern simulating Three.js grid floor */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-80 overflow-hidden opacity-20 pointer-events-none z-0"
+        style={{ perspective: "250px" }}
+      >
+        <div
+          className="w-full h-[250%] origin-bottom"
+          style={{
+            transform: "rotateX(-55deg)",
+            backgroundImage: "linear-gradient(rgba(109, 74, 255, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 74, 255, 0.12) 1px, transparent 1px)",
+            backgroundSize: "24px 24px"
+          }}
+        />
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#efeae2]/10 to-transparent" />
+      </div>
 
       {/* Glowing Top Border Line - Matching Navbar brand colors */}
-      <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent shadow-[0_0_20px_4px_rgba(109,74,255,0.25)] z-50 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent shadow-[0_0_25px_6px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
 
-      <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
+      <div className="w-full px-8 md:px-12 relative z-10">
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-neutral-200/50">
@@ -82,20 +97,28 @@ export default function Footer() {
 
             {/* Logo - Matching Navbar Logo structure and accent */}
             <Link href="/" className="flex items-center gap-3 font-black text-2xl md:text-3xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105 w-fit">
-              <Image
-                src="/favicon.ico"
-                alt="ExamForge AI Logo"
-                width={56}
-                height={56}
-                className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-neutral-100 shadow-sm"
-              />
-              <span className="font-black tracking-tight text-neutral-900 uppercase text-2xl md:text-3xl mt-1">
-                EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
+              <div className="relative shrink-0" style={{ perspective: 1000 }}>
+                <motion.div
+                  whileHover={{ rotateY: 180, scale: 1.05 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="relative w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-slate-150 shadow-md flex items-center justify-center bg-white"
+                >
+                  <Image
+                    src="/favicon.ico"
+                    alt="ExamForge AI Vision Logo"
+                    width={56}
+                    height={56}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </motion.div>
+              </div>
+              <span className="font-black tracking-tight text-neutral-900 text-2xl md:text-3xl mt-1">
+                ExamForge-<span className="text-[#6D4AFF]">AI</span>
               </span>
             </Link>
 
             <p className="text-neutral-500 text-sm font-semibold leading-relaxed max-w-sm">
-              AI-powered platform to help students prepare smarter, not harder. Select, learn, practice, and achieve your dreams.
+              AI-powered platform to help students prepare smarter, not harder. Select book, learn, practice, and achieve your dreams.
             </p>
 
             {/* Social Icons */}

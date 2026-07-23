@@ -16,6 +16,67 @@ import {
   CheckSquare
 } from "lucide-react";
 import { useToast } from "@/lib/ToastContext";
+import { profileService } from "@/services";
+
+// Helper functions for mapping AspirantProfileData to/from the backend API
+const mapProfileToPayload = (profile: AspirantProfileData) => {
+  return {
+    name: profile.fullName,
+    phone: profile.mobile,
+    dob: profile.dob,
+    gender: profile.gender,
+    location: `${profile.city}, ${profile.district}, ${profile.state}, ${profile.country} - ${profile.pinCode}`,
+    timezone: profile.timezone,
+    education: profile.currentQualification,
+    college: profile.college,
+    avatar_url: profile.avatarUrl,
+    target_exam: profile.preparingFor,
+    target_score: profile.expectedScore,
+    target_rank: profile.dreamRank,
+    target_date: profile.targetExamDate,
+    study_hours_goal: profile.studyHoursGoal,
+  };
+};
+
+const mapPayloadToProfile = (apiProfile: any, currentProfile: AspirantProfileData): AspirantProfileData => {
+  let city = currentProfile.city;
+  let district = currentProfile.district;
+  let state = currentProfile.state;
+  let pinCode = currentProfile.pinCode;
+
+  if (apiProfile.location) {
+    const parts = apiProfile.location.split(",");
+    city = parts[0]?.trim() || city;
+    district = parts[1]?.trim() || district;
+    const statePart = parts[2]?.trim();
+    if (statePart) {
+      const stateAndPin = statePart.split("-");
+      state = stateAndPin[0]?.trim() || state;
+      pinCode = stateAndPin[1]?.trim() || pinCode;
+    }
+  }
+
+  return {
+    ...currentProfile,
+    fullName: apiProfile.name || currentProfile.fullName,
+    mobile: apiProfile.phone || currentProfile.mobile,
+    dob: apiProfile.dob || currentProfile.dob,
+    gender: apiProfile.gender || currentProfile.gender,
+    city,
+    district,
+    state,
+    pinCode,
+    timezone: apiProfile.timezone || currentProfile.timezone,
+    currentQualification: apiProfile.education || currentProfile.currentQualification,
+    college: apiProfile.college || currentProfile.college,
+    avatarUrl: apiProfile.avatar_url || currentProfile.avatarUrl,
+    preparingFor: apiProfile.target_exam || currentProfile.preparingFor,
+    expectedScore: apiProfile.target_score || currentProfile.expectedScore,
+    dreamRank: apiProfile.target_rank || currentProfile.dreamRank,
+    targetExamDate: apiProfile.target_date || currentProfile.targetExamDate,
+    studyHoursGoal: apiProfile.study_hours_goal || currentProfile.studyHoursGoal,
+  };
+};
 
 // Interface definitions
 interface SubjectStats {
@@ -159,11 +220,11 @@ const DEFAULT_ASPIRANT_PROFILE: AspirantProfileData = {
   preferredName: "Aniket",
   gender: "Male",
   age: 23,
-  dob: "2003-09-12",
+  dob: "2003-29-06",
   mobile: "+91 9876543210",
-  email: "aniket@examforge.ai",
-  city: "Mumbai",
-  district: "Mumbai Suburban",
+  email: "agentforge29@gmail.com",
+  city: "Sangali",
+  district: "Sangali Suburban",
   state: "Maharashtra",
   country: "India",
   pinCode: "400001",
@@ -178,7 +239,7 @@ const DEFAULT_ASPIRANT_PROFILE: AspirantProfileData = {
   graduationStream: "Computer Engineering",
   graduationPassingYear: "2025",
   graduationCgpa: "8.9",
-  university: "Mumbai University",
+  university: "Shivaji University",
   college: "Vidyalankar Institute of Technology",
   medium: "English",
 
@@ -329,9 +390,8 @@ function PremiumSelect({
                   onChange(opt);
                   setOpen(false);
                 }}
-                className={`w-full p-2 text-xs font-bold rounded-lg text-left hover:bg-slate-50 transition-colors cursor-pointer ${
-                  value === opt ? "bg-indigo-50 text-indigo-700" : "text-slate-600"
-                }`}
+                className={`w-full p-2 text-xs font-bold rounded-lg text-left hover:bg-slate-50 transition-colors cursor-pointer ${value === opt ? "bg-indigo-50 text-indigo-700" : "text-slate-600"
+                  }`}
               >
                 {opt}
               </button>
@@ -351,18 +411,18 @@ function ProfileInner() {
   // Profile states
   const [profile, setProfile] = useState<AspirantProfileData>(DEFAULT_ASPIRANT_PROFILE);
   const [editMode, setEditMode] = useState(false);
-  
+
   // Tab/Step flow
   const STEPS: { id: "identity" | "academics" | "journey" | "lifestyle" | "subjects" | "analytics" | "history"; label: string; icon: any }[] = [
-    { id: "identity", label: "Personal Identity", icon: User },
+    { id: "identity", label: "Personal Information", icon: User },
     { id: "academics", label: "Education & Academics", icon: GraduationCap },
     { id: "journey", label: "Exam Journey", icon: Compass },
     { id: "lifestyle", label: "Study & Lifestyle", icon: Clock },
     { id: "subjects", label: "Subject Profiler", icon: BookOpen },
     { id: "analytics", label: "Living Analytics & AI", icon: BrainCircuit },
-    { id: "history", label: "Version Control", icon: History }
+    { id: "history", label: "Profile View", icon: History }
   ];
-  
+
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeTab = STEPS[activeStepIndex].id;
 
@@ -383,52 +443,93 @@ function ProfileInner() {
   const [newSubjectName, setNewSubjectName] = useState("");
   const [newSubjectDifficulty, setNewSubjectDifficulty] = useState<"Easy" | "Medium" | "Hard">("Medium");
 
-  // Load profile on mount
+  // Load profile on mount (CRUD: Read)
   useEffect(() => {
-    try {
-      const savedProfile = localStorage.getItem("ef_aspirant_profile");
-      const savedHistory = localStorage.getItem("ef_profile_history");
+    const loadProfile = async () => {
+      try {
+        let profileData = null;
+        if (user?.email) {
+          try {
+            const res = await profileService.getProfile(user.email) as any;
+            if (res && res.success && res.profile) {
+              profileData = mapPayloadToProfile(res.profile, DEFAULT_ASPIRANT_PROFILE);
+            }
+          } catch (apiErr) {
+            console.warn("Could not fetch profile from backend API, using local storage instead:", apiErr);
+          }
+        }
 
-      if (savedProfile) {
-        setProfile(JSON.parse(savedProfile));
-      } else if (activeGoal) {
-        const hydrated = {
-          ...DEFAULT_ASPIRANT_PROFILE,
-          fullName: activeGoal.profile.fullName || DEFAULT_ASPIRANT_PROFILE.fullName,
-          preparingFor: activeGoal.targetExam || DEFAULT_ASPIRANT_PROFILE.preparingFor,
-          avatarUrl: activeGoal.profile.avatar || DEFAULT_ASPIRANT_PROFILE.avatarUrl,
-          studyHoursGoal: activeGoal.timeline.dailyStudyHours || DEFAULT_ASPIRANT_PROFILE.studyHoursGoal,
-          burnoutRisk: activeGoal.timeline.burnoutRisk || DEFAULT_ASPIRANT_PROFILE.burnoutRisk
-        };
-        setProfile(hydrated);
-        localStorage.setItem("ef_aspirant_profile", JSON.stringify(hydrated));
+        if (!profileData) {
+          const savedProfile = localStorage.getItem("ef_aspirant_profile");
+          if (savedProfile) {
+            profileData = JSON.parse(savedProfile);
+          }
+        }
+
+        if (profileData) {
+          setProfile(profileData);
+        } else if (activeGoal) {
+          const hydrated = {
+            ...DEFAULT_ASPIRANT_PROFILE,
+            fullName: activeGoal.profile.fullName || DEFAULT_ASPIRANT_PROFILE.fullName,
+            preparingFor: activeGoal.targetExam || DEFAULT_ASPIRANT_PROFILE.preparingFor,
+            avatarUrl: activeGoal.profile.avatar || DEFAULT_ASPIRANT_PROFILE.avatarUrl,
+            studyHoursGoal: activeGoal.timeline.dailyStudyHours || DEFAULT_ASPIRANT_PROFILE.studyHoursGoal,
+            burnoutRisk: activeGoal.timeline.burnoutRisk || DEFAULT_ASPIRANT_PROFILE.burnoutRisk
+          };
+          setProfile(hydrated);
+          localStorage.setItem("ef_aspirant_profile", JSON.stringify(hydrated));
+        }
+
+        const savedHistory = localStorage.getItem("ef_profile_history");
+        if (savedHistory) {
+          setHistoryList(JSON.parse(savedHistory));
+        } else {
+          const initialSnapshot = {
+            id: "v_init",
+            timestamp: new Date().toISOString(),
+            description: "Initial profile calibration",
+            data: JSON.stringify(DEFAULT_ASPIRANT_PROFILE)
+          };
+          setHistoryList([initialSnapshot]);
+          localStorage.setItem("ef_profile_history", JSON.stringify([initialSnapshot]));
+        }
+      } catch (e) {
+        console.error(e);
       }
+    };
+    loadProfile();
+  }, [activeGoal, user]);
 
-      if (savedHistory) {
-        setHistoryList(JSON.parse(savedHistory));
-      } else {
-        const initialSnapshot = {
-          id: "v_init",
-          timestamp: new Date().toISOString(),
-          description: "Initial profile calibration",
-          data: JSON.stringify(DEFAULT_ASPIRANT_PROFILE)
-        };
-        setHistoryList([initialSnapshot]);
-        localStorage.setItem("ef_profile_history", JSON.stringify([initialSnapshot]));
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [activeGoal]);
-
-  // Validation
+  // Step validation
   const validateForm = (): boolean => {
     const tempErrors: Record<string, string> = {};
+    
+    // Step 1: Personal Identity Validations
     if (!profile.fullName.trim()) tempErrors.fullName = "Full Name is required";
     if (!profile.email.includes("@")) tempErrors.email = "Valid Email is required";
     if (profile.age < 16 || profile.age > 60) tempErrors.age = "Age must be between 16 and 60";
-    if (profile.studyHoursGoal < 1 || profile.studyHoursGoal > 18) tempErrors.studyHoursGoal = "Study Hours must be between 1 and 18";
+    if (!profile.mobile.trim()) tempErrors.mobile = "Mobile Number is required";
+    if (!/^\+?[0-9\s-]{10,15}$/.test(profile.mobile.trim())) tempErrors.mobile = "Invalid mobile format";
+    if (!profile.dob.trim()) tempErrors.dob = "Date of Birth is required";
+    if (!profile.city.trim()) tempErrors.city = "City is required";
+    if (!profile.pinCode.trim()) tempErrors.pinCode = "Pin Code is required";
+    if (!/^[0-9]{6}$/.test(profile.pinCode.trim())) tempErrors.pinCode = "Pin Code must be 6 digits";
+
+    // Step 2: Academics Validations
+    if (!profile.college.trim()) tempErrors.college = "College Name is required";
+    if (!profile.university.trim()) tempErrors.university = "University Name is required";
     
+    // Step 3: Journey Validations
+    if (!profile.preparingFor.trim()) tempErrors.preparingFor = "Target Exam is required";
+    if (!profile.dreamJob.trim()) tempErrors.dreamJob = "Dream Job is required";
+    if (!profile.dreamDepartment.trim()) tempErrors.dreamDepartment = "Dream Department is required";
+
+    // Step 4: Lifestyle Validations
+    if (profile.studyHoursGoal < 1 || profile.studyHoursGoal > 18) tempErrors.studyHoursGoal = "Study Hours must be between 1 and 18";
+    if (!profile.wakeUpTime) tempErrors.wakeUpTime = "Wake up time is required";
+    if (!profile.sleepTime) tempErrors.sleepTime = "Sleep time is required";
+
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -458,8 +559,8 @@ function ProfileInner() {
     toast("Action redone", "info");
   };
 
-  // Final Commit Save
-  const commitSave = () => {
+  // Final Commit Save (CRUD: Update)
+  const commitSave = async () => {
     if (!validateForm()) {
       toast("Please fix form errors before saving.", "error");
       setShowSaveDialog(false);
@@ -468,6 +569,18 @@ function ProfileInner() {
 
     const desc = saveDescription.trim() || "Profile state updated";
     localStorage.setItem("ef_aspirant_profile", JSON.stringify(profile));
+
+    // Update database profile if authenticated
+    if (user?.email) {
+      try {
+        const payload = mapProfileToPayload(profile);
+        await profileService.updateProfile(user.email, payload);
+        toast("Profile synchronized with cloud database!", "success");
+      } catch (dbErr: any) {
+        console.warn("Database sync warning:", dbErr.message || dbErr);
+        toast("Saved locally, but could not sync with server.", "error");
+      }
+    }
 
     // Update global auth user info
     login({
@@ -543,16 +656,50 @@ function ProfileInner() {
     reader.readAsText(file);
   };
 
+  const handleCreateManualSnapshot = () => {
+    const desc = prompt("Enter a description for this manual snapshot:", "Manual Backup");
+    if (!desc) return;
+    const nextSnapshot = {
+      id: `v_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      description: desc,
+      data: JSON.stringify(profile)
+    };
+    const updated = [nextSnapshot, ...historyList];
+    setHistoryList(updated);
+    localStorage.setItem("ef_profile_history", JSON.stringify(updated));
+    toast("Snapshot created successfully!", "success");
+  };
+
+  const handleDeleteSnapshot = (id: string) => {
+    const updated = historyList.filter(h => h.id !== id);
+    setHistoryList(updated);
+    localStorage.setItem("ef_profile_history", JSON.stringify(updated));
+    toast("Snapshot deleted", "info");
+  };
+
+  const handleRenameSnapshot = (id: string) => {
+    const hist = historyList.find(h => h.id === id);
+    if (!hist) return;
+    const newDesc = prompt("Enter new description:", hist.description);
+    if (!newDesc) return;
+    const updated = historyList.map(h => h.id === id ? { ...h, description: newDesc } : h);
+    setHistoryList(updated);
+    localStorage.setItem("ef_profile_history", JSON.stringify(updated));
+    toast("Snapshot renamed", "success");
+  };
+
   return (
     <DashboardLayout activeTab="profile">
       {/* Premium Linear Gradient Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-slate-50 via-indigo-50/10 to-purple-50/20 -z-10 pointer-events-none" />
-      
+      <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-purple-200/10 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 right-1/4 w-[350px] h-[350px] bg-indigo-200/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+
       <div className="max-w-7xl mx-auto space-y-6 pb-12 text-slate-800">
-        
+
         {/* PROFILE HEADER HERO */}
-        <div className="relative rounded-3xl bg-white/70 backdrop-blur-md border border-slate-200/80 shadow-xl overflow-hidden">
-          <div className={`h-36 w-full bg-gradient-to-r ${profile.coverPreset} relative opacity-90`}>
+        <div className="relative rounded-[32px] bg-white border border-slate-200/80 shadow-xl overflow-hidden">
+          <div className={`h-36 w-full bg-gradient-to-r ${profile.coverPreset} relative opacity-95`}>
             <div className="absolute inset-0 bg-black/10" />
             <div className="absolute top-4 right-4 flex gap-1.5 bg-black/25 p-1.5 rounded-xl backdrop-blur-sm">
               {COVER_PRESETS.map((preset) => (
@@ -570,13 +717,13 @@ function ProfileInner() {
           <div className="p-6 pt-0 relative flex flex-col md:flex-row items-start md:items-end justify-between gap-5">
             <div className="flex flex-col sm:flex-row gap-5 -mt-14 items-start sm:items-end relative z-10">
               <div className="relative group">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 blur opacity-60" />
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 blur opacity-60 group-hover:opacity-85 transition" />
                 <img
                   src={profile.avatarUrl}
                   alt={profile.fullName}
                   className="relative w-24 h-24 rounded-full border-4 border-white bg-slate-50 object-cover shadow"
                 />
-                <label className="absolute bottom-1 right-1 p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full cursor-pointer shadow transition">
+                <label className="absolute bottom-1 right-1 p-2 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-full cursor-pointer shadow transition">
                   <Camera className="w-3.5 h-3.5" />
                   <input
                     type="file"
@@ -597,17 +744,33 @@ function ProfileInner() {
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-lg font-black text-slate-800">{profile.fullName}</h2>
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100 px-2.5 py-0.5 rounded-full">
                     {profile.preparingFor}
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-100 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                    <Flame className="w-3 h-3 text-amber-500 fill-amber-500" />
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-100 px-2.5 py-0.5 rounded-full flex items-center gap-0.5">
+                    <Flame className="w-3 h-3 text-amber-500 fill-amber-500 animate-pulse" />
                     {profile.currentStreak} Day Streak
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 font-semibold">
+                <p className="text-xs text-slate-500 font-bold">
                   Target: {profile.dreamJob} • Aiming for {profile.dreamRank}
                 </p>
+
+                {/* Gamification metric indicators */}
+                <div className="flex items-center gap-2.5 mt-3 flex-wrap">
+                  <div className="flex items-center gap-1 text-[9px] font-black text-slate-500 bg-slate-50 border border-slate-100 px-3 py-1 rounded-xl">
+                    <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                    <span>LEVEL {Math.floor((profile.aiPoints || 450) / 100) + 1}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[9px] font-black text-slate-500 bg-slate-50 border border-slate-100 px-3 py-1 rounded-xl">
+                    <Star className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>{profile.aiPoints || 450} XP</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[9px] font-black text-slate-500 bg-slate-50 border border-slate-100 px-3 py-1 rounded-xl">
+                    <Coins className="w-3.5 h-3.5 text-[#6D4AFF]" />
+                    <span>{Math.floor((profile.aiPoints || 450) * 0.4)} COINS</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -616,10 +779,10 @@ function ProfileInner() {
               {!editMode ? (
                 <button
                   onClick={() => setEditMode(true)}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-750 text-white rounded-xl shadow cursor-pointer transition"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4.5 py-2.5 text-xs font-black bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl shadow cursor-pointer transition"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                  Edit Identity Settings
+                  Edit Profile
                 </button>
               ) : (
                 <div className="flex items-center gap-1.5 w-full md:w-auto">
@@ -643,10 +806,10 @@ function ProfileInner() {
                     onClick={() => {
                       if (validateForm()) setShowSaveDialog(true);
                     }}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow cursor-pointer"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4.5 py-2.5 text-xs font-black bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl shadow cursor-pointer"
                   >
                     <Save className="w-3.5 h-3.5" />
-                    Save Settings
+                    Save
                   </button>
                   <button
                     onClick={() => {
@@ -654,7 +817,7 @@ function ProfileInner() {
                       setEditHistory([]);
                       setRedoStack([]);
                     }}
-                    className="flex-1 md:flex-none px-4 py-2 text-xs font-bold bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl cursor-pointer"
+                    className="flex-1 md:flex-none px-4.5 py-2.5 text-xs font-black bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -663,11 +826,11 @@ function ProfileInner() {
               <button
                 onClick={handleExportProfile}
                 title="Export Profile"
-                className="p-2 bg-slate-50 border border-slate-250/50 hover:bg-slate-100 rounded-xl cursor-pointer text-slate-600"
+                className="p-2.5 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl cursor-pointer text-slate-600"
               >
                 <Download className="w-4 h-4" />
               </button>
-              <label className="p-2 bg-slate-55 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-slate-600 flex items-center justify-center">
+              <label className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-slate-600 flex items-center justify-center">
                 <Upload className="w-4 h-4" />
                 <input type="file" accept=".json" onChange={handleImportProfile} className="hidden" />
               </label>
@@ -676,21 +839,22 @@ function ProfileInner() {
         </div>
 
         {/* STEPPER BAR */}
-        <div className="flex items-center gap-1.5 bg-white border border-slate-200/70 p-1.5 rounded-2xl shadow-sm overflow-x-auto">
+        <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl shadow-xl overflow-x-auto text-slate-350 select-none no-scrollbar">
           {STEPS.map((step, idx) => {
             const Icon = step.icon;
+            const isActive = activeStepIndex === idx;
             return (
               <button
                 key={step.id}
                 onClick={() => setActiveStepIndex(idx)}
-                className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                  activeStepIndex === idx
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-black rounded-xl transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-[#6D4AFF] text-white shadow-[0_4px_14px_rgba(109,74,255,0.3)] border border-[#7C5DFF]/40"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
-                {step.label}
+                <span>{step.label}</span>
               </button>
             );
           })}
@@ -707,15 +871,15 @@ function ProfileInner() {
               transition={{ duration: 0.2 }}
               className="space-y-6"
             >
-              
+
               {/* STEP 1: IDENTITY */}
               {activeTab === "identity" && (
                 <div className="space-y-5">
                   <div>
-                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Aspirant Personal Identity</h3>
-                    <p className="text-xs text-slate-400">Core personal metadata linked to regional state exams.</p>
+                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Aspirant Personal Information</h3>
+                    <p className="text-xs text-slate-400">Core personal metadata linked to regional state exams</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-1">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider pl-1">Full Name</label>
@@ -821,7 +985,7 @@ function ProfileInner() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Academic Credentials</h3>
-                    <p className="text-xs text-slate-400">Historically tracked education grades and background qualifications.</p>
+                    <p className="text-xs text-slate-400">Tracked education grades and background qualifications</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -885,7 +1049,7 @@ function ProfileInner() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Civil Services & Exam Journey</h3>
-                    <p className="text-xs text-slate-400">Target metrics, attempt history, department goals, and core dreams.</p>
+                    <p className="text-xs text-slate-400">Target metrics, attempt history, department goals, and core dreams</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -946,7 +1110,7 @@ function ProfileInner() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Study Lifestyle & Routine</h3>
-                    <p className="text-xs text-slate-400">Available study slots, book budgets, device compatibility, and routines.</p>
+                    <p className="text-xs text-slate-400">Available study slots, book budgets, device compatibility, and routines</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1003,7 +1167,7 @@ function ProfileInner() {
                   <div className="flex justify-between items-center flex-wrap gap-3">
                     <div>
                       <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Syllabus Subject Profile</h3>
-                      <p className="text-xs text-slate-400">Confidence, progress rates, chapters, and dynamic exam weights.</p>
+                      <p className="text-xs text-slate-400">Confidence, progress rates, chapters, and dynamic exam weights</p>
                     </div>
                     {editMode && (
                       <div className="flex gap-2">
@@ -1041,20 +1205,77 @@ function ProfileInner() {
                             </button>
                           )}
                         </div>
-                        <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                          <div className="bg-white border border-slate-200/40 rounded-xl p-2">
-                            <span className="text-[9px] font-bold text-slate-400 block uppercase">Confidence</span>
-                            <span className="font-bold text-indigo-700">{sub.confidence}/5</span>
+                        {!editMode ? (
+                          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                            <div className="bg-white border border-slate-200/40 rounded-xl p-2">
+                              <span className="text-[9px] font-bold text-slate-400 block uppercase">Confidence</span>
+                              <span className="font-bold text-indigo-700">{sub.confidence}/5</span>
+                            </div>
+                            <div className="bg-white border border-slate-200/40 rounded-xl p-2">
+                              <span className="text-[9px] font-bold text-slate-400 block uppercase">Completion</span>
+                              <span className="font-bold text-slate-700">{sub.completionPct}%</span>
+                            </div>
+                            <div className="bg-white border border-slate-200/40 rounded-xl p-2">
+                              <span className="text-[9px] font-bold text-slate-400 block uppercase">Mock score</span>
+                              <span className="font-bold text-emerald-600">{sub.mockPct}%</span>
+                            </div>
                           </div>
-                          <div className="bg-white border border-slate-200/40 rounded-xl p-2">
-                            <span className="text-[9px] font-bold text-slate-400 block uppercase">Completion</span>
-                            <span className="font-bold text-slate-700">{sub.completionPct}%</span>
+                        ) : (
+                          <div className="space-y-2.5 bg-white border border-slate-200/50 p-3.5 rounded-2xl text-xs">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Confidence ({sub.confidence}/5)</span>
+                              <select
+                                value={sub.confidence}
+                                onChange={(e) => {
+                                  const next = [...profile.subjects];
+                                  next[idx] = { ...sub, confidence: Number(e.target.value) };
+                                  updateProfileData({ ...profile, subjects: next });
+                                }}
+                                className="text-[10px] font-black border border-slate-200 rounded-lg p-1 bg-slate-50 outline-none"
+                              >
+                                {[1,2,3,4,5].map((n) => <option key={n} value={n}>{n}/5</option>)}
+                              </select>
+                            </div>
+
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                                <span>Completion</span>
+                                <span>{sub.completionPct}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={sub.completionPct}
+                                onChange={(e) => {
+                                  const next = [...profile.subjects];
+                                  next[idx] = { ...sub, completionPct: Number(e.target.value) };
+                                  updateProfileData({ ...profile, subjects: next });
+                                }}
+                                className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                                <span>Mock score</span>
+                                <span>{sub.mockPct}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={sub.mockPct}
+                                onChange={(e) => {
+                                  const next = [...profile.subjects];
+                                  next[idx] = { ...sub, mockPct: Number(e.target.value) };
+                                  updateProfileData({ ...profile, subjects: next });
+                                }}
+                                className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                              />
+                            </div>
                           </div>
-                          <div className="bg-white border border-slate-200/40 rounded-xl p-2">
-                            <span className="text-[9px] font-bold text-slate-400 block uppercase">Mock score</span>
-                            <span className="font-bold text-emerald-600">{sub.mockPct}%</span>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1066,7 +1287,7 @@ function ProfileInner() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Living Analytics & AI Behavior</h3>
-                    <p className="text-xs text-slate-400">Consistency metrics, stress thresholds, and target AI Mentor Personality.</p>
+                    <p className="text-xs text-slate-400">Consistency metrics, stress thresholds, and target AI Mentor Personality</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1091,34 +1312,66 @@ function ProfileInner() {
               {/* STEP 7: HISTORY SNAPSHOTS */}
               {activeTab === "history" && (
                 <div className="space-y-5">
-                  <div>
-                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Profile Snapshots History</h3>
-                    <p className="text-xs text-slate-400">Compare previous data snapshots or restore session settings.</p>
+                  <div className="flex justify-between items-center pb-2 border-b border-slate-100 flex-wrap gap-3">
+                    <div>
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Profile Version History</h3>
+                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Compare previous data snapshots or restore session settings.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCreateManualSnapshot}
+                      className="text-xs bg-[#6D4AFF] hover:bg-[#5A36EE] text-white font-black px-4 py-2 rounded-xl transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Create Snapshot
+                    </button>
                   </div>
 
-                  <div className="space-y-2.5">
-                    {historyList.map((hist) => (
-                      <div key={hist.id} className="flex justify-between items-center p-3.5 border border-slate-200/60 rounded-xl bg-slate-50/30">
-                        <div>
-                          <p className="text-xs font-black text-slate-800">{hist.description}</p>
-                          <p className="text-[10px] text-slate-400">{new Date(hist.timestamp).toLocaleString()}</p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            try {
-                              const restored = JSON.parse(hist.data);
-                              updateProfileData(restored);
-                              toast(`Loaded snapshot: ${hist.description}`, "info");
-                            } catch {
-                              toast("Could not read snapshot data", "error");
-                            }
-                          }}
-                          className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[10px] font-black cursor-pointer"
-                        >
-                          Load Snapshot
-                        </button>
+                  <div className="space-y-3">
+                    {historyList.length === 0 ? (
+                      <div className="text-center py-8 text-slate-400 text-xs font-semibold">
+                        No snapshots logged yet. Save profile edits to generate backups automatically.
                       </div>
-                    ))}
+                    ) : (
+                      historyList.map((hist) => (
+                        <div key={hist.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border border-slate-200/60 rounded-2xl bg-slate-50/30 gap-4">
+                          <div className="space-y-1">
+                            <p className="text-xs font-black text-slate-800">{hist.description}</p>
+                            <p className="text-[10px] text-slate-400 font-bold">{new Date(hist.timestamp).toLocaleString()}</p>
+                          </div>
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <button
+                              onClick={() => {
+                                try {
+                                  const restored = JSON.parse(hist.data);
+                                  updateProfileData(restored);
+                                  toast(`Loaded snapshot: ${hist.description}`, "info");
+                                } catch {
+                                  toast("Could not read snapshot data", "error");
+                                }
+                              }}
+                              className="flex-1 sm:flex-none px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-[10px] font-black cursor-pointer tracking-wider uppercase transition-all"
+                            >
+                              Restore
+                            </button>
+                            <button
+                              onClick={() => handleRenameSnapshot(hist.id)}
+                              className="p-2 border border-slate-200 bg-white hover:bg-slate-100 text-slate-500 rounded-xl cursor-pointer transition-all"
+                              title="Rename Snapshot"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              disabled={historyList.length <= 1}
+                              onClick={() => handleDeleteSnapshot(hist.id)}
+                              className="p-2 border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl cursor-pointer disabled:opacity-40 transition-all"
+                              title="Delete Snapshot"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
@@ -1165,13 +1418,13 @@ function ProfileInner() {
                   <CheckSquare className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-slate-800">Confirm Profile Calibration</h3>
-                  <p className="text-[11px] text-slate-400">Save current edits and commit updates to active goals.</p>
+                  <h3 className="text-sm font-black text-slate-800">Confirm Profile</h3>
+                  <p className="text-[11px] text-slate-400">Save current edits and updates to active goals</p>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">Change Description</label>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">Add Description</label>
                 <input
                   type="text"
                   placeholder="e.g., Updated daily study hours, added Polity weakness"
@@ -1192,7 +1445,7 @@ function ProfileInner() {
                   onClick={commitSave}
                   className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-750 text-white rounded-xl text-xs font-bold transition cursor-pointer"
                 >
-                  Confirm & Commit
+                  Save
                 </button>
               </div>
             </motion.div>

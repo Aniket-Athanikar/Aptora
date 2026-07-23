@@ -10,9 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    webpackBuildWorker: false,
-  },
+
   eslint: {
     ignoreDuringBuilds: true,
   },

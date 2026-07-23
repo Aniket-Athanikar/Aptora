@@ -15,7 +15,7 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, title, description, breadcrumb }: PageLayoutProps) {
   return (
-    <div className="relative min-h-screen bg-slate-50/50 text-slate-900 overflow-x-hidden font-sans">
+    <div className="relative min-h-screen bg-[var(--background)] text-slate-900 overflow-x-hidden font-sans">
       {/* Premium Clean Background Pattern (Dot Pattern & Interactive Ambient Glows) */}
       <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none z-0" />
       
@@ -59,7 +59,7 @@ export default function PageLayout({ children, title, description, breadcrumb }:
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 border border-slate-200/50 backdrop-blur-md text-[11px] font-bold text-slate-500 mb-8 shadow-xs"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface)]/60 border border-white/20 backdrop-blur-md text-[11px] font-bold text-slate-500 mb-8 shadow-xs"
             >
               <Link href="/" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
                 <HomeIcon className="w-3.5 h-3.5" />
