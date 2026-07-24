@@ -11,9 +11,9 @@ services:
       - ENV=development
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_NAME=examforgedb
-      - DB_USER=examforge_admin
-      - DB_PASSWORD=password123
+      - DB_NAME=Exame_forgeDB
+      - DB_USER=aniket
+      - DB_PASSWORD=admin123
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant

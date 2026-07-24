@@ -608,7 +608,7 @@ const mapGoalToProfilePayload = (goal: GoalData) => {
 
 export function GoalEngineProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(goalEngineReducer, initialState);
-  const { user } = useAuth();
+  const { user, login } = useAuth();
 
   // Load from services and backend database on mount
   useEffect(() => {
@@ -728,6 +728,12 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
       try {
         const payload = mapGoalToProfilePayload(goal);
         await profileService.updateProfile(user.email, payload);
+        // Sync to local auth context immediately
+        login({
+          name: goal.profile.fullName,
+          email: user.email,
+          avatar: goal.profile.avatar,
+        });
       } catch (dbErr) {
         console.warn("Database sync warning from completeWizard:", dbErr);
       }

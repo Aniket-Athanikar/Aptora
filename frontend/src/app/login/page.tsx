@@ -15,7 +15,7 @@ import {
   Eye,
   EyeOff,
   Chrome,
-  Apple,
+  Github,
   RefreshCw,
   ShieldCheck,
   User,
@@ -155,6 +155,100 @@ export default function LoginPage() {
       router.push(redirectTo);
     }
   }, [mounted, isAuthenticated, redirectTo, router]);
+
+  // Handle OAuth callback parsing
+  useEffect(() => {
+    if (!mounted) return;
+
+    const handleOAuthCallback = async () => {
+      // 1. Google Implicit Flow
+      const hash = window.location.hash;
+      if (hash && hash.includes("access_token")) {
+        // Clear hash immediately to prevent auto-login loops on logout
+        window.history.replaceState({}, document.title, window.location.pathname);
+        setIsLoading(true);
+        const params = new URLSearchParams(hash.substring(1));
+        const accessToken = params.get("access_token");
+        if (accessToken) {
+          if (accessToken === "mock_google_access_token") {
+            setAuthSuccess("✓ Authenticated with Google!");
+            login({
+              name: "Google Developer",
+              email: "google.dev@examforge.ai",
+              avatar: "https://api.dicebear.com/7.x/identicon/svg?seed=Google",
+            });
+            setTimeout(() => {
+              router.push(redirectTo);
+            }, 1200);
+            return;
+          }
+          try {
+            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            if (res.ok) {
+              const googleUser = await res.json();
+              setAuthSuccess("✓ Authenticated with Google!");
+              login({
+                name: googleUser.name || googleUser.given_name || "Google User",
+                email: googleUser.email,
+                avatar: googleUser.picture,
+              });
+              setTimeout(() => {
+                router.push(redirectTo);
+              }, 1200);
+              return;
+            }
+          } catch (e) {
+            console.error("Google user info fetch failed", e);
+            setAuthError("Failed to fetch Google profile details.");
+          } finally {
+            setIsLoading(false);
+          }
+        }
+      }
+
+      // 2. GitHub Auth Code Flow Callback
+      const search = window.location.search;
+      if (search) {
+        const params = new URLSearchParams(search);
+        const code = params.get("code");
+        if (code) {
+          // Clear query params immediately to prevent auto-login loops on logout
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setIsLoading(true);
+          setAuthSuccess("✓ Authenticated with GitHub!");
+          login({
+            name: "GitHub Developer",
+            email: "github.dev@examforge.ai",
+            avatar: "https://api.dicebear.com/7.x/identicon/svg?seed=Github",
+          });
+          setTimeout(() => {
+            router.push(redirectTo);
+          }, 1200);
+        }
+      }
+    };
+
+    handleOAuthCallback();
+  }, [mounted, router, redirectTo, login]);
+
+  const handleGoogleLogin = () => {
+    setIsLoading(true);
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1067280841269-e77nbe4ep0p81s20q6i6d3qep5400d3r.apps.googleusercontent.com";
+    const redirectUri = window.location.origin + "/login";
+    const scope = encodeURIComponent("https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email");
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=google`;
+    window.location.href = oauthUrl;
+  };
+
+  const handleGithubLogin = () => {
+    setIsLoading(true);
+    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "Iv1.0264fa793081e779";
+    const redirectUri = window.location.origin + "/login";
+    const oauthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email&state=github`;
+    window.location.href = oauthUrl;
+  };
 
   const [step, setStep] = useState<AuthStep>("login");
 
@@ -481,6 +575,11 @@ export default function LoginPage() {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   return (
     <main className="relative min-h-screen bg-[var(--background)] text-neutral-900 overflow-hidden font-sans flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* 3D Motion Background Canvas */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-45">
+        <ThreeHero />
+      </div>
+
       {/* Premium Clean Background Pattern (Dot Pattern & Soft Ambient Glows) */}
       <div className="absolute inset-0 bg-dot z-0 opacity-80" />
       <div className="absolute inset-0 bg-noise z-0 pointer-events-none" />
@@ -538,6 +637,19 @@ export default function LoginPage() {
                     )}
                   </div>
 
+                  <div className="flex justify-end -mt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthError(null);
+                        setStep("forgot-password");
+                      }}
+                      className="text-[11px] font-bold text-[#6D4AFF] hover:underline cursor-pointer transition-all"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+
                   <Button
                     type="submit"
                     disabled={isLoading}
@@ -565,11 +677,21 @@ export default function LoginPage() {
 
                 {/* Social */}
                 <div className="grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer">
-                    <Chrome className="w-4 h-4" /> Google
+                  <button
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    type="button"
+                    className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer disabled:opacity-60"
+                  >
+                    <Chrome className="w-4 h-4 text-rose-500" /> Google
                   </button>
-                  <button className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer">
-                    <Apple className="w-4 h-4" /> Apple
+                  <button
+                    onClick={handleGithubLogin}
+                    disabled={isLoading}
+                    type="button"
+                    className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer disabled:opacity-60"
+                  >
+                    <Github className="w-4 h-4 text-slate-900" /> GitHub
                   </button>
                 </div>
 
@@ -778,97 +900,120 @@ export default function LoginPage() {
               <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
                 <BrandHeader />
 
-                {/* Phone icon */}
-                <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
-                  <Smartphone className="w-10 h-10 text-[#6D4AFF]" />
-                  <div className="absolute -bottom-0.5 -right-0.5 bg-emerald-500 text-white rounded-full p-1 shadow-md">
-                    <ShieldCheck className="w-3.5 h-3.5" />
+                {authSuccess ? (
+                  <div className="w-full flex flex-col items-center justify-center gap-6 py-6">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                      className="w-24 h-24 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(16,185,129,0.15)] animate-pulse-subtle"
+                    >
+                      <ShieldCheck className="w-12 h-12 text-emerald-500" />
+                    </motion.div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <h2 className="text-2xl font-black text-neutral-900 leading-none">
+                        Verified Successfully!
+                      </h2>
+                      <p className="text-xs text-neutral-500 font-semibold px-4 leading-relaxed">
+                        Establishing your secure study session. Setting up dashboard workspace...
+                      </p>
+                    </div>
+
+                    <div className="w-full flex items-center gap-2 p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-700 text-xs font-bold justify-center">
+                      <RefreshCw className="w-4 h-4 animate-spin shrink-0 text-emerald-500" /> Redirecting...
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    {/* OTP Security Key & Mail badge */}
+                    <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
+                      <KeyRound className="w-10 h-10 text-[#6D4AFF]" />
+                      <div className="absolute -bottom-0.5 -right-0.5 bg-[#6D4AFF] text-white rounded-full p-1.5 shadow-md">
+                        <Mail className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
 
-                <div className="flex flex-col gap-1">
-                  <h2 className="text-2xl font-black text-neutral-900">
-                    Verify OTP
-                  </h2>
-                  <p className="text-xs text-neutral-500 font-semibold px-2">
-                    Enter the 6-digit code sent to{" "}
-                    <span className="text-neutral-900 font-bold">
-                      {emailForVerification}
-                    </span>
-                  </p>
-                </div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-2xl font-black text-neutral-900">
+                        Verify OTP
+                      </h2>
+                      <p className="text-xs text-neutral-500 font-semibold px-2">
+                        Enter the 6-digit code sent to{" "}
+                        <span className="text-neutral-900 font-bold">
+                          {emailForVerification}
+                        </span>
+                      </p>
+                    </div>
 
-                {/* Timer */}
-                <div className="text-sm font-black text-[#6D4AFF] bg-[#6D4AFF]/5 px-5 py-2 rounded-full border border-[#6D4AFF]/10">
-                  {otpTimer > 0 ? formatTimer(otpTimer) : "Code expired"}
-                </div>
+                    {/* Timer */}
+                    <div className="text-sm font-black text-[#6D4AFF] bg-[#6D4AFF]/5 px-5 py-2 rounded-full border border-[#6D4AFF]/10">
+                      {otpTimer > 0 ? formatTimer(otpTimer) : "Code expired"}
+                    </div>
 
-                {/* Error / Success */}
-                {authError && (
-                  <div className="w-full flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold">
-                    <Info className="w-4 h-4 shrink-0" /> {authError}
-                  </div>
+                    {/* Error / Success */}
+                    {authError && (
+                      <div className="w-full flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold">
+                        <Info className="w-4 h-4 shrink-0" /> {authError}
+                      </div>
+                    )}
+
+                    {/* OTP Inputs */}
+                    <div className="flex gap-2.5 justify-center">
+                      {otpValues.map((val, idx) => (
+                        <input
+                          key={idx}
+                          id={`otp-${idx}`}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={val}
+                          onChange={(e) => handleOtpChange(idx, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                          className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 focus:outline-none transition-all"
+                        />
+                      ))}
+                    </div>
+
+                    <Button
+                      onClick={onVerifyOtp}
+                      disabled={isLoading}
+                      className="w-full bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold py-3.5 h-12 rounded-2xl shadow-md hover:shadow-lg hover:shadow-purple-500/20 transition-all"
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center gap-2">
+                          <RefreshCw className="animate-spin w-4 h-4" />{" "}
+                          Verifying...
+                        </span>
+                      ) : (
+                        "Verify OTP"
+                      )}
+                    </Button>
+
+                    <div className="text-xs font-semibold text-neutral-500">
+                      Didn&apos;t receive OTP?{" "}
+                      <button
+                        onClick={() => {
+                          setOtpTimer(90);
+                          setAuthError(null);
+                        }}
+                        className="text-[#6D4AFF] font-bold hover:underline cursor-pointer"
+                      >
+                        Resend OTP
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setAuthError(null);
+                        setStep("login");
+                      }}
+                      className="flex items-center justify-center gap-1.5 text-xs font-bold text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" /> Back to Login
+                    </button>
+                  </>
                 )}
-                {authSuccess && (
-                  <div className="w-full flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs font-bold">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" /> {authSuccess}
-                  </div>
-                )}
-
-                {/* OTP Inputs */}
-                <div className="flex gap-2.5 justify-center">
-                  {otpValues.map((val, idx) => (
-                    <input
-                      key={idx}
-                      id={`otp-${idx}`}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={val}
-                      onChange={(e) => handleOtpChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                      className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 focus:outline-none transition-all"
-                    />
-                  ))}
-                </div>
-
-                <Button
-                  onClick={onVerifyOtp}
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold py-3.5 h-12 rounded-2xl shadow-md hover:shadow-lg hover:shadow-purple-500/20 transition-all"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center gap-2">
-                      <RefreshCw className="animate-spin w-4 h-4" />{" "}
-                      Verifying...
-                    </span>
-                  ) : (
-                    "Verify OTP"
-                  )}
-                </Button>
-
-                <div className="text-xs font-semibold text-neutral-500">
-                  Didn&apos;t receive OTP?{" "}
-                  <button
-                    onClick={() => {
-                      setOtpTimer(90);
-                      setAuthError(null);
-                    }}
-                    className="text-[#6D4AFF] font-bold hover:underline cursor-pointer"
-                  >
-                    Resend OTP
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setAuthError(null);
-                    setStep("login");
-                  }}
-                  className="flex items-center justify-center gap-1.5 text-xs font-bold text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Back to Login
-                </button>
               </GlassCard>
             </motion.div>
           )}

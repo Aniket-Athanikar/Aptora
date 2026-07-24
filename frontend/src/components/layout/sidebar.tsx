@@ -34,18 +34,18 @@ interface SidebarProps {
 }
 
 const NAV_ITEMS = [
-  { key: "home", label: "Home", icon: Home, gradient: "from-slate-650 to-slate-800", textClass: "text-slate-700", bgLight: "bg-slate-100/60", glow: "rgba(148, 163, 184, 0.45)" },
-  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, gradient: "from-[#6D4AFF] to-indigo-650", textClass: "text-[#6D4AFF]", bgLight: "bg-indigo-50/60", glow: "rgba(109, 74, 255, 0.45)" },
-  { key: "ai", label: "AI Study", icon: Sparkles, gradient: "from-purple-500 to-pink-500", textClass: "text-purple-600", bgLight: "bg-purple-50/60", glow: "rgba(168, 85, 247, 0.45)" },
-  { key: "knowledge", label: "AI Library", icon: BookOpen, gradient: "from-amber-500 to-orange-500", textClass: "text-amber-600", bgLight: "bg-amber-50/60", glow: "rgba(245, 158, 11, 0.45)" },
-  { key: "goal-plan", label: "Goal", icon: Compass, gradient: "from-violet-500 to-fuchsia-600", textClass: "text-violet-600", bgLight: "bg-violet-50/60", glow: "rgba(139, 92, 246, 0.45)" },
-  { key: "planner", label: "Planner", icon: ListTodo, gradient: "from-sky-500 to-blue-600", textClass: "text-sky-600", bgLight: "bg-sky-50/60", glow: "rgba(14, 165, 233, 0.45)" },
-  { key: "progress", label: "Progress", icon: Star, gradient: "from-yellow-400 to-amber-500", textClass: "text-amber-600", bgLight: "bg-amber-50/60", glow: "rgba(245, 158, 11, 0.45)" },
-  { key: "analytics", label: "Analytics", icon: TrendingUp, gradient: "from-emerald-400 to-teal-600", textClass: "text-emerald-600", bgLight: "bg-emerald-50/60", glow: "rgba(16, 185, 129, 0.45)" },
-  { key: "achievements", label: "Achievements", icon: Trophy, gradient: "from-fuchsia-500 to-rose-600", textClass: "text-fuchsia-600", bgLight: "bg-fuchsia-50/60", glow: "rgba(217, 70, 239, 0.45)" },
-  { key: "coach", label: "AI Mentor", icon: Bot, gradient: "from-indigo-500 to-blue-600", textClass: "text-indigo-600", bgLight: "bg-indigo-50/60", glow: "rgba(99, 102, 241, 0.45)" },
-  { key: "notifications", label: "Notifications", icon: Bell, gradient: "from-rose-500 to-red-600", textClass: "text-rose-600", bgLight: "bg-rose-50/60", glow: "rgba(244, 63, 94, 0.45)" },
-  { key: "calendar", label: "Target", icon: Calendar, gradient: "from-cyan-500 to-teal-500", textClass: "text-cyan-600", bgLight: "bg-cyan-50/60", glow: "rgba(6, 182, 212, 0.45)" },
+  { key: "home", label: "Home", icon: Home, gradient: "from-slate-600 to-slate-800", textClass: "text-slate-700", bgLight: "bg-slate-200/50 text-slate-900 border-slate-200/50", glow: "rgba(148, 163, 184, 0.45)" },
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, gradient: "from-[#6D4AFF] to-indigo-600", textClass: "text-[#6D4AFF]", bgLight: "bg-indigo-100/50 text-indigo-950 border-indigo-200/30", glow: "rgba(109, 74, 255, 0.45)" },
+  { key: "ai", label: "AI Study", icon: Sparkles, gradient: "from-purple-500 to-pink-500", textClass: "text-purple-600", bgLight: "bg-purple-100/50 text-purple-955 border-purple-200/30", glow: "rgba(168, 85, 247, 0.45)" },
+  { key: "knowledge", label: "AI Library", icon: BookOpen, gradient: "from-amber-500 to-orange-500", textClass: "text-amber-600", bgLight: "bg-amber-100/50 text-amber-955 border-amber-200/30", glow: "rgba(245, 158, 11, 0.45)" },
+  { key: "goal-plan", label: "Goal", icon: Compass, gradient: "from-violet-500 to-fuchsia-600", textClass: "text-violet-600", bgLight: "bg-violet-100/50 text-violet-955 border-violet-200/30", glow: "rgba(139, 92, 246, 0.45)" },
+  { key: "planner", label: "Planner", icon: ListTodo, gradient: "from-sky-500 to-blue-600", textClass: "text-sky-600", bgLight: "bg-sky-100/50 text-sky-955 border-sky-200/30", glow: "rgba(14, 165, 233, 0.45)" },
+  { key: "progress", label: "Progress", icon: Star, gradient: "from-yellow-400 to-amber-500", textClass: "text-amber-600", bgLight: "bg-amber-100/50 text-amber-955 border-amber-200/30", glow: "rgba(245, 158, 11, 0.45)" },
+  { key: "analytics", label: "Analytics", icon: TrendingUp, gradient: "from-emerald-400 to-teal-600", textClass: "text-emerald-600", bgLight: "bg-emerald-100/50 text-emerald-955 border-emerald-200/30", glow: "rgba(16, 185, 129, 0.45)" },
+  { key: "achievements", label: "Achievements", icon: Trophy, gradient: "from-fuchsia-500 to-rose-600", textClass: "text-fuchsia-600", bgLight: "bg-fuchsia-100/50 text-fuchsia-955 border-fuchsia-200/30", glow: "rgba(217, 70, 239, 0.45)" },
+  { key: "coach", label: "AI Mentor", icon: Bot, gradient: "from-indigo-500 to-blue-600", textClass: "text-indigo-600", bgLight: "bg-indigo-100/50 text-indigo-955 border-indigo-200/30", glow: "rgba(99, 102, 241, 0.45)" },
+  { key: "notifications", label: "Notifications", icon: Bell, gradient: "from-rose-500 to-red-600", textClass: "text-rose-600", bgLight: "bg-rose-100/50 text-rose-955 border-rose-200/30", glow: "rgba(244, 63, 94, 0.45)" },
+  { key: "calendar", label: "Target", icon: Calendar, gradient: "from-cyan-500 to-teal-500", textClass: "text-cyan-600", bgLight: "bg-cyan-100/50 text-cyan-955 border-cyan-200/30", glow: "rgba(6, 182, 212, 0.45)" },
 ];
 
 const QUOTES = [
@@ -140,7 +140,7 @@ export function Sidebar({
       {/* Desktop Sidebar */}
       <aside
         className={`hidden lg:flex flex-col shrink-0 sticky top-0 h-screen z-30 transition-all duration-500 ease-in-out
-                    bg-white border-r border-slate-200/80 shadow-2xl relative
+                    bg-slate-50/95 border-r border-slate-200/80 shadow-2xl relative
                     ${sidebarWidth} ${isCollapsed ? "px-3.5 py-7" : "px-6 py-8"}`}
       >
         {/* Toggle Collapse Button */}
@@ -214,9 +214,21 @@ export function Sidebar({
                 {active && (
                   <motion.div
                     layoutId="activePill"
-                    className="absolute inset-0 bg-white/20 -z-10 rounded-2xl"
+                    className="absolute inset-0 bg-white/25 -z-10 rounded-2xl overflow-hidden"
                     transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                  />
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/45 to-transparent"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "100%" }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 2.2,
+                        ease: "linear",
+                      }}
+                    />
+                  </motion.div>
                 )}
 
                 {/* Left Active border indicator */}
@@ -391,7 +403,7 @@ export function Sidebar({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative w-[310px] h-full bg-white border-r border-slate-200 flex flex-col p-6 shadow-2xl z-10"
+              className="relative w-[310px] h-full bg-slate-50/95 border-r border-slate-200 flex flex-col p-6 shadow-2xl z-10"
             >
               {/* Mobile Header */}
               <div className="flex items-center justify-between mb-9">
@@ -426,15 +438,28 @@ export function Sidebar({
                         navigate(router, key);
                         setMobileOpen(false);
                       }}
-                      className={`flex items-center gap-4 w-full h-12 px-4.5 rounded-2xl text-[13px] font-black transition-all cursor-pointer border
+                      className={`flex items-center gap-4 w-full h-12 px-4.5 rounded-2xl text-[13px] font-black transition-all cursor-pointer border relative overflow-hidden
                                   ${active
                           ? `${textClass} ${bgLight} border-slate-100 shadow-md`
                           : "text-slate-500 hover:bg-slate-50 border-transparent hover:border-slate-150"}`}
                     >
+                      {active && (
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/45 to-transparent pointer-events-none -z-10"
+                          initial={{ x: "-100%" }}
+                          animate={{ x: "100%" }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 2.2,
+                            ease: "linear",
+                          }}
+                        />
+                      )}
                       <div className={`p-2 rounded-xl transition-all border ${active ? "bg-white border-slate-100 shadow-sm" : "bg-transparent border-transparent"}`}>
                         <Icon className={`w-[17px] h-[17px] ${active ? textClass : "text-slate-400"}`} />
                       </div>
-                      <span className="tracking-wide">{label}</span>
+                      <span className="tracking-wide text-left">{label}</span>
                     </button>
                   );
                 })}

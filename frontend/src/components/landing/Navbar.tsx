@@ -12,12 +12,8 @@ import Image from "next/image";
 import DeleteAccountModal from "@/components/DeleteAccountModal";
 
 const getAvatarUrl = (name: string) => {
-  const femaleNames = ["mrunal", "priya", "sneha", "neha", "reddy", "sharma", "puja", "pooja", "anita", "sunita", "rekha", "kiran", "chaudhari"];
-  const cleanName = name.toLowerCase().trim();
-  const isFemale = femaleNames.some(fName => cleanName.includes(fName));
-  return isFemale
-    ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
-    : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120";
+  const seed = encodeURIComponent(name || "User");
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
 };
 
 const formatDisplayName = (name: string) => {
@@ -223,6 +219,7 @@ export default function Navbar() {
                       src={getAvatarUrl(user.name)}
                       alt={user.name}
                       fill
+                      sizes="32px"
                       className="object-cover"
                     />
                   )}
@@ -352,6 +349,7 @@ export default function Navbar() {
                       src={getAvatarUrl(user.name)}
                       alt={user.name}
                       fill
+                      sizes="40px"
                       className="object-cover"
                     />
                   )}

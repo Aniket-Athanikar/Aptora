@@ -220,7 +220,7 @@ const DEFAULT_ASPIRANT_PROFILE: AspirantProfileData = {
   preferredName: "Aniket",
   gender: "Male",
   age: 23,
-  dob: "2003-29-06",
+  dob: "2003-06-29",
   mobile: "+91 9876543210",
   email: "agentforge29@gmail.com",
   city: "Sangali",

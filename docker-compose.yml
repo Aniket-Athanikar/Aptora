@@ -5,37 +5,49 @@ services:
     image: postgres:15-alpine
     container_name: examforge_postgres
     environment:
-      POSTGRES_DB: examforgedb
-      POSTGRES_USER: examforge_admin
-      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: Exame_forgeDB
+      POSTGRES_USER: aniket
+      POSTGRES_PASSWORD: admin123
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   redis:
     image: redis:7-alpine
     container_name: examforge_redis
     ports:
-      - "6379:6379"
+      - "6479:6379"
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 64M
 
   qdrant:
     image: qdrant/qdrant:latest
     container_name: examforge_qdrant
     ports:
-      - "6333:6333"
-      - "6334:6334"
+      - "6433:6333"
+      - "6434:6334"
     volumes:
       - qdrant_data:/qdrant/storage
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   backend:
     build:
@@ -45,9 +57,9 @@ services:
       - ENV=production
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_NAME=examforgedb
-      - DB_USER=examforge_admin
-      - DB_PASSWORD=password123
+      - DB_NAME=Exame_forgeDB
+      - DB_USER=aniket
+      - DB_PASSWORD=admin123
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant
@@ -59,13 +71,17 @@ services:
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   frontend:
     build:
       context: ./frontend
       dockerfile: ../docker/frontend.Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:8000
     depends_on:
@@ -73,6 +89,10 @@ services:
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   nginx:
     image: nginx:alpine
@@ -87,6 +107,10 @@ services:
     networks:
       - examforge-network
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 32M
 
 volumes:
   pgdata:

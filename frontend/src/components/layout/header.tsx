@@ -80,7 +80,7 @@ export function Header() {
               </Link>
               <Link href="/profile" className="relative group shrink-0 transition-transform duration-300 hover:scale-105">
                 <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-60 blur-xs" />
-                <Avatar src={user?.avatarUrl} fallback={user?.name || user?.email} size="sm" className="relative border-2 border-white shadow-sm" />
+                <Avatar src={user?.avatar || user?.avatarUrl} fallback={user?.name || user?.email} size="sm" className="relative border-2 border-white shadow-sm" />
               </Link>
             </div>
           ) : (

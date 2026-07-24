@@ -63,7 +63,11 @@ def profile_to_dict(p: UserProfileDb, user: UserDb) -> dict:
 async def get_profile(email: str, db: Session = Depends(get_db)):
     user = db.query(UserDb).filter(UserDb.email == email).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
+        user = UserDb(name=email.split("@")[0].capitalize(), email=email, password="")
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        logger.info(f"Auto-registered user during profile GET fetch: {email}")
 
     profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
     if not profile:
@@ -78,7 +82,11 @@ async def get_profile(email: str, db: Session = Depends(get_db)):
 async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session = Depends(get_db)):
     user = db.query(UserDb).filter(UserDb.email == email).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
+        user = UserDb(name=email.split("@")[0].capitalize(), email=email, password="")
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        logger.info(f"Auto-registered user during profile POST update: {email}")
 
     profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
     if not profile:

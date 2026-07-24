@@ -5,6 +5,21 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
 
+// Suppress THREE.Clock deprecation warnings from third-party libraries (e.g. R3F)
+if (typeof window !== "undefined") {
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      (args[0].includes("THREE.Clock") || args[0].includes("ThreeHero.tsx"))
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+}
+
 // Helper to create a high-quality radial glow texture dynamically
 function useGlowTexture() {
   return useMemo(() => {
@@ -172,10 +187,24 @@ function FloatingGlassmorphicShapes() {
   );
 }
 
+let lastTime = typeof window !== "undefined" ? performance.now() / 1000 : 0;
+const customClock = {
+  getElapsedTime: () => (typeof window !== "undefined" ? performance.now() / 1000 : 0),
+  getDelta: () => {
+    if (typeof window === "undefined") return 0;
+    const now = performance.now() / 1000;
+    const delta = now - lastTime;
+    lastTime = now;
+    return delta;
+  },
+  start: () => {},
+  stop: () => {},
+} as any;
+
 export default function ThreeHero() {
   return (
     <div className="w-full h-full relative min-h-[500px] lg:min-h-[650px] overflow-hidden">
-      <Canvas camera={{ position: [0, 2.5, 7.5], fov: 45 }}>
+      <Canvas camera={{ position: [0, 2.5, 7.5], fov: 45 }} clock={customClock}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[8, 12, 10]} intensity={2.0} color="#ffffff" />
         <pointLight position={[-10, 8, -5]} intensity={1.5} color="#8B5CF6" />

@@ -7,15 +7,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import redis
 from qdrant_client import QdrantClient
+from app.core.config import settings
 
 logger = logging.getLogger("backend")
 
 # ─── DATABASE CONFIGURATION ──────────────────────────────────────────
-DB_HOST = os.getenv("DB_HOST", "127.0.0.1")  # Default to localhost for local runs
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "Exame_forgeDB")
-DB_USER = os.getenv("DB_USER", "aniket")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "admin123")
+DB_HOST = settings.DB_HOST
+DB_PORT = settings.DB_PORT
+DB_NAME = settings.DB_NAME
+DB_USER = settings.DB_USER
+DB_PASSWORD = settings.DB_PASSWORD
 
 # We try the primary port first. If it fails, we fallback to the docker port mapping 5433.
 ports_to_try = [DB_PORT]
@@ -79,8 +80,8 @@ def get_db():
         db.close()
 
 # ─── REDIS CLIENT WITH LOCAL FALLBACK ─────────────────────────────────
-REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
-REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+REDIS_HOST = settings.REDIS_HOST
+REDIS_PORT = settings.REDIS_PORT
 redis_client = None
 
 # Attempt to connect to configured REDIS_HOST first
@@ -104,8 +105,8 @@ except Exception as e:
         redis_client = None
 
 # ─── QDRANT VECTOR DB CLIENT WITH LOCAL FALLBACK ─────────────────────
-QDRANT_HOST = os.getenv("QDRANT_HOST", "127.0.0.1")
-QDRANT_PORT = int(os.getenv("QDRANT_PORT", "6333"))
+QDRANT_HOST = settings.QDRANT_HOST
+QDRANT_PORT = settings.QDRANT_PORT
 qdrant_client = None
 
 try:

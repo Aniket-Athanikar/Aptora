@@ -31,17 +31,23 @@ export function RealtimeHub() {
       socketUrl = `${protocol}${cleanHost}/ws/dashboard`;
     }
 
+    let active = true;
+    let ws: WebSocket | null = null;
+
     const connectWS = () => {
+      if (!active) return;
       setStatus("connecting");
       try {
-        const ws = new WebSocket(socketUrl);
+        ws = new WebSocket(socketUrl);
         wsRef.current = ws;
 
         ws.onopen = () => {
+          if (!active) return;
           setStatus("connected");
         };
 
         ws.onmessage = (event) => {
+          if (!active) return;
           try {
             const data = JSON.parse(event.data);
             if (data.type === "connection_status") {
@@ -67,25 +73,35 @@ export function RealtimeHub() {
         };
 
         ws.onclose = () => {
+          if (!active) return;
           setStatus("disconnected");
-          // Reconnect attempt after 5 seconds
           setTimeout(connectWS, 5000);
         };
 
         ws.onerror = () => {
+          if (!active) return;
           setStatus("disconnected");
         };
       } catch (err) {
+        if (!active) return;
         console.error("WebSocket connection error", err);
         setStatus("disconnected");
       }
     };
 
-    connectWS();
+    const timer = setTimeout(connectWS, 100);
 
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
+      active = false;
+      clearTimeout(timer);
+      if (ws) {
+        ws.onopen = null;
+        ws.onmessage = null;
+        ws.onclose = null;
+        ws.onerror = null;
+        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+          ws.close();
+        }
       }
     };
   }, []);
