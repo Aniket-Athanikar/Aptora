@@ -7,7 +7,7 @@ import { GoalEngineProvider } from "@/contexts/goal-engine.context";
 
 function AIDashboardContent() {
   return (
-    <DashboardLayout activeTab="ai">
+    <DashboardLayout activeTab="ai" noPadding={true}>
       <AIWorkspace />
     </DashboardLayout>
   );

@@ -90,7 +90,7 @@ export function Sidebar({
     return () => clearInterval(t);
   }, []);
 
-  const sidebarWidth = isCollapsed ? "w-[96px]" : "w-[290px]";
+  const sidebarWidth = isCollapsed ? "w-[80px]" : "w-[240px]";
 
   return (
     <>

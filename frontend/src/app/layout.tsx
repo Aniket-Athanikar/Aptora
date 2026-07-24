@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ExamForge-AI | Premium Cognitive Exam Prep",
+  title: "ExamForge-AI",
   description:
     "Upload books, notes & PYQs. Our AI generates tailored study guides, mock tests, and provides personalized tracking to ensure you ace your exams.",
   keywords: [

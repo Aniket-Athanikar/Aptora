@@ -21,19 +21,19 @@ function WorkspaceInner() {
   const [activeMainTab, setActiveMainTab] = useState<"flow" | "tree" | "uploads">("flow");
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen relative text-slate-800">
+    <div className="space-y-6 w-full p-4 sm:p-6 lg:p-8 min-h-screen relative text-slate-800">
       
       {/* Premium Ambient Background Glow elements */}
       <div className="absolute top-0 left-1/4 w-[350px] h-[350px] bg-purple-200/20 rounded-full blur-[100px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-indigo-200/20 rounded-full blur-[120px] pointer-events-none -z-10" />
-
+ 
       {/* Modern Creative Header Panel */}
       <div className="relative rounded-[32px] bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl overflow-hidden text-white">
         
         {/* Glow presets */}
         <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-[200px] h-[200px] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
+ 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6D4AFF] to-[#A855F7] text-white flex items-center justify-center shadow-[0_0_20px_rgba(109,74,255,0.4)] shrink-0 animate-pulse-subtle">
@@ -54,7 +54,7 @@ function WorkspaceInner() {
               </p>
             </div>
           </div>
-
+ 
           {/* Tab Selection Switcher */}
           <div className="flex items-center gap-1.5 bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/60 select-none self-start lg:self-auto shadow-inner">
             {(["flow", "tree", "uploads"] as const).map((tab) => {
@@ -65,7 +65,7 @@ function WorkspaceInner() {
               };
               const TabIcon = tabLabels[tab].icon;
               const isActive = activeMainTab === tab;
-
+ 
               return (
                 <button
                   key={tab}
@@ -83,7 +83,7 @@ function WorkspaceInner() {
             })}
           </div>
         </div>
-
+ 
         {/* Real-time System Statistics Indicators */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800/80 text-xs">
           <div className="flex items-center gap-2.5">
@@ -115,18 +115,18 @@ function WorkspaceInner() {
             </div>
           </div>
         </div>
-
+ 
       </div>
-
+ 
       {/* Main Content Workspace Transition Panels */}
       <div className="min-h-[400px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeMainTab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             {activeMainTab === "flow" && (
               <div className="flex flex-col xl:flex-row gap-6">

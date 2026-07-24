@@ -148,7 +148,7 @@ export function DashboardLayout({
 
         <main
           className={`flex-1 ${
-            noPadding ? "overflow-hidden" : "p-4 md:p-6 space-y-5 overflow-y-auto"
+            noPadding ? "overflow-y-auto" : "p-4 md:p-6 space-y-5 overflow-y-auto"
           }`}
         >
           {children}
