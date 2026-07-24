@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: examforge-network-policy
+  namespace: examforge
+spec:
+  podSelector:
+    matchLabels:
+      app: examforge
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow traffic to backend from frontend and ingress controller
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8000
+  # Allow traffic to database and redis only from backend
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend
+    ports:
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 6333

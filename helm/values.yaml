@@ -1,0 +1,55 @@
+replicaCount:
+  backend: 2
+  frontend: 2
+
+image:
+  registry: ghcr.io
+  repository: aniket-athanikar/exam_forge
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  backendPort: 8000
+  frontendPort: 3000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: examforge.ai
+      paths:
+        - path: /
+          pathType: Prefix
+          serviceName: frontend
+    - host: api.examforge.ai
+      paths:
+        - path: /
+          pathType: Prefix
+          serviceName: backend
+
+config:
+  dbHost: "postgres-service"
+  dbPort: "5432"
+  dbName: "examforgedb"
+  redisHost: "redis-service"
+  redisPort: "6379"
+  qdrantHost: "qdrant-service"
+  qdrantPort: "6333"
+  env: "production"
+
+resources:
+  backend:
+    limits:
+      cpu: "1"
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  frontend:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi

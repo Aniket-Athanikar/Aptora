@@ -1,0 +1,63 @@
+name: "🐛 Bug Report"
+description: "Report a bug or unexpected behavior in ExamForge AI"
+title: "[BUG]: "
+labels: ["bug", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        Steps to reproduce the behavior:
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+      placeholder: |
+        1. Run `make dev`
+        2. Open frontend at http://localhost:3000
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Output
+      description: Please copy and paste any relevant logs, stack traces, or terminal output here.
+      render: bash
+  - type: checkboxes
+    id: environment
+    attributes:
+      label: Environment & Tech Stack
+      description: Select the environment where the bug occurred.
+      options:
+        - label: Local Development (Docker Compose)
+        - label: Development Environment (K8s)
+        - label: Staging Environment (K8s)
+        - label: Production Environment
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here (e.g., OS, browser version).

@@ -138,6 +138,21 @@ Access the platform at:
 * **Frontend Client**: [http://localhost:3000](http://localhost:3000)
 * **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### 🛠 Enterprise DevOps Platform Commands
+
+A unified Makefile is available to simplify common developer tasks:
+* Run development containers: `make dev`
+* Run production container stack: `make prod`
+* Spin up Prometheus & Grafana stack: `make monitoring`
+* Apply K8s manifests: `make k8s-deploy`
+* Upgrade / Deploy via Helm: `make helm-deploy`
+
+For detailed guidance, see:
+* [Git Workflow Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/GIT_WORKFLOW.md)
+* [Deployment Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/DEPLOYMENT_GUIDE.md)
+* [Monitoring & Observability Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/MONITORING.md)
+
+
 ---
 
 ### Manual Development Setup

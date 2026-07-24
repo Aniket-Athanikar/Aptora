@@ -1,0 +1,48 @@
+name: "🚀 Feature Request"
+description: "Suggest a new feature or improvement for ExamForge AI"
+title: "[FEAT]: "
+labels: ["enhancement", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make ExamForge AI better? We'd love to hear about it!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+      placeholder: We should add a new dashboard for...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: Alternatively, we could...
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Target Component
+      description: Select all components affected by this feature.
+      options:
+        - label: Frontend (Next.js)
+        - label: Backend (FastAPI / Celery)
+        - label: DevOps / Deployment
+        - label: AI / OCR Services
+        - label: Monitoring & Metrics
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here.

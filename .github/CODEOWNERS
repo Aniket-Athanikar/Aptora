@@ -1,0 +1,21 @@
+# CODEOWNERS File for ExamForge AI
+# Defines owners for different parts of the codebase.
+
+# Global owners (backup)
+* @Aniket-Athanikar
+
+# DevOps and Infrastructure owners
+/docker/ @Aniket-Athanikar
+/k8s/ @Aniket-Athanikar
+/helm/ @Aniket-Athanikar
+/monitoring/ @Aniket-Athanikar
+/.github/ @Aniket-Athanikar
+/.gitlab-ci.yml @Aniket-Athanikar
+/Makefile @Aniket-Athanikar
+/Taskfile.yml @Aniket-Athanikar
+
+# Backend owners
+/backend/ @Aniket-Athanikar
+
+# Frontend owners
+/frontend/ @Aniket-Athanikar

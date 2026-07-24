@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "examforge.fullname" . }}-frontend
+  labels:
+    app: {{ include "examforge.name" . }}-frontend
+spec:
+  ports:
+  - port: {{ .Values.service.frontendPort }}
+    targetPort: {{ .Values.service.frontendPort }}
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ include "examforge.name" . }}-frontend

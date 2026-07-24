@@ -135,6 +135,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   // Custom states for loading animation (AI Thinking Screen)
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingStep, setThinkingStep] = useState(0);
+  const [isCelebrating, setIsCelebrating] = useState(false);
+  const [celebrationGoal, setCelebrationGoal] = useState<GoalData | null>(null);
 
   // Initialize draft with fallback names on start
   useEffect(() => {
@@ -228,6 +230,15 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
   // Handle preset subject generation on exam change
   const handleSelectExam = (exam: string, category: string) => {
+    if (draft.targetExam === exam) {
+      updateWizardDraft({
+        targetExam: "",
+        examCategory: "",
+        weaknesses: []
+      });
+      return;
+    }
+
     const defaultSubjects = PRESET_SUBJECTS[exam] || PRESET_SUBJECTS["default"];
     const weaknesses: SubjectWeakness[] = defaultSubjects.map(sub => ({
       subject: sub,
@@ -249,8 +260,24 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   const validateStep = (): boolean => {
     const stepErrors: Record<string, string> = {};
 
-    if (currentStep === 1 && !draft.targetExam) {
-      stepErrors.targetExam = "Please select or type your target exam to proceed.";
+    if (currentStep === 1) {
+      let finalExam = draft.targetExam;
+      if (!finalExam && customExam.trim()) {
+        const examName = customExam.trim();
+        if (examName.length < 2) {
+          stepErrors.targetExam = "Custom exam name must be at least 2 characters.";
+        } else if (examName.length > 50) {
+          stepErrors.targetExam = "Custom exam name must not exceed 50 characters.";
+        } else {
+          const categoryName = customCategory.trim() || "Custom Exam";
+          handleSelectExam(examName, categoryName);
+          setCustomExam("");
+          setCustomCategory("");
+          finalExam = examName;
+        }
+      } else if (!finalExam) {
+        stepErrors.targetExam = "Please select a target exam or type a custom one to proceed.";
+      }
     }
 
     if (currentStep === 2) {
@@ -375,9 +402,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             updatedAt: new Date().toISOString()
           };
 
-          completeWizard(finishedGoal, isEditMode ? "Calibrated and Edited success profile params" : "Configured initial Success engine blueprint");
+          setCelebrationGoal(finishedGoal);
           setIsThinking(false);
-          if (onClose) onClose();
+          setIsCelebrating(true);
         }, 1000);
       }
     }, 600);
@@ -455,16 +482,31 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
   if (isThinking) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/65 backdrop-blur-xl">
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center"
+          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center relative overflow-hidden"
         >
+          {/* Subtle floating background colors inside loader */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+            <div className="absolute top-[-20%] left-[-20%] w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px]" />
+            <div className="absolute bottom-[-20%] right-[-20%] w-64 h-64 bg-purple-500/10 rounded-full blur-[80px]" />
+          </div>
+
           <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
-            <span className="absolute inset-0 border-4 border-indigo-100 rounded-full animate-pulse"></span>
-            <span className="absolute inset-0 border-4 border-t-indigo-650 rounded-full animate-spin"></span>
-            <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "linear" }}
+              className="absolute inset-0 rounded-full border-4 border-dashed border-indigo-600/35"
+            />
+            <motion.div
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+              className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-650 shadow-md shadow-indigo-600/5"
+            >
+              <Sparkles className="w-6.5 h-6.5 text-indigo-600" />
+            </motion.div>
           </div>
 
           <h2 className="text-2xl font-black mb-1 text-slate-900">Calibrating Success Engine</h2>
@@ -480,38 +522,123 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               "Formulating Success Prediction Metrics",
               "Launching Success Dashboard Engine"
             ].map((text, idx) => (
-              <div key={idx} className="flex items-center text-left text-xs gap-3">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${thinkingStep > idx
-                  ? "bg-emerald-500 text-white shadow-sm"
-                  : thinkingStep === idx
-                    ? "bg-indigo-600 text-white animate-pulse"
-                    : "bg-slate-100 text-slate-400 border border-slate-200/50"
-                  }`}>
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{
+                  opacity: thinkingStep > idx ? 0.95 : thinkingStep === idx ? 1 : 0.3,
+                  x: thinkingStep === idx ? 4 : 0,
+                  scale: thinkingStep === idx ? 1.015 : 1
+                }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center text-left text-xs gap-3"
+              >
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 transition-all duration-300 ${
+                  thinkingStep > idx
+                    ? "bg-emerald-500 text-white shadow-sm"
+                    : thinkingStep === idx
+                      ? "bg-indigo-600 text-white shadow-md scale-105"
+                      : "bg-slate-100 text-slate-400 border border-slate-200/50"
+                }`}>
                   {thinkingStep > idx ? (
                     <LucideIcons.Check className="w-3.5 h-3.5 text-white" />
                   ) : (
                     <span>{idx + 1}</span>
                   )}
                 </div>
-                <span className={`font-bold ${thinkingStep >= idx ? "text-slate-800" : "text-slate-400"}`}>
+                <span className={`font-bold transition-all duration-300 ${
+                  thinkingStep === idx ? "text-indigo-600 font-extrabold" : thinkingStep > idx ? "text-slate-800" : "text-slate-400"
+                }`}>
                   {text}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
       </div>
     );
   }
+  if (isCelebrating && celebrationGoal) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center relative overflow-hidden"
+        >
+          {/* Animated sparkles/particles backgrounds */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] bg-emerald-400/20 rounded-full blur-[80px]" />
+            <div className="absolute bottom-[-20%] right-[-20%] w-[300px] h-[300px] bg-indigo-500/20 rounded-full blur-[80px]" />
+          </div>
 
-  const STEP_COLORS: Record<number, { glowLeft: string; glowRight: string; shadow: string }> = {
-    1: { glowLeft: "bg-[#6D4AFF]/12", glowRight: "bg-[#A855F7]/12", shadow: "shadow-[0_24px_85px_rgba(109,74,255,0.18)]" },
-    2: { glowLeft: "bg-[#10B981]/12", glowRight: "bg-[#14B8A6]/12", shadow: "shadow-[0_24px_85px_rgba(16,185,129,0.15)]" },
-    3: { glowLeft: "bg-[#F59E0B]/12", glowRight: "bg-[#F97316]/12", shadow: "shadow-[0_24px_85px_rgba(245,158,11,0.15)]" },
-    4: { glowLeft: "bg-[#F43F5E]/12", glowRight: "bg-[#D946EF]/12", shadow: "shadow-[0_24px_85px_rgba(244,63,94,0.15)]" },
-    5: { glowLeft: "bg-[#0EA5E9]/12", glowRight: "bg-[#06B6D4]/12", shadow: "shadow-[0_24px_85px_rgba(14,165,233,0.15)]" },
-    6: { glowLeft: "bg-[#EF4444]/12", glowRight: "bg-[#F43F5E]/12", shadow: "shadow-[0_24px_85px_rgba(239,68,68,0.15)]" },
-    7: { glowLeft: "bg-[#EAB308]/15", glowRight: "bg-[#F59E0B]/15", shadow: "shadow-[0_24px_85px_rgba(234,179,8,0.2)]" }
+          <motion.div
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", delay: 0.2, stiffness: 200 }}
+            className="w-24 h-24 mb-6 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20 relative"
+          >
+            <Trophy className="w-11 h-11 text-white" />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute -inset-2 rounded-full border border-orange-400/50 -z-10"
+            />
+          </motion.div>
+
+          <h2 className="text-2xl font-black mb-2 bg-gradient-to-r from-slate-900 to-slate-800 bg-clip-text text-transparent">
+            Success Engine Calibrated!
+          </h2>
+          <p className="text-slate-500 text-xs font-semibold max-w-sm mb-6 leading-relaxed">
+            Your customized roadmap blueprint has been generated. Ready to target your exam milestones.
+          </p>
+
+          {/* Metric Details Panel */}
+          <div className="grid grid-cols-2 gap-3.5 w-full mb-8">
+            <div className="p-4 rounded-2xl border border-indigo-50 bg-indigo-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-indigo-500 tracking-wider">Target Goal</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.targetExam}</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-emerald-50 bg-emerald-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-emerald-500 tracking-wider">Success Score</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.successPrediction}%</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-amber-50 bg-amber-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-amber-500 tracking-wider">Commitment</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.dailyStudyHours} hrs / day</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-rose-50 bg-rose-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-rose-500 tracking-wider">Time Remaining</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.remainingDays} Days</p>
+            </div>
+          </div>
+
+          {/* Enter Button */}
+          <button
+            type="button"
+            onClick={() => {
+              completeWizard(celebrationGoal, isEditMode ? "Calibrated and Edited success profile params" : "Configured initial Success engine blueprint");
+              setIsCelebrating(false);
+              if (onClose) onClose();
+            }}
+            className="w-full py-4 bg-gradient-to-r from-indigo-650 to-[#6D4AFF] hover:from-[#6D4AFF] hover:to-indigo-650 text-white text-xs font-black rounded-2xl cursor-pointer shadow-lg shadow-indigo-600/10 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+          >
+            <span>Enter Study Workspace</span>
+            <LucideIcons.ArrowRight className="w-4.5 h-4.5 text-white" />
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const STEP_COLORS: Record<number, { glowLeft: string; glowRight: string; shadow: string; gradient: string; glowBtn: string }> = {
+    1: { glowLeft: "bg-[#6D4AFF]/12", glowRight: "bg-[#A855F7]/12", shadow: "shadow-[0_24px_85px_rgba(109,74,255,0.18)]", gradient: "from-[#6D4AFF] to-[#A855F7]", glowBtn: "rgba(109,74,255,0.3)" },
+    2: { glowLeft: "bg-[#10B981]/12", glowRight: "bg-[#14B8A6]/12", shadow: "shadow-[0_24px_85px_rgba(16,185,129,0.15)]", gradient: "from-[#10B981] to-[#14B8A6]", glowBtn: "rgba(16,185,129,0.3)" },
+    3: { glowLeft: "bg-[#F59E0B]/12", glowRight: "bg-[#F97316]/12", shadow: "shadow-[0_24px_85px_rgba(245,158,11,0.15)]", gradient: "from-[#F59E0B] to-[#F97316]", glowBtn: "rgba(245,158,11,0.3)" },
+    4: { glowLeft: "bg-[#F43F5E]/12", glowRight: "bg-[#D946EF]/12", shadow: "shadow-[0_24px_85px_rgba(244,63,94,0.15)]", gradient: "from-[#F43F5E] to-[#D946EF]", glowBtn: "rgba(244,63,94,0.3)" },
+    5: { glowLeft: "bg-[#0EA5E9]/12", glowRight: "bg-[#06B6D4]/12", shadow: "shadow-[0_24px_85px_rgba(14,165,233,0.15)]", gradient: "from-[#0EA5E9] to-[#06B6D4]", glowBtn: "rgba(14,165,233,0.3)" },
+    6: { glowLeft: "bg-[#EF4444]/12", glowRight: "bg-[#F43F5E]/12", shadow: "shadow-[0_24px_85px_rgba(239,68,68,0.15)]", gradient: "from-[#EF4444] to-[#F43F5E]", glowBtn: "rgba(239,68,68,0.3)" },
+    7: { glowLeft: "bg-[#EAB308]/15", glowRight: "bg-[#F59E0B]/15", shadow: "shadow-[0_24px_85px_rgba(234,179,8,0.2)]", gradient: "from-[#EAB308] to-[#F59E0B]", glowBtn: "rgba(234,179,8,0.4)" }
   };
 
   const theme = STEP_COLORS[currentStep] || STEP_COLORS[1];
@@ -575,10 +702,34 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         transition={{ type: "spring", damping: 30, stiffness: 250 }}
         className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white/75 glass border border-white/30 overflow-hidden backdrop-blur-3xl transition-all duration-700 ${theme.shadow}`}
       >
-        {/* Ambient background glows inside the modal */}
+        {/* Ambient background glows inside the modal with float motion */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-          <div className={`absolute top-[-25%] left-[-15%] w-[400px] h-[400px] ${theme.glowLeft} rounded-full filter blur-[120px] animate-pulse transition-all duration-700`} style={{ animationDuration: '8s' }} />
-          <div className={`absolute bottom-[-25%] right-[-15%] w-[400px] h-[400px] ${theme.glowRight} rounded-full filter blur-[120px] animate-pulse transition-all duration-700`} style={{ animationDuration: '8s', animationDelay: '2s' }} />
+          <motion.div
+            animate={{
+              x: [-15, 15, -15],
+              y: [-10, 20, -10],
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 9,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className={`absolute top-[-25%] left-[-15%] w-[400px] h-[400px] ${theme.glowLeft} rounded-full filter blur-[100px] transition-all duration-700`}
+          />
+          <motion.div
+            animate={{
+              x: [15, -15, 15],
+              y: [15, -15, 15],
+              scale: [1.08, 0.95, 1.08],
+            }}
+            transition={{
+              duration: 11,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className={`absolute bottom-[-25%] right-[-15%] w-[400px] h-[400px] ${theme.glowRight} rounded-full filter blur-[100px] transition-all duration-700`}
+          />
         </div>
 
         {/* Top Header Navigation */}
@@ -589,7 +740,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#6D4AFF] bg-indigo-50/90 px-2.5 py-0.5 rounded-full border border-indigo-100/40">
+                <span className={`text-[10px] font-black uppercase tracking-wider bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-100 ${stepStyles.accentText}`}>
                   Step {currentStep} of 7
                 </span>
                 {isEditMode && (
@@ -652,14 +803,14 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             return (
               <div key={s.id} className="flex items-center gap-2">
                 <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isActive
-                  ? "bg-gradient-to-r from-[#6D4AFF] to-[#A855F7] border-white/10 text-white shadow-[0_0_14px_rgba(109,74,255,0.4)] scale-105"
+                  ? `bg-gradient-to-r ${theme.gradient} border-white/10 text-white shadow-md scale-105`
                   : isCompleted
                     ? "bg-emerald-500 border-emerald-400 text-white font-bold shadow-[0_0_10px_rgba(16,185,129,0.25)]"
                     : "bg-white/40 border-white/20 text-slate-500"
                   }`}>
                   {isCompleted ? <LucideIcons.Check className="w-4 h-4" /> : StepIconComponent ? <StepIconComponent className="w-4 h-4" /> : s.id}
                 </span>
-                <span className={isActive ? "text-[#6D4AFF] font-black tracking-wide" : isCompleted ? "text-emerald-600 font-bold" : "text-slate-500"}>
+                <span className={isActive ? `${stepStyles.accentText} font-black tracking-wide` : isCompleted ? "text-emerald-600 font-bold" : "text-slate-500"}>
                   {s.label}
                 </span>
                 {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-400/60 ml-1 shrink-0" />}
@@ -671,7 +822,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         {/* Step Progress Bar with Glowing Line Effect */}
         <div className="w-full bg-white/25 h-1.5 relative z-10 border-b border-white/10">
           <motion.div
-            className="bg-gradient-to-r from-[#6D4AFF] via-[#A855F7] to-[#4F46E5] h-full shadow-[0_0_15px_rgba(109,74,255,0.6)]"
+            className={`bg-gradient-to-r ${theme.gradient} h-full transition-all duration-500`}
+            style={{ boxShadow: `0 0 15px ${theme.glowBtn}` }}
             initial={{ width: `${((currentStep - 1) / 7) * 100}%` }}
             animate={{ width: `${(currentStep / 7) * 100}%` }}
             transition={{ duration: 0.4 }}

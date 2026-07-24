@@ -56,6 +56,49 @@ const QUOTES = [
   "Pomodoro breaks keep your mind fresh.",
 ];
 
+const COACH_TEMPLATES = [
+  {
+    gradient: "from-indigo-50/90 via-purple-50/60 to-white",
+    border: "border-indigo-100/90",
+    glow: "bg-[#6D4AFF]/10",
+    accent: "text-[#6D4AFF]",
+    badge: "bg-[#6D4AFF]/10 text-[#6D4AFF]",
+    text: "text-slate-800"
+  },
+  {
+    gradient: "from-emerald-50/90 via-teal-50/60 to-white",
+    border: "border-emerald-100/90",
+    glow: "bg-emerald-500/10",
+    accent: "text-emerald-600",
+    badge: "bg-emerald-500/10 text-emerald-700",
+    text: "text-slate-800"
+  },
+  {
+    gradient: "from-amber-50/90 via-orange-50/60 to-white",
+    border: "border-amber-100/90",
+    glow: "bg-amber-500/10",
+    accent: "text-amber-600",
+    badge: "bg-amber-500/10 text-amber-700",
+    text: "text-slate-800"
+  },
+  {
+    gradient: "from-sky-50/90 via-blue-50/60 to-white",
+    border: "border-sky-100/90",
+    glow: "bg-sky-500/10",
+    accent: "text-sky-600",
+    badge: "bg-sky-500/10 text-sky-700",
+    text: "text-slate-800"
+  },
+  {
+    gradient: "from-rose-50/90 via-pink-50/60 to-white",
+    border: "border-rose-100/90",
+    glow: "bg-rose-500/10",
+    accent: "text-rose-600",
+    badge: "bg-rose-500/10 text-rose-700",
+    text: "text-slate-800"
+  }
+];
+
 function navigate(router: ReturnType<typeof useRouter>, tab: string, sub?: string) {
   if (tab === "home") return router.push("/");
   if (tab === "dashboard") return router.push("/dashboard");
@@ -249,26 +292,33 @@ export function Sidebar({
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 pt-4 border-t border-slate-100"
           >
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200/60 bg-slate-50/40 p-4 shadow-3xs">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-[#6D4AFF]/5 rounded-full blur-xl pointer-events-none" />
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase text-[#6D4AFF] tracking-[0.25em]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#6D4AFF] animate-ping" />
-                <Sparkles className="w-3.5 h-3.5 text-purple-550 text-purple-500 animate-pulse" />
-                <span>Daily Coach</span>
-              </div>
-              <p className="mt-3.5 min-h-[42px] text-[11px] font-bold text-slate-500 leading-relaxed italic">
-                "{QUOTES[quoteIdx]}"
-              </p>
-              <div className="mt-3.5 flex justify-center gap-1.5">
-                {QUOTES.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`h-1 rounded-full transition-all duration-500 ${i === quoteIdx ? "w-4 bg-[#6D4AFF]" : "w-1 bg-slate-350 bg-slate-300"
-                      }`}
-                  />
-                ))}
-              </div>
-            </div>
+            {(() => {
+              const tmpl = COACH_TEMPLATES[quoteIdx % COACH_TEMPLATES.length];
+              return (
+                <div className={`relative overflow-hidden rounded-3xl border ${tmpl.border} bg-gradient-to-br ${tmpl.gradient} p-4 shadow-3xs transition-all duration-500`}>
+                  <div className={`absolute top-0 right-0 w-24 h-24 ${tmpl.glow} rounded-full blur-xl pointer-events-none transition-all duration-500`} />
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500">
+                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse bg-current ${tmpl.accent}`} />
+                    <Sparkles className={`w-3.5 h-3.5 animate-pulse ${tmpl.accent}`} />
+                    <span className={tmpl.accent}>Daily Coach</span>
+                  </div>
+                  <p className={`mt-3.5 min-h-[46px] text-[12px] font-extrabold ${tmpl.text} leading-relaxed italic transition-colors duration-500`}>
+                    "{QUOTES[quoteIdx]}"
+                  </p>
+                  <div className="mt-3.5 flex justify-center gap-1.5">
+                    {QUOTES.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setQuoteIdx(i)}
+                        className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                          i === quoteIdx ? `w-5 bg-gradient-to-r ${NAV_ITEMS[1].gradient}` : "w-1.5 bg-slate-300 hover:bg-slate-400"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </motion.div>
         )}
 
