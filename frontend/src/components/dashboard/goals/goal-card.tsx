@@ -124,7 +124,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
           <button
             onClick={onEdit}
             className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-white transition-all cursor-pointer"
-            title="Edit Parameters"
+            title="Edit"
           >
             <Edit2 className="w-3.5 h-3.5" />
           </button>

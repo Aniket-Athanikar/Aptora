@@ -9,9 +9,9 @@ import {
   ShieldCheck, Languages, Code, Calculator, School, UserCheck,
   CheckCircle2, ChevronRight, HelpCircle
 } from "lucide-react";
-import GlassCard from "../ui/GlassCard";
-import SectionHeading from "../ui/SectionHeading";
-import GlowButton from "../ui/GlowButton";
+import GlassCard from "@/components/ui/GlassCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import GlowButton from "@/components/ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
 
 const categories = [

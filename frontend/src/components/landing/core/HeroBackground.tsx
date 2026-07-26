@@ -1,5 +1,5 @@
 import React from "react";
-import ParticleBackground from "../three/ParticleBackground";
+import ParticleBackground from "@/components/three/ParticleBackground";
 
 export default function HeroBackground() {
   return (

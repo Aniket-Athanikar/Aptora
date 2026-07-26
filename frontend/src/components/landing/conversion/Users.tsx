@@ -3,8 +3,8 @@
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { User, ShieldCheck, Briefcase, School } from "lucide-react";
-import GlassCard from "../ui/GlassCard";
-import SectionHeading from "../ui/SectionHeading";
+import GlassCard from "@/components/ui/GlassCard";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 // High-Performance 3D Tilt Wrapper for horizontal cards
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {

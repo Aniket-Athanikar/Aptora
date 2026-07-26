@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { CoachCard } from "@/features/ai-coach/components/CoachCard";
 import { DailyBriefing } from "@/features/ai-coach/components/DailyBriefing";
 import { AIScore } from "@/features/ai-coach/components/AIScore";

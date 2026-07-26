@@ -3,11 +3,11 @@
 import { Play, CheckCircle, Star, ArrowRight, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import GlowButton from "../ui/GlowButton";
-import FloatingCards from "./FloatingCards";
-import dynamic from "next/dynamic";
-import GlassCard from "../ui/GlassCard";
+import GlowButton from "@/components/ui/GlowButton";
+import FloatingCards from "../sections/FloatingCards";
+import GlassCard from "@/components/ui/GlassCard";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 const HeroBackground = dynamic(() => import("./HeroBackground"), {
   ssr: false,

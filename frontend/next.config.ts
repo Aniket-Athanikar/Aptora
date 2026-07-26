@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  transpilePackages: ["motion-dom", "framer-motion", "motion"],
+
   webpack: (config, { dev }) => {
     if (dev) {
       config.cache = false; // Disable disk caching to prevent 1.5GB+ disk bloat

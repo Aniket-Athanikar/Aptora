@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { ProgressHero } from "@/features/progress/components/ProgressHero";
 import { StatCard } from "@/features/progress/components/StatCard";
 import { SubjectProgress } from "@/features/progress/components/SubjectProgress";

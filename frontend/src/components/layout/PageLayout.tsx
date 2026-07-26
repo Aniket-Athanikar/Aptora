@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight, Home as HomeIcon } from "lucide-react";
 import Link from "next/link";
-import Navbar from "@/components/landing/Navbar";
-import Footer from "@/components/landing/Footer";
+import { Navbar, Footer } from "@/components/landing";
 
 interface PageLayoutProps {
   children: React.ReactNode;

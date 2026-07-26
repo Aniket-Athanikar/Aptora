@@ -1,19 +1,21 @@
 "use client";
 
-import SmoothScroll from "@/components/animations/SmoothScroll";
 import CursorFollower from "@/components/animations/CursorFollower";
-import ScrollToTop from "@/components/ui/ScrollToTop";
-import Navbar from "@/components/landing/Navbar";
-import Hero from "@/components/landing/Hero";
-import HowItWorks from "@/components/landing/HowItWorks";
-import Features from "@/components/landing/Features";
-import Stats from "@/components/landing/Stats";
-import Exams from "@/components/landing/Exams";
-import Users from "@/components/landing/Users";
-import Pricing from "@/components/landing/Pricing";
-import Testimonials from "@/components/landing/Testimonials";
-import CTA from "@/components/landing/CTA";
-import Footer from "@/components/landing/Footer";
+import SmoothScroll from "@/components/animations/SmoothScroll";
+import { ScrollToTop } from "@/components/ui";
+import {
+  CTA,
+  Exams,
+  Features,
+  Footer,
+  Hero,
+  HowItWorks,
+  Navbar,
+  Pricing,
+  Stats,
+  Testimonials,
+  Users,
+} from "@/components/landing";
 
 export default function Home() {
   return (

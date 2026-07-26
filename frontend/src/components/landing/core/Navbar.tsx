@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import GlowButton from "../ui/GlowButton";
+import GlowButton from "@/components/ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
-import DeleteAccountModal from "@/components/DeleteAccountModal";
+import DeleteAccountModal from "@/components/modals/DeleteAccountModal";
 
 const getAvatarUrl = (name: string) => {
   const seed = encodeURIComponent(name || "User");

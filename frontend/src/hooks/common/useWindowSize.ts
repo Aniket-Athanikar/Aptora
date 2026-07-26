@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react';
 
 export function useWindowSize(): { width: number; height: number } {
   const [windowSize, setWindowSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+    width: 0,
+    height: 0,
   });
 
   useEffect(() => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
     let timeout: NodeJS.Timeout | null = null;
 
     function handleResize() {

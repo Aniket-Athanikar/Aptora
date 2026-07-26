@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Award, Star, Flame, Trophy, Coins, CheckCircle, AlertCircle,

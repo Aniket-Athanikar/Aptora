@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { HelpCircle, ArrowLeft, FileQuestion } from "lucide-react";
-import GlassCard from "../components/ui/GlassCard";
+import { ArrowLeft, FileQuestion, HelpCircle } from "lucide-react";
+import Link from "next/link";
+import { GlassCard } from "@/components/ui";
 
 export default function NotFound() {
   return (

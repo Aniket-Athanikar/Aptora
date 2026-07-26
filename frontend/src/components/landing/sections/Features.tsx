@@ -17,9 +17,9 @@ import {
   MessageCircle,
   BarChart3
 } from "lucide-react";
-import GlassCard from "../ui/GlassCard";
-import SectionHeading from "../ui/SectionHeading";
-import GlowButton from "../ui/GlowButton";
+import GlassCard from "@/components/ui/GlassCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import GlowButton from "@/components/ui/GlowButton";
 
 // 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {

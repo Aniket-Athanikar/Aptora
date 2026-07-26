@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Avatar } from '@/components/ui/avatar';
+import { Button, Avatar } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
 import { Search, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';

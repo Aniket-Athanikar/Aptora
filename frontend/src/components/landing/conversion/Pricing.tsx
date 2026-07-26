@@ -9,9 +9,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import GlassCard from "../ui/GlassCard";
-import SectionHeading from "../ui/SectionHeading";
-import GlowButton from "../ui/GlowButton";
+import GlassCard from "@/components/ui/GlassCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import GlowButton from "@/components/ui/GlowButton";
 
 // High-Performance 3D Tilt Wrapper
 function PricingTiltCard({ children, className, isPopular }: { children: React.ReactNode; className?: string; isPopular?: boolean }) {

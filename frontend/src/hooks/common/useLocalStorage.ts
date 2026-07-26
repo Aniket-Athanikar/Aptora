@@ -12,19 +12,18 @@ export function useLocalStorage<T>(
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
   const { serializer = JSON.stringify, deserializer = JSON.parse } = options;
 
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
+  useEffect(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? deserializer(item) : initialValue;
+      if (item) {
+        setStoredValue(deserializer(item));
+      }
     } catch (error) {
       console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
     }
-  });
+  }, [key, deserializer]);
 
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {

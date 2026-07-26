@@ -1,8 +1,8 @@
+import { AuthProvider } from "@/lib/auth-context";
+import { ToastProvider } from "@/lib/ToastContext";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
-import { ToastProvider } from "@/lib/ToastContext";
 
 const inter = Inter({
   variable: "--font-inter",

@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { BrainCircuit, ShieldCheck, Sparkles, Zap } from "lucide-react";
-import GlassCard from "../ui/GlassCard";
+import GlassCard from "@/components/ui/GlassCard";
 
 // High-Performance 3D Tilt Wrapper optimized for floating micro-cards
 function InteractiveFloatCard({ children, className }: { children: React.ReactNode; className?: string }) {

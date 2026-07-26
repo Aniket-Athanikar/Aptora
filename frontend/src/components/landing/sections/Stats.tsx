@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import AnimatedCounter from "../ui/AnimatedCounter";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { Users, FileText, BookOpen, Trophy, Sparkles } from "lucide-react";
 
 export default function Stats() {
