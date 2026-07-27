@@ -8,6 +8,8 @@ from sqlalchemy.orm import sessionmaker
 import redis
 from qdrant_client import QdrantClient
 
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 logger = logging.getLogger("backend")
 
 # ─── DATABASE CONFIGURATION ──────────────────────────────────────────

@@ -4,8 +4,9 @@ Aggregates all versioned API routers.
 """
 from fastapi import APIRouter
 
-from app.api.v1 import auth, profile, billing, newsletter, admin, contact, account, workspace, onboarding_profile, timeline, study_slot, lifestyle, learning_mode, gap_analysis
-
+from app.api.v1 import ( auth, profile, billing, newsletter, admin, contact, account, workspace, onboarding_profile, 
+                        timeline, study_slot, lifestyle, learning_mode, gap_analysis, resource, chat, summary, flashcard, 
+                        question, prediction, knowledge, mcq, study_advisor, concept)
 api_router = APIRouter()
 
 # V1 API routes
@@ -23,3 +24,13 @@ api_router.include_router(lifestyle.router)
 api_router.include_router(study_slot.router)
 api_router.include_router(learning_mode.router)
 api_router.include_router(gap_analysis.router)
+api_router.include_router(resource.router)
+api_router.include_router(chat.router)
+api_router.include_router(summary.router)
+api_router.include_router(flashcard.router)
+api_router.include_router(question.router)
+api_router.include_router(prediction.router)
+api_router.include_router(knowledge.router)
+api_router.include_router(mcq.router)
+api_router.include_router(study_advisor.router)
+api_router.include_router(concept.router)

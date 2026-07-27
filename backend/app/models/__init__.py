@@ -15,6 +15,10 @@ from app.models.lifestyle import StudyLifestyleDb
 from app.models.study_slot import StudyTimeSlotDb
 from app.models.learning_mode import LearningModeDb
 from app.models.gap_analysis import GapAnalysisDb
+from .workspace_subject import WorkspaceSubjectDb
+from .resource import ResourceDb
+from .resource_chunk import ResourceChunkDb
+from app.models.resource_content import ResourceContentDb
 
 # Billing
 from app.models.billing import OrderDb
@@ -29,6 +33,7 @@ from app.models.newsletter import NewsletterDb
 from app.models.account import AccountDeletionRequestDb
 from app.models.onboarding_profile import UserOnboardingProfileDb
 
+
 __all__ = [
     "UserDb",
     "OtpDb",
@@ -39,6 +44,10 @@ __all__ = [
     "StudyTimeSlotDb",
     "LearningModeDb",
     "GapAnalysisDb",
+    "WorkspaceSubjectDb",
+    "ResourceDb",
+    "ResourceChunkDb",
+    "ResourceContentDb",
     "OrderDb",
     "ContactDb",
     "NewsletterDb",

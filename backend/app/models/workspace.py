@@ -87,6 +87,24 @@ class GoalWorkspaceDb(Base):
         cascade="all, delete-orphan",
     )
 
+     # -----------------------
+    # Phase 2
+    # -----------------------
+
+    subjects = relationship(
+        "WorkspaceSubjectDb",
+        back_populates="workspace",
+        cascade="all, delete-orphan",
+    )
+
+    resources = relationship(
+        "ResourceDb",
+        back_populates="workspace",
+        cascade="all, delete-orphan",
+    )
+
+    # -----------------------
+
     user = relationship(
         "UserDb",
         back_populates="workspace",

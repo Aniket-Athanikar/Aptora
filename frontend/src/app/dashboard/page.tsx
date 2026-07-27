@@ -9,13 +9,8 @@ import { GoalCard } from "@/components/dashboard/goal-card";
 import { RoadmapTimeline } from "@/features/planner/components/RoadmapTimeline";
 import { DailyPlanner } from "@/features/planner/components/DailyPlanner";
 import { Recommendations } from "@/components/dashboard/recommendations";
-<<<<<<< HEAD
-import { Calendar2026 } from "@/components/dashboard/calendar-2026";
-import { StudyTimer } from "@/components/dashboard/study-timer";
-=======
 import { HistoryVersioning } from "@/components/dashboard/history-versioning";
 import { FocusTimer } from "@/features/planner/components/FocusTimer";
->>>>>>> origin/frontend-v3
 import { AnimatedWizard } from "@/components/dashboard/wizard/animated-wizard";
 import { GoalPlanPanel } from "@/components/dashboard/goal-plan-panel";
 import { Sparkles, Compass } from "lucide-react";
@@ -51,13 +46,13 @@ function DashboardContent() {
 
   // Show onboarding wizard if no active goal is configured
   useEffect(() => {
-    if (activeGoal === null && wizardState.isCompleted === false) {
+    if (activeGoal === null && (!wizardState || wizardState.isCompleted === false)) {
       setShowWizard(true);
       setIsEditMode(false);
     } else {
       setShowWizard(false);
     }
-  }, [activeGoal, wizardState.isCompleted]);
+  }, [activeGoal, wizardState?.isCompleted]);
 
   if (!isAuthenticated) {
     return (
@@ -123,8 +118,6 @@ function DashboardContent() {
                   <RealtimeHub />
                 </div>
 
-<<<<<<< HEAD
-=======
                 {/* Row 2: Action Planner & Recommendations (2 Columns) */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Left (2/3): Timeline & Planner */}
@@ -139,7 +132,6 @@ function DashboardContent() {
                     <HistoryVersioning />
                   </div>
                 </div>
->>>>>>> origin/frontend-v3
               </div>
             </div>
           ) : (

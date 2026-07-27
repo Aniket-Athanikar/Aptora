@@ -4,11 +4,8 @@ import React, { useState } from "react";
 import { GoalData } from "@/types/goal.types";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
 import { motion } from "framer-motion";
-<<<<<<< HEAD
-import { Edit2, Trash2, Share2, Award, Clock } from "lucide-react";
-=======
-import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock, Calendar, CheckCircle, Target } from "lucide-react";
->>>>>>> origin/frontend-v3
+// import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock, Calendar, CheckCircle, Target } from "lucide-react";
+import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock, Calendar, Target } from "lucide-react";
 
 interface GoalCardProps {
   goal: GoalData;
@@ -16,13 +13,12 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal, onEdit }: GoalCardProps) {
-<<<<<<< HEAD
   const { deleteGoal } = useGoalEngine();
-=======
-  const { deleteGoal, completeWizard } = useGoalEngine();
->>>>>>> origin/frontend-v3
   const [copied, setCopied] = useState(false);
 
+  const togglePin = () => console.log("Pin clicked");
+  const toggleFavorite = () => console.log("Favorite clicked");
+  const toggleArchive = () => console.log("Archive clicked");
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(`My ExamForge Goal: Cracking the ${goal.targetExam} on ${goal.timeline.examDate}!`);
@@ -45,21 +41,17 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-<<<<<<< HEAD
-      className="glass-panel p-6 relative overflow-hidden flex flex-col justify-between min-h-[300px] border-l-4 border-l-indigo-200"
-=======
       whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={`relative p-6 min-h-[320px] rounded-3xl premium-card premium-card-hover flex flex-col justify-between overflow-hidden ${
-        goal.isPinned
-          ? "ring-2 ring-indigo-500/10 shadow-indigo-100/50"
-          : ""
+        // goal.isPinned 
+        false? "ring-2 ring-indigo-500/10 shadow-indigo-100/50": ""
       }`}
->>>>>>> origin/frontend-v3
     >
       {/* Decorative gradient corner mesh */}
       <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -z-10 transition-colors ${
-        goal.isPinned ? "bg-indigo-100/40" : "bg-slate-50"
+        // goal.isPinned 
+        false ? "bg-indigo-100/40" : "bg-slate-50"
       }`} />
 
       {/* Header Info */}
@@ -77,12 +69,11 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
               <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
                 {goal.examCategory || "General Exam"}
               </span>
-<<<<<<< HEAD
-=======
-              {goal.isFavorite && (
+              {
+              // goal.isFavorite
+               false && (
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 filter drop-shadow-xs" />
               )}
->>>>>>> origin/frontend-v3
             </div>
             <h2 className="text-lg font-black text-slate-800 tracking-tight mt-1">{goal.targetExam}</h2>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
@@ -94,11 +85,10 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
         {/* Toolbar Controls */}
         <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-1 rounded-xl shrink-0">
           <button
-<<<<<<< HEAD
-=======
             onClick={togglePin}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-              goal.isPinned ? "bg-white text-indigo-600 shadow-xs scale-105" : "text-slate-400 hover:text-slate-700"
+              // goal.isPinned 
+              false? "bg-white text-indigo-600 shadow-xs scale-105" : "text-slate-400 hover:text-slate-700"
             }`}
             title="Pin Goal"
           >
@@ -107,7 +97,8 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
           <button
             onClick={toggleFavorite}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-              goal.isFavorite ? "bg-white text-amber-500 shadow-xs scale-105" : "text-slate-400 hover:text-slate-700"
+              //goal.isFavorite 
+              false? "bg-white text-amber-500 shadow-xs scale-105" : "text-slate-400 hover:text-slate-700"
             }`}
             title="Favorite Goal"
           >
@@ -116,7 +107,8 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
           <button
             onClick={toggleArchive}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-              goal.isArchived ? "bg-white text-slate-700 shadow-xs scale-105" : "text-slate-400 hover:text-slate-750"
+              //goal.isArchived 
+              false? "bg-white text-slate-700 shadow-xs scale-105" : "text-slate-400 hover:text-slate-750"
             }`}
             title="Archive Goal"
           >
@@ -124,7 +116,6 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
           </button>
           <div className="w-px h-4 bg-slate-200/80 mx-0.5" />
           <button
->>>>>>> origin/frontend-v3
             onClick={onEdit}
             className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-white transition-all cursor-pointer"
             title="Edit Parameters"
@@ -141,16 +132,15 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
       {/* Summary Box */}
       <div className="my-4.5 p-3.5 rounded-2xl bg-slate-50/70 border border-slate-100/50 flex items-start gap-2.5">
         <span className="text-indigo-500 text-sm mt-0.5">“</span>
         <p className="text-xs text-slate-500 font-medium italic leading-relaxed">
-          {goal.summary || "Your success blueprint has been configured. Complete daily planning goals to build performance."}
+          { 
+          // goal.summary 
+          false || "Your success blueprint has been configured. Complete daily planning goals to build performance."}
         </p>
       </div>
->>>>>>> origin/frontend-v3
 
       {/* Center Metrics (Visual Grid) */}
       <div className="grid grid-cols-3 gap-3 border-y border-slate-100 py-3.5 my-1">

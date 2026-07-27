@@ -1,6 +1,7 @@
 import os
 import logging
 from fastapi import FastAPI, status, HTTPException, Request
+from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 from app.db import Base, engine, redis_client, qdrant_client
 # Import models to ensure they register on Base.metadata before create_all
 import app.models
+from app.ai.services.qdrant_service import QdrantService
 
 # Load env variables
 load_dotenv()
@@ -45,12 +47,26 @@ app.add_middleware(
 )
 
 # Initialize database schemas
-if engine:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    logger.info("Starting ExamForge AI Backend...")
+
     try:
-        Base.metadata.create_all(bind=engine)
-        logger.info("Database tables initialized successfully.")
+        # Base.metadata.create_all(bind=engine)
+        logger.info("Database initialized.")
     except Exception as e:
-        logger.error(f"Error creating database tables: {e}")
+        logger.exception(e)
+
+    try:
+        QdrantService.create_collection()
+        logger.info("Qdrant collection ready.")
+    except Exception as e:
+        logger.exception(e)
+
+    yield
+
+    logger.info("Shutting down ExamForge AI Backend...")
 
 # Include all API routes via the central router
 from app.api.router import api_router
@@ -58,7 +74,6 @@ app.include_router(api_router)
 
 from fastapi import WebSocket, WebSocketDisconnect
 import asyncio
-import json
 import random
 
 class ConnectionManager:
@@ -77,8 +92,8 @@ class ConnectionManager:
         for connection in self.active_connections:
             try:
                 await connection.send_text(message)
-            except:
-                pass
+            except Exception as e:
+                logger.exception(e)
 
 manager = ConnectionManager()
 
