@@ -187,9 +187,9 @@ export function groupBy<T, K extends string | number>(arr: T[], keyFn: (item: T)
   return result;
 }
 
-export function debounce<T extends (...args: any[]) => any>(fn: T, delay: number): T {
+export function debounce<T extends (...args: unknown[]) => unknown>(fn: T, delay: number): T {
   let timer: ReturnType<typeof setTimeout> | null = null;
-  return ((...args: any[]) => {
+  return ((...args: unknown[]) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delay);
   }) as T;
@@ -208,7 +208,7 @@ export function downloadFile(content: string, fileName: string, mime: string = "
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function downloadJson(data: any, fileName: string): void {
+export function downloadJson(data: unknown, fileName: string): void {
   downloadFile(JSON.stringify(data, null, 2), fileName, "application/json");
 }
 

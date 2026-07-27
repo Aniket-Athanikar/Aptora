@@ -51,7 +51,7 @@ export function useLocalStorage<T>(
 
     }
 
-  }, [key]);
+  }, [key, deserializer]);
 
 
   // Update storage

@@ -322,7 +322,7 @@ export function knowledgeReducer(state: KnowledgeEngineState, action: Action): K
         chapters: { ...state.chapters, [newId]: state.chapters[action.bookId]?.map((c) => ({ ...c, id: nextId("ch") })) || [] },
         formulas: { ...state.formulas, [newId]: state.formulas[action.bookId]?.map((f) => ({ ...f, id: nextId("f") })) || [] },
         flashcards: { ...state.flashcards, [newId]: state.flashcards[action.bookId]?.map((f) => ({ ...f, id: nextId("fc") })) || [] },
-        questions: { ...state.questions, [newId]: state.questions[action.bookId]?.map((q) => ({ ...q, id: nextId("q") } as any)) || [] },
+        questions: { ...state.questions, [newId]: state.questions[action.bookId]?.map((q) => ({ ...q, id: nextId("q") } as AnyQuestion)) || [] },
         mindmaps: { ...state.mindmaps, [newId]: state.mindmaps[action.bookId] ? { ...state.mindmaps[action.bookId], id: newId, bookId: newId } : state.mindmaps[newId] },
         analytics: { ...state.analytics, [newId]: state.analytics[action.bookId] ? { ...state.analytics[action.bookId], bookId: newId } : state.analytics[newId] },
         versions: [...state.versions, ...dupVersions],

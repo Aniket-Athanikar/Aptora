@@ -36,7 +36,7 @@ export function StepFocus({
           { name: "Live Classes", icon: "Radio", color: "rgba(217, 70, 239, 0.08)" }
         ].map((pref) => {
           const selected = draft.preferences?.includes(pref.name) || false;
-          const Icon = (LucideIcons as any)[pref.icon] || LucideIcons.Award;
+          const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[pref.icon] || LucideIcons.Award;
           return (
             <button
               key={pref.name}

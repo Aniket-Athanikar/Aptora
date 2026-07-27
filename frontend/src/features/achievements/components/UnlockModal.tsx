@@ -17,7 +17,7 @@ export function UnlockModal({ achievement, onClose }: UnlockModalProps) {
     }
   }, [achievement]);
 
-  const IconComponent = achievement ? ((LucideIcons as any)[achievement.icon] || LucideIcons.Award) : null;
+  const IconComponent = achievement ? ((LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[achievement.icon] || LucideIcons.Award) : null;
 
   const particles = React.useMemo(() => {
     return Array.from({ length: 45 }).map((_, i) => ({

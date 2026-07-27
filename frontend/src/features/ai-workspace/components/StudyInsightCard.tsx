@@ -18,7 +18,7 @@ export function StudyInsightCard() {
             </span>
             <h4 className="text-sm font-black mt-2">Welcome Back, Scholar</h4>
             <p className="text-[10px] text-purple-100 font-semibold mt-1">
-              "Consistency outperforms brilliance. Keep pushing."
+              &ldquo;Consistency outperforms brilliance. Keep pushing.&rdquo;
             </p>
           </div>
           <Award className="w-8 h-8 text-purple-200 opacity-90 animate-pulse" />
@@ -50,7 +50,7 @@ export function StudyInsightCard() {
 
       {/* Goal details */}
       <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm">
-        <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Today's Study Goal</h5>
+        <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Today&apos;s Study Goal</h5>
         <p className="text-xs font-bold text-slate-800 leading-relaxed bg-slate-50/50 border border-slate-100 p-3 rounded-2xl">
           {studyGoal.todayGoal}
         </p>

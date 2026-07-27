@@ -122,7 +122,7 @@ export function ConversationSidebar() {
           <div>
             <div className="flex items-center gap-1.5 text-[9px] font-black text-purple-500 uppercase tracking-widest mb-2 pl-1.5">
               <MessageSquare className="w-3 h-3" />
-              <span>Today's Sessions</span>
+              <span>Today&apos;s Sessions</span>
             </div>
             <div className="space-y-1.5">
               {normalConvs.map((conv) => (

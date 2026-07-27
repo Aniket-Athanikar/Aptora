@@ -8,7 +8,7 @@ interface ActionCard {
   id: string;
   label: string;
   desc: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   bg: string;
 }

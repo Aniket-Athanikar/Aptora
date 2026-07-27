@@ -5,9 +5,9 @@ import { GoalData } from "@/types/goal.types";
 interface StepTimelineProps {
   draft: Partial<GoalData>;
   errors: Record<string, string>;
-  stepStyles: any;
+  stepStyles: Record<string, string>;
   updateWizardDraft: (payload: Partial<GoalData>) => void;
-  theme: any;
+  theme: Record<string, string>;
 }
 
 export function StepTimeline({

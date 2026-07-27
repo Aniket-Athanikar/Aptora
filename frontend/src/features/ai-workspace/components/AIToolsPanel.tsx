@@ -7,7 +7,7 @@ import { Scan, FileText, Layers, GitPullRequest, HelpCircle, Calendar, RefreshCw
 interface QuickTool {
   id: string;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
 }
 

@@ -18,7 +18,7 @@ export function LibraryView() {
 
   // ---- filtered & sorted books ----
   const filtered = useMemo(() => {
-    let list = engine.state.books.filter((b) => {
+    const list = engine.state.books.filter((b) => {
       // Search
       if (f.search) {
         const q = f.search.toLowerCase();
@@ -192,7 +192,7 @@ export function LibraryView() {
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Select up to 2 books to compare</p>
                 <div className="space-y-1">
                   {u.compareBookIds.length === 0 && (
-                    <p className="text-[10px] text-slate-400 italic">Click "Compare" on any book card</p>
+                    <p className="text-[10px] text-slate-400 italic">Click &quot;Compare&quot; on any book card</p>
                   )}
                   {u.compareBookIds.map((id) => {
                     const b = engine.state.books.find((x) => x.id === id);

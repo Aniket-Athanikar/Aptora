@@ -4,10 +4,10 @@ import type { ContactInput, NewsletterInput } from '@/types';
 
 export const contactService = {
   async sendContact(data: ContactInput): Promise<ApiResponse<void>> {
-    return apiClient.post<void>('/api/contact', data) as Promise<ApiResponse<void>>;
+    return apiClient.post<ApiResponse<void>>('/api/contact', data);
   },
 
   async subscribeNewsletter(data: NewsletterInput): Promise<ApiResponse<void>> {
-    return apiClient.post<void>('/api/newsletter/subscribe', data) as Promise<ApiResponse<void>>;
+    return apiClient.post<ApiResponse<void>>('/api/newsletter/subscribe', data);
   },
 };

@@ -2,6 +2,7 @@ export interface PrepProfile {
   fullName: string;
   avatar: string;
   phone?: string;
+  gender?: string;
   education: string;
   stream: string;
   city: string;

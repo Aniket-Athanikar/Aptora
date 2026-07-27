@@ -181,14 +181,14 @@ export function AIChatStepFlow() {
           {/* 4 Resource Type Cards (Books, PDFs, Notes, PYQs) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { type: "Book", label: "Books", count: "28 Resources", icon: BookOpen, color: "text-purple-600", bg: "bg-purple-50" },
-              { type: "PDF", label: "PDFs", count: "36 Resources", icon: FileText, color: "text-rose-600", bg: "bg-rose-50" },
-              { type: "Note", label: "Notes", count: "42 Resources", icon: FileCheck, color: "text-amber-600", bg: "bg-amber-50" },
-              { type: "PYQ", label: "PYQs", count: "21 Resources", icon: HelpCircle, color: "text-blue-600", bg: "bg-blue-50" },
+              { type: "Book" as const, label: "Books", count: "28 Resources", icon: BookOpen, color: "text-purple-600", bg: "bg-purple-50" },
+              { type: "PDF" as const, label: "PDFs", count: "36 Resources", icon: FileText, color: "text-rose-600", bg: "bg-rose-50" },
+              { type: "Note" as const, label: "Notes", count: "42 Resources", icon: FileCheck, color: "text-amber-600", bg: "bg-amber-50" },
+              { type: "PYQ" as const, label: "PYQs", count: "21 Resources", icon: HelpCircle, color: "text-blue-600", bg: "bg-blue-50" },
             ].map(({ type, label, count, icon: Icon, color, bg }) => (
               <button
                 key={type}
-                onClick={() => selectResourceType(type as any)}
+                onClick={() => selectResourceType(type)}
                 className="group p-5 bg-white border border-slate-200 hover:border-purple-300 rounded-2xl shadow-sm hover:shadow-md transition-all text-center flex flex-col items-center justify-center cursor-pointer"
               >
                 <div className={`w-12 h-12 rounded-xl ${bg} ${color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>

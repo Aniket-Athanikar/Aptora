@@ -52,7 +52,7 @@ export default function NotFound() {
               Page Not Found
             </h2>
             <p className="text-xs md:text-sm text-slate-400 font-bold max-w-sm mx-auto leading-relaxed">
-              The page you are looking for doesn't exist or has been shifted to another syllabus segment.
+              The page you are looking for doesn&apos;t exist or has been shifted to another syllabus segment.
             </p>
           </div>
 

@@ -355,7 +355,7 @@ export function ExamTreeInspector() {
                 <label className="font-bold text-slate-700">Exam Category</label>
                 <select
                   value={newSubjCategory}
-                  onChange={(e) => setNewSubjCategory(e.target.value as any)}
+                  onChange={(e) => setNewSubjCategory(e.target.value as "Prelims" | "Mains" | "Interview" | "General")}
                   className="w-full mt-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl"
                 >
                   <option value="Prelims">Prelims</option>
@@ -396,7 +396,7 @@ export function ExamTreeInspector() {
                 <label className="font-bold text-slate-700">Resource Type</label>
                 <select
                   value={newResType}
-                  onChange={(e) => setNewResType(e.target.value as any)}
+                  onChange={(e) => setNewResType(e.target.value as "Book" | "PDF" | "Note" | "PYQ")}
                   className="w-full mt-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl"
                 >
                   <option value="Book">Book</option>

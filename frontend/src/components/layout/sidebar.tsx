@@ -236,7 +236,7 @@ export function Sidebar({
                     <span className={tmpl.accent}>Daily Coach</span>
                   </div>
                   <p className={`mt-3.5 min-h-[46px] text-[12px] font-extrabold ${tmpl.text} leading-relaxed italic transition-colors duration-500`}>
-                    "{QUOTES[quoteIdx]}"
+                    &ldquo;{QUOTES[quoteIdx]}&rdquo;
                   </p>
                   <div className="mt-3.5 flex justify-center gap-1.5">
                     {QUOTES.map((_, i) => (

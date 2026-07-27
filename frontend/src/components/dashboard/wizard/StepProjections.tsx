@@ -4,7 +4,7 @@ import { GoalData } from "@/types/goal.types";
 
 interface StepProjectionsProps {
   draft: Partial<GoalData>;
-  theme: any;
+  theme: Record<string, string>;
 }
 
 export function StepProjections({

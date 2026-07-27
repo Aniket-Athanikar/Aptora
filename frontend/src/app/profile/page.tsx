@@ -38,7 +38,24 @@ const mapProfileToPayload = (profile: AspirantProfileData) => {
   };
 };
 
-const mapPayloadToProfile = (apiProfile: any, currentProfile: AspirantProfileData): AspirantProfileData => {
+interface ApiProfile {
+  location?: string;
+  name?: string;
+  phone?: string;
+  dob?: string;
+  gender?: string;
+  timezone?: string;
+  education?: string;
+  college?: string;
+  avatar_url?: string;
+  target_exam?: string;
+  target_score?: string | number | null;
+  target_rank?: string | number | null;
+  target_date?: string;
+  study_hours_goal?: number;
+}
+
+const mapPayloadToProfile = (apiProfile: ApiProfile, currentProfile: AspirantProfileData): AspirantProfileData => {
   let city = currentProfile.city;
   let district = currentProfile.district;
   let state = currentProfile.state;
@@ -71,8 +88,8 @@ const mapPayloadToProfile = (apiProfile: any, currentProfile: AspirantProfileDat
     college: apiProfile.college || currentProfile.college,
     avatarUrl: apiProfile.avatar_url || currentProfile.avatarUrl,
     preparingFor: apiProfile.target_exam || currentProfile.preparingFor,
-    expectedScore: apiProfile.target_score || currentProfile.expectedScore,
-    dreamRank: apiProfile.target_rank || currentProfile.dreamRank,
+    expectedScore: apiProfile.target_score !== undefined && apiProfile.target_score !== null ? String(apiProfile.target_score) : currentProfile.expectedScore,
+    dreamRank: apiProfile.target_rank !== undefined && apiProfile.target_rank !== null ? String(apiProfile.target_rank) : currentProfile.dreamRank,
     targetExamDate: apiProfile.target_date || currentProfile.targetExamDate,
     studyHoursGoal: apiProfile.study_hours_goal || currentProfile.studyHoursGoal,
   };
@@ -413,7 +430,7 @@ function ProfileInner() {
   const [editMode, setEditMode] = useState(false);
 
   // Tab/Step flow
-  const STEPS: { id: "identity" | "academics" | "journey" | "lifestyle" | "subjects" | "analytics" | "history"; label: string; icon: any }[] = [
+  const STEPS: { id: "identity" | "academics" | "journey" | "lifestyle" | "subjects" | "analytics" | "history"; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: "identity", label: "Personal Information", icon: User },
     { id: "academics", label: "Education & Academics", icon: GraduationCap },
     { id: "journey", label: "Exam Journey", icon: Compass },
@@ -450,7 +467,7 @@ function ProfileInner() {
         let profileData = null;
         if (user?.email) {
           try {
-            const res = await profileService.getProfile(user.email) as any;
+            const res = await profileService.getProfile(user.email) as { success: boolean; profile: ApiProfile };
             if (res && res.success && res.profile) {
               profileData = mapPayloadToProfile(res.profile, DEFAULT_ASPIRANT_PROFILE);
             }
@@ -576,8 +593,9 @@ function ProfileInner() {
         const payload = mapProfileToPayload(profile);
         await profileService.updateProfile(user.email, payload);
         toast("Profile synchronized with cloud database!", "success");
-      } catch (dbErr: any) {
-        console.warn("Database sync warning:", dbErr.message || dbErr);
+      } catch (dbErr: unknown) {
+        const errMessage = dbErr instanceof Error ? dbErr.message : String(dbErr);
+        console.warn("Database sync warning:", errMessage);
         toast("Saved locally, but could not sync with server.", "error");
       }
     }
@@ -613,7 +631,7 @@ function ProfileInner() {
         timeline: {
           ...activeGoal.timeline,
           dailyStudyHours: profile.studyHoursGoal,
-          burnoutRisk: profile.burnoutRisk as any
+          burnoutRisk: (profile.burnoutRisk === "High" || profile.burnoutRisk === "Moderate" ? profile.burnoutRisk : "Low") as "Low" | "Moderate" | "High"
         }
       };
       completeWizard(syncedGoal, `Profile sync: ${desc}`);

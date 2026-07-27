@@ -6,7 +6,7 @@ import { CustomSelect } from "./CustomSelect";
 interface StepLifestyleProps {
   draft: Partial<GoalData>;
   errors: Record<string, string>;
-  stepStyles: any;
+  stepStyles: Record<string, string>;
   updateWizardDraft: (payload: Partial<GoalData>) => void;
 }
 

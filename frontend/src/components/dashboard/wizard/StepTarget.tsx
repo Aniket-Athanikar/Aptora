@@ -8,11 +8,11 @@ import { PRESET_EXAMS } from "./constants";
 interface StepTargetProps {
   draft: Partial<GoalData>;
   errors: Record<string, string>;
-  stepStyles: any;
+  stepStyles: Record<string, string>;
   customExam: string;
-  setCustomExam: (val: string) => void;
-  customCategory: string;
   setCustomCategory: (val: string) => void;
+  customCategory: string;
+  setCustomExam: (val: string) => void;
   onSelectExam: (exam: string, category: string) => void;
   onSetCustomExam: () => void;
   onClearExam: () => void;
@@ -106,7 +106,7 @@ export function StepTarget({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {PRESET_EXAMS.map((item) => {
           const selected = draft.targetExam === item.name;
-          const IconComponent = (LucideIcons as any)[item.icon] || Award;
+          const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[item.icon] || Award;
           return (
             <button
               key={item.name}

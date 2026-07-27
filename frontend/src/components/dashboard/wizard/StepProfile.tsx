@@ -7,7 +7,7 @@ import { AVATAR_OPTIONS } from "./constants";
 interface StepProfileProps {
   draft: Partial<GoalData>;
   errors: Record<string, string>;
-  stepStyles: any;
+  stepStyles: Record<string, string>;
   updateWizardDraft: (payload: Partial<GoalData>) => void;
 }
 

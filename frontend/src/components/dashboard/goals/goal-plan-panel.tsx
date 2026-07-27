@@ -270,7 +270,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <span className="flex items-center gap-2">
                     {(() => {
                       const iconName = EXAMS_LIST.find((e) => e.name === targetExam)?.icon || "Target";
-                      const Icon = (LucideIcons as any)[iconName] || Target;
+                      const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || Target;
                       return <Icon className="w-4 h-4 text-[#6D4AFF]" />;
                     })()}
                     <span>{targetExam}</span>
@@ -294,7 +294,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                           }`}
                         >
                           {(() => {
-                            const Icon = (LucideIcons as any)[exam.icon] || Target;
+                            const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[exam.icon] || Target;
                             return <Icon className="w-4 h-4 text-slate-450" />;
                           })()}
                           <div>
