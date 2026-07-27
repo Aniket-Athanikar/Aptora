@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth';
-import type { LoginInput, RegisterInput, ForgotPasswordInput, ChangePasswordInput } from '@/types/auth';
+import type { LoginInput, RegisterInput, ForgotPasswordInput } from '@/types/auth';
 import { AppError } from '@/lib/errors';
 
 export function useAuth() {
@@ -82,20 +82,6 @@ export function useAuth() {
     }
   }, [setLoading]);
 
-  const changePassword = useCallback(async (data: ChangePasswordInput) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      return await authService.changePassword(data);
-    } catch (err) {
-      handleError(err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [setLoading]);
-
   return {
     user,
     token,
@@ -106,7 +92,6 @@ export function useAuth() {
     register,
     logout,
     forgotPassword,
-    changePassword,
     clearError: () => setError(null),
   };
 }

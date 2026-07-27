@@ -23,47 +23,26 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    const startedAt = performance.now();
-    const payload = options.body ? JSON.parse(String(options.body)) : undefined;
     const config: RequestInit = {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+      headers: { ...options.headers },
       ...options,
     };
-
-    console.group("==========================\nAPI REQUEST\n==========================");
-    console.log("Method:", config.method || "GET");
-    console.log("URL:", url);
-    console.log("Headers:", config.headers);
-    console.log("Payload:", payload);
-    if (payload && typeof payload === "object") console.table(payload);
-    console.log("Time:", new Date().toISOString());
-    console.groupEnd();
+    const headers = new Headers(config.headers);
+    if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
+    config.headers = headers;
 
     try {
       const response = await fetch(url, { ...config, credentials: "include" });
       const body = await response.json().catch(() => null);
-      console.group("==========================\nAPI RESPONSE\n==========================");
-      console.log("Status:", response.status);
-      console.log("Response:", body);
-      console.log("Time Taken:", `${(performance.now() - startedAt).toFixed(1)}ms`);
-      console.groupEnd();
-
       if (!response.ok) {
-        throw new Error(body?.message || body?.detail || `HTTP ${response.status}`);
+        const message = body?.message || body?.detail || body?.error?.detail || `HTTP ${response.status}`;
+        throw new ApiError(message, response.status, body);
       }
 
       return body as T;
-    } catch (error) {
-      console.group("==========================\nAPI ERROR\n==========================");
-      console.error("Status:", error instanceof Error ? error.message : "Network error");
-      console.error("Message:", error instanceof Error ? error.message : error);
-      console.error("Stack:", error instanceof Error ? error.stack : undefined);
-      console.groupEnd();
-      throw error;
-    }
+    } catch (error) { throw error; }
   }
 
   async get<T>(endpoint: string): Promise<T> {
@@ -93,6 +72,17 @@ class ApiClient {
 
   async delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: "DELETE" });
+  }
+
+  async upload<T>(endpoint: string, body: FormData): Promise<T> {
+    return this.request<T>(endpoint, { method: "POST", body });
+  }
+}
+
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number, public readonly body?: unknown) {
+    super(message);
+    this.name = "ApiError";
   }
 }
 

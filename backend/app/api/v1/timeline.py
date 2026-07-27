@@ -39,7 +39,7 @@ def create_timeline(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:
@@ -82,7 +82,7 @@ def get_timeline(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:
@@ -122,7 +122,7 @@ def update_timeline(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:
@@ -159,7 +159,7 @@ def delete_timeline(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:

@@ -3,3 +3,4 @@ export { authService } from "./auth.service";
 export { profileService } from "./profile.service";
 export { billingService } from "./billing.service";
 export { goalService} from "./goal.service";
+export { backendService } from "./backend.service";

@@ -42,7 +42,7 @@ def replace_learning_modes(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:
@@ -84,7 +84,7 @@ def get_learning_modes(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:

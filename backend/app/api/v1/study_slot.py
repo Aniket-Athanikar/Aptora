@@ -39,7 +39,7 @@ def replace_study_slots(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:
@@ -82,7 +82,7 @@ def get_study_slots(
 
     workspace = WorkspaceService.get_workspace(
         db,
-        user_id,
+        user_id=user_id,
     )
 
     if not workspace:

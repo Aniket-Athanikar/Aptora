@@ -48,6 +48,4 @@ export const authService = {
   me: () =>
     apiClient.get("/api/auth/me"),
 
-  changePassword: (payload: unknown) =>
-    apiClient.post("/api/auth/change-password", payload),
 };

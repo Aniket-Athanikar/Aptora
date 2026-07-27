@@ -29,8 +29,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // The server session is the source of truth after a refresh.
   useEffect(() => {
     authService.me()
-      .then((result) => setUser((result as { data?: User }).data ?? null))
-      .catch((error) => console.error("API Error", error));
+      .then((result) => {
+        const value = result as { success?: boolean; data?: { name?: string; email?: string } | null };
+        const sessionUser = value.data;
+        setUser(value.success && sessionUser?.email
+          ? { name: sessionUser.name || sessionUser.email.split("@")[0], email: sessionUser.email }
+          : null);
+      })
+      .catch(() => setUser(null));
   }, []);
 
   const login = async (userData: User) => {
@@ -38,7 +44,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     try {
       await authService.logout();
     } catch (e) {
