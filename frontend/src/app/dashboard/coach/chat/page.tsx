@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { ChatAssistant } from "@/features/ai-coach/components/ChatAssistant";
 import { useAICoachStore } from "@/features/ai-coach/store/aiCoachStore";
 import { ChevronLeft } from "lucide-react";
@@ -13,6 +13,14 @@ function CoachChatContent() {
 
   useEffect(() => {
     loadCoachData();
+    // Refresh state when local storage undergoes CRUD operations
+    const handleSync = () => {
+      loadCoachData();
+    };
+    window.addEventListener("storage", handleSync);
+    return () => {
+      window.removeEventListener("storage", handleSync);
+    };
   }, [loadCoachData]);
 
   return (

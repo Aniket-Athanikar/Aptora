@@ -1,0 +1,61 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: help
+
+  help:
+    desc: List all available tasks
+    cmds:
+      - task --list
+
+  dev:
+    desc: Start local development stack (hot reloading)
+    cmds:
+      - docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+  prod:
+    desc: Start production stack
+    cmds:
+      - docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+  monitoring:
+    desc: Start monitoring stack (Prometheus & Grafana)
+    cmds:
+      - docker compose -f docker-compose.monitoring.yml up -d
+
+  down:
+    desc: Shutdown all active Docker containers
+    cmds:
+      - docker compose down
+
+  test:
+    desc: Run pytest unit tests with coverage
+    cmds:
+      - cd backend && pytest tests/ -v --cov=app --cov-report=term-missing
+
+  lint:
+    desc: Lint Python and Next.js projects
+    cmds:
+      - cd backend && ruff check app/ && ruff format --check app/
+      - cd frontend && npm run lint
+
+  migrate:
+    desc: Run database head migrations
+    cmds:
+      - cd backend && alembic upgrade head
+
+  deploy:
+    desc: Deploy to Kubernetes namespace
+    cmds:
+      - kubectl apply -f k8s/namespace.yaml
+      - kubectl apply -f k8s/configmap.yaml
+      - kubectl apply -f k8s/secret.yaml
+      - kubectl apply -f k8s/network-policy.yaml
+      - kubectl apply -f k8s/db-statefulset.yaml
+      - kubectl apply -f k8s/redis-statefulset.yaml
+      - kubectl apply -f k8s/backend-deployment.yaml
+      - kubectl apply -f k8s/frontend-deployment.yaml
+      - kubectl apply -f k8s/ingress.yaml
+      - kubectl apply -f k8s/hpa.yaml

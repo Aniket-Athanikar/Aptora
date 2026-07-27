@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { GoalEngineProvider } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { NotificationList } from "@/features/notifications/components/NotificationList";
 import { useNotificationStore } from "@/features/notifications/store/notificationStore";
 

@@ -1,0 +1,13 @@
+ef_env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+dev.db
+*.db
+.env

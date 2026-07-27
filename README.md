@@ -1,325 +1,198 @@
-🚀 ExamForge AI
-
-Enterprise AI-Powered Exam Preparation Platform
-
-
+# 🚀 ExamForge AI
+### Enterprise AI-Powered Exam Preparation Platform
 
 <p align="center">
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)
-![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
-![License](https://img.shields.io/badge/License-MIT-success)
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python" alt="Python" />
+  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker" alt="Docker" />
+  <img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" alt="License" />
 </p>
 
+---
 
-📖 Overview
-ExamForge AI is a next-generation AI-powered examination platform designed to help students prepare smarter using intelligent learning, adaptive assessments, personalized study plans, AI tutors, and enterprise-grade analytics.
+## 📖 Overview
 
-Unlike traditional exam portals, ExamForge AI creates an adaptive learning ecosystem where AI continuously analyzes performance, identifies weak topics, generates personalized content, and guides students toward better results.
+**ExamForge AI** is a next-generation, AI-driven examination and preparation ecosystem designed to help students learn smarter. By combining intelligent learning algorithms, adaptive assessments, personalized study plans, active-recall tools, and enterprise-grade analytics, ExamForge AI helps students target weaknesses and optimize their learning velocity.
 
+Unlike traditional exam preparation portals, ExamForge AI creates a continuous feedback loop: analyzing performance, dynamically identifying syllabus gaps, and adapting both content delivery and mock difficulty to individual profiles.
 
+---
 
+## ✨ Key Features
 
-✨ Key Features
-🎯 AI Personal Goal Engine
-- 7-Step Intelligent Goal Setup
-- Personalized Learning Journey
-- AI Career Guidance
-- Dynamic Learning Roadmap
-- Progress Tracking
-- Editable Goal Planning
-- Smart Milestones
+### 🎯 AI Personal Goal Engine
+* **7-Step Intelligent Goal Setup**: Structured onboarding wizard mapping target syllabus goals.
+* **Personalized Learning Journeys**: Tailored daily milestones and progress pathways.
+* **AI Career Mentorship**: Data-driven advice matching preparation trajectories to careers.
+* **Smart Milestones**: Actionable checkpoints with automated adaptive feedback loops.
 
-🤖 AI Learning Assistant
-- AI Study Mentor
-- AI Question Generator
-- AI Doubt Solver
-- AI Concept Explainer
-- AI Revision Planner
-- AI Smart Notes
-- AI Flashcards
-- AI Mind Maps
+### 🤖 AI Study Assistant
+* **AI Cognitive Co-Pilot**: Integrated study mentor providing active guidance.
+* **Concept Explainer & doubt Solver**: Instantly unpacks complex topics and answers doubts.
+* **AI Revision Planner**: Automates spacing intervals for review tasks.
+* **Active-Recall Tools**: Generates contextual flashcards, smart notes, and interactive mind maps.
 
-📚 Smart Exam Preparation
-- Mock Tests
-- Previous Year Papers
-- Topic-wise Practice
-- Difficulty Levels
-- Adaptive Tests
-- Timed Assessments
-- Instant Feedback
-- Performance Analytics
+### 📚 Smart Exam Prep & Adaptive Testing
+* **Mock Tests & PYQs**: Simulates real exam environments with authentic past questions.
+* **Practice Mode**: Offers instant verification, correct-option highlighting, and in-context tutor explanations.
+* **Timed Assessments**: Real-time evaluation under realistic timing constraints.
+* **Syllabus Subject Inspector**: Interactive breakdown of mastery levels per topic.
 
-📊 Student Dashboard
-- Personalized Dashboard
-- Daily Progress
-- Weekly Reports
-- Learning Streak
-- Goal Tracking
-- AI Recommendations
-- Performance Graphs
-- Study Calendar
+### 📊 Comprehensive Dashboards
+* **Student Dashboard**: Performance graphs, daily streaks, calendar targets, and custom recommendations.
+* **Mentor/Teacher Workspace**: Batch oversight, live exam creation, attendance tracking, and batch-wide intelligence insights.
+* **Admin Center**: RBAC controls, billing & subscription management, audit logging, and platform metrics.
 
-👨‍🏫 AI Dashboard
-- Student Analytics
-- Batch Management
-- Live Tests
-- Assignment Management
-- Attendance
-- Leaderboards
-- Reports
-- AI Performance Insights
+---
 
-🏢 Admin Dashboard
-- User Management
-- Role Based Access Control
-- Institute Management
-- Payment Management
-- Subscription Plans
-- Analytics
-- Notifications
-- Audit Logs
+## 🏗 System Architecture
 
-🧠 AI Capabilities
-- GPT Integration
-- Personalized AI Tutor
-- AI Roadmaps
-- Adaptive Learning
-- Smart Recommendations
-- AI Performance Prediction
-- AI Career Suggestions
-- AI Progress Analysis
-- AI Goal Planning
-- AI Learning Path Optimization
+```
+                     [ Internet Client ]
+                             │
+                             ▼
+                    [ Nginx Reverse Proxy ]
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+  [ Next.js Web ]     [ FastAPI App ]     [ WebSocket Server ]
+  (Frontend UI)       (Backend Core)      (Real-time Updates)
+         │                   │
+         └─────────┬─────────┘
+                   ▼
+       [ Authentication Service ]
+                   │
+                   ▼
+       [ Business Logic Layer ]
+                   │
+  ┌──────────┬─────┴────┬───────────┐
+  ▼          ▼          ▼           ▼
+[AI Copilot] [Exams] [Analytics] [Notifications]
+  │          │          │           │
+  └──────────┴─────┬────┴───────────┘
+                   ▼
+  [ Database & Vector Storage Layer ]
+  - PostgreSQL (Relational Data)
+  - Redis (Caching & Sessions)
+  - Qdrant (Semantic Embeddings & RAG)
+```
 
+---
 
-🏗 Enterprise Architecture
+## 🏛 Project Directory Layout
 
-                     Internet
-                         │
-                         ▼
-                  Nginx Reverse Proxy
-                         │
-        ┌────────────────┼────────────────┐
-        ▼                ▼                ▼
-    Next.js         FastAPI API      WebSocket
-    Frontend         Backend          Server
-        │                │
-        ├────────────────┤
-        ▼
-    Authentication Service
-        │
-        ▼
-    Business Logic Layer
-        │
- ┌──────┼──────────┬───────────┐
- ▼      ▼          ▼           ▼
- AI     Exams    Analytics   Notifications
- Engine Engine    Engine        Engine
-         │
-         ▼
-    PostgreSQL + Redis + Qdrant
-
-
-🏛 Project Structure
+```
 ExamForge/
-
-├── backend/
-│   ├── app/
-│   ├── api/
-│   ├── core/
-│   ├── db/
-│   ├── modules/
-│   ├── services/
-│   └── main.py
+├── backend/                  # FastAPI Application Core
+│   ├── app/                  # Main server and configs
+│   │   ├── api/              # API router declarations
+│   │   ├── core/             # Security, JWT, configuration setup
+│   │   ├── db/               # PostgreSQL session, Alembic migrations
+│   │   ├── modules/          # Business modules (Exams, Auth, Analytics)
+│   │   └── services/         # Third-party adapters (OpenAI, Qdrant)
+│   └── main.py               # Uvicorn entry point
 │
-├── frontend/
+├── frontend/                 # Next.js 15 Web Client
 │   ├── src/
-│   ├── app/
-│   ├── components/
-│   ├── dashboard/
-│   ├── services/
-│   └── public/
+│   │   ├── app/              # Next.js app router pages
+│   │   ├── components/       # Shared UI and dashboard layout components
+│   │   ├── constants/        # Client configuration constants
+│   │   ├── contexts/         # Goal engines & React context providers
+│   │   ├── features/         # Specialized components (AI Workspace, Library)
+│   │   └── lib/              # Client libraries (auth-context, APIs)
+│   └── package.json          # Node dependencies
 │
-├── nginx/
-├── docker-compose.yml
-├── README.md
-└── .gitignore
+└── nginx/                    # Reverse Proxy configurations
+```
 
+---
 
-🛠 Technology Stack
-Frontend
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Three.js
-- GSAP
-- React Hook Form
+## 🛠 Technology Stack
 
-Backend
-- FastAPI
-- SQLAlchemy
-- Alembic
-- JWT Authentication
-- OAuth2
-- Pydantic
-- Uvicorn
+* **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Three.js, GSAP.
+* **Backend**: FastAPI, SQLAlchemy, Alembic, Pydantic, JWT Auth.
+* **Database**: PostgreSQL, Redis, Qdrant (Vector Database).
+* **AI & Orchestration**: OpenAI API, LangChain, RAG pipelines, Ollama.
+* **DevOps & Infrastructure**: Docker, Docker Compose, Nginx, GitHub Actions, AWS.
 
-Database
-- PostgreSQL
-- Redis
-- Qdrant
-- Vector Search
+---
 
-AI
-- OpenAI
-- LangGraph
-- LangChain
-- RAG
-- Ollama
-- Embeddings
-- AI Agents
+## 🚀 Getting Started
 
-DevOps
-- Docker
-- Docker Compose
-- Nginx
-- GitHub Actions
-- Linux
-- Ubuntu
-- AWS
-- Vercel
+### Quickstart (Docker Compose)
+The easiest way to boot up the entire stack is through Docker:
 
-🚀 Getting Started
-Clone Repository
-bash
+```bash
+# Clone the repository
 git clone https://github.com/Aniket-Athanikar/Exam_Forge.git
-
 cd Exam_Forge
-Docker Setup
-bash
+
+# Start all services
 docker compose up --build
+```
 
-Application:
-Frontend
-http://localhost:3000
+Access the platform at:
+* **Frontend Client**: [http://localhost:3000](http://localhost:3000)
+* **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-Backend
-http://localhost:8000
+### 🛠 Enterprise DevOps Platform Commands
 
-Swagger
-http://localhost:8000/docs
+A unified Makefile is available to simplify common developer tasks:
+* Run development containers: `make dev`
+* Run production container stack: `make prod`
+* Spin up Prometheus & Grafana stack: `make monitoring`
+* Apply K8s manifests: `make k8s-deploy`
+* Upgrade / Deploy via Helm: `make helm-deploy`
+
+For detailed guidance, see:
+* [Git Workflow Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/GIT_WORKFLOW.md)
+* [Deployment Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/DEPLOYMENT_GUIDE.md)
+* [Monitoring & Observability Guide](file:///c:/Users/mruna/Downloads/Examp_Forge/docs/MONITORING.md)
 
 
-Backend Setup
-bash
+---
+
+### Manual Development Setup
+
+#### 1. Backend Setup
+```bash
 cd backend
+# Create and activate virtual environment
 python -m venv af_env
-source af_env/bin/activate
+source af_env/bin/activate  # Windows: af_env\Scripts\activate
 
-Windows bash
-af_env\Scripts\activate
-
-
-Install bash
+# Install requirements
 pip install -r requirements.txt
-Run bash
-py -m uvicorn app.main:app --reload
 
+# Start local server
+python -m uvicorn app.main:app --reload --port 8000
+```
 
-Frontend Setup
-bash
+#### 2. Frontend Setup
+```bash
 cd frontend
+# Install node packages
 npm install
+
+# Start Next.js development server
 npm run dev
+```
 
+---
 
-🔐 Security
-- JWT Authentication
-- Refresh Tokens
-- Email Verification
-- Password Reset
-- RBAC
-- CORS Protection
-- SQL Injection Protection
-- XSS Protection
-- CSRF Protection
-- Rate Limiting
+## 📄 License
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
+---
 
-📊 Platform Modules
-✅ Authentication
-✅ Landing Website
-✅ Student Dashboard
-✅ AI Dashboard
-✅ Admin Dashboard
-✅ AI Goal Engine
-✅ AI Mentor
-✅ AI Mock Tests
-✅ AI Analytics
-✅ Payments
-✅ Notifications
-✅ Reports
+## 👥 Authors & Contributors
+* **Mrunal Chaudhari** — *Full Stack AI Engineer* (Backend, FastAPI, AI Agents, RAG)
+* **Aniket Athanikar** — *Frontend Architect* (Next.js, UI/UX, Motion, Enterprise Layouts)
 
-📈 Roadmap
-Phase 1
-- Authentication
-- Landing Page
-- Dashboard
-
-Phase 2
-- AI Goal Engine
-- AI Mentor
-- AI Study Planner
-
-Phase 3
-- AI Mock Tests
-- Adaptive Learning
-- AI Analytics
-
-Phase 4
-- Marketplace
-- Mobile App
-- Enterprise Features
-
-🤝 Contributing
-# bash
-Fork Repository
-Create Feature Branch
-git checkout -b feature/amazing-feature
-
-Commit Changes
-git commit -m "Add amazing feature"
-
-Push Branch
-git push origin feature/amazing-feature
-Create Pull Request
-
-
-📄 License
-Licensed under the MIT License.
-
-
-👨‍💻 Authors
----Mrunal Chaudhari---
-• Full Stack AI Engineer
-•Backend •AI •FastAPI •Next.js
-
----Aniket Athanikar---
-• Frontend Engineer
-•UI|UX •React •Next.js •Enterprise Frontend
-
-
-🌟 Vision
-Our mission is to build India's most intelligent AI-powered examination platform that transforms the way students learn, prepare, and achieve success through adaptive learning, personalized AI guidance, and enterprise-grade technology.
-
-
+---
 <p align="center">
 ⭐ If you like this project, please consider giving it a star!
-Built with  using Next.js, FastAPI, AI, and modern cloud technologies.❤️
 </p>

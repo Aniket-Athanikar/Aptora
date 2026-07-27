@@ -7,107 +7,33 @@ import { GoalData, SubjectWeakness } from "@/types/goal.types";
 import { motion, AnimatePresence } from "framer-motion";
 import * as LucideIcons from "lucide-react";
 
+import {
+  PRESET_EXAMS,
+  PRESET_SUBJECTS,
+  AVATAR_OPTIONS,
+  STEP_HEADERS,
+  STEP_COLORS,
+  getStepStyles
+} from "./constants";
+
+import { CustomSelect } from "./CustomSelect";
+import { StepTarget } from "./StepTarget";
+import { StepProfile } from "./StepProfile";
+import { StepTimeline } from "./StepTimeline";
+import { StepLifestyle } from "./StepLifestyle";
+import { StepFocus } from "./StepFocus";
+import { StepWeakness } from "./StepWeakness";
+import { StepProjections } from "./StepProjections";
+
 const {
-  Compass, User, Calendar, Watch, CheckSquare, Brain,
-  Sparkles, Undo2, Redo2, ChevronLeft, ChevronRight, X, ChevronDown,
-  Clock, AlertTriangle, Monitor, Wifi, BookOpen, Layers, Upload,
-  Coffee, Trophy, Star, Flame, CalendarDays, Zap
+  Compass, Undo2, Redo2, ChevronLeft, ChevronRight, X,
+  Clock, AlertTriangle, Monitor, BookOpen, Layers, Upload,
+  Coffee, Trophy, Star, Flame, CalendarDays, Zap, Trash2
 } = LucideIcons;
-
-// Standard UPSC and other target exams
-const PRESET_EXAMS = [
-  { name: "UPSC CSE", category: "Civil Services", color: "from-amber-500 to-orange-600", icon: "FileText", glow: "rgba(245, 158, 11, 0.1)" },
-  { name: "State PSC", category: "Civil Services", color: "from-orange-500 to-red-600", icon: "Building", glow: "rgba(239, 68, 68, 0.1)" },
-  { name: "JEE Advanced", category: "Engineering", color: "from-blue-500 to-indigo-600", icon: "Atom", glow: "rgba(79, 70, 229, 0.1)" },
-  { name: "NEET UG", category: "Medical", color: "from-emerald-500 to-teal-600", icon: "Activity", glow: "rgba(16, 185, 129, 0.1)" },
-  { name: "CAT", category: "Management", color: "from-pink-500 to-rose-600", icon: "TrendingUp", glow: "rgba(244, 63, 94, 0.1)" },
-  { name: "GATE", category: "Engineering", color: "from-purple-500 to-violet-600", icon: "Settings", glow: "rgba(139, 92, 246, 0.1)" },
-  { name: "SSC CGL", category: "Government", color: "from-cyan-500 to-blue-600", icon: "Briefcase", glow: "rgba(6, 182, 212, 0.1)" },
-  { name: "Banking PO", category: "Government", color: "from-sky-500 to-indigo-600", icon: "Landmark", glow: "rgba(14, 165, 233, 0.1)" },
-];
-
-const PRESET_SUBJECTS: Record<string, string[]> = {
-  "UPSC CSE": ["Indian Polity", "History & Culture", "Geography", "Indian Economy", "Environment & Ecology", "Science & Tech", "CSAT & Logic"],
-  "State PSC": ["State History", "Polity & Governance", "Geography", "Economy & Development", "General Mental Ability"],
-  "JEE Advanced": ["Physics", "Organic Chemistry", "Inorganic Chemistry", "Physical Chemistry", "Mathematics"],
-  "NEET UG": ["Biology (Botany)", "Biology (Zoology)", "Physics", "Chemistry"],
-  "CAT": ["Quantitative Aptitude", "Data Interpretation", "Logical Reasoning", "Verbal Ability & RC"],
-  "GATE": ["Engineering Mathematics", "General Aptitude", "Core Technical Subject 1", "Core Technical Subject 2"],
-  "SSC CGL": ["Quantitative Aptitude", "General Intelligence & Reasoning", "English Language", "General Awareness"],
-  "Banking PO": ["Quantitative Aptitude", "Reasoning Ability", "English Language", "General Financial Awareness"],
-  "default": ["General Knowledge", "Analytical Reasoning", "Quantitative Ability", "Verbal Ability"]
-};
-
-const AVATAR_OPTIONS = [
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Aria",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Jack",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Luna",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Zoe"
-];
-
-const STEP_HEADERS = [
-  { id: 1, label: "Target" },
-  { id: 2, label: "Profile" },
-  { id: 3, label: "Timeline" },
-  { id: 4, label: "Lifestyle" },
-  { id: 5, label: "Focus" },
-  { id: 6, label: "Weakness" },
-  { id: 7, label: "Projections" }
-];
 
 interface AnimatedWizardProps {
   onClose?: () => void;
   isEditMode?: boolean;
-}
-
-function CustomSelect({
-  value,
-  onChange,
-  options,
-  label
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  options: string[];
-  label: string;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="relative flex flex-col gap-1.5 w-full text-left">
-      <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider pl-1">{label}</label>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full bg-white border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-semibold flex items-center justify-between cursor-pointer"
-      >
-        <span>{value}</span>
-        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 mt-1.5 w-full bg-white/95 backdrop-blur-md border border-slate-200/60 rounded-2xl shadow-xl p-2.5 z-50 space-y-1 max-h-[160px] overflow-y-auto">
-            {options.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => {
-                  onChange(opt);
-                  setOpen(false);
-                }}
-                className={`w-full p-2 px-3 text-xs font-bold rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${
-                  value === opt ? "bg-indigo-50/60 text-indigo-650" : "text-slate-600"
-                }`}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
 }
 
 export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardProps) {
@@ -132,6 +58,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   // Custom states for loading animation (AI Thinking Screen)
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingStep, setThinkingStep] = useState(0);
+  const [isCelebrating, setIsCelebrating] = useState(false);
+  const [celebrationGoal, setCelebrationGoal] = useState<GoalData | null>(null);
 
   // Initialize draft with fallback names on start
   useEffect(() => {
@@ -220,6 +148,15 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
   // Handle preset subject generation on exam change
   const handleSelectExam = (exam: string, category: string) => {
+    if (draft.targetExam === exam) {
+      updateWizardDraft({
+        targetExam: "",
+        examCategory: "",
+        weaknesses: []
+      });
+      return;
+    }
+
     const defaultSubjects = PRESET_SUBJECTS[exam] || PRESET_SUBJECTS["default"];
     const weaknesses: SubjectWeakness[] = defaultSubjects.map(sub => ({
       subject: sub,
@@ -241,8 +178,23 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   const validateStep = (): boolean => {
     const stepErrors: Record<string, string> = {};
 
-    if (currentStep === 1 && !draft.targetExam) {
-      stepErrors.targetExam = "Please select or type your target exam to proceed.";
+    if (currentStep === 1) {
+      let finalExam = draft.targetExam;
+      if (!finalExam && customExam.trim()) {
+        const examName = customExam.trim();
+        const examNameRegex = /^[a-zA-Z\s\-\/]{2,50}$/;
+        if (!examNameRegex.test(examName)) {
+          stepErrors.targetExam = "Exam name must be 2-50 alphabetical letters (spaces, hyphens, or slashes only).";
+        } else {
+          const categoryName = customCategory.trim() || "Custom Exam";
+          handleSelectExam(examName, categoryName);
+          setCustomExam("");
+          setCustomCategory("");
+          finalExam = examName;
+        }
+      } else if (!finalExam) {
+        stepErrors.targetExam = "Please select a target exam or enter custom details to proceed.";
+      }
     }
 
     if (currentStep === 2) {
@@ -362,9 +314,9 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
             updatedAt: new Date().toISOString()
           };
 
-          completeWizard(finishedGoal, isEditMode ? "Calibrated and Edited success profile params" : "Configured initial Success engine blueprint");
+          setCelebrationGoal(finishedGoal);
           setIsThinking(false);
-          if (onClose) onClose();
+          setIsCelebrating(true);
         }, 1000);
       }
     }, 600);
@@ -412,46 +364,52 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
       difficulty: "Medium",
       weaknessScore: 50,
       priority: "Medium",
-      aiRecommendation: "Added custom focus slot in planner."
+      aiRecommendation: `Review core materials and active practice loops for ${customSubjectName.trim()}.`
     };
-    updateWizardDraft({
-      weaknesses: [...(draft.weaknesses || []), newWeakness]
-    });
+    const current = draft.weaknesses || [];
+    updateWizardDraft({ weaknesses: [...current, newWeakness] });
     setCustomSubjectName("");
+    setErrors({});
   };
 
   const handleRemoveSubject = (idx: number) => {
     if (!draft.weaknesses) return;
-    const items = draft.weaknesses.filter((_, i) => i !== idx);
-    updateWizardDraft({ weaknesses: items });
+    const current = draft.weaknesses.filter((_, i) => i !== idx);
+    updateWizardDraft({ weaknesses: current });
   };
 
-  // Step Header Details
-  const stepMeta = [
-    { num: 1, title: "Target Exam", icon: Compass, desc: "What goal or exam are you pursuing?" },
-    { num: 2, title: "Your Profile", icon: User, desc: "Tell us a bit about your preparation background" },
-    { num: 3, title: "Timeline Calc", icon: Calendar, desc: "Set target date and daily hours" },
-    { num: 4, title: "Study Lifestyle", icon: Coffee, desc: "Tailor learning environment & schedule" },
-    { num: 5, title: "Learning Modes", icon: CheckSquare, desc: "Select preferred studying tools" },
-    { num: 6, title: "Gap Analysis", icon: Brain, desc: "Audit and map syllabus confidence gaps" },
-    { num: 7, title: "AI Blueprint Summary", icon: Trophy, desc: "Review and calibrate your Success Engine" }
-  ];
-
-  const currentMeta = stepMeta[currentStep - 1];
-  const StepIcon = currentMeta.icon;
+  const currentMeta = STEP_HEADERS.find((s) => s.id === currentStep) || STEP_HEADERS[0];
+  const StepIcon = {
+    1: Compass,
+    2: LucideIcons.User,
+    3: LucideIcons.Calendar,
+    4: Coffee,
+    5: LucideIcons.CheckSquare,
+    6: LucideIcons.Brain,
+    7: Trophy
+  }[currentStep as 1 | 2 | 3 | 4 | 5 | 6 | 7] || Compass;
 
   if (isThinking) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center"
+          className="w-full max-w-md p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center"
         >
           <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
-            <span className="absolute inset-0 border-4 border-indigo-100 rounded-full animate-pulse"></span>
-            <span className="absolute inset-0 border-4 border-t-indigo-650 rounded-full animate-spin"></span>
-            <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+              className="absolute inset-0 rounded-full border-4 border-dashed border-indigo-600/35"
+            />
+            <motion.div
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+              className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-md shadow-indigo-600/5"
+            >
+              <LucideIcons.Sparkles className="w-6.5 h-6.5 text-indigo-600" />
+            </motion.div>
           </div>
 
           <h2 className="text-2xl font-black mb-1 text-slate-900">Calibrating Success Engine</h2>
@@ -467,12 +425,22 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               "Formulating Success Prediction Metrics",
               "Launching Success Dashboard Engine"
             ].map((text, idx) => (
-              <div key={idx} className="flex items-center text-left text-xs gap-3">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{
+                  opacity: thinkingStep > idx ? 0.95 : thinkingStep === idx ? 1 : 0.3,
+                  x: thinkingStep === idx ? 4 : 0,
+                  scale: thinkingStep === idx ? 1.015 : 1
+                }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center text-left text-xs gap-3"
+              >
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 transition-all duration-300 ${
                   thinkingStep > idx
                     ? "bg-emerald-500 text-white shadow-sm"
                     : thinkingStep === idx
-                      ? "bg-indigo-600 text-white animate-pulse"
+                      ? "bg-indigo-600 text-white shadow-md scale-105"
                       : "bg-slate-100 text-slate-400 border border-slate-200/50"
                 }`}>
                   {thinkingStep > idx ? (
@@ -481,72 +449,196 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
                     <span>{idx + 1}</span>
                   )}
                 </div>
-                <span className={`font-bold ${thinkingStep >= idx ? "text-slate-800" : "text-slate-400"}`}>
+                <span className={`font-bold transition-all duration-300 ${
+                  thinkingStep === idx ? "text-indigo-600 font-extrabold" : thinkingStep > idx ? "text-slate-800" : "text-slate-400"
+                }`}>
                   {text}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
       </div>
     );
   }
+  if (isCelebrating && celebrationGoal) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-full max-w-lg p-8 rounded-[32px] bg-white border border-slate-200/50 shadow-2xl text-center flex flex-col items-center relative overflow-hidden"
+        >
+          {/* Animated sparkles/particles backgrounds */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] bg-emerald-400/20 rounded-full blur-[80px]" />
+            <div className="absolute bottom-[-20%] right-[-20%] w-[300px] h-[300px] bg-indigo-500/20 rounded-full blur-[80px]" />
+          </div>
+
+          <motion.div
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", delay: 0.2, stiffness: 200 }}
+            className="w-24 h-24 mb-6 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20 relative"
+          >
+            <Trophy className="w-11 h-11 text-white" />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute -inset-2 rounded-full border border-orange-400/50 -z-10"
+            />
+          </motion.div>
+
+          <h2 className="text-2xl font-black mb-2 bg-gradient-to-r from-slate-900 to-slate-800 bg-clip-text text-transparent">
+            Success Engine Calibrated!
+          </h2>
+          <p className="text-slate-500 text-xs font-semibold max-w-sm mb-6 leading-relaxed">
+            Your customized roadmap blueprint has been generated. Ready to target your exam milestones.
+          </p>
+
+          {/* Metric Details Panel */}
+          <div className="grid grid-cols-2 gap-3.5 w-full mb-8 text-left">
+            <div className="p-4 rounded-2xl border border-emerald-100 bg-emerald-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-emerald-600 tracking-wider">Target Goal</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.targetExam}</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-teal-100 bg-teal-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-teal-600 tracking-wider">Success Score</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.successPrediction}%</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-amber-100 bg-amber-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-amber-600 tracking-wider">Commitment</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.dailyStudyHours} hrs / day</p>
+            </div>
+            <div className="p-4 rounded-2xl border border-rose-100 bg-rose-50/20 text-left">
+              <span className="text-[10px] font-black uppercase text-rose-600 tracking-wider">Time Remaining</span>
+              <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.timeline.remainingDays} Days</p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 w-full">
+            <button
+              type="button"
+              onClick={() => {
+                setIsCelebrating(false);
+              }}
+              className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-black rounded-2xl cursor-pointer hover:scale-[1.01] transition-all flex items-center justify-center gap-2 shadow-xs"
+            >
+              <ChevronLeft className="w-4.5 h-4.5" />
+              <span>Back & Edit</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                completeWizard(celebrationGoal, isEditMode ? "Calibrated and Edited success profile params" : "Configured initial Success engine blueprint");
+                setIsCelebrating(false);
+                if (onClose) onClose();
+              }}
+              className="flex-[2] py-4 bg-gradient-to-r from-emerald-600 to-[#10B981] hover:brightness-105 text-white text-xs font-black rounded-2xl cursor-pointer shadow-lg shadow-emerald-500/15 hover:scale-[1.01] transition-all flex items-center justify-center gap-2 border-none"
+            >
+              <span>Enter Study Workspace</span>
+              <LucideIcons.ArrowRight className="w-4.5 h-4.5 text-white" />
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const theme = STEP_COLORS[currentStep] || STEP_COLORS[1];
+  const stepStyles = getStepStyles(currentStep);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 15 }}
         transition={{ type: "spring", damping: 30, stiffness: 250 }}
-        className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white border border-slate-200/60 shadow-2xl overflow-hidden backdrop-blur-2xl"
+        className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white/75 glass border border-white/30 overflow-hidden backdrop-blur-3xl transition-all duration-700 ${theme.shadow}`}
       >
+        {/* Ambient background glows inside the modal with float motion */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <motion.div
+            animate={{
+              x: [-15, 15, -15],
+              y: [-10, 20, -10],
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 9,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className={`absolute top-[-25%] left-[-15%] w-[400px] h-[400px] ${theme.glowLeft} rounded-full filter blur-[100px] transition-all duration-700`}
+          />
+          <motion.div
+            animate={{
+              x: [15, -15, 15],
+              y: [15, -15, 15],
+              scale: [1.08, 0.95, 1.08],
+            }}
+            transition={{
+              duration: 11,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className={`absolute bottom-[-25%] right-[-15%] w-[400px] h-[400px] ${theme.glowRight} rounded-full filter blur-[100px] transition-all duration-700`}
+          />
+        </div>
+
         {/* Top Header Navigation */}
-        <div className="p-6 border-b border-slate-200/50 flex items-center justify-between bg-white/50">
+        <div className="p-6 border-b border-white/20 flex items-center justify-between bg-white/40 backdrop-blur-sm relative z-10">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
-              <StepIcon className="w-5.5 h-5.5 text-indigo-600" />
-            </div>
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.03, 1] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="w-11 h-11 rounded-2xl bg-white border border-slate-200/60 flex items-center justify-center shadow-sm shrink-0"
+            >
+              <StepIcon className={`w-5.5 h-5.5 ${stepStyles.accentText}`} />
+            </motion.div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50/80 px-2.5 py-0.5 rounded-full">
+                <span className={`text-[10px] font-black uppercase tracking-wider bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-100 ${stepStyles.accentText}`}>
                   Step {currentStep} of 7
                 </span>
                 {isEditMode && (
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/40">
                     Edit Mode
                   </span>
                 )}
               </div>
-              <h3 className="font-extrabold text-slate-800 tracking-tight">{currentMeta.title}</h3>
+              <h3 className="font-extrabold text-slate-800 tracking-tight text-left">{currentMeta.label} Milestones</h3>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             {/* Undo/Redo Buttons */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/40">
+            <div className="flex items-center gap-1 bg-white/60 backdrop-blur-md p-1 rounded-xl border border-slate-200/40 shadow-sm">
               <button
                 onClick={undoWizardDraft}
                 disabled={undoStack.length === 0}
-                className="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-55 hover:text-slate-800 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
                 title="Undo"
               >
-                <Undo2 className="w-4 h-4" />
+                <Undo2 className="w-4.5 h-4.5" />
               </button>
               <button
                 onClick={redoWizardDraft}
                 disabled={redoStack.length === 0}
-                className="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-55 hover:text-slate-800 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
                 title="Redo"
               >
-                <Redo2 className="w-4 h-4" />
+                <Redo2 className="w-4.5 h-4.5" />
               </button>
             </div>
 
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all cursor-pointer"
+                className="p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all cursor-pointer border border-transparent hover:border-rose-100 shadow-sm"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -555,44 +647,64 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Step Indicator Badges Strip */}
-        <div className="hidden md:flex items-center justify-between px-6 py-4 bg-slate-50/50 border-b border-slate-200/50 text-[10px] font-black uppercase tracking-wider text-slate-400">
+        <div className="hidden md:flex items-center justify-between px-6 py-4 bg-white/30 border-b border-white/20 text-[10px] font-black uppercase tracking-wider text-slate-400 relative z-10">
           {STEP_HEADERS.map((s) => {
             const isActive = currentStep === s.id;
             const isCompleted = currentStep > s.id;
             const IconMap: Record<number, React.ComponentType<{ className?: string }>> = {
-              1: LucideIcons.Compass,
+              1: Compass,
               2: LucideIcons.User,
               3: LucideIcons.Calendar,
-              4: LucideIcons.Coffee,
+              4: Coffee,
               5: LucideIcons.CheckSquare,
               6: LucideIcons.Brain,
-              7: LucideIcons.Trophy
+              7: Trophy
+            };
+            const IconColorMap: Record<number, string> = {
+              1: "text-blue-500",
+              2: "text-purple-500",
+              3: "text-emerald-500",
+              4: "text-amber-500",
+              5: "text-rose-500",
+              6: "text-indigo-500",
+              7: "text-yellow-500"
             };
             const StepIconComponent = IconMap[s.id];
+            const stepColorClass = IconColorMap[s.id] || "text-slate-400";
             return (
               <div key={s.id} className="flex items-center gap-2">
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
-                  isActive
-                    ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-100 animate-pulse-subtle"
+                <motion.div
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isActive
+                    ? `bg-gradient-to-r ${theme.gradient} border-white/10 text-white shadow-md scale-105`
                     : isCompleted
-                      ? "bg-emerald-50 border-emerald-250 text-emerald-600 font-bold"
-                      : "bg-white border-slate-200 text-slate-400"
-                }`}>
-                  {isCompleted ? <LucideIcons.Check className="w-4 h-4" /> : StepIconComponent ? <StepIconComponent className="w-4 h-4" /> : s.id}
-                </span>
-                <span className={isActive ? "text-indigo-650 font-black" : isCompleted ? "text-emerald-600" : ""}>
+                      ? "bg-emerald-500 border-emerald-400 text-white font-bold shadow-[0_0_10px_rgba(16,185,129,0.25)]"
+                      : "bg-white/40 border-white/20 text-slate-500"
+                    }`}
+                >
+                  {isCompleted ? (
+                    <LucideIcons.Check className="w-4 h-4 text-white" />
+                  ) : StepIconComponent ? (
+                    <StepIconComponent className={`w-4 h-4 ${isActive ? "text-white" : stepColorClass}`} />
+                  ) : (
+                    s.id
+                  )}
+                </motion.div>
+                <span className={isActive ? `${stepStyles.accentText} font-black tracking-wide` : isCompleted ? "text-emerald-600 font-bold" : "text-slate-500"}>
                   {s.label}
                 </span>
-                {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-300 ml-1 shrink-0" />}
+                {s.id < 7 && <LucideIcons.ChevronRight className="w-4 h-4 text-slate-400/60 ml-1 shrink-0" />}
               </div>
             );
           })}
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="w-full bg-slate-100 h-1">
+        {/* Step Progress Bar with Glowing Line Effect */}
+        <div className="w-full bg-white/25 h-1.5 relative z-10 border-b border-white/10">
           <motion.div
-            className="bg-gradient-to-r from-indigo-500 to-violet-650 h-full"
+            className={`bg-gradient-to-r ${theme.gradient} h-full transition-all duration-500`}
+            style={{ boxShadow: `0 0 15px ${theme.glowBtn}` }}
             initial={{ width: `${((currentStep - 1) / 7) * 100}%` }}
             animate={{ width: `${(currentStep / 7) * 100}%` }}
             transition={{ duration: 0.4 }}
@@ -609,772 +721,93 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               exit={{ opacity: 0, x: -15 }}
               transition={{ duration: 0.25 }}
             >
-              {/* STEP 1: Target Exam */}
               {currentStep === 1 && (
-                <div className="space-y-6">
-                  <div className="flex flex-col gap-4 bg-slate-50 border border-slate-200/60 p-5 rounded-2xl">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pl-1">Add custom Target Exam details</h4>
-                    <div className="flex flex-col md:flex-row gap-4 items-end">
-                      <div className="flex-1 flex flex-col gap-1.5 w-full">
-                        <label className="text-[9px] font-black text-slate-500 uppercase pl-1">Exam Name</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. GRE, TOEFL, IELTS..."
-                          value={customExam}
-                          onChange={(e) => setCustomExam(e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
-                        />
-                      </div>
-                      <div className="flex-1 flex flex-col gap-1.5 w-full">
-                        <label className="text-[9px] font-black text-slate-500 uppercase pl-1">Exam Category</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. Higher Studies, Lang Proficiency..."
-                          value={customCategory}
-                          onChange={(e) => setCustomCategory(e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (customExam.trim()) {
-                            handleSelectExam(customExam.trim(), customCategory.trim() || "Custom Exam");
-                            setCustomExam("");
-                            setCustomCategory("");
-                          }
-                        }}
-                        className="bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-black px-5 py-3 rounded-xl cursor-pointer transition-all hover:scale-[1.02] shadow-sm flex items-center justify-center shrink-0 w-full md:w-auto"
-                      >
-                        Set Exam
-                      </button>
-                    </div>
-                    {errors.targetExam && <p className="text-red-500 text-xs mt-1 pl-1">{errors.targetExam}</p>}
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {PRESET_EXAMS.map((item) => {
-                      const selected = draft.targetExam === item.name;
-                      return (
-                        <button
-                          key={item.name}
-                          onClick={() => handleSelectExam(item.name, item.category)}
-                          className={`p-5 rounded-2xl border text-left flex flex-col justify-between h-36 transition-all relative overflow-hidden group cursor-pointer ${
-                            selected
-                              ? "border-indigo-600 bg-indigo-50/40 shadow-[0_4px_16px_rgba(79,70,229,0.08)] scale-[1.02]"
-                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]"
-                          }`}
-                          style={{
-                            boxShadow: selected ? `0 6px 20px ${item.glow}` : undefined
-                          }}
-                        >
-                          <div className={`mb-2 p-2 rounded-xl w-10 h-10 flex items-center justify-center transition-colors ${selected ? "bg-white text-indigo-600 shadow-xs" : "bg-slate-50 text-slate-400 group-hover:bg-white"}`}>
-                            {(() => {
-                              const Icon = (LucideIcons as any)[item.icon] || LucideIcons.Award;
-                              return <Icon className="w-5.5 h-5.5" />;
-                            })()}
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase">{item.category}</p>
-                            <h4 className="font-extrabold text-slate-800 text-sm group-hover:text-indigo-600 transition-colors">{item.name}</h4>
-                          </div>
-                          {selected && (
-                            <div className="absolute right-3.5 top-3.5 bg-indigo-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow-sm">✓</div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {draft.targetExam && (
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 bg-white rounded-xl shadow-xs">
-                          <LucideIcons.Target className="w-6 h-6 text-indigo-600" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-wider">Active Choice</p>
-                          <p className="font-black text-slate-800 text-sm">{draft.targetExam} ({draft.examCategory})</p>
-                        </div>
-                      </div>
-                      <span className="text-xs text-indigo-600 bg-white border border-indigo-100 px-3 py-1 rounded-full font-bold shadow-xs">Syllabus Matrix Populated</span>
-                    </motion.div>
-                  )}
-                </div>
+                <StepTarget
+                  draft={draft}
+                  errors={errors}
+                  stepStyles={stepStyles}
+                  customExam={customExam}
+                  setCustomExam={setCustomExam}
+                  customCategory={customCategory}
+                  setCustomCategory={setCustomCategory}
+                  onSelectExam={handleSelectExam}
+                  onClearExam={() => {
+                    updateWizardDraft({ targetExam: "", examCategory: "" });
+                    setErrors({});
+                  }}
+                  onSetCustomExam={() => {
+                    const examName = customExam.trim();
+                    if (!examName) {
+                      setErrors({ targetExam: "Please enter an exam name." });
+                      return;
+                    }
+                    const examNameRegex = /^[a-zA-Z\s\-\/]{2,50}$/;
+                    if (!examNameRegex.test(examName)) {
+                      setErrors({ targetExam: "Exam name must be 2-50 alphabetical letters (spaces, hyphens, or slashes only)." });
+                      return;
+                    }
+                    setErrors({});
+                    handleSelectExam(examName, customCategory.trim() || "Custom Exam");
+                    setCustomExam("");
+                    setCustomCategory("");
+                  }}
+                />
               )}
 
-              {/* STEP 2: Prep Profile */}
               {currentStep === 2 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-1 flex flex-col items-center gap-4 bg-slate-50 border border-slate-200/50 p-6 rounded-3xl justify-center">
-                      <div className="relative group shrink-0">
-                        <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 blur-md opacity-40 group-hover:opacity-75 transition-opacity" />
-                        <img
-                          src={draft.profile?.avatar || AVATAR_OPTIONS[0]}
-                          alt="Avatar"
-                          className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
-                        />
-                      </div>
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block text-center">Aspirant Profile Image</label>
-
-                      {/* File Uploader system */}
-                      <label className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-750 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl cursor-pointer transition-all shadow-md hover:-translate-y-0.5">
-                        <Upload className="w-3.5 h-3.5" /> Upload JPG/PNG
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                updateWizardDraft({
-                                  profile: { ...draft.profile!, avatar: reader.result as string }
-                                });
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
-                          className="hidden"
-                        />
-                      </label>
-
-                      <div className="w-full border-t border-slate-200/60 my-2" />
-
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Or Choose Preset</span>
-                      <div className="flex gap-2 justify-center flex-wrap">
-                        {AVATAR_OPTIONS.map((av, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => updateWizardDraft({
-                              profile: { ...draft.profile!, avatar: av }
-                            })}
-                            className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
-                              draft.profile?.avatar === av ? "border-indigo-600 scale-110 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
-                            }`}
-                          >
-                            <img src={av} alt="" className="w-full h-full object-cover" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-2 space-y-5">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Full Name</label>
-                          <input
-                            type="text"
-                            value={draft.profile?.fullName || ""}
-                            onChange={(e) => updateWizardDraft({
-                              profile: { ...draft.profile!, fullName: e.target.value }
-                            })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
-                            placeholder="John Doe"
-                          />
-                          {errors.fullName && <p className="text-red-500 text-xs pl-1">{errors.fullName}</p>}
-                        </div>
-
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-black text-slate-600 uppercase pl-1">Age Range (16-40)</label>
-                          <input
-                            type="number"
-                            min="16"
-                            max="40"
-                            value={draft.profile?.age || 21}
-                            onChange={(e) => updateWizardDraft({
-                              profile: { ...draft.profile!, age: parseInt(e.target.value) || 21 }
-                            })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
-                          />
-                          {errors.age && <p className="text-red-500 text-xs pl-1">{errors.age}</p>}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <CustomSelect
-                          label="Education / Degree"
-                          value={draft.profile?.education || "Bachelor of Arts"}
-                          options={["Bachelor of Technology", "Bachelor of Science", "Bachelor of Arts", "Master of Business Admin", "High School"]}
-                          onChange={(val) => updateWizardDraft({
-                            profile: { ...draft.profile!, education: val }
-                          })}
-                        />
-
-                        <CustomSelect
-                          label="Stream"
-                          value={draft.profile?.stream || "Arts & Humanities"}
-                          options={["Science & Technology", "Arts & Humanities", "Commerce & Accounts", "Medical & Health"]}
-                          onChange={(val) => updateWizardDraft({
-                            profile: { ...draft.profile!, stream: val }
-                          })}
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-black text-slate-650 uppercase pl-1">Target Exam City</label>
-                          <input
-                            type="text"
-                            value={draft.profile?.city || ""}
-                            onChange={(e) => updateWizardDraft({
-                              profile: { ...draft.profile!, city: e.target.value }
-                            })}
-                            className="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold"
-                            placeholder="e.g. Delhi, Mumbai"
-                          />
-                          {errors.city && <p className="text-red-500 text-xs pl-1">{errors.city}</p>}
-                        </div>
-
-                        <CustomSelect
-                          label="Occupation"
-                          value={draft.profile?.occupation || "Full-time Aspirant"}
-                          options={["Full-time Aspirant", "Working Professional", "College Student"]}
-                          onChange={(val) => updateWizardDraft({
-                            profile: { ...draft.profile!, occupation: val }
-                          })}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Confidence and syllabus coverage */}
-                  <div className="bg-indigo-50/30 p-6 rounded-3xl border border-indigo-100 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex justify-between pl-1">
-                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Syllabus Covered (%): {draft.profile?.syllabusPercent || 0}%</label>
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={draft.profile?.syllabusPercent || 0}
-                          onChange={(e) => updateWizardDraft({
-                            profile: { ...draft.profile!, syllabusPercent: parseInt(e.target.value) }
-                          })}
-                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                      <div className="flex justify-between pl-1">
-                        <label className="text-xs font-extrabold text-indigo-700 uppercase">Current Confidence Level: {draft.profile?.currentConfidence || 3}/5</label>
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={draft.profile?.currentConfidence || 3}
-                          onChange={(e) => updateWizardDraft({
-                            profile: { ...draft.profile!, currentConfidence: parseInt(e.target.value) }
-                          })}
-                          className="w-full h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <StepProfile
+                  draft={draft}
+                  errors={errors}
+                  stepStyles={stepStyles}
+                  updateWizardDraft={updateWizardDraft}
+                />
               )}
 
-              {/* STEP 3: Goal Timeline */}
               {currentStep === 3 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-5">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-black text-slate-650 uppercase flex items-center gap-1.5 pl-1">
-                          <Calendar className="w-4 h-4 text-indigo-600" /> Exam Date
-                        </label>
-                        <input
-                          type="date"
-                          value={draft.timeline?.examDate || ""}
-                          onChange={(e) => updateWizardDraft({
-                            timeline: { ...draft.timeline!, examDate: e.target.value }
-                          })}
-                          className="border border-slate-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 font-semibold bg-white"
-                        />
-                        {errors.examDate && <p className="text-red-500 text-xs pl-1">{errors.examDate}</p>}
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-slate-650 uppercase flex items-center gap-1.5 pl-1">
-                          <Clock className="w-4 h-4 text-indigo-600" /> Target Study Hours (Daily)
-                        </label>
-                        <div className="flex items-center gap-4 mt-1.5">
-                          <input
-                            type="range"
-                            min="2"
-                            max="15"
-                            value={draft.timeline?.dailyStudyHours || 8}
-                            onChange={(e) => updateWizardDraft({
-                              timeline: { ...draft.timeline!, dailyStudyHours: parseInt(e.target.value) }
-                            })}
-                            className="flex-1 h-2 bg-indigo-150 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                          />
-                          <span className="w-20 text-center font-black text-indigo-700 text-xs bg-indigo-50 border border-indigo-100 py-2 px-3 rounded-xl shrink-0 shadow-xs">
-                            {draft.timeline?.dailyStudyHours || 8} Hrs
-                          </span>
-                        </div>
-                        {errors.dailyStudyHours && <p className="text-red-500 text-xs pl-1">{errors.dailyStudyHours}</p>}
-                      </div>
-                    </div>
-
-                    {/* Timeline calculations output */}
-                    <div className="bg-slate-50/50 border border-slate-200/60 p-6 rounded-3xl space-y-4">
-                      <h4 className="font-extrabold text-slate-800 text-sm flex items-center gap-2">
-                        <Sparkles className="w-4.5 h-4.5 text-amber-500 animate-pulse" /> AI Calculator Projections
-                      </h4>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
-                          <span className="text-[10px] uppercase font-bold text-slate-400">Days Remaining</span>
-                          <p className="text-lg font-black text-indigo-600 mt-1">{draft.timeline?.remainingDays || 0} Days</p>
-                        </div>
-
-                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
-                          <span className="text-[10px] uppercase font-bold text-slate-400">Total Study Hours</span>
-                          <p className="text-lg font-black text-indigo-600 mt-1">
-                            {((draft.timeline?.remainingDays || 0) * (draft.timeline?.dailyStudyHours || 8)).toLocaleString()} Hrs
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
-                          <span className="text-[10px] uppercase font-bold text-slate-400">Burnout Risk</span>
-                          <div className="flex items-center gap-2 mt-1.5">
-                            <span className={`w-2.5 h-2.5 rounded-full ${
-                              draft.timeline?.burnoutRisk === "High" ? "bg-rose-500" : draft.timeline?.burnoutRisk === "Moderate" ? "bg-amber-500" : "bg-emerald-500"
-                            }`} />
-                            <span className="text-xs font-extrabold text-slate-800">{draft.timeline?.burnoutRisk || "Low"}</span>
-                          </div>
-                        </div>
-
-                        <div className="bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
-                          <span className="text-[10px] uppercase font-bold text-slate-400">Difficulty Level</span>
-                          <p className="text-xs font-extrabold text-slate-800 mt-2">{draft.timeline?.difficulty || "Medium"}</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-gradient-to-r from-indigo-600 to-violet-650 text-white p-4.5 rounded-2xl flex items-center justify-between shadow-md">
-                        <div>
-                          <p className="text-[10px] font-black uppercase tracking-wider opacity-90">Success Prediction Rate</p>
-                          <p className="text-[10px] opacity-75 mt-0.5">Based on hours, coverage, target date</p>
-                        </div>
-                        <span className="text-2xl font-black">{draft.timeline?.successPrediction || 65}%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <StepTimeline
+                  draft={draft}
+                  errors={errors}
+                  stepStyles={stepStyles}
+                  updateWizardDraft={updateWizardDraft}
+                  theme={theme}
+                />
               )}
 
-              {/* STEP 4: Study Lifestyle */}
               {currentStep === 4 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-5">
-                      <div>
-                        <label className="text-xs font-black text-slate-650 uppercase block mb-3 pl-1">Preferred Study Time Slots</label>
-                        <div className="flex flex-wrap gap-2">
-                          {(["Morning", "Afternoon", "Night", "Weekend"] as const).map((slot) => {
-                            const active = draft.lifestyle?.slots?.includes(slot) || false;
-                            const SlotIcon = {
-                              Morning: LucideIcons.Sun,
-                              Afternoon: LucideIcons.CloudSun,
-                              Night: LucideIcons.Moon,
-                              Weekend: LucideIcons.Calendar
-                            }[slot];
-                            return (
-                              <button
-                                key={slot}
-                                onClick={() => {
-                                  const currentSlots = draft.lifestyle?.slots || [];
-                                  const nextSlots = active
-                                    ? currentSlots.filter((s) => s !== slot)
-                                    : [...currentSlots, slot];
-                                  updateWizardDraft({
-                                    lifestyle: { ...draft.lifestyle!, slots: nextSlots }
-                                  });
-                                }}
-                                className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] ${
-                                  active
-                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
-                                }`}
-                              >
-                                {SlotIcon && <SlotIcon className="w-4 h-4" />}
-                                <span>{slot}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {errors.slots && <p className="text-rose-500 text-[10px] font-black mt-2 pl-1">{errors.slots}</p>}
-                      </div>
-
-                      <CustomSelect
-                        label="Preferred Learning Device"
-                        value={draft.lifestyle?.preferredDevice || "Laptop & Tablet"}
-                        options={["Laptop & Tablet", "Desktop & Workstation", "Mobile Smartphone only", "Physical books/Printed notes"]}
-                        onChange={(val) => updateWizardDraft({
-                          lifestyle: { ...draft.lifestyle!, preferredDevice: val }
-                        })}
-                      />
-
-                      <CustomSelect
-                        label="Learning Environment"
-                        value={draft.lifestyle?.learningEnvironment || "Home Study Room (Quiet)"}
-                        options={["Home Study Room (Quiet)", "Public Library / Study Cafe", "College / University Lounge", "Co-working Space / Commute"]}
-                        onChange={(val) => updateWizardDraft({
-                          lifestyle: { ...draft.lifestyle!, learningEnvironment: val }
-                        })}
-                      />
-                    </div>
-
-                    <div className="space-y-5">
-                      <CustomSelect
-                        label="Internet Access / Availability"
-                        value={draft.lifestyle?.internetAvailability || "High-speed Wi-Fi (Continuous)"}
-                        options={["High-speed Wi-Fi (Continuous)", "Cellular Data / Limited access", "Offline / Intermittent sync only"]}
-                        onChange={(val) => updateWizardDraft({
-                          lifestyle: { ...draft.lifestyle!, internetAvailability: val }
-                        })}
-                      />
-
-                      <div>
-                        <label className="text-xs font-black text-slate-650 uppercase block mb-3 pl-1">Consistency Commits</label>
-                        <div className="grid grid-cols-2 gap-2.5">
-                          {["Everyday", "Weekdays Only", "Weekends Intensive", "Skip Festivals/Holidays"].map((item) => {
-                            const selected = draft.lifestyle?.consistency?.includes(item) || false;
-                            const CommitIcon = {
-                              "Everyday": Flame,
-                              "Weekdays Only": CalendarDays,
-                              "Weekends Intensive": Zap,
-                              "Skip Festivals/Holidays": Sparkles
-                            }[item as "Everyday" | "Weekdays Only" | "Weekends Intensive" | "Skip Festivals/Holidays"];
-                            return (
-                              <button
-                                key={item}
-                                onClick={() => {
-                                  const currentCon = draft.lifestyle?.consistency || [];
-                                  const nextCon = selected
-                                    ? currentCon.filter((c) => c !== item)
-                                    : [...currentCon, item];
-                                  updateWizardDraft({
-                                    lifestyle: { ...draft.lifestyle!, consistency: nextCon }
-                                  });
-                                }}
-                                className={`p-3.5 rounded-xl border text-left text-xs font-bold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${
-                                  selected
-                                    ? "bg-indigo-50/50 border-indigo-650 text-indigo-700 shadow-sm"
-                                    : "bg-white border-slate-200 hover:border-indigo-300"
-                                }`}
-                              >
-                                <div className="flex items-center gap-2">
-                                  {CommitIcon && <CommitIcon className={`w-4.5 h-4.5 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-slate-400"}`} />}
-                                  <span>{item}</span>
-                                </div>
-                                {selected && <LucideIcons.Check className="w-3.5 h-3.5 text-indigo-600 shrink-0" />}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {errors.consistency && <p className="text-rose-500 text-[10px] font-black mt-2 pl-1">{errors.consistency}</p>}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <StepLifestyle
+                  draft={draft}
+                  errors={errors}
+                  stepStyles={stepStyles}
+                  updateWizardDraft={updateWizardDraft}
+                />
               )}
 
-              {/* STEP 5: Learning Preferences */}
               {currentStep === 5 && (
-                <div className="space-y-6">
-                  <div className="flex flex-col pl-1">
-                    <label className="text-sm font-black text-slate-800 mb-1">Select Study & Revision preferences</label>
-                    <p className="text-xs text-slate-450 font-medium">Our study blueprint generator configures daily goals tailored to these learning formats.</p>
-                    {errors.preferences && <p className="text-rose-500 text-[10px] font-black mt-2">{errors.preferences}</p>}
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[
-                      { name: "Video lectures", icon: "Video", color: "rgba(99, 102, 241, 0.08)" },
-                      { name: "Reading books", icon: "BookOpen", color: "rgba(16, 185, 129, 0.08)" },
-                      { name: "Practice Questions", icon: "PenTool", color: "rgba(245, 158, 11, 0.08)" },
-                      { name: "PYQs (Previous Years)", icon: "Calendar", color: "rgba(239, 68, 68, 0.08)" },
-                      { name: "Mock Tests", icon: "Award", color: "rgba(139, 92, 246, 0.08)" },
-                      { name: "Flashcards", icon: "Layers", color: "rgba(244, 63, 94, 0.08)" },
-                      { name: "Mind Maps", icon: "Brain", color: "rgba(6, 182, 212, 0.08)" },
-                      { name: "AI Tutor sessions", icon: "Bot", color: "rgba(79, 70, 229, 0.08)" },
-                      { name: "Revision Notes", icon: "FileText", color: "rgba(100, 116, 139, 0.08)" },
-                      { name: "Discussion Forums", icon: "Users", color: "rgba(79, 70, 229, 0.08)" },
-                      { name: "Live Classes", icon: "Radio", color: "rgba(217, 70, 239, 0.08)" }
-                    ].map((pref) => {
-                      const selected = draft.preferences?.includes(pref.name) || false;
-                      const Icon = (LucideIcons as any)[pref.icon] || LucideIcons.Award;
-                      return (
-                        <button
-                          key={pref.name}
-                          onClick={() => {
-                            const currentPrefs = draft.preferences || [];
-                            const nextPrefs = selected
-                              ? currentPrefs.filter((p) => p !== pref.name)
-                              : [...currentPrefs, pref.name];
-                            updateWizardDraft({ preferences: nextPrefs });
-                          }}
-                          className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2.5 transition-all cursor-pointer hover:scale-[1.02] ${
-                            selected
-                              ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
-                              : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50"
-                          }`}
-                          style={{
-                            boxShadow: selected ? `0 6px 16px ${pref.color}` : undefined
-                          }}
-                        >
-                          <Icon className={`w-6 h-6 ${selected ? "text-indigo-600 animate-pulse-subtle" : "text-slate-400"}`} />
-                          <span className="text-xs font-extrabold text-slate-700">{pref.name}</span>
-                          {selected && (
-                            <span className="text-[9px] font-black text-white bg-indigo-650 px-2 py-0.5 rounded-full shadow-xs">Active</span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <StepFocus
+                  draft={draft}
+                  errors={errors}
+                  updateWizardDraft={updateWizardDraft}
+                />
               )}
 
-              {/* STEP 6: Weakness Analysis */}
               {currentStep === 6 && (
-                <div className="space-y-6">
-                  <div className="flex flex-col gap-4 pl-1">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-sm font-black text-slate-800">Review Subject Competencies for {draft.targetExam || "Selected Exam"}</label>
-                      <p className="text-xs text-slate-450 font-medium">Rate your active confidence (1 = No confidence, 5 = High mastery) to automatically program AI focus revisions.</p>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        placeholder="Add custom subject/module name..."
-                        value={customSubjectName}
-                        onChange={(e) => setCustomSubjectName(e.target.value)}
-                        className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 bg-white font-semibold"
-                      />
-                      <button
-                        onClick={handleAddCustomSubject}
-                        className="bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-black px-5 rounded-xl cursor-pointer transition-all hover:scale-102 shrink-0 shadow-sm"
-                      >
-                        Add Subject
-                      </button>
-                    </div>
-                    {errors.weaknesses && <p className="text-rose-500 text-[10px] font-black mt-1.5">{errors.weaknesses}</p>}
-                  </div>
-
-                  <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
-                    {draft.weaknesses?.map((w, idx) => (
-                      <div key={idx} className="bg-white border border-slate-200/80 p-4.5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-3xs">
-                        <div className="flex-1 min-w-[180px]">
-                          <div className="flex items-center gap-2">
-                            <span className={`w-2.5 h-2.5 rounded-full ${
-                              w.priority === "High" ? "bg-rose-500" : w.priority === "Medium" ? "bg-amber-500" : "bg-emerald-500"
-                            }`} />
-                            <h5 className="font-extrabold text-slate-800 text-sm">{w.subject}</h5>
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase block mt-1.5">
-                            Weakness: {w.weaknessScore}% &bull; Priority: {w.priority}
-                          </span>
-                        </div>
-
-                        <div className="flex flex-1 items-center gap-3 justify-start md:justify-center">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Confidence</label>
-                          <div className="flex gap-1 bg-slate-55 p-0.5 rounded-xl border border-slate-200/60 bg-slate-50">
-                            {[1, 2, 3, 4, 5].map((stars) => (
-                              <button
-                                key={stars}
-                                onClick={() => handleWeaknessConfidenceChange(idx, stars)}
-                                className={`w-7 h-7 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                                  w.confidence >= stars
-                                    ? "bg-indigo-600 text-white shadow-xs"
-                                    : "text-slate-400 hover:text-slate-650"
-                                }`}
-                              >
-                                {stars}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Difficulty</label>
-                          <div className="flex bg-slate-50 p-0.5 rounded-xl border border-slate-200/60">
-                            {(["Easy", "Medium", "Hard"] as const).map((diff) => (
-                              <button
-                                key={diff}
-                                onClick={() => handleWeaknessDifficultyChange(idx, diff)}
-                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                  w.difficulty === diff
-                                    ? "bg-white text-slate-900 shadow-xs"
-                                    : "text-slate-400 hover:text-slate-700"
-                                }`}
-                              >
-                                {diff}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => handleRemoveSubject(idx)}
-                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-rose-50/50 transition-all cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <StepWeakness
+                  draft={draft}
+                  errors={errors}
+                  customSubjectName={customSubjectName}
+                  setCustomSubjectName={setCustomSubjectName}
+                  onAddCustomSubject={handleAddCustomSubject}
+                  onRemoveSubject={handleRemoveSubject}
+                  onWeaknessConfidenceChange={handleWeaknessConfidenceChange}
+                  onWeaknessDifficultyChange={handleWeaknessDifficultyChange}
+                />
               )}
 
-              {/* STEP 7: Review summary */}
               {currentStep === 7 && (
-                <div className="space-y-6">
-                  {/* Performance projection panel */}
-                  <div className="bg-gradient-to-r from-indigo-600 to-violet-650 text-white p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-                    <div className="space-y-2 relative z-10">
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-indigo-500/80 border border-indigo-400/50 px-3 py-1 rounded-full">
-                        Calibration Forecast Established
-                      </span>
-                      <h4 className="text-xl font-black">Calibration Projections Calculated!</h4>
-                      <p className="text-indigo-100 text-xs max-w-md">The ExamForge engine combined your inputs from all steps to calibrate target metrics</p>
-                    </div>
-
-                    <div className="flex items-center gap-4 bg-indigo-700/40 p-4.5 rounded-2xl border border-indigo-500/40 relative z-10 shrink-0">
-                      <div className="text-center">
-                        <span className="text-[9px] text-indigo-200 uppercase font-black tracking-wider">Success Prediction</span>
-                        <p className="text-3xl font-black mt-1">{draft.timeline?.successPrediction || 65}%</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Calculations math breakdown (Aesthetics/Predict correct analysis) */}
-                  <div className="bg-white border border-slate-200/60 rounded-3xl p-6 space-y-4">
-                    <h5 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
-                      <Sparkles className="w-4.5 h-4.5 text-amber-500 animate-pulse" /> Success Predictor Calculation Math
-                    </h5>
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-semibold text-slate-500">
-                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">1. Baseline Level</span>
-                        <span className="text-sm font-black text-slate-800 mt-1 block">50.0%</span>
-                        <p className="text-[9px] text-slate-400 mt-1">Base probability chance</p>
-                      </div>
-
-                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">2. Hours Multiplier</span>
-                        <span className="text-sm font-black text-indigo-650 mt-1 block">+{((draft.timeline?.dailyStudyHours || 8) * 2.5).toFixed(1)}%</span>
-                        <p className="text-[9px] text-slate-400 mt-1">Based on {draft.timeline?.dailyStudyHours || 8} study hrs</p>
-                      </div>
-
-                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">3. Study Formats Bonus</span>
-                        <span className="text-sm font-black text-emerald-600 mt-1 block">+{((draft.preferences?.length || 0) * 1.5).toFixed(1)}%</span>
-                        <p className="text-[9px] text-slate-400 mt-1">Based on {draft.preferences?.length || 0} active modes</p>
-                      </div>
-
-                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/40">
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">4. Weakness Buffer</span>
-                        <span className="text-sm font-black text-amber-605 mt-1 block">
-                          -{(Math.max(0, 10 - ((draft.weaknesses || []).reduce((acc, w) => acc + w.confidence, 0) / ((draft.weaknesses || []).length || 1)) * 2)).toFixed(1)}%
-                        </span>
-                        <p className="text-[9px] text-slate-400 mt-1">Average weakness ratings drag</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left Column: Profile, Timeline & Environment */}
-                    <div className="md:col-span-2 space-y-5 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-3xs">
-                      <h5 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-3">Profile & Logistics</h5>
-                      <div className="grid grid-cols-2 gap-5 text-xs font-semibold text-slate-700">
-                        <div className="space-y-1">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Aspirant Name</span>
-                          <p className="font-black text-slate-800">{draft.profile?.fullName || "Student"}</p>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Exam Category</span>
-                          <p className="font-black text-slate-800">{draft.targetExam} ({draft.examCategory || "Custom"})</p>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Syllabus Status</span>
-                          <p className="font-black text-slate-800">{draft.profile?.syllabusPercent || 0}% Complete</p>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Exam Date</span>
-                          <p className="font-black text-slate-800">{draft.timeline?.examDate} ({draft.timeline?.remainingDays} Days Left)</p>
-                        </div>
-                        <div className="space-y-2 col-span-2 border-t border-slate-100 pt-4.5 grid grid-cols-2 gap-4">
-                          <div>
-                            <span className="text-[9px] text-slate-400 uppercase font-bold block">Study Environment</span>
-                            <p className="font-bold text-slate-700">{draft.lifestyle?.learningEnvironment || "Quiet Study Room"}</p>
-                          </div>
-                          <div>
-                            <span className="text-[9px] text-slate-400 uppercase font-bold block">Study Slots / Device</span>
-                            <p className="font-bold text-slate-700">{draft.lifestyle?.slots?.join(", ")} via {draft.lifestyle?.preferredDevice}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Column: Step 6 selections list (Subject Confidence Model) */}
-                    <div className="space-y-5 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-3xs">
-                      <h5 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-3">Weak Subjects</h5>
-                      <div className="space-y-3 max-h-[190px] overflow-y-auto pr-1 custom-scrollbar">
-                        {(draft.weaknesses || [])
-                          .filter((w) => w.confidence <= 3 || w.priority === "High" || w.priority === "Medium")
-                          .map((w, index) => (
-                            <div key={index} className="flex flex-col gap-2 bg-slate-50 border border-slate-200/40 p-3.5 rounded-xl text-xs font-bold">
-                              <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                  <Star className={`w-4 h-4 shrink-0 ${
-                                    w.priority === "High"
-                                      ? "fill-rose-500 text-rose-500 animate-pulse"
-                                      : w.priority === "Medium"
-                                        ? "fill-amber-500 text-amber-500"
-                                        : "fill-emerald-500 text-emerald-500"
-                                  }`} />
-                                  <span className="text-slate-800 font-extrabold truncate max-w-[125px]">{w.subject}</span>
-                                </div>
-                                <span className="text-[9px] text-slate-400 font-black uppercase tracking-wider">{w.difficulty}</span>
-                              </div>
-
-                              <div className="flex justify-between items-center border-t border-slate-200/50 pt-2.5 mt-1">
-                                <span className="text-[8px] text-slate-400 font-black uppercase tracking-widest">Confidence</span>
-                                <span className="flex items-center gap-0.5">
-                                  {[...Array(5)].map((_, i) => {
-                                    const isFilled = i < w.confidence;
-                                    return (
-                                      <Star
-                                        key={i}
-                                        className={`w-3.5 h-3.5 ${isFilled ? "fill-amber-400 text-amber-400" : "text-slate-355"}`}
-                                      />
-                                    );
-                                  })}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <StepProjections
+                  draft={draft}
+                  theme={theme}
+                />
               )}
             </motion.div>
           </AnimatePresence>
@@ -1385,19 +818,19 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="p-3 bg-white border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-800 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer shadow-xs flex items-center justify-center"
+            className="p-3 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center rounded-xl transition-all duration-300 hover:scale-[1.05] shadow-md border border-emerald-600 text-slate-950"
             title="Previous Step"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5.5 h-5.5 stroke-[3px]" />
           </button>
 
           <button
             onClick={handleNext}
-            className="bg-indigo-600 hover:bg-indigo-750 text-white font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl flex items-center gap-2 transition-all shadow-md cursor-pointer hover:scale-[1.02] hover:shadow-lg"
+            className={`${stepStyles.btnBg} font-black text-xs uppercase tracking-wider px-5 py-3.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-sm`}
             title={currentStep === 7 ? "Launch success engine" : "Save & Continue"}
           >
             <span>{currentStep === 7 ? "Launch Engine" : "Next Step"}</span>
-            {currentStep === 7 ? <Trophy className="w-4.5 h-4.5 text-amber-350 animate-bounce" /> : <ChevronRight className="w-4.5 h-4.5" />}
+            {currentStep === 7 ? <Trophy className="w-4.5 h-4.5 text-amber-350" /> : <ChevronRight className="w-4.5 h-4.5" />}
           </button>
         </div>
       </motion.div>

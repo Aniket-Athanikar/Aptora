@@ -1,0 +1,17 @@
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
+export function navigate(router: AppRouterInstance, tab: string, sub?: string) {
+  if (tab === "home") return router.push("/");
+  if (tab === "dashboard") return router.push("/dashboard");
+  if (tab === "ai") return router.push("/dashboard/ai");
+  if (tab === "progress") return router.push("/dashboard/progress");
+  if (tab === "analytics") return router.push("/dashboard/analytics");
+  if (tab === "achievements") return router.push("/dashboard/achievements");
+  if (tab === "coach") return router.push("/dashboard/coach");
+  if (tab === "notifications") return router.push("/dashboard/notifications");
+
+  if (tab === "knowledge" && sub) {
+    return router.push(`/dashboard?tab=knowledge&sub=${sub}`);
+  }
+  return router.push(`/dashboard?tab=${tab}`);
+}

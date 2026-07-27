@@ -113,6 +113,7 @@ export default function BlogPage() {
                   src={featuredPost.image}
                   alt={featuredPost.title}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
@@ -169,6 +170,7 @@ export default function BlogPage() {
                       src={post.image}
                       alt={post.title}
                       fill
+                      sizes="(max-width: 768px) 112px, 128px"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

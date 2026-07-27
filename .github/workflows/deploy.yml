@@ -2,19 +2,24 @@ name: Deploy Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     tags: ["v*"]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ${{ github.repository }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
 jobs:
+  # ──────────────────────────────────────────────
+  # Build and Push Container Images
+  # ──────────────────────────────────────────────
   build-and-push:
     name: Build & Push Docker Images
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     strategy:
@@ -23,6 +28,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
@@ -36,8 +43,14 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=sha-
 
-      - name: Build and push
+      - name: Build and push production image
         uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.service }}
@@ -45,3 +58,82 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ──────────────────────────────────────────────
+  # Deploy Stages
+  # ──────────────────────────────────────────────
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set Kubernetes Context (Staging)
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_STAGING }}
+
+      - name: Deploy Manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/configmap.yaml -n staging
+          kubectl apply -f k8s/secret.yaml -n staging
+          kubectl apply -f k8s/network-policy.yaml -n staging
+          kubectl apply -f k8s/db-statefulset.yaml -n staging
+          kubectl apply -f k8s/redis-statefulset.yaml -n staging
+          kubectl apply -f k8s/backend-deployment.yaml -n staging
+          kubectl apply -f k8s/frontend-deployment.yaml -n staging
+          kubectl apply -f k8s/ingress.yaml -n staging
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set Kubernetes Context (Production)
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_PRODUCTION }}
+
+      - name: Deploy Manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/configmap.yaml -n production
+          kubectl apply -f k8s/secret.yaml -n production
+          kubectl apply -f k8s/network-policy.yaml -n production
+          kubectl apply -f k8s/db-statefulset.yaml -n production
+          kubectl apply -f k8s/redis-statefulset.yaml -n production
+          kubectl apply -f k8s/backend-deployment.yaml -n production
+          kubectl apply -f k8s/frontend-deployment.yaml -n production
+          kubectl apply -f k8s/ingress.yaml -n production
+
+      # Create GitHub Release & Auto-Changelog
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "examforge.fullname" . }}-backend
+  labels:
+    app: {{ include "examforge.name" . }}-backend
+spec:
+  ports:
+  - port: {{ .Values.service.backendPort }}
+    targetPort: {{ .Values.service.backendPort }}
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ include "examforge.name" . }}-backend

@@ -68,6 +68,14 @@ async def lifespan(app: FastAPI):
 
     logger.info("Shutting down ExamForge AI Backend...")
 
+# Flush Redis cache on startup
+if redis_client:
+    try:
+        redis_client.flushdb()
+        logger.info("Redis database cache flushed successfully on startup.")
+    except Exception as e:
+        logger.error(f"Error flushing Redis cache on startup: {e}")
+
 # Include all API routes via the central router
 from app.api.router import api_router
 app.include_router(api_router)

@@ -8,11 +8,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+      },
     ],
   },
-  experimental: {
-    webpackBuildWorker: false,
+
+  transpilePackages: ["motion-dom", "framer-motion", "motion"],
+
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = false; // Disable disk caching to prevent 1.5GB+ disk bloat
+    }
+    return config;
   },
+
   eslint: {
     ignoreDuringBuilds: true,
   },

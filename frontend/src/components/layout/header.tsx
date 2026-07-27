@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Avatar } from '@/components/ui/avatar';
+import { Button, Avatar } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
 import { Search, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -21,7 +20,7 @@ export function Header() {
   const { user, isAuthenticated } = useAuthStore();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.03)]">
+    <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-[var(--surface)]/70 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.03)]">
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         {/* Brand/Logo */}
         <div className="flex items-center gap-10">
@@ -80,7 +79,7 @@ export function Header() {
               </Link>
               <Link href="/profile" className="relative group shrink-0 transition-transform duration-300 hover:scale-105">
                 <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-60 blur-xs" />
-                <Avatar src={user?.avatarUrl} fallback={user?.name || user?.email} size="sm" className="relative border-2 border-white shadow-sm" />
+                <Avatar src={user?.avatar || user?.avatarUrl} fallback={user?.name || user?.email} size="sm" className="relative border-2 border-white shadow-sm" />
               </Link>
             </div>
           ) : (

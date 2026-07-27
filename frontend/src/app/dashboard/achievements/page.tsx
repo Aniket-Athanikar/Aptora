@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { BadgeGrid } from "@/features/achievements/components/BadgeGrid";
 import { UnlockModal } from "@/features/achievements/components/UnlockModal";
 import { useAchievementStore, Achievement } from "@/features/achievements/achievementEngine";

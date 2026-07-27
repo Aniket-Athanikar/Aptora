@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo } from "react";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { StudyChart } from "@/features/analytics/components/StudyChart";
 import { ProgressChart } from "@/features/analytics/components/ProgressChart";
 import { SubjectChart } from "@/features/analytics/components/SubjectChart";

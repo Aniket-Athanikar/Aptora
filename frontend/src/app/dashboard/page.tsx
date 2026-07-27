@@ -4,19 +4,21 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
-import { GoalCard } from "@/components/dashboard/goal-card";
+import {
+  DashboardLayout,
+  GoalCard,
+  Recommendations,
+  HistoryVersioning,
+  GoalPlanPanel,
+  Calendar2026,
+  RealtimeHub,
+  AnimatedWizard,
+} from "@/components/dashboard";
 import { RoadmapTimeline } from "@/features/planner/components/RoadmapTimeline";
 import { DailyPlanner } from "@/features/planner/components/DailyPlanner";
-import { Recommendations } from "@/components/dashboard/recommendations";
-import { HistoryVersioning } from "@/components/dashboard/history-versioning";
 import { FocusTimer } from "@/features/planner/components/FocusTimer";
-import { AnimatedWizard } from "@/components/dashboard/wizard/animated-wizard";
-import { GoalPlanPanel } from "@/components/dashboard/goal-plan-panel";
 import { Sparkles, Compass } from "lucide-react";
 import { AIPlanner } from "@/features/planner/components/AIPlanner";
-import { Calendar2026 } from "@/components/dashboard/calendar-2026";
-import { RealtimeHub } from "@/components/dashboard/RealtimeHub";
 import { usePlanner } from "@/features/planner/hooks/usePlanner";
 import { KnowledgeEngine } from "@/features/knowledge-engine";
 

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "examforge.fullname" . }}-frontend
+  labels:
+    app: {{ include "examforge.name" . }}-frontend
+spec:
+  replicas: {{ .Values.replicaCount.frontend }}
+  selector:
+    matchLabels:
+      app: {{ include "examforge.name" . }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ include "examforge.name" . }}-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}/frontend:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.frontendPort }}
+          name: http
+        envFrom:
+        - configMapRef:
+            name: {{ include "examforge.fullname" . }}-config
+        resources:
+          {{- toYaml .Values.resources.frontend | nindent 10 }}

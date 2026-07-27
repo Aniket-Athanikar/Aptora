@@ -11,6 +11,8 @@ import {
   AchievementItem
 } from "@/types/goal.types";
 import { goalService } from "@/services/goal.service";
+import { useAuth } from "@/lib/auth-context";
+import { profileService } from "@/services";
 
 // Define context state type
 interface GoalEngineState {
@@ -573,15 +575,106 @@ interface GoalEngineContextType extends GoalEngineState {
 
 const GoalEngineContext = createContext<GoalEngineContextType | undefined>(undefined);
 
+const mapGoalToProfilePayload = (goal: GoalData) => {
+  const weak = goal.weaknesses.filter(w => w.confidence <= 2).map(w => w.subject);
+  const strong = goal.weaknesses.filter(w => w.confidence >= 4).map(w => w.subject);
+  const fav = goal.weaknesses.filter(w => w.confidence === 3).map(w => w.subject);
+
+  return {
+    name: goal.profile.fullName,
+    location: goal.profile.city,
+    education: goal.profile.education,
+    avatar_url: goal.profile.avatar,
+    target_exam: goal.targetExam,
+    study_hours_goal: goal.timeline.dailyStudyHours,
+    target_date: goal.timeline.examDate,
+    weak_subjects: weak,
+    strong_subjects: strong,
+    favorite_subjects: fav,
+    completion_pct: goal.profile.syllabusPercent,
+  };
+};
+
 export function GoalEngineProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(goalEngineReducer, initialState);
+  const { user, login } = useAuth();
 
-  // Hydrate all dashboard business data from PostgreSQL.
+  // Load from services and backend database on mount
   useEffect(() => {
-    goalService.getWorkspace()
-      .then(({ activeGoal, history, wizardState }) => dispatch({ type: "HYDRATE_STATE", payload: { activeGoal, history, wizardState } }))
-      .catch((error) => console.error("API Error", error));
-  }, []);
+    const loadGoal = async () => {
+      let activeGoal = goalService.getActiveGoal();
+
+      if (user?.email) {
+        try {
+          const res = await profileService.getProfile(user.email) as any;
+          if (res && res.success && res.profile && res.profile.target_exam) {
+            const profile = res.profile;
+            const mergedGoal: GoalData = {
+              id: activeGoal?.id || `goal_${Date.now()}`,
+              targetExam: profile.target_exam || activeGoal?.targetExam || "UPSC CSE",
+              examCategory: activeGoal?.examCategory || "General",
+              profile: {
+                fullName: profile.name || activeGoal?.profile.fullName || "Student",
+                avatar: profile.avatar_url || activeGoal?.profile.avatar || "Felix",
+                education: profile.education || activeGoal?.profile.education || "Undergraduate",
+                stream: activeGoal?.profile.stream || "General",
+                city: profile.location || activeGoal?.profile.city || "New Delhi",
+                occupation: profile.occupation || activeGoal?.profile.occupation || "Student",
+                age: activeGoal?.profile.age || 22,
+                gender: profile.gender || activeGoal?.profile.gender || "Not Specified",
+                syllabusPercent: profile.completion_pct || activeGoal?.profile.syllabusPercent || 0,
+                currentConfidence: profile.mock_average ? Math.round(profile.mock_average / 20) : (activeGoal?.profile.currentConfidence || 3)
+              },
+              timeline: {
+                examDate: profile.target_date || activeGoal?.timeline.examDate || "2026-06-07",
+                dailyStudyHours: profile.study_hours_goal || activeGoal?.timeline.dailyStudyHours || 8,
+                burnoutRisk: (profile.study_hours_goal || 8) >= 11 ? "High" : (profile.study_hours_goal || 8) >= 8 ? "Moderate" : "Low",
+                difficulty: activeGoal?.timeline.difficulty || "Hard",
+                successPrediction: activeGoal?.timeline.successPrediction || 72,
+                remainingDays: activeGoal?.timeline.remainingDays || 300
+              },
+              lifestyle: {
+                slots: activeGoal?.lifestyle.slots || ["Morning"],
+                dailyHours: profile.study_hours_goal || activeGoal?.lifestyle.dailyHours || 8,
+                preferredDevice: activeGoal?.lifestyle.preferredDevice || "Laptop & Tablet",
+                learningEnvironment: activeGoal?.lifestyle.learningEnvironment || "Quiet Study Room",
+                internetAvailability: activeGoal?.lifestyle.internetAvailability || "Always Connected (High Speed WiFi)",
+                consistency: activeGoal?.lifestyle.consistency || ["Daily Tracker"]
+              },
+              preferences: activeGoal?.preferences || ["Flashcards", "Practice Loops"],
+              weaknesses: activeGoal?.weaknesses || (profile.weak_subjects || []).map((sub: string) => ({
+                subject: sub,
+                confidence: 2,
+                difficulty: "Medium" as const,
+                weaknessScore: 60,
+                priority: "High" as const,
+                aiRecommendation: `Reinforce study loops for ${sub}`
+              })),
+              summary: activeGoal?.summary || `Calibrated goal configuration for ${profile.target_exam}`,
+              isPinned: activeGoal?.isPinned || false,
+              isArchived: activeGoal?.isArchived || false,
+              isFavorite: activeGoal?.isFavorite || false,
+              createdAt: activeGoal?.createdAt || new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            };
+            activeGoal = mergedGoal;
+            goalService.saveActiveGoal(mergedGoal, "Database Sync Hydration");
+          }
+        } catch (dbErr) {
+          console.warn("Could not load goal from DB, using local storage:", dbErr);
+        }
+      }
+
+      const history = goalService.getHistory();
+      const wizardState = goalService.getWizardState();
+
+      dispatch({
+        type: "HYDRATE_STATE",
+        payload: { activeGoal, history, wizardState }
+      });
+    };
+    loadGoal();
+  }, [user]);
 
   // Tick study timer
   useEffect(() => {
@@ -615,26 +708,77 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
   const redoWizardDraft = () => dispatch({ type: "WIZARD_REDO" });
 
   const completeWizard = async (goal: GoalData, changeDesc: string) => {
-    try {
-      const workspace = await goalService.saveActiveGoal(goal, changeDesc);
-      dispatch({ type: "HYDRATE_STATE", payload: workspace });
-    } catch (error) { console.error("API Error", error); }
+    goalService.saveActiveGoal(goal, changeDesc);
+    goalService.clearWizardState();
+    dispatch({ type: "COMPLETE_WIZARD", payload: goal });
+
+    // Sync to backend database
+    if (user?.email) {
+      try {
+        const payload = mapGoalToProfilePayload(goal);
+        await profileService.updateProfile(user.email, payload);
+        // Sync to local auth context immediately
+        login({
+          name: goal.profile.fullName,
+          email: user.email,
+          avatar: goal.profile.avatar,
+        });
+      } catch (dbErr) {
+        console.warn("Database sync warning from completeWizard:", dbErr);
+      }
+    }
   };
 
   const deleteGoal = async () => {
-    try { const workspace = await goalService.deleteActiveGoal(); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
-    catch (error) { console.error("API Error", error); }
-  };
+  try {
+    const workspace = await goalService.deleteActiveGoal();
 
-  const restoreVersion = async (version: number) => {
-    try { const workspace = await goalService.restoreVersion(version); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
-    catch (error) { console.error("API Error", error); }
-  };
+    dispatch({
+      type: "HYDRATE_STATE",
+      payload: {
+        activeGoal: workspace.activeGoal ?? null,
+        history: workspace.history ?? [],
+        wizardState: workspace.wizardState ?? null,
+      },
+    });
+  } catch (error) {
+    console.error("API Error", error);
+  }
+};
 
-  const deleteVersion = async (version: number) => {
-    try { const workspace = await goalService.deleteHistoryVersion(version); dispatch({ type: "HYDRATE_STATE", payload: workspace }); }
-    catch (error) { console.error("API Error", error); }
-  };
+const restoreVersion = async (version: number) => {
+  try {
+    const workspace = await goalService.restoreVersion(version);
+
+    dispatch({
+      type: "HYDRATE_STATE",
+      payload: {
+        activeGoal: workspace.activeGoal ?? null,
+        history: workspace.history ?? [],
+        wizardState: workspace.wizardState ?? null,
+      },
+    });
+  } catch (error) {
+    console.error("API Error", error);
+  }
+};
+
+const deleteVersion = async (version: number) => {
+  try {
+    const workspace = await goalService.deleteHistoryVersion(version);
+
+    dispatch({
+      type: "HYDRATE_STATE",
+      payload: {
+        activeGoal: workspace.activeGoal ?? null,
+        history: workspace.history ?? [],
+        wizardState: workspace.wizardState ?? null,
+      },
+    });
+  } catch (error) {
+    console.error("API Error", error);
+  }
+};
 
   const toggleMission = (id: string) => dispatch({ type: "TOGGLE_MISSION", payload: id });
 

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "examforge.fullname" . }}-backend
+  labels:
+    app: {{ include "examforge.name" . }}-backend
+spec:
+  replicas: {{ .Values.replicaCount.backend }}
+  selector:
+    matchLabels:
+      app: {{ include "examforge.name" . }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ include "examforge.name" . }}-backend
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}/backend:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.backendPort }}
+          name: http
+        envFrom:
+        - configMapRef:
+            name: {{ include "examforge.fullname" . }}-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "examforge.fullname" . }}-secret
+              key: DB_PASSWORD
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "examforge.fullname" . }}-secret
+              key: SECRET_KEY
+        resources:
+          {{- toYaml .Values.resources.backend | nindent 10 }}

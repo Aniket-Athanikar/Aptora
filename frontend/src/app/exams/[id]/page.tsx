@@ -368,7 +368,7 @@ export default function ExamDetail() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-6 md:p-8 shadow-md"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-[var(--surface)]/70 backdrop-blur-xl border border-white/20 rounded-[24px] p-6 md:p-8 shadow-md"
         >
           <div className="space-y-1">
             <span className="text-xs font-bold text-neutral-400 block uppercase">Available Content</span>
@@ -419,7 +419,7 @@ export default function ExamDetail() {
                 <motion.div
                   key={sIdx}
                   variants={itemVariants}
-                  className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-6 md:p-8 shadow-sm"
+                  className="bg-[var(--surface)]/70 backdrop-blur-xl border border-white/20 rounded-[24px] p-6 md:p-8 shadow-sm"
                 >
                   <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2 mb-4">
                     <Target className="w-5 h-5 text-[#6D4AFF]" /> {syl.name}
@@ -449,7 +449,7 @@ export default function ExamDetail() {
             className="lg:col-span-4 space-y-6 lg:sticky lg:top-24"
           >
             {/* Highlights Card */}
-            <div className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-md space-y-6">
+            <div className="bg-[var(--surface)]/70 backdrop-blur-xl border border-white/20 rounded-[24px] p-8 shadow-md space-y-6">
               <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2">
                 <Award className="w-5 h-5 text-[#6D4AFF]" /> Exam Highlights
               </h3>

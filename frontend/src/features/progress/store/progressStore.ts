@@ -1,4 +1,4 @@
-﻿import { create } from "zustand";
+import { create } from "zustand";
 
 export interface SubjectProgressData {
   subject: string;
@@ -33,6 +33,7 @@ interface ProgressStore {
   incrementStreak: () => void;
   updateTaskCompletion: (subject: string, completed: boolean) => void;
   loadFromLocalStorage: () => void;
+  updateDailyActivity: (date: string, hours: number, tasksCompleted: number, status: "completed" | "partial" | "missed") => void;
 }
 
 export const useProgressStore = create<ProgressStore>((set, get) => ({
@@ -53,8 +54,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     { subject: "Mathematics", completedTasks: 30, totalTasks: 100, completionPercentage: 30, confidence: 3, revisionStatus: "Needs Review" },
     { subject: "Reasoning", completedTasks: 65, totalTasks: 100, completionPercentage: 65, confidence: 4, revisionStatus: "Good" },
   ],
-  activityHistory: [], // Will populate with past 30 days for heatmap
-
+  activityHistory: [], // Will populate with past 365 days for heatmap
+ 
   initializeProgress: (goalId, weaknesses) => {
     // Generate active subject progress matching goal configuration
     const initialSubjects = [
@@ -83,16 +84,16 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     const totalT = subjectProgress.reduce((sum, s) => sum + s.totalTasks, 0);
     const overallPercentage = Math.round((totalCompleted / totalT) * 100);
 
-    // Generate mock heatmap history (past 30 days)
+    // Generate mock heatmap history (past 365 days)
     const history: ActivityHistoryItem[] = [];
     const now = new Date();
-    for (let i = 30; i >= 0; i--) {
+    for (let i = 365; i >= 0; i--) {
       const d = new Date();
       d.setDate(now.getDate() - i);
       const dateStr = d.toISOString().split("T")[0];
-      const hours = Math.random() > 0.2 ? Math.round(1 + Math.random() * 7) : 0;
+      const hours = Math.random() > 0.25 ? Math.round(1 + Math.random() * 7) : 0;
       const tasksCompleted = hours > 4 ? 3 : hours > 0 ? 1 : 0;
-      const status = hours > 4 ? "completed" : hours > 0 ? "partial" : "missed";
+      const status = hours > 4 ? ("completed" as const) : hours > 0 ? ("partial" as const) : ("missed" as const);
       history.push({ date: dateStr, hours, tasksCompleted, status });
     }
 
@@ -243,16 +244,16 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       if (storedHistory) {
         set({ activityHistory: JSON.parse(storedHistory) });
       } else {
-        // Generate mock activity history for heatmap
+        // Generate mock activity history for heatmap (past 365 days)
         const history: ActivityHistoryItem[] = [];
         const now = new Date();
-        for (let i = 30; i >= 0; i--) {
+        for (let i = 365; i >= 0; i--) {
           const d = new Date();
           d.setDate(now.getDate() - i);
           const dateStr = d.toISOString().split("T")[0];
-          const hours = Math.random() > 0.2 ? Math.round(1 + Math.random() * 7) : 0;
+          const hours = Math.random() > 0.25 ? Math.round(1 + Math.random() * 7) : 0;
           const tasksCompleted = hours > 4 ? 3 : hours > 0 ? 1 : 0;
-          const status = hours > 4 ? "completed" : hours > 0 ? "partial" : "missed";
+          const status = hours > 4 ? ("completed" as const) : hours > 0 ? ("partial" as const) : ("missed" as const);
           history.push({ date: dateStr, hours, tasksCompleted, status });
         }
         set({ activityHistory: history });
@@ -267,5 +268,33 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     } catch (e) {
       console.error("Failed to load progress from localStorage", e);
     }
+  },
+
+  updateDailyActivity: (date, hours, tasksCompleted, status) => {
+    const activityHistory = get().activityHistory.map((h) => {
+      if (h.date === date) {
+        return { ...h, hours, tasksCompleted, status };
+      }
+      return h;
+    });
+
+    const exists = get().activityHistory.some(h => h.date === date);
+    if (!exists) {
+      activityHistory.push({ date, hours, tasksCompleted, status });
+    }
+
+    const nextTotalHours = Number(activityHistory.reduce((sum, h) => sum + h.hours, 0).toFixed(1));
+    const nextCompletedTasks = activityHistory.reduce((sum, h) => sum + h.tasksCompleted, 0);
+
+    const newState = {
+      activityHistory,
+      totalHours: nextTotalHours,
+      completedTasks: nextCompletedTasks,
+      lastUpdated: new Date().toISOString()
+    };
+
+    set(newState);
+    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("examforge_activity_history", JSON.stringify(activityHistory));
   }
 }));

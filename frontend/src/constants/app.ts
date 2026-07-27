@@ -32,8 +32,8 @@ export const MAX_PASSING_SCORE = 100;
 export const DEFAULT_PASSING_SCORE = 70;
 
 // UI
-export const SIDEBAR_WIDTH = 256;
-export const SIDEBAR_COLLAPSED_WIDTH = 64;
+export const SIDEBAR_WIDTH = 240;
+export const SIDEBAR_COLLAPSED_WIDTH = 80;
 export const HEADER_HEIGHT = 64;
 export const MOBILE_BREAKPOINT = 768;
 export const TABLET_BREAKPOINT = 1024;

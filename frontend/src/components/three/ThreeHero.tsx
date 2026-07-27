@@ -5,38 +5,74 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
 
-function NeuralParticles() {
-  const pointsRef = useRef<THREE.Points>(null);
-  const { mouse, viewport } = useThree();
-
-  const count = 1200;
-
-  // Create random particles
-  const [positions, originalPositions] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const orig = new Float32Array(count * 3);
-
-    for (let i = 0; i < count; i++) {
-      // Create cluster positions around a central neural field
-      const r = 2.5 + Math.random() * 3.5;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.sin(phi) * Math.sin(theta);
-      const z = r * Math.cos(phi);
-
-      pos[i * 3] = x;
-      pos[i * 3 + 1] = y;
-      pos[i * 3 + 2] = z;
-
-      orig[i * 3] = x;
-      orig[i * 3 + 1] = y;
-      orig[i * 3 + 2] = z;
+// Suppress THREE.Clock deprecation warnings from third-party libraries (e.g. R3F)
+if (typeof window !== "undefined") {
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      (args[0].includes("THREE.Clock") || args[0].includes("ThreeHero.tsx"))
+    ) {
+      return;
     }
+    originalWarn(...args);
+  };
+}
 
-    return [pos, orig];
+// Helper to create a high-quality radial glow texture dynamically
+function useGlowTexture() {
+  return useMemo(() => {
+    if (typeof window === "undefined") return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    grad.addColorStop(0.25, "rgba(139, 92, 246, 0.85)"); // violet-500
+    grad.addColorStop(0.55, "rgba(99, 102, 241, 0.3)");   // indigo-500
+    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
   }, []);
+}
+
+function GlowingWavingGrid() {
+  const pointsRef = useRef<THREE.Points>(null);
+  const { mouse } = useThree();
+  const glowTexture = useGlowTexture();
+
+  // Grid dimensions
+  const widthCount = 45;
+  const depthCount = 45;
+  const count = widthCount * depthCount;
+
+  // Generate initial grid position coordinates
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const spacing = 0.25;
+
+    for (let i = 0; i < widthCount; i++) {
+      for (let j = 0; j < depthCount; j++) {
+        const index = (i * depthCount + j) * 3;
+        // Center the grid around origin
+        const x = (i - widthCount / 2) * spacing;
+        const z = (j - depthCount / 2) * spacing;
+        pos[index] = x;
+        pos[index + 1] = 0; // Will be animated
+        pos[index + 2] = z;
+      }
+    }
+    return pos;
+  }, [count]);
 
   useFrame((state) => {
     if (!pointsRef.current) return;
@@ -44,54 +80,31 @@ function NeuralParticles() {
     const posAttr = geo.attributes.position;
     const time = state.clock.getElapsedTime();
 
-    // Map normalized mouse to three.js coordinates
-    const targetX = (mouse.x * viewport.width) / 2;
-    const targetY = (mouse.y * viewport.height) / 2;
+    for (let i = 0; i < widthCount; i++) {
+      for (let j = 0; j < depthCount; j++) {
+        const index = i * depthCount + j;
+        const x = posAttr.getX(index);
+        const z = posAttr.getZ(index);
 
-    for (let i = 0; i < count; i++) {
-      const idx = i * 3;
-      let px = posAttr.getX(i);
-      let py = posAttr.getY(i);
-      let pz = posAttr.getZ(i);
+        // Multi-frequency wave pattern for organic, natural waving motion
+        const wave1 = Math.sin(x * 0.4 + time * 1.2) * 0.45;
+        const wave2 = Math.cos(z * 0.35 + time * 1.0) * 0.45;
+        const wave3 = Math.sin((x + z) * 0.2 + time * 0.8) * 0.3;
 
-      // Original base coordinates
-      const ox = originalPositions[idx];
-      const oy = originalPositions[idx + 1];
-      const oz = originalPositions[idx + 2];
+        // Interactive mouse height distortion
+        const dx = x - mouse.x * 6;
+        const dz = z - mouse.y * 6;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        const mouseEffect = dist < 3.0 ? (3.0 - dist) * 0.35 : 0;
 
-      // Subtle float animation
-      const floatX = Math.sin(time * 0.5 + ox) * 0.04;
-      const floatY = Math.cos(time * 0.4 + oy) * 0.04;
-      const floatZ = Math.sin(time * 0.6 + oz) * 0.04;
-
-      const baseTargetX = ox + floatX;
-      const baseTargetY = oy + floatY;
-      const baseTargetZ = oz + floatZ;
-
-      // Mouse repulsion calculations
-      const dx = px - targetX;
-      const dy = py - targetY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 2.0) {
-        // Apply repulsion force inversely proportional to distance
-        const force = (2.0 - dist) * 0.08;
-        px += (dx / dist) * force;
-        py += (dy / dist) * force;
+        posAttr.setY(index, wave1 + wave2 + wave3 + mouseEffect);
       }
-
-      // Smooth return to base positions
-      px += (baseTargetX - px) * 0.06;
-      py += (baseTargetY - py) * 0.06;
-      pz += (baseTargetZ - pz) * 0.06;
-
-      posAttr.setXYZ(i, px, py, pz);
     }
     posAttr.needsUpdate = true;
 
-    // Rotate points group slowly
-    pointsRef.current.rotation.y = time * 0.03;
-    pointsRef.current.rotation.x = time * 0.015;
+    // Gentle global rotation based on mouse or time
+    pointsRef.current.rotation.y = time * 0.05 + mouse.x * 0.15;
+    pointsRef.current.rotation.x = 0.3 + mouse.y * 0.1;
   });
 
   return (
@@ -102,57 +115,103 @@ function NeuralParticles() {
           args={[positions, 3]}
         />
       </bufferGeometry>
-      <pointsMaterial
-        color="#8B5CF6"
-        size={0.06}
-        sizeAttenuation={true}
-        transparent={true}
-        opacity={0.7}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
+      {glowTexture && (
+        <pointsMaterial
+          size={0.24}
+          sizeAttenuation={true}
+          transparent={true}
+          opacity={0.9}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          map={glowTexture}
+        />
+      )}
     </points>
   );
 }
 
-function FloatingSpheres() {
+function FloatingGlassmorphicShapes() {
   return (
     <>
-      {[
-        { pos: [-2, 1.5, 0], scale: 0.6 },
-        { pos: [2.5, -1, 1], scale: 0.4 },
-        { pos: [-1, -2, -1], scale: 0.3 },
-      ].map((item, idx) => (
-        <Float key={idx} speed={1.5} rotationIntensity={1.5} floatIntensity={1.5}>
-          <mesh position={item.pos as [number, number, number]}>
-            <sphereGeometry args={[item.scale, 32, 32]} />
-            <meshPhysicalMaterial
-              roughness={0.05}
-              transmission={0.9}
-              thickness={0.8}
-              ior={1.5}
-              clearcoat={1.0}
-              clearcoatRoughness={0.1}
-              color="#A855F7"
-            />
-          </mesh>
-        </Float>
-      ))}
+      {/* Central Ring / Torus */}
+      <Float speed={2.0} rotationIntensity={1.8} floatIntensity={1.5}>
+        <mesh position={[2.8, 1.2, -1]}>
+          <torusGeometry args={[0.7, 0.22, 16, 100]} />
+          <meshPhysicalMaterial
+            roughness={0.1}
+            transmission={0.95}
+            thickness={1.2}
+            ior={1.6}
+            clearcoat={1.0}
+            clearcoatRoughness={0.1}
+            color="#A855F7"
+            emissive="#6D4AFF"
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+      </Float>
+
+      {/* Modern Octahedron */}
+      <Float speed={2.5} rotationIntensity={2.5} floatIntensity={2.0}>
+        <mesh position={[-3.2, -0.8, 1]}>
+          <octahedronGeometry args={[0.7, 0]} />
+          <meshPhysicalMaterial
+            roughness={0.05}
+            transmission={0.9}
+            thickness={1.5}
+            ior={1.7}
+            clearcoat={1.0}
+            color="#06B6D4"
+            emissive="#3B82F6"
+            emissiveIntensity={0.4}
+          />
+        </mesh>
+      </Float>
+
+      {/* Floating sphere */}
+      <Float speed={1.8} rotationIntensity={1.2} floatIntensity={1.2}>
+        <mesh position={[-1.2, 2.0, -2]}>
+          <sphereGeometry args={[0.45, 32, 32]} />
+          <meshPhysicalMaterial
+            roughness={0.15}
+            transmission={0.9}
+            thickness={0.8}
+            ior={1.45}
+            color="#EC4899"
+            emissive="#A855F7"
+            emissiveIntensity={0.25}
+          />
+        </mesh>
+      </Float>
     </>
   );
 }
 
+let lastTime = typeof window !== "undefined" ? performance.now() / 1000 : 0;
+const customClock = {
+  getElapsedTime: () => (typeof window !== "undefined" ? performance.now() / 1000 : 0),
+  getDelta: () => {
+    if (typeof window === "undefined") return 0;
+    const now = performance.now() / 1000;
+    const delta = now - lastTime;
+    lastTime = now;
+    return delta;
+  },
+  start: () => {},
+  stop: () => {},
+} as any;
+
 export default function ThreeHero() {
   return (
-    <div className="w-full h-full relative min-h-[400px] lg:min-h-[550px]">
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 15, 10]} intensity={1.5} color="#ffffff" />
-        <pointLight position={[-8, -8, -8]} intensity={1} color="#6D4AFF" />
-        <pointLight position={[8, 8, 8]} intensity={1.2} color="#4F46E5" />
+    <div className="w-full h-full relative min-h-[500px] lg:min-h-[650px] overflow-hidden">
+      <Canvas camera={{ position: [0, 2.5, 7.5], fov: 45 }} clock={customClock}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[8, 12, 10]} intensity={2.0} color="#ffffff" />
+        <pointLight position={[-10, 8, -5]} intensity={1.5} color="#8B5CF6" />
+        <pointLight position={[10, -5, 5]} intensity={1.5} color="#06B6D4" />
 
-        <NeuralParticles />
-        <FloatingSpheres />
+        <GlowingWavingGrid />
+        <FloatingGlassmorphicShapes />
       </Canvas>
     </div>
   );
