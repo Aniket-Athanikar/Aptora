@@ -33,7 +33,7 @@ export interface BookMetadata {
   author?: string;
   uploadedDate?: string;
   size?: string;
-  resourceType?: "Book" | "PDF" | "Note" | "PYQ";
+  resourceType?: "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
   subjectId?: string;
 }
 
@@ -51,7 +51,7 @@ export interface ResourceItem {
   id: string;
   subjectId: string;
   title: string;
-  type: "Book" | "PDF" | "Note" | "PYQ";
+  type: "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
   author?: string;
   pages: number;
   size: string;

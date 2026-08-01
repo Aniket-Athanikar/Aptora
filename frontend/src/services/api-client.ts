@@ -18,6 +18,15 @@ class ApiClient {
     this.baseUrl = baseUrl;
   }
 
+  private getAuthToken(): string | null {
+    if (typeof window === "undefined") return null;
+    return (
+      localStorage.getItem("token") ||
+      localStorage.getItem("auth_token") ||
+      localStorage.getItem("access_token")
+    );
+  }
+
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -31,6 +40,12 @@ class ApiClient {
     if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
+
+    const token = this.getAuthToken();
+    if (token && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
     config.headers = headers;
 
     try {
@@ -76,6 +91,59 @@ class ApiClient {
 
   async upload<T>(endpoint: string, body: FormData): Promise<T> {
     return this.request<T>(endpoint, { method: "POST", body });
+  }
+
+  async uploadWithProgress<T>(
+    endpoint: string,
+    body: FormData,
+    onProgress?: (percent: number) => void
+  ): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.withCredentials = true;
+
+      const token = this.getAuthToken();
+      if (token) {
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      }
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percent = Math.round((event.loaded / event.total) * 100);
+            onProgress(percent);
+          }
+        };
+      }
+
+      xhr.onload = () => {
+        let responseData: any;
+        try {
+          responseData = JSON.parse(xhr.responseText);
+        } catch {
+          responseData = null;
+        }
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(responseData as T);
+        } else {
+          const message =
+            responseData?.message ||
+            responseData?.detail ||
+            responseData?.error?.detail ||
+            `Upload failed with HTTP ${xhr.status}`;
+          reject(new ApiError(message, xhr.status, responseData));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new ApiError("Network error occurred during upload.", 0));
+      };
+
+      xhr.send(body);
+    });
   }
 }
 

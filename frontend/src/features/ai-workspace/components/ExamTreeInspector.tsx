@@ -22,6 +22,8 @@ import {
   Bot
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { ResourceUploadModal } from "@/components/resources/ResourceUploadModal";
+import { ResourceUploadButton } from "@/components/resources/ResourceUploadButton";
 
 export function ExamTreeInspector() {
   const {
@@ -116,9 +118,10 @@ export function ExamTreeInspector() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ResourceUploadButton variant="gradient" size="md" />
           <button
             onClick={() => setCreateWSModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-2xl transition-all shadow-md cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-2xl transition-all shadow-md cursor-pointer"
           >
             <Plus className="w-4 h-4" /> New Workspace
           </button>

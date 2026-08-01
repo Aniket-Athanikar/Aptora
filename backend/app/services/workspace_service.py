@@ -90,14 +90,33 @@ class WorkspaceService(BaseService):
         workspace,
     ) -> GoalWorkspaceDb:
         """
-        Create a new workspace for user.
+        Create a new workspace and its default subjects.
         """
-        return cls.create(
+
+        created_workspace = cls.create(
             db,
             user_id=user_id,
             target_exam=workspace.target_exam,
             exam_category=workspace.exam_category,
         )
+
+        subjects = cls._get_default_subjects(
+            workspace.target_exam
+        )
+
+        for index, subject in enumerate(subjects, start=1):
+            db.add(
+                WorkspaceSubjectDb(
+                    workspace_id=created_workspace.id,
+                    name=subject,
+                    display_order=index,
+                    is_active=True,
+                )
+            )
+
+        db.commit()
+
+        return created_workspace
 
     @classmethod
     def update_workspace(
@@ -222,6 +241,26 @@ class WorkspaceService(BaseService):
             f"{len(groups)} subject group(s)"
         )
         return groups
+
+    @classmethod
+    def get_workspace_subjects(
+        cls,
+        db: Session,
+        workspace_id: int,
+    ) -> List[WorkspaceSubjectDb]:
+        """
+        Retrieve all subjects belonging to a workspace.
+        """
+        return (
+            db.query(WorkspaceSubjectDb)
+            .filter(WorkspaceSubjectDb.workspace_id == workspace_id)
+            .order_by(
+                WorkspaceSubjectDb.display_order.asc(),
+                WorkspaceSubjectDb.name.asc(),
+            )
+            .all()
+        )
+
 
     @classmethod
     def get_workspace_statistics(
@@ -510,3 +549,34 @@ class WorkspaceService(BaseService):
             "offset": offset,
             "items": items,
         }
+    @staticmethod
+    def _get_default_subjects(target_exam: str) -> list[str]:
+        exam = target_exam.lower()
+
+        if "upsc" in exam:
+            return [
+                "History",
+                "Geography",
+                "Polity",
+                "Economy",
+                "Environment",
+                "Science & Technology",
+                "Current Affairs",
+                "Ethics",
+            ]
+
+        if "jee" in exam:
+            return [
+                "Physics",
+                "Chemistry",
+                "Mathematics",
+            ]
+
+        if "neet" in exam:
+            return [
+                "Physics",
+                "Chemistry",
+                "Biology",
+            ]
+
+        return ["General"]

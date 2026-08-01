@@ -157,7 +157,7 @@ async def verify_otp(payload: OtpPayload, response: Response, db: Session = Depe
 
     # Allow backdoor master OTP "123456" for testing
     if payload.otp == "123456":
-        response.set_cookie("ef_user_email", payload.email, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24 * 7)
+        response.set_cookie("ef_user_email", payload.email, httponly=False, path="/", samesite="lax", secure=False, max_age=60 * 60 * 24 * 7 )
         return OtpResponse(
             success=True,
             message="OTP verified successfully! Welcome back.",
@@ -203,7 +203,7 @@ async def verify_otp(payload: OtpPayload, response: Response, db: Session = Depe
             except:
                 pass
 
-    response.set_cookie("ef_user_email", payload.email, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24 * 7)
+    response.set_cookie("ef_user_email", payload.email, httponly=False, path="/", samesite="lax", secure=False, max_age=60 * 60 * 24 * 7 )
     return OtpResponse(
         success=True,
         message="OTP verified successfully! Welcome to ExamForge AI.",

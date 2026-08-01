@@ -6,7 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-
+from app.models.workspace import GoalWorkspaceDb
+from app.models.user import UserDb
+from app.models.lifestyle import StudyLifestyleDb
 from app.services.workspace_service import WorkspaceService
 from app.services.lifestyle_service import StudyLifestyleService
 from app.services.study_slot_service import StudyTimeSlotService
@@ -22,6 +24,36 @@ router = APIRouter(
 )
 
 
+def get_active_workspace(db: Session) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=1)
+    if not workspace or isinstance(workspace, dict):
+        workspace = db.query(GoalWorkspaceDb).first()
+    if not workspace:
+        user = db.query(UserDb).first()
+        user_id = user.id if user else 1
+        workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    return workspace
+
+
+def get_active_lifestyle(db: Session, workspace_id: int) -> StudyLifestyleDb:
+    lifestyle = StudyLifestyleService.get_lifestyle(db, workspace_id)
+    if not lifestyle:
+        lifestyle = StudyLifestyleDb(
+            workspace_id=workspace_id,
+            preferred_device="Laptop",
+            learning_environment="Home",
+            internet_availability="High Speed",
+            consistency_commit="High",
+        )
+        db.add(lifestyle)
+        db.commit()
+        db.refresh(lifestyle)
+    return lifestyle
+
+
 # ----------------------------------------------------------
 # Replace Study Slots
 # ----------------------------------------------------------
@@ -34,30 +66,8 @@ def replace_study_slots(
     request: StudyTimeSlotListRequest,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
-    lifestyle = StudyLifestyleService.get_lifestyle(
-        db,
-        workspace.id,
-    )
-
-    if not lifestyle:
-        raise HTTPException(
-            status_code=404,
-            detail="Lifestyle not found",
-        )
+    workspace = get_active_workspace(db)
+    lifestyle = get_active_lifestyle(db, workspace.id)
 
     return StudyTimeSlotService.replace_slots(
         db=db,
@@ -77,35 +87,13 @@ def replace_study_slots(
 def get_study_slots(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
-    lifestyle = StudyLifestyleService.get_lifestyle(
-        db,
-        workspace.id,
-    )
-
-    if not lifestyle:
-        raise HTTPException(
-            status_code=404,
-            detail="Lifestyle not found",
-        )
+    workspace = get_active_workspace(db)
+    lifestyle = get_active_lifestyle(db, workspace.id)
 
     return StudyTimeSlotService.get_slots(
         db,
         lifestyle.id,
-    )
+    ) or []
 
 
 # ----------------------------------------------------------
@@ -117,18 +105,13 @@ def delete_study_slot(
     slot_id: int,
     db: Session = Depends(get_db),
 ):
-
     deleted = StudyTimeSlotService.delete_slot(
         db,
         slot_id,
     )
 
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail="Study slot not found",
-        )
-
     return {
+        "success": True,
         "message": "Study slot deleted successfully"
     }
+

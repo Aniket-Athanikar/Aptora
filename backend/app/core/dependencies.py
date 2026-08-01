@@ -58,20 +58,35 @@ def get_current_user(
     Replace this with JWT token verification.
     """
 
-    # Until JWT verification is introduced, the verified-login HTTP-only cookie
-    # is the session identity used by the frontend API client.
+    print("\n" + "=" * 60)
+    print("REQUEST COOKIES:", request.cookies)
+    print("AUTH HEADER:", request.headers.get("Authorization"))
+
     email = request.cookies.get("ef_user_email")
-    user = db.query(UserDb).filter(UserDb.email == email).first() if email else None
+    print("EMAIL FROM COOKIE:", email)
+
+    user = None
+
+    if email:
+        user = db.query(UserDb).filter(UserDb.email == email).first()
+
+    print("USER FROM COOKIE:", user)
 
     # Preserve the development bearer-token path used by the existing API.
     if user is None and token:
+        print("Bearer token received:", token)
         user = db.query(UserDb).first()
+        print("USER FROM TOKEN:", user)
 
     if user is None:
+        print("AUTH FAILED")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not authenticated.",
         )
+
+    print("AUTH SUCCESS:", user.email)
+    print("=" * 60 + "\n")
 
     return user
 

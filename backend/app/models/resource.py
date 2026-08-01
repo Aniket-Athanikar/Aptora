@@ -45,7 +45,12 @@ class ResourceDb(Base):
     )
 
     resource_type = Column(
-        Enum(ResourceType),
+        Enum(
+            ResourceType,
+            values_callable=lambda enum: [e.value for e in enum],
+            name="resourcetype",
+            native_enum=True,
+        ),
         nullable=False,
         index=True,
     )

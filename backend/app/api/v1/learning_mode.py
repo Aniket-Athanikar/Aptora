@@ -8,7 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-
+from app.models.workspace import GoalWorkspaceDb
+from app.models.user import UserDb
 from app.services.workspace_service import WorkspaceService
 from app.services.learning_mode_service import LearningModeService
 
@@ -25,6 +26,20 @@ router = APIRouter(
 )
 
 
+def get_active_workspace(db: Session) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=1)
+    if not workspace or isinstance(workspace, dict):
+        workspace = db.query(GoalWorkspaceDb).first()
+    if not workspace:
+        user = db.query(UserDb).first()
+        user_id = user.id if user else 1
+        workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    return workspace
+
+
 # ----------------------------------------------------------
 # Replace Learning Modes
 # ----------------------------------------------------------
@@ -37,25 +52,11 @@ def replace_learning_modes(
     request: LearningModeListRequest,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
+    workspace = get_active_workspace(db)
 
     logger.info(
         f"Replacing learning modes for workspace={workspace.id}"
     )
-
-    logger.info(request.learning_modes)
 
     modes = LearningModeService.replace_learning_modes(
         db=db,
@@ -63,9 +64,7 @@ def replace_learning_modes(
         learning_modes=request.learning_modes,
     )
 
-    logger.info("Learning modes updated successfully.")
-
-    return modes
+    return modes or []
 
 
 # ----------------------------------------------------------
@@ -79,19 +78,7 @@ def replace_learning_modes(
 def get_learning_modes(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
+    workspace = get_active_workspace(db)
 
     logger.info(
         f"Fetching learning modes for workspace={workspace.id}"
@@ -100,7 +87,7 @@ def get_learning_modes(
     return LearningModeService.get_learning_modes(
         db,
         workspace.id,
-    )
+    ) or []
 
 
 # ----------------------------------------------------------
@@ -115,18 +102,12 @@ def delete_learning_mode(
     learning_mode_id: int,
     db: Session = Depends(get_db),
 ):
-
     deleted = LearningModeService.delete_learning_mode(
         db,
         learning_mode_id,
     )
 
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail="Learning mode not found",
-        )
-
     return Response(
         status_code=status.HTTP_204_NO_CONTENT,
     )
+

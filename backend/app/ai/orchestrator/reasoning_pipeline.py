@@ -32,7 +32,9 @@ from app.ai.orchestrator.response_formatter import ResponseFormatter
 
 from app.ai.rag.confidence_scorer import ConfidenceScorer
 from app.ai.rag.retriever import Retriever
+from app.ai.services.search_service import RetrievalUnavailable
 from app.ai.services.llm_service import LLMService
+from app.ai.rag.study_mode_prompts import instruction_for
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +46,58 @@ class ReasoningPipeline:
     context optimization, knowledge synthesis, LLM generation, and formatting.
     """
 
+    MIN_CONTEXT_CHARS = 100
+    MIN_SIMILARITY_SCORE = 0.35
+    NO_CONTEXT_ANSWER = (
+        "This question is not available in your uploaded study material. "
+        "Please ask questions related to your uploaded documents."
+    )
+    SEARCH_UNAVAILABLE_ANSWER = "Knowledge search service is temporarily unavailable. Please retry."
+
+    @classmethod
+    def _no_context_result(cls, intent: str, queries: List[str]) -> Dict[str, Any]:
+        return {
+            "answer": cls.NO_CONTEXT_ANSWER,
+            "raw_answer": cls.NO_CONTEXT_ANSWER,
+            "intent": intent,
+            "confidence": 0.0,
+            "sources": [],
+            "context_found": False,
+            "queries_used": queries,
+        }
+
+    @classmethod
+    def _search_unavailable_result(cls, intent: str, queries: List[str]) -> Dict[str, Any]:
+        return {
+            "answer": cls.SEARCH_UNAVAILABLE_ANSWER,
+            "raw_answer": "",
+            "intent": intent,
+            "confidence": 0.0,
+            "sources": [],
+            "context_found": False,
+            "queries_used": queries,
+        }
+
+    @classmethod
+    def _has_valid_context(cls, chunks: List[Dict[str, Any]], context: str) -> bool:
+        if not chunks:
+            logger.info("[ReasoningPipeline] Context validation failed. No relevant chunks found for query.")
+            return False
+        # SearchService preserves the raw Qdrant cosine score as
+        # ``vector_score`` after lightweight reranking.  Fall back to score
+        # for legacy callers that do not provide it.
+        max_score = max(float(chunk.get("vector_score", chunk.get("score")) or 0.0) for chunk in chunks)
+        strong_keyword_match = any(float(chunk.get("keyword_score") or 0.0) >= 0.5 for chunk in chunks)
+        if max_score < cls.MIN_SIMILARITY_SCORE and not strong_keyword_match:
+            logger.info("[ReasoningPipeline] Context validation failed. Max similarity %.4f is below %.2f.", max_score, cls.MIN_SIMILARITY_SCORE)
+            return False
+        if max_score < cls.MIN_SIMILARITY_SCORE:
+            logger.info("[ReasoningPipeline] Context validation accepted a strong keyword/topic match despite low vector similarity %.4f.", max_score)
+        if len(context.strip()) < cls.MIN_CONTEXT_CHARS:
+            logger.info("[ReasoningPipeline] Context validation failed. Context length %d is below %d.", len(context.strip()), cls.MIN_CONTEXT_CHARS)
+            return False
+        return True
+
     @classmethod
     def run(
         cls,
@@ -51,37 +105,37 @@ class ReasoningPipeline:
         question: str,
         history: List[Dict[str, str]] | None = None,
         subject: str | None = None,
+        subject_id: int | None = None,
+        limit: int | None = None,
     ) -> Dict[str, Any]:
         """
         Execute the full reasoning pipeline for a student query.
-
-        Parameters
-        ----------
-        workspace_id:
-            Target workspace ID.
-        question:
-            User query text.
-        history:
-            Optional conversation history list.
-        subject:
-            Optional subject filter.
-
-        Returns
-        -------
-        Dict with keys: ``answer``, ``intent``, ``confidence``, ``sources``, ``queries_used``
         """
         question = question.strip()
         if not question:
             raise ValueError("Question cannot be empty.")
 
-        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d", workspace_id)
+        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d | subject_id=%s", workspace_id, subject_id)
+
+        # Resolve subject_name from DB if subject_id is provided but subject text is None
+        if subject_id and not subject:
+            try:
+                from app.database import SessionLocal
+                from app.models.workspace_subject import WorkspaceSubjectDb
+                s_db = SessionLocal()
+                subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
+                if subj_rec:
+                    subject = subj_rec.name
+                s_db.close()
+            except Exception as s_err:
+                logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
 
         # Step 1: Intent Analysis
         intent_res = IntentAnalyzer.analyze(question)
         logger.info("[ReasoningPipeline] Step 1: Intent = %s (conf: %.2f)", intent_res.intent, intent_res.confidence)
 
-        # Step 2: Query Rewriting
-        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent)
+        # Step 2: Query rewriting. Subject scope is enforced by retrieval filters.
+        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
         logger.info("[ReasoningPipeline] Step 2: Multi-queries = %s", rewritten_queries)
 
         # Step 3: Retrieval Planning
@@ -93,15 +147,21 @@ class ReasoningPipeline:
             subject=subject,
         )
 
-        # Step 4: Multi-Query Retrieval (Task 9 Quality Improvement)
+        # Step 4: Multi-Query Retrieval
         raw_chunks: List[Dict[str, Any]] = []
-        for q in rewritten_queries:
-            chunks = Retriever.retrieve(
-                workspace_id=workspace_id,
-                question=q,
-                limit=plan.max_chunks_per_query,
-            )
-            raw_chunks.extend(chunks)
+        try:
+            for q in rewritten_queries:
+                chunks = Retriever.retrieve(
+                    workspace_id=workspace_id,
+                    question=q,
+                    limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
+                    subject_id=subject_id,
+                    resource_types=plan.target_resource_types,
+                )
+                raw_chunks.extend(chunks)
+        except RetrievalUnavailable:
+            logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
+            return cls._search_unavailable_result(intent_res.intent, rewritten_queries)
 
         logger.info("[ReasoningPipeline] Step 4: Multi-query retrieved %d raw chunks total.", len(raw_chunks))
 
@@ -109,12 +169,24 @@ class ReasoningPipeline:
         optimized_chunks = ContextOptimizer.optimize(raw_chunks)
         logger.info("[ReasoningPipeline] Step 5: Optimized to %d chunks.", len(optimized_chunks))
 
+        # Task 8: Detailed Logging of Chunk Injection
+        chunk_summary = [
+            f"ID:{c.get('chunk_id','?')} (score:{c.get('score', 0.0):.4f}, res:{c.get('resource_id')})"
+            for c in optimized_chunks
+        ]
+        logger.info("[ReasoningPipeline Task 8 Audit] Retrieved Chunks (%d): %s", len(optimized_chunks), chunk_summary)
+
         # Step 6: Confidence & Sources
         confidence_result = ConfidenceScorer.score(optimized_chunks)
         logger.info("[ReasoningPipeline] Step 6: Confidence = %s (avg: %.2f)", confidence_result.level, confidence_result.avg_score)
 
         # Step 7: Knowledge Synthesis
         synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
+        logger.info("[ReasoningPipeline] Final context documents=%s; context length=%d chars.", [c.get("document_title") for c in optimized_chunks], len(synthesized_context))
+
+        if not cls._has_valid_context(optimized_chunks, synthesized_context):
+            logger.info("[ReasoningPipeline] Skipping LLM generation.")
+            return cls._no_context_result(intent_res.intent, rewritten_queries)
 
         # Step 8: LLM Generation
         prompt = cls._build_reasoning_prompt(
@@ -123,7 +195,21 @@ class ReasoningPipeline:
             intent=intent_res.intent,
             history=history,
         )
-        raw_answer = LLMService.generate(prompt)
+        logger.info("[ReasoningPipeline Task 8 Audit] Prompt Preview (first 300 chars):\n%s", prompt[:300])
+
+        try:
+            raw_answer = LLMService.generate(prompt)
+        except Exception:
+            logger.exception("[ReasoningPipeline] LLM generation failed after context validation.")
+            return {
+                "answer": "AI generation service is temporarily unavailable. Please start Ollama and retry.",
+                "raw_answer": "",
+                "intent": intent_res.intent,
+                "confidence": confidence_result.level,
+                "sources": confidence_result.sources,
+                "context_found": True,
+                "queries_used": rewritten_queries,
+            }
 
         # Step 9: Response Formatting & Source Attribution
         formatted_answer = ResponseFormatter.format_response(
@@ -141,6 +227,7 @@ class ReasoningPipeline:
             "intent": intent_res.intent,
             "confidence": confidence_result.level,
             "sources": confidence_result.sources,
+            "context_found": True,
             "queries_used": rewritten_queries,
         }
 
@@ -151,6 +238,8 @@ class ReasoningPipeline:
         question: str,
         history: List[Dict[str, str]] | None = None,
         subject: str | None = None,
+        subject_id: int | None = None,
+        limit: int | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream response through reasoning pipeline.
@@ -159,9 +248,22 @@ class ReasoningPipeline:
         if not question:
             raise ValueError("Question cannot be empty.")
 
+        # Resolve subject_name from DB if subject_id is provided but subject text is None
+        if subject_id and not subject:
+            try:
+                from app.database import SessionLocal
+                from app.models.workspace_subject import WorkspaceSubjectDb
+                s_db = SessionLocal()
+                subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
+                if subj_rec:
+                    subject = subj_rec.name
+                s_db.close()
+            except Exception as s_err:
+                logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
+
         # Execute steps 1 to 7
         intent_res = IntentAnalyzer.analyze(question)
-        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent)
+        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
         plan = RetrievalPlanner.plan(
             intent=intent_res.intent,
             confidence=intent_res.confidence,
@@ -171,17 +273,29 @@ class ReasoningPipeline:
         )
 
         raw_chunks: List[Dict[str, Any]] = []
-        for q in rewritten_queries:
-            chunks = Retriever.retrieve(
-                workspace_id=workspace_id,
-                question=q,
-                limit=plan.max_chunks_per_query,
-            )
-            raw_chunks.extend(chunks)
+        try:
+            for q in rewritten_queries:
+                chunks = Retriever.retrieve(
+                    workspace_id=workspace_id,
+                    question=q,
+                    limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
+                    subject_id=subject_id,
+                    resource_types=plan.target_resource_types,
+                )
+                raw_chunks.extend(chunks)
+        except RetrievalUnavailable:
+            logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
+            yield cls.SEARCH_UNAVAILABLE_ANSWER
+            return
 
         optimized_chunks = ContextOptimizer.optimize(raw_chunks)
         confidence_result = ConfidenceScorer.score(optimized_chunks)
         synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
+
+        if not cls._has_valid_context(optimized_chunks, synthesized_context):
+            logger.info("[ReasoningPipeline] Skipping LLM generation.")
+            yield cls.NO_CONTEXT_ANSWER
+            return
 
         prompt = cls._build_reasoning_prompt(
             question=question,
@@ -190,8 +304,14 @@ class ReasoningPipeline:
             history=history,
         )
 
-        # Stream tokens
-        yield from LLMService.stream(prompt)
+        # Stream tokens only after context validation.  Generator exceptions
+        # occur during iteration, so handle them here rather than leaking an
+        # Ollama traceback through the streaming endpoint.
+        try:
+            yield from LLMService.stream(prompt)
+        except Exception:
+            logger.exception("[ReasoningPipeline] LLM streaming failed after context validation.")
+            yield "AI generation service is temporarily unavailable. Please start Ollama and retry."
 
     @staticmethod
     def _build_reasoning_prompt(
@@ -213,6 +333,9 @@ You are ExamForge AI, an expert educational tutor.
 
 Intent Focus: {intent.upper()}
 
+Study-mode output contract:
+{instruction_for(intent)}
+
 Study Material Context:
 {context}
 {history_text}
@@ -220,5 +343,5 @@ Study Material Context:
 Student Question:
 {question}
 
-Provide a clear, thorough, and highly educational response.
+Use only the supplied Study Material Context for factual claims. If it is empty or insufficient, respond exactly: "I could not find this topic in the uploaded study materials." Do not fill gaps with generic knowledge. When answering, name the source document(s) used.
         """.strip()

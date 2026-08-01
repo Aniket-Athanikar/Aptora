@@ -65,7 +65,8 @@ class RetrievalPlanner:
         resource_types = preferred_resource_types if preferred_resource_types else ["book", "notes"]
 
         # Calculate chunk limits per search query (multi-query retrieval runs 3 queries)
-        chunks_per_query = max(3, preferred_chunk_limit // 2)
+        # Fetch a sufficiently broad candidate set for local reranking.
+        chunks_per_query = max(12, preferred_chunk_limit)
         total_budget = preferred_chunk_limit * 2  # Total budget before context optimization
 
         plan = RetrievalPlan(

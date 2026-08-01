@@ -6,11 +6,9 @@ import { WorkspaceProvider, useWorkspace } from "../workspaceContext";
 import { ConversationSidebar } from "./ConversationSidebar";
 import { AIChatStepFlow } from "./AIChatStepFlow";
 import { ExamTreeInspector } from "./ExamTreeInspector";
-import { CountdownCard } from "./CountdownCard";
-import { StudyInsightCard } from "./StudyInsightCard";
-import { KnowledgeGraphCard } from "./KnowledgeGraphCard";
-import { AIToolsPanel } from "./AIToolsPanel";
 import { UploadZone } from "./UploadZone";
+import { ResourceManagement } from "@/components/resources/ResourceManagement";
+import { ResourceUploadButton } from "@/components/resources/ResourceUploadButton";
 import { 
   Sparkles, Trophy, FolderTree, MessageSquare, Layers, 
   ShieldCheck, Activity, Cpu, Database, Network, Zap 
@@ -138,17 +136,9 @@ function WorkspaceInner() {
                   </div>
                 </div>
 
-                {/* AI Chat Window Workflow (Center Column) */}
+                {/* AI Chat Home */}
                 <div className="flex-1 min-w-0">
                   <AIChatStepFlow />
-                </div>
-
-                {/* Cognitive Widgets & Analytics (Right Column) */}
-                <div className="w-full xl:w-80 shrink-0 space-y-6">
-                  <CountdownCard />
-                  <StudyInsightCard />
-                  <KnowledgeGraphCard />
-                  <AIToolsPanel />
                 </div>
 
               </div>
@@ -168,21 +158,8 @@ function WorkspaceInner() {
             )}
 
             {activeMainTab === "uploads" && (
-              <div className="max-w-4xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200/60 rounded-[32px] p-6 sm:p-8 shadow-sm space-y-4">
-                  <div className="flex items-start gap-3 pb-3 border-b border-slate-100">
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-[#6D4AFF] shrink-0">
-                      <Layers className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-slate-900">Upload Material to AI Pipeline</h3>
-                      <p className="text-xs text-slate-450 font-semibold leading-relaxed mt-0.5">
-                        Files uploaded here undergo semantic analysis, OCR chunking, topic detection, and embedding generation into our secure vectors store.
-                      </p>
-                    </div>
-                  </div>
-                  <UploadZone />
-                </div>
+              <div className="max-w-6xl mx-auto space-y-6">
+                <ResourceManagement />
               </div>
             )}
           </motion.div>

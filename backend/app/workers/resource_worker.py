@@ -1,336 +1,87 @@
-"""
-ExamForge AI - Resource Worker
+"""Redis worker for the single, canonical document indexing pipeline."""
 
-Pipeline:
-1. Listen for jobs from Redis
-2. Extract text (OCR)
-3. Clean text
-4. Extract metadata
-5. Store OCR output
-6. Generate chunks
-7. Detect topics
-8. Generate embeddings
-9. Upload vectors to Qdrant
-10. Update processing status
-"""
+from __future__ import annotations
 
 import logging
 import time
 
-from sqlalchemy.orm import Session
-
-from app.database import SessionLocal
-
+from app.db import SessionLocal
+from app.models.resource import ResourceDb
+from app.processing.document_indexer import DocumentIndexer
 from app.processing.redis_service import RedisService
-from app.processing.ocr_service import OCRService
-from app.processing.cleaner import CleanerService
-from app.processing.metadata_service import MetadataService
-from app.processing.chunk_service import ChunkService
-from app.processing.topic_service import TopicService
-from app.processing.embedding_service import EmbeddingService
-from app.processing.qdrant_service import QdrantService
-
 from app.repositories.resource_repository import ResourceRepository
-from app.repositories.resource_content_repository import ResourceContentRepository
-from app.repositories.resource_chunk_repository import ResourceChunkRepository
 
 logger = logging.getLogger(__name__)
 
 
 class ResourceWorker:
-
-    # ==========================================================
-    # OCR + Resource Content
-    # ==========================================================
+    RECOVERY_INTERVAL_SECONDS = 30
 
     @staticmethod
-    def save_resource_content(
-        db: Session,
-        resource,
-        raw_text: str,
-        cleaned_text: str,
-    ):
-
-        existing = ResourceContentRepository.get_by_resource_id(
-            db=db,
-            resource_id=resource.id,
-        )
-
-        if existing:
-
-            ResourceContentRepository.update(
-                db=db,
-                content=existing,
-                raw_text=raw_text,
-                cleaned_text=cleaned_text,
-            )
-
-        else:
-
-            ResourceContentRepository.create(
-                db=db,
-                resource_id=resource.id,
-                raw_text=raw_text,
-                cleaned_text=cleaned_text,
-            )
-
-        logger.info(
-            "OCR content saved."
-        )
-
-    # ==========================================================
-    # Chunk Generation
-    # ==========================================================
+    def process_resource(db, resource) -> None:
+        """Run the same indexer used by all ingestion entry points."""
+        logger.info("Entering DocumentIndexer.index_document for resource %s.", resource.id)
+        DocumentIndexer.index_document(db=db, resource=resource)
 
     @staticmethod
-    def generate_chunks(
-        db: Session,
-        resource,
-        cleaned_text: str,
-    ):
-
-        ResourceChunkRepository.delete_by_resource_id(
-            db=db,
-            resource_id=resource.id,
-        )
-
-        chunks = ChunkService.split(cleaned_text)
-
-        logger.info(
-            f"Generated {len(chunks)} chunks."
-        )
-
-        ResourceChunkRepository.create_many(
-            db=db,
-            resource_id=resource.id,
-            chunks=chunks,
-        )
-
-    # ==========================================================
-    # AI Processing
-    # ==========================================================
-
-    @staticmethod
-    def process_chunks(
-        db: Session,
-        resource,
-    ):
-
-        chunks = ResourceChunkRepository.get_by_resource_id(
-            db=db,
-            resource_id=resource.id,
-        )
-
-        logger.info(
-            f"Processing {len(chunks)} chunks."
-        )
-
-        for chunk in chunks:
-
-            logger.info(
-                f"Chunk #{chunk.chunk_index}"
-            )
-
-            # -------------------------
-            # Topic Detection
-            # -------------------------
-
-            analysis = TopicService.detect(
-                chunk.content
-            )
-
-            chunk = ResourceChunkRepository.update_analysis(
-                db=db,
-                chunk=chunk,
-                subject=analysis.get("subject"),
-                chapter=analysis.get("chapter"),
-                topic=analysis.get("topic"),
-                metadata={
-                    "keywords": analysis.get(
-                        "keywords",
-                        [],
-                    )
-                },
-            )
-
-            # -------------------------
-            # Embedding
-            # -------------------------
-
-            embedding = EmbeddingService.generate(
-                chunk.content
-            )
-
-            # -------------------------
-            # Upload to Qdrant
-            # -------------------------
-
-            point_id = QdrantService.upload(
-                embedding=embedding,
-                payload={
-                    "workspace_id": resource.workspace_id,
-                    "resource_id": resource.id,
-                    "chunk_id": chunk.id,
-                    "chunk_index": chunk.chunk_index,
-                    "subject": chunk.subject,
-                    "chapter": chunk.chapter,
-                    "topic": chunk.topic,
-                    "page_number": chunk.page_number,
-                },
-            )
-
-            ResourceChunkRepository.update_embedding(
-                db=db,
-                chunk=chunk,
-                qdrant_point_id=point_id,
-            )
-
-        logger.info(
-            "AI processing completed."
-        )
-
-    # ==========================================================
-    # Main Processing Pipeline
-    # ==========================================================
-
-    @staticmethod
-    def process_resource(
-        db: Session,
-        resource,
-    ):
-
-        logger.info(
-            f"Processing Resource #{resource.id}"
-        )
-
-        ResourceRepository.update_status(
-            db=db,
-            resource=resource,
-            status="PROCESSING",
-        )
-
+    def recover_pending() -> None:
+        """Process durable queued work when a Redis message was lost or missed."""
+        recovery_db = SessionLocal()
         try:
-
-            raw_text = OCRService.extract_text(
-                resource.storage_path
-            )
-
-            if not raw_text.strip():
-                raise Exception(
-                    "No text extracted from document."
-                )
-
-            cleaned_text = CleanerService.clean(
-                raw_text
-            )
-
-            logger.info(
-                f"Extracted {len(cleaned_text)} characters."
-            )
-
-            metadata = MetadataService.extract(
-                resource.storage_path
-            )
-
-            logger.info(
-                f"Metadata: {metadata}"
-            )
-
-            ResourceWorker.save_resource_content(
-                db=db,
-                resource=resource,
-                raw_text=raw_text,
-                cleaned_text=cleaned_text,
-            )
-
-            ResourceWorker.generate_chunks(
-                db=db,
-                resource=resource,
-                cleaned_text=cleaned_text,
-            )
-
-            ResourceWorker.process_chunks(
-                db=db,
-                resource=resource,
-            )
-
-            ResourceRepository.update_status(
-                db=db,
-                resource=resource,
-                status="COMPLETED",
-            )
-
-            logger.info(
-                f"Resource #{resource.id} completed."
-            )
-
+            pending = recovery_db.query(ResourceDb).filter(
+                ResourceDb.status.in_(("UPLOADED", "QUEUED"))
+            ).order_by(ResourceDb.created_at).all()
+            logger.info("Recovering %d pending document(s).", len(pending))
+            for resource in pending:
+                try:
+                    ResourceWorker.process_resource(recovery_db, resource)
+                except Exception:
+                    # DocumentIndexer already records the failed status; a
+                    # single malformed file must not strand later uploads.
+                    logger.exception("Recovery failed for resource %s.", resource.id)
         except Exception:
-
-            logger.exception(
-                "Resource processing failed."
-            )
-
-            ResourceRepository.update_status(
-                db=db,
-                resource=resource,
-                status="FAILED",
-            )
-
-    # ==========================================================
-    # Worker Loop
-    # ==========================================================
+            logger.exception("Pending document recovery failed.")
+        finally:
+            recovery_db.close()
 
     @staticmethod
-    def start():
-
-        logger.info("=" * 60)
-        logger.info("ExamForge Resource Worker Started")
-        logger.info("=" * 60)
-
+    def start() -> None:
+        logger.info("ResourceWorker.start() executing.")
+        logger.info("ExamForge resource worker started.")
+        # Redis is a delivery mechanism, not the source of truth.  PostgreSQL
+        # status is the durable work ledger, so recover it at startup and
+        # periodically while polling.  A failed enqueue/dequeue can therefore
+        # never leave a resource QUEUED forever.
+        ResourceWorker.recover_pending()
+        logger.info("Recovery complete; entering document queue polling loop.")
+        next_recovery_at = time.monotonic() + ResourceWorker.RECOVERY_INTERVAL_SECONDS
         while True:
-
             db = SessionLocal()
-
             try:
-
+                if time.monotonic() >= next_recovery_at:
+                    ResourceWorker.recover_pending()
+                    next_recovery_at = time.monotonic() + ResourceWorker.RECOVERY_INTERVAL_SECONDS
                 job = RedisService.dequeue_document()
-
-                if job is None:
-                    time.sleep(2)
-                    continue
-
-                resource_id = job["resource_id"]
-
-                logger.info(
-                    f"Received Resource #{resource_id}"
-                )
-
-                resource = ResourceRepository.get_by_id(
-                    db=db,
-                    resource_id=resource_id,
-                )
-
-                if resource is None:
-
-                    logger.warning(
-                        f"Resource #{resource_id} not found."
-                    )
-
-                    continue
-
-                ResourceWorker.process_resource(
-                    db=db,
-                    resource=resource,
-                )
-
+                if job:
+                    logger.info("Worker received document job: %s", job)
+                    resource = ResourceRepository.get_by_id(db=db, resource_id=job["resource_id"])
+                    if resource and resource.status in ("UPLOADED", "QUEUED"):
+                        logger.info("ResourceRepository.get_by_id found resource %s with status %s.", resource.id, resource.status)
+                        ResourceWorker.process_resource(db, resource)
+                    elif resource:
+                        logger.info(
+                            "Discarding stale queue job for resource %s; current status is %s.",
+                            resource.id, resource.status,
+                        )
+                    else:
+                        logger.warning("Queued resource %s no longer exists.", job["resource_id"])
             except Exception:
-
-                logger.exception(
-                    "Worker execution failed."
-                )
-
+                logger.exception("Resource processing failed.")
             finally:
-
                 db.close()
-
             time.sleep(1)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    ResourceWorker.start()

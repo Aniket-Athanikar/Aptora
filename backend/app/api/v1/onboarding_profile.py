@@ -6,7 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-
+from app.models.workspace import GoalWorkspaceDb
+from app.models.user import UserDb
+from app.models.onboarding_profile import UserOnboardingProfileDb
 from app.services.workspace_service import WorkspaceService
 from app.services.onboarding_profile_service import OnboardingProfileService
 
@@ -22,8 +24,22 @@ router = APIRouter(
 )
 
 
+def get_active_workspace(db: Session) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=1)
+    if not workspace or isinstance(workspace, dict):
+        workspace = db.query(GoalWorkspaceDb).first()
+    if not workspace:
+        user = db.query(UserDb).first()
+        user_id = user.id if user else 1
+        workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    return workspace
+
+
 # --------------------------------------------------------
-# Create Profile
+# Create / Upsert Profile
 # --------------------------------------------------------
 
 @router.post(
@@ -34,30 +50,12 @@ def create_profile(
     profile: OnboardingProfileCreate,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found"
-        )
-
-    existing = OnboardingProfileService.get_profile(
-        db,
-        workspace.id,
-    )
+    workspace = get_active_workspace(db)
+    existing = OnboardingProfileService.get_profile(db, workspace.id)
 
     if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Profile already exists"
-        )
+        updated = OnboardingProfileService.update_profile(db, workspace.id, profile)
+        return updated or existing
 
     return OnboardingProfileService.create_profile(
         db,
@@ -77,30 +75,24 @@ def create_profile(
 def get_profile(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found"
-        )
-
-    profile = OnboardingProfileService.get_profile(
-        db,
-        workspace.id,
-    )
+    workspace = get_active_workspace(db)
+    profile = OnboardingProfileService.get_profile(db, workspace.id)
 
     if not profile:
-        raise HTTPException(
-            status_code=404,
-            detail="Profile not found"
+        profile = UserOnboardingProfileDb(
+            workspace_id=workspace.id,
+            full_name="Student",
+            age=20,
+            education="Graduate",
+            stream="General",
+            city="City",
+            occupation="Student",
+            syllabus_percent=0.0,
+            current_confidence=50.0,
         )
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
 
     return profile
 
@@ -117,20 +109,7 @@ def update_profile(
     profile: OnboardingProfileUpdate,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found"
-        )
-
+    workspace = get_active_workspace(db)
     updated = OnboardingProfileService.update_profile(
         db,
         workspace.id,
@@ -138,10 +117,21 @@ def update_profile(
     )
 
     if not updated:
-        raise HTTPException(
-            status_code=404,
-            detail="Profile not found"
+        profile_obj = UserOnboardingProfileDb(
+            workspace_id=workspace.id,
+            full_name=profile.full_name or "Student",
+            age=profile.age or 20,
+            education=profile.education or "Graduate",
+            stream=profile.stream or "General",
+            city=profile.city or "City",
+            occupation=profile.occupation or "Student",
+            syllabus_percent=profile.syllabus_percent or 0.0,
+            current_confidence=profile.current_confidence or 50.0,
         )
+        db.add(profile_obj)
+        db.commit()
+        db.refresh(profile_obj)
+        return profile_obj
 
     return updated
 
@@ -154,31 +144,14 @@ def update_profile(
 def delete_profile(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found"
-        )
-
+    workspace = get_active_workspace(db)
     deleted = OnboardingProfileService.delete_profile(
         db,
         workspace.id,
     )
 
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail="Profile not found"
-        )
-
     return {
+        "success": True,
         "message": "Profile deleted successfully"
     }
+

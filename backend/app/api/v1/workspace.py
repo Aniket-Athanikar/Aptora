@@ -224,6 +224,36 @@ def get_workspace_documents(
 
 
 # ==========================================================
+# Get Workspace Subjects
+# ==========================================================
+
+@router.get(
+    "/{workspace_id}/subjects",
+)
+def get_workspace_subjects(
+    workspace_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    """
+    Return all subjects configured for a workspace.
+    """
+    logger.info(f"Fetching workspace subjects for workspace #{workspace_id}")
+    workspace_info = WorkspaceService.get_workspace(db, workspace_id=workspace_id)
+    if workspace_info is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Workspace #{workspace_id} not found.",
+        )
+
+    return WorkspaceService.get_workspace_subjects(
+        db,
+        workspace_id=workspace_id,
+    )
+
+
+
+# ==========================================================
 # Get Workspace Statistics
 # ==========================================================
 

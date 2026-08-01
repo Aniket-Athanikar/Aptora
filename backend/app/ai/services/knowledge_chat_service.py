@@ -60,6 +60,8 @@ class KnowledgeChatService:
         workspace_id: int,
         question: str,
         limit: int = DEFAULT_RETRIEVAL_LIMIT,
+        history: list[dict[str, str]] | None = None,
+        subject_id: int | None = None,
     ) -> dict[str, Any]:
         """
         Generate a complete multi-turn response via ReasoningPipeline.
@@ -75,7 +77,7 @@ class KnowledgeChatService:
         )
 
         # 1. Load conversation history
-        history = ConversationMemory.get_history(session_id)
+        history = history if history is not None else ConversationMemory.get_history(session_id)
         logger.info(
             "[KnowledgeChatService] History loaded: %d message(s).",
             len(history),
@@ -86,11 +88,14 @@ class KnowledgeChatService:
             workspace_id=workspace_id,
             question=question,
             history=history,
+            subject_id=subject_id,
+            limit=limit,
         )
 
         answer = pipeline_result["answer"]
         confidence = pipeline_result["confidence"]
         sources = pipeline_result["sources"]
+        context_found = pipeline_result["context_found"]
 
         # 3. Persist to memory
         ConversationMemory.add_message(session_id, "user", question)
@@ -103,6 +108,7 @@ class KnowledgeChatService:
             "answer": answer,
             "confidence": confidence,
             "sources": sources,
+            "context_found": context_found,
             "history_length": len(history) + 2,   # +2 for messages just added
         }
 
@@ -117,6 +123,7 @@ class KnowledgeChatService:
         workspace_id: int,
         question: str,
         limit: int = DEFAULT_RETRIEVAL_LIMIT,
+        subject_id: int | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream a multi-turn response token by token via ReasoningPipeline.
@@ -144,6 +151,8 @@ class KnowledgeChatService:
             workspace_id=workspace_id,
             question=question,
             history=history,
+            limit=limit,
+            subject_id=subject_id,
         ):
             accumulated.append(token)
             yield token

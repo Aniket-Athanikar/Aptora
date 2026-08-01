@@ -83,10 +83,17 @@ class DocumentIndexer:
         )
 
         try:
+            resource.status = ResourceStatus.PROCESSING.value
+            db.commit()
+            logger.info("[DocumentIndexer] Resource %d status set to PROCESSING.", resource.id)
+
             # ------------------------------------------------------------------
             # Stage 1: File Validation & Document Processing (OCR + Clean + Chunk)
             # ------------------------------------------------------------------
-            file_path = resource.storage_path
+            # Uploads can be created on Windows while the worker runs in a
+            # Linux container.  Normalise persisted separators before opening
+            # the shared /app/app/uploads mount.
+            file_path = (resource.storage_path or "").replace("\\", "/")
             if not file_path or not Path(file_path).exists():
                 raise FileNotFoundError(
                     f"[DocumentIndexer] Storage path not found: '{file_path}'"
@@ -122,29 +129,58 @@ class DocumentIndexer:
             db.commit()
 
             chunks: List[str] = doc_result["chunks"]
+            chunk_metadata = cls._build_chunk_metadata(
+                chunks=chunks,
+                clean_text=doc_result["clean_text"],
+                subject=getattr(getattr(resource, "subject", None), "name", None),
+                headings=metadata.get("headings", []),
+            )
 
             if not chunks:
-                logger.warning(
-                    "[DocumentIndexer] Document resource_id=%d produced 0 chunks.",
-                    resource.id,
+                raise RuntimeError(
+                    f"Document resource_id={resource.id} produced no indexable chunks."
                 )
-                embeddings: List[List[float]] = []
-                point_ids: List[str] = []
-            else:
-                embeddings = EmbeddingService.embed_many(chunks)
-                logger.info("[DocumentIndexer] Embedding complete (%d vectors).", len(embeddings))
 
-                # --------------------------------------------------------------
-                # Stage 4: Store Vectors in Qdrant
-                # --------------------------------------------------------------
-                point_ids = QdrantService.upsert_chunks(
-                    resource_id=resource.id,
-                    subject_id=resource.subject_id,
-                    workspace_id=resource.workspace_id,
-                    chunks=chunks,
-                    embeddings=embeddings,
+            embeddings = EmbeddingService.embed_many(chunks)
+            logger.info("[DocumentIndexer] Embedding complete (%d vectors).", len(embeddings))
+            if len(embeddings) != len(chunks) or any(len(vector) != QdrantService.VECTOR_SIZE for vector in embeddings):
+                raise RuntimeError("Embedding validation failed: every chunk needs one 768-dimensional vector.")
+
+            # --------------------------------------------------------------
+            # Stage 4: Store Vectors in Qdrant
+            # --------------------------------------------------------------
+            resource.status = ResourceStatus.INDEXING.value
+            db.commit()
+            logger.info("[DocumentIndexer] Qdrant insertion started for resource_id=%d.", resource.id)
+            try:
+                QdrantService.delete_resource(resource.id)
+            except RuntimeError:
+                # A first upload has no collection/points to remove.
+                logger.info("[DocumentIndexer] No prior Qdrant points to replace for resource_id=%d.", resource.id)
+            point_ids = QdrantService.upsert_chunks(
+                resource_id=resource.id,
+                subject_id=resource.subject_id,
+                workspace_id=resource.workspace_id,
+                chunks=chunks,
+                embeddings=embeddings,
+                resource_type=getattr(resource.resource_type, "value", resource.resource_type),
+                document_title=resource.title or metadata["title"],
+                chunk_metadata=chunk_metadata,
+            )
+            if len(point_ids) != len(chunks):
+                raise RuntimeError(
+                    f"Qdrant insertion returned {len(point_ids)} point IDs for {len(chunks)} chunks."
                 )
-                logger.info("[DocumentIndexer] Qdrant complete.")
+            qdrant_state = QdrantService.diagnostics(resource_id=resource.id)
+            if qdrant_state["count"] < len(point_ids):
+                raise RuntimeError(
+                    f"Qdrant insertion verification failed: expected at least {len(point_ids)} "
+                    f"points for resource_id={resource.id}, found {qdrant_state['count']}."
+                )
+            logger.info(
+                "[DocumentIndexer] Qdrant insertion finished for resource_id=%d (%d points).",
+                resource.id, qdrant_state["count"],
+            )
 
             # ------------------------------------------------------------------
             # Stage 5: Relational Database Persistence
@@ -161,6 +197,7 @@ class DocumentIndexer:
                 resource_id=resource.id,
                 chunks=chunks,
                 point_ids=point_ids,
+                chunk_metadata=chunk_metadata,
             )
 
             # Update ResourceDb metadata and status
@@ -173,7 +210,7 @@ class DocumentIndexer:
 
             db.commit()
             db.refresh(resource)
-            logger.info("[DocumentIndexer] Database complete.")
+            logger.info("[DocumentIndexer] Status updated to COMPLETED and database transaction committed.")
 
             logger.info(
                 "[DocumentIndexer] Finished indexing resource_id=%d successfully. Status: COMPLETED",
@@ -244,6 +281,7 @@ class DocumentIndexer:
         resource_id: int,
         chunks: List[str],
         point_ids: List[str],
+        chunk_metadata: List[Dict[str, Any]],
     ) -> List[ResourceChunkDb]:
         """
         Save or refresh chunk records in ResourceChunkDb table.
@@ -261,12 +299,41 @@ class DocumentIndexer:
                 token_count=len(chunk_text.split()),
                 qdrant_point_id=point_id,
                 embedding_generated=True if point_id else False,
+                page_number=chunk_metadata[idx].get("page_number"),
+                subject=chunk_metadata[idx].get("subject"),
+                chapter=chunk_metadata[idx].get("chapter"),
+                topic=chunk_metadata[idx].get("topic"),
                 chunk_metadata={"char_count": len(chunk_text)},
             )
             db.add(chunk_record)
             chunk_records.append(chunk_record)
 
         return chunk_records
+
+    @staticmethod
+    def _build_chunk_metadata(
+        chunks: List[str], clean_text: str, subject: str | None, headings: List[str],
+    ) -> List[Dict[str, Any]]:
+        """Create consistent chunk metadata for Qdrant and relational storage."""
+        result: List[Dict[str, Any]] = []
+        cursor = 0
+        active_heading: str | None = None
+        for chunk in chunks:
+            position = clean_text.find(chunk, cursor)
+            if position < 0:
+                position = cursor
+            cursor = position + len(chunk)
+            preceding = clean_text[:position].lower()
+            for heading in headings:
+                if heading.lower() in preceding:
+                    active_heading = heading
+            result.append({
+                "subject": subject,
+                "chapter": active_heading,
+                "topic": active_heading,
+                "page_number": max(1, (position // 2200) + 1),
+            })
+        return result
 
 
 # ---------------------------------------------------------------------------

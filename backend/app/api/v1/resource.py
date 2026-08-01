@@ -8,6 +8,8 @@ from fastapi import (
     UploadFile,
     File,
     Form,
+    HTTPException,
+    status,
 )
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -16,6 +18,11 @@ from app.services.resource_service import ResourceService
 from app.schemas.resource import ResourceResponse
 from app.core.enums import ResourceType
 from app.schemas.document_status import DocumentStatusResponse
+from app.core.dependencies import get_current_user
+from app.models.user import UserDb
+from app.models.workspace import GoalWorkspaceDb
+from app.models.workspace_subject import WorkspaceSubjectDb
+from app.ai.services.qdrant_service import QdrantService
 router = APIRouter(
     prefix="/documents",
     tags=["Documents"],
@@ -30,15 +37,70 @@ def upload_document(
     workspace_id: int = Form(...),
     subject_id: int = Form(...),
     resource_type: ResourceType = Form(...),
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
+    workspace = db.query(GoalWorkspaceDb).filter(
+        GoalWorkspaceDb.id == workspace_id,
+        GoalWorkspaceDb.user_id == current_user.id,
+    ).first()
+    if workspace is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Workspace not found for the authenticated user.",
+        )
+
+    subject = db.query(WorkspaceSubjectDb).filter(
+        WorkspaceSubjectDb.id == subject_id,
+        WorkspaceSubjectDb.workspace_id == workspace_id,
+    ).first()
+    if subject is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="The selected subject does not belong to this workspace.",
+        )
+
     return ResourceService.upload_resource(
         db=db,
         workspace_id=workspace_id,
         subject_id=subject_id,
         resource_type=resource_type,
         file=file,
+        title=title,
+        description=description,
+    )
+
+@router.patch(
+    "/{resource_id}",
+    response_model=ResourceResponse,
+)
+def rename_document(
+    resource_id: int,
+    title: str = Form(...),
+    description: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+):
+    return ResourceService.rename_resource(
+        db=db,
+        resource_id=resource_id,
+        title=title,
+        description=description,
+    )
+
+@router.post(
+    "/{resource_id}/reprocess",
+    response_model=ResourceResponse,
+)
+def reprocess_document(
+    resource_id: int,
+    db: Session = Depends(get_db),
+):
+    return ResourceService.reprocess_resource(
+        db=db,
+        resource_id=resource_id,
     )
 
 @router.get(
@@ -106,3 +168,13 @@ def delete_document(
         db=db,
         resource_id=resource_id,
     )
+
+
+@router.get("/{resource_id}/index-diagnostics")
+def get_document_index_diagnostics(resource_id: int, db: Session = Depends(get_db), current_user: UserDb = Depends(get_current_user)):
+    resource = ResourceService.get_resource(db=db, resource_id=resource_id)
+    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.id == resource.workspace_id, GoalWorkspaceDb.user_id == current_user.id).first()
+    if workspace is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found.")
+    details = QdrantService.diagnostics(workspace_id=resource.workspace_id, resource_id=resource.id)
+    return {"resource_id": resource.id, "resource_status": resource.status, "chunk_records": len(resource.chunks), **details}

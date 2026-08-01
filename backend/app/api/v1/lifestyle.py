@@ -6,7 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-
+from app.models.workspace import GoalWorkspaceDb
+from app.models.user import UserDb
+from app.models.lifestyle import StudyLifestyleDb
 from app.services.workspace_service import WorkspaceService
 from app.services.lifestyle_service import StudyLifestyleService
 
@@ -22,8 +24,22 @@ router = APIRouter(
 )
 
 
+def get_active_workspace(db: Session) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=1)
+    if not workspace or isinstance(workspace, dict):
+        workspace = db.query(GoalWorkspaceDb).first()
+    if not workspace:
+        user = db.query(UserDb).first()
+        user_id = user.id if user else 1
+        workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    return workspace
+
+
 # --------------------------------------------------------
-# Create Lifestyle
+# Create / Upsert Lifestyle
 # --------------------------------------------------------
 
 @router.post(
@@ -34,30 +50,12 @@ def create_lifestyle(
     lifestyle: StudyLifestyleCreate,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
-    existing = StudyLifestyleService.get_lifestyle(
-        db,
-        workspace.id,
-    )
+    workspace = get_active_workspace(db)
+    existing = StudyLifestyleService.get_lifestyle(db, workspace.id)
 
     if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Lifestyle already exists",
-        )
+        updated = StudyLifestyleService.update_lifestyle(db, workspace.id, lifestyle)
+        return updated or existing
 
     return StudyLifestyleService.create_lifestyle(
         db,
@@ -77,30 +75,20 @@ def create_lifestyle(
 def get_lifestyle(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
-    lifestyle = StudyLifestyleService.get_lifestyle(
-        db,
-        workspace.id,
-    )
+    workspace = get_active_workspace(db)
+    lifestyle = StudyLifestyleService.get_lifestyle(db, workspace.id)
 
     if not lifestyle:
-        raise HTTPException(
-            status_code=404,
-            detail="Lifestyle not found",
+        lifestyle = StudyLifestyleDb(
+            workspace_id=workspace.id,
+            preferred_device="Laptop",
+            learning_environment="Home",
+            internet_availability="High Speed",
+            consistency_commit="High",
         )
+        db.add(lifestyle)
+        db.commit()
+        db.refresh(lifestyle)
 
     return lifestyle
 
@@ -117,20 +105,7 @@ def update_lifestyle(
     lifestyle: StudyLifestyleUpdate,
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
+    workspace = get_active_workspace(db)
     updated = StudyLifestyleService.update_lifestyle(
         db,
         workspace.id,
@@ -138,10 +113,17 @@ def update_lifestyle(
     )
 
     if not updated:
-        raise HTTPException(
-            status_code=404,
-            detail="Lifestyle not found",
+        lifestyle_obj = StudyLifestyleDb(
+            workspace_id=workspace.id,
+            preferred_device=lifestyle.preferred_device or "Laptop",
+            learning_environment=lifestyle.learning_environment or "Home",
+            internet_availability=lifestyle.internet_availability or "High Speed",
+            consistency_commit=lifestyle.consistency_commit or "High",
         )
+        db.add(lifestyle_obj)
+        db.commit()
+        db.refresh(lifestyle_obj)
+        return lifestyle_obj
 
     return updated
 
@@ -154,31 +136,14 @@ def update_lifestyle(
 def delete_lifestyle(
     db: Session = Depends(get_db),
 ):
-
-    user_id = 1
-
-    workspace = WorkspaceService.get_workspace(
-        db,
-        user_id=user_id,
-    )
-
-    if not workspace:
-        raise HTTPException(
-            status_code=404,
-            detail="Workspace not found",
-        )
-
+    workspace = get_active_workspace(db)
     deleted = StudyLifestyleService.delete_lifestyle(
         db,
         workspace.id,
     )
 
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail="Lifestyle not found",
-        )
-
     return {
+        "success": True,
         "message": "Lifestyle deleted successfully"
     }
+

@@ -17,6 +17,21 @@ Design principles
 - Hard per-request timeout to prevent pipeline stalls
 - Every vector is validated before being returned
 - Returns clean list[float] — caller never sees raw HTTP responses
+
+Task prefixes
+--------------
+``nomic-embed-text`` was trained with task-specific prefixes and produces
+noticeably lower-quality (less separable) embeddings without them:
+
+- Chunks being indexed                        -> ``"search_document: <text>"``
+- User questions being embedded for retrieval -> ``"search_query: <text>"``
+
+Mixing these up, or omitting them, does not raise an error -- Ollama will
+happily embed the raw text -- but similarity scores across unrelated topics
+become noisier, which is what lets irrelevant chunks slip past a relevance
+filter. ``embed`` / ``embed_many`` default to the document prefix (safe for
+existing ingestion call sites); pass ``is_query=True`` when embedding a
+question for retrieval.
 """
 
 from __future__ import annotations
@@ -40,10 +55,14 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-# Ollama embeddings endpoint.
-_OLLAMA_EMBED_URL: Final[str] = (
-    settings.OLLAMA_HOST.rstrip("/") + "/api/embeddings"
-)
+# Ollama embeddings endpoint helper.
+def _get_ollama_embed_url() -> str:
+    return settings.OLLAMA_HOST.rstrip("/") + "/api/embeddings"
+
+
+# nomic-embed-text task prefixes. See module docstring.
+_DOCUMENT_PREFIX: Final[str] = "search_document: "
+_QUERY_PREFIX: Final[str] = "search_query: "
 
 # nomic-embed-text context window is 8 192 tokens.  We stay conservatively
 # below that by capping input at 8 000 characters (~6 000 tokens on average).
@@ -74,7 +93,14 @@ class EmbeddingService:
 
         from app.ai.services.embedding_service import EmbeddingService
 
-        vector  = EmbeddingService.embed("Introduction to algorithms")
+        # Indexing a chunk (default -- uses the "search_document:" prefix)
+        doc_vector = EmbeddingService.embed("Introduction to algorithms")
+
+        # Embedding a user question for retrieval
+        query_vector = EmbeddingService.embed(
+            "Explain Indian monsoon mechanism", is_query=True
+        )
+
         vectors = EmbeddingService.embed_many(["chunk 1", "chunk 2"])
 
     All methods are ``@staticmethod`` — no instantiation required.
@@ -88,7 +114,7 @@ class EmbeddingService:
     # -----------------------------------------------------------------------
 
     @staticmethod
-    def embed(text: str) -> list[float]:
+    def embed(text: str, is_query: bool = False) -> list[float]:
         """
         Generate a single embedding vector for *text*.
 
@@ -100,6 +126,12 @@ class EmbeddingService:
         ----------
         text:
             The text to embed.  Should be a cleaned, non-empty string.
+        is_query:
+            Set to ``True`` when embedding a user question for retrieval.
+            Applies the ``"search_query: "`` task prefix instead of the
+            default ``"search_document: "`` prefix used for indexing.
+            Getting this wrong doesn't error -- it just quietly degrades
+            similarity scores, so it's worth double-checking at call sites.
 
         Returns
         -------
@@ -122,18 +154,23 @@ class EmbeddingService:
                 "[EmbeddingService] Cannot embed empty text."
             )
 
-        # Truncate to model context window limit.
+        # Truncate to model context window limit (measured on the raw text;
+        # the prefix is short and fixed-length, so this stays safely under
+        # the model's token budget).
         payload_text = text[:_MAX_INPUT_CHARS]
+        prefix = _QUERY_PREFIX if is_query else _DOCUMENT_PREFIX
+        prefixed_text = prefix + payload_text
 
         logger.info(
-            "[EmbeddingService] Embedding text (%d chars) with model '%s'",
+            "[EmbeddingService] Embedding text (%d chars, prefix=%r) with model '%s'",
             len(payload_text),
+            prefix.strip().rstrip(":"),
             EmbeddingService.MODEL_NAME,
         )
 
         start = time.perf_counter()
 
-        vector = EmbeddingService._request_embedding(payload_text)
+        vector = EmbeddingService._request_embedding(prefixed_text)
 
         elapsed = time.perf_counter() - start
 
@@ -146,7 +183,7 @@ class EmbeddingService:
         return vector
 
     @staticmethod
-    def embed_many(chunks: list[str]) -> list[list[float]]:
+    def embed_many(chunks: list[str], is_query: bool = False) -> list[list[float]]:
         """
         Generate embedding vectors for a list of text chunks.
 
@@ -158,6 +195,11 @@ class EmbeddingService:
         chunks:
             Ordered list of text segments produced by ``TextChunker``.
             Empty strings in the list raise ``ValueError``.
+        is_query:
+            See :meth:`embed`. Almost always left as ``False`` here --
+            ``embed_many`` is normally used for batch-indexing chunks, not
+            for embedding queries (queries are typically embedded one at a
+            time via :meth:`embed`).
 
         Returns
         -------
@@ -199,7 +241,7 @@ class EmbeddingService:
                 len(chunk),
             )
 
-            vector = EmbeddingService.embed(chunk)
+            vector = EmbeddingService.embed(chunk, is_query=is_query)
             vectors.append(vector)
 
         batch_elapsed = time.perf_counter() - batch_start
@@ -230,7 +272,7 @@ class EmbeddingService:
         Parameters
         ----------
         text:
-            Pre-truncated text ready to be embedded.
+            Pre-truncated, already-prefixed text ready to be embedded.
 
         Returns
         -------
@@ -246,15 +288,28 @@ class EmbeddingService:
         RuntimeError
             For empty or malformed Ollama responses.
         """
+        url = _get_ollama_embed_url()
+        host = settings.get_ollama_host()
+        model_name = EmbeddingService.MODEL_NAME
+        text_len = len(text)
+
+        logger.info(
+            "[Embedding Diagnostics] Request | Request URL=%s | Host=%s | Endpoint=/api/embeddings | Model=%s | Text Length=%d",
+            url,
+            host,
+            model_name,
+            text_len,
+        )
+
         payload = json.dumps(
             {
-                "model": EmbeddingService.MODEL_NAME,
+                "model": model_name,
                 "prompt": text,
             }
         ).encode("utf-8")
 
         request = urllib.request.Request(
-            url=_OLLAMA_EMBED_URL,
+            url=url,
             data=payload,
             headers={"Content-Type": "application/json"},
             method="POST",
@@ -310,7 +365,7 @@ class EmbeddingService:
                 time.sleep(delay)
 
         raise ConnectionError(
-            f"[EmbeddingService] Ollama unreachable at '{_OLLAMA_EMBED_URL}' "
+            f"[EmbeddingService] Ollama unreachable at '{_get_ollama_embed_url()}' "
             f"after {_MAX_RETRIES} attempt(s). Last error: {last_error}"
         ) from last_error
 
@@ -444,7 +499,7 @@ if __name__ == "__main__":  # pragma: no cover
     print("EmbeddingService - smoke test")
     print("=" * 60)
     print(f"Model     : {EmbeddingService.MODEL_NAME}")
-    print(f"Endpoint  : {_OLLAMA_EMBED_URL}")
+    print(f"Endpoint  : {_get_ollama_embed_url()}")
     print(f"Input     : '{test_text}'")
     print()
 

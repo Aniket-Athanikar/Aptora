@@ -18,6 +18,8 @@ services:
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - LLM_MODEL=qwen3:4b
     ports:
       - "8000:8000"
 

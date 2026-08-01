@@ -12,6 +12,7 @@ from app.db import Base, engine, redis_client, qdrant_client
 # Import models to ensure they register on Base.metadata before create_all
 import app.models
 from app.ai.services.qdrant_service import QdrantService
+from app.core.config import settings
 
 # Load env variables
 load_dotenv()
@@ -25,6 +26,12 @@ app = FastAPI(
     description="Full-stack containerized backend API for ExamForge AI with DB integrations",
     version="2.1.0"
 )
+
+
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    """Container health probe; dependency detail remains available at `/`."""
+    return {"status": "healthy"}
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(_: Request, exc: HTTPException):
@@ -50,7 +57,29 @@ app.add_middleware(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    logger.info("Starting ExamForge AI Backend...")
+    logger.info("==================================================")
+    logger.info("ExamForge AI Backend Initialization Diagnostics")
+    logger.info("==================================================")
+    logger.info("  Running inside Docker : %s", settings.RUNNING_IN_DOCKER)
+    logger.info("  LLM Provider          : %s", settings.LLM_PROVIDER)
+    logger.info("  OLLAMA_HOST           : %s", settings.OLLAMA_HOST)
+    logger.info("  LLM Model             : %s", settings.OPENROUTER_MODEL if settings.LLM_PROVIDER.lower() == "openrouter" else settings.LLM_MODEL)
+    logger.info("  Embedding Model       : %s", settings.EMBEDDING_MODEL)
+    logger.info("==================================================")
+
+    try:
+        import requests
+        tags_url = f"{settings.get_ollama_host()}/api/tags"
+        res = requests.get(tags_url, timeout=3)
+        if res.status_code == 200:
+            raw_models = res.json().get("models", [])
+            models = [m.get("name") for m in raw_models if isinstance(m, dict) and m.get("name")]
+            logger.info("[Startup] Ollama is reachable at %s | Available models: %s", settings.OLLAMA_HOST, models)
+        else:
+            logger.warning("[Startup WARNING] Ollama at %s returned status HTTP %d", settings.OLLAMA_HOST, res.status_code)
+    except Exception as exc:
+        logger.warning("[Startup WARNING] Ollama host '%s' unreachable on startup: %s", settings.OLLAMA_HOST, exc)
+
 
     try:
         # Base.metadata.create_all(bind=engine)
@@ -68,13 +97,9 @@ async def lifespan(app: FastAPI):
 
     logger.info("Shutting down ExamForge AI Backend...")
 
-# Flush Redis cache on startup
-if redis_client:
-    try:
-        redis_client.flushdb()
-        logger.info("Redis database cache flushed successfully on startup.")
-    except Exception as e:
-        logger.error(f"Error flushing Redis cache on startup: {e}")
+# Never flush Redis here: document_processing_queue is durable work, not cache.
+# Flushing it at every backend restart silently discarded uploads before the
+# worker could create embeddings and Qdrant points.
 
 # Include all API routes via the central router
 from app.api.router import api_router

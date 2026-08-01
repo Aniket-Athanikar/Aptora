@@ -2,16 +2,19 @@
 ExamForge AI - OCR Service
 """
 
+import os
+import shutil
 import fitz
 import pytesseract
-
 from pathlib import Path
 from pdf2image import convert_from_path
 import pytesseract
 
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-)
+# Do not hard-code Windows executables.  Containers use PATH; local Windows
+# installs may optionally supply an explicit executable through this variable.
+_tesseract_cmd = os.getenv("TESSERACT_CMD")
+if _tesseract_cmd:
+    pytesseract.pytesseract.tesseract_cmd = _tesseract_cmd
 
 class OCRService:
 
@@ -33,15 +36,19 @@ class OCRService:
 
         print(f"Direct extraction length: {len(text.strip())}")
 
-        # ----------------------------
-        # Force OCR for now
-        # ----------------------------
+        # Digitally generated PDFs should never require external OCR tools.
+        # The old forced-OCR path made otherwise valid documents fail in the
+        # Linux worker because it referenced a Windows Poppler installation.
+        if len(text.strip()) >= 40:
+            return text
 
-        print("Running OCR...")
+        if not shutil.which("pdftoppm") or not shutil.which("tesseract"):
+            raise RuntimeError("Scanned PDF needs Poppler and Tesseract, but they are unavailable in this runtime.")
+
+        print("Running OCR for scanned PDF...")
 
         pages = convert_from_path(
-            file_path,
-            poppler_path=r"C:\poppler\poppler-26.02.0\Library\bin",
+            str(file_path),
         )
 
         ocr_text = ""

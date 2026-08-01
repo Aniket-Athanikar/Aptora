@@ -68,7 +68,7 @@ class IntentAnalyzer:
         },
         "generate_notes": {
             "keywords": ["notes", "summary notes", "revision notes", "cheat sheet", "bullet points"],
-            "resource_types": ["book", "notes", "syllabus"],
+            "resource_types": ["notes", "book"],
             "limit": 10,
         },
         "predict_questions": {
@@ -82,7 +82,7 @@ class IntentAnalyzer:
             "limit": 8,
         },
         "memory_tricks": {
-            "keywords": ["mnemonic", "memory trick", "how to remember", "shortcut", "trick to learn"],
+            "keywords": ["mnemonic", "memory trick", "memory tricks", "how to remember", "shortcut", "trick to learn"],
             "resource_types": ["notes", "book"],
             "limit": 6,
         },
@@ -123,7 +123,7 @@ class IntentAnalyzer:
         },
         "explain": {
             "keywords": ["what is", "explain", "define", "concept of", "meaning of", "describe"],
-            "resource_types": ["book", "notes"],
+            "resource_types": ["book", "notes", "syllabus"],
             "limit": 6,
         },
     }

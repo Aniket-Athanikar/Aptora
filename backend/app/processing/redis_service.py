@@ -26,6 +26,9 @@ class RedisService:
         """
 
         try:
+            if redis_client is None:
+                logger.error("Redis is unavailable; document %s was not queued.", resource_id)
+                return False
 
             payload = {
                 "resource_id": resource_id,
@@ -42,9 +45,8 @@ class RedisService:
 
             return True
 
-        except Exception as e:
-
-            logger.error(e)
+        except Exception:
+            logger.exception("Failed to enqueue document %s on queue %s.", resource_id, DOCUMENT_QUEUE)
 
             return False
 
@@ -55,17 +57,23 @@ class RedisService:
         """
 
         try:
+            if redis_client is None:
+                return None
 
             item = redis_client.lpop(DOCUMENT_QUEUE)
 
             if item is None:
+                logger.debug("No job available on Redis queue %s.", DOCUMENT_QUEUE)
                 return None
 
-            return json.loads(item)
+            job = json.loads(item)
+            logger.info("Dequeued document job from %s: %s", DOCUMENT_QUEUE, job)
+            return job
 
-        except Exception as e:
-
-            logger.error(e)
+        except Exception:
+            # LPOP removes a job.  The full traceback is essential to
+            # distinguish a Redis/JSON failure from an empty queue.
+            logger.exception("Failed to dequeue a document job from queue %s.", DOCUMENT_QUEUE)
 
             return None
 

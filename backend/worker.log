@@ -1,0 +1,1301 @@
+INFO:__main__:ExamForge resource worker started.
+INFO:__main__:Recovering 2 pending document(s).
+INFO:app.processing.document_indexer:[DocumentIndexer] Starting document indexing pipeline for resource_id=4 ('Class-12-Geo-Part-1.pdf')
+INFO:app.processing.document_processor:[DocumentProcessor] Starting pipeline for '36e3b636-5977-406e-8de8-458c4d1a6b0d.pdf'
+INFO:app.processing.document_processor:[DocumentProcessor] OCR: extracting text from '36e3b636-5977-406e-8de8-458c4d1a6b0d.pdf'
+Trying direct PDF extraction...
+Direct extraction length: 257059
+INFO:app.processing.document_processor:[DocumentProcessor] OCR complete: 257060 chars extracted in 19.64s
+INFO:app.processing.document_processor:[DocumentProcessor] Cleaner: processing 257060 chars from '36e3b636-5977-406e-8de8-458c4d1a6b0d.pdf'
+INFO:app.processing.document_processor:[DocumentProcessor] Cleaning complete: 254448 chars remaining in 0.24s
+INFO:app.processing.document_processor:[DocumentProcessor] Chunker: splitting '36e3b636-5977-406e-8de8-458c4d1a6b0d.pdf' (chunk_size=1000, overlap=200)
+INFO:app.processing.document_processor:[DocumentProcessor] Chunking complete: 296 chunks in 1.50s
+INFO:app.processing.document_processor:[DocumentProcessor] Finished '36e3b636-5977-406e-8de8-458c4d1a6b0d.pdf' in 21.41s — 254448 chars, 40161 words, 296 chunks
+INFO:app.processing.document_indexer:[DocumentIndexer] OCR complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Cleaning complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Chunking complete (296 chunks).
+INFO:app.processing.metadata_extractor:[MetadataExtractor] Extracting metadata from 'Class-12-Geo-Part-1.pdf' (254448 chars)
+INFO:app.processing.metadata_extractor:[MetadataExtractor] Done: title='1.
+Human Geography', lang='English', ~116 pages, 505 headings, 72 chapters
+INFO:app.processing.document_indexer:[DocumentIndexer] Metadata complete (title='1.
+Human Geography', lang='English', ~116 pages).
+INFO:app.ai.services.embedding_service:[EmbeddingService] Starting batch embedding: 296 chunk(s)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 1 / 296 (410 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (410 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=410
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 2.200s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 2 / 296 (1158 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1158 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1158
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.557s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 3 / 296 (1149 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1149 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1149
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.084s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 4 / 296 (551 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (551 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=551
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.670s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 5 / 296 (895 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (895 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=895
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.866s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 6 / 296 (1150 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1150 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1150
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.155s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 7 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.830s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 8 / 296 (1124 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1124 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1124
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.981s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 9 / 296 (330 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (330 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=330
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.613s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 10 / 296 (1108 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1108 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1108
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.968s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 11 / 296 (1152 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1152 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1152
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.884s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 12 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.761s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 13 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.903s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 14 / 296 (443 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (443 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=443
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.419s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 15 / 296 (1149 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1149 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1149
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.798s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 16 / 296 (1168 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1168 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1168
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.741s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 17 / 296 (1137 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1137 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1137
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.693s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 18 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.708s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 19 / 296 (256 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (256 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=256
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.258s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 20 / 296 (993 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (993 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=993
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.651s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 21 / 296 (1117 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1117 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1117
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.743s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 22 / 296 (774 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (774 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=774
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.587s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 23 / 296 (1184 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1184 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1184
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.975s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 24 / 296 (519 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (519 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=519
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.666s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 25 / 296 (1176 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1176 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1176
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.847s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 26 / 296 (1137 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1137 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1137
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.886s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 27 / 296 (830 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (830 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=830
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.851s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 28 / 296 (1021 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1021 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1021
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.989s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 29 / 296 (1145 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1145 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1145
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.085s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 30 / 296 (372 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (372 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=372
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.436s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 31 / 296 (1099 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1099 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1099
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.826s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 32 / 296 (1115 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1115 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1115
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.794s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 33 / 296 (1139 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1139 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1139
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.742s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 34 / 296 (1120 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1120 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1120
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.672s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 35 / 296 (1083 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1083 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1083
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.628s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 36 / 296 (648 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (648 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=648
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.496s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 37 / 296 (1173 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1173 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1173
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.789s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 38 / 296 (1136 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1136 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1136
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.641s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 39 / 296 (241 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (241 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=241
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.256s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 40 / 296 (938 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (938 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=938
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.580s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 41 / 296 (942 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (942 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=942
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.574s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 42 / 296 (1167 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1167 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1167
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.063s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 43 / 296 (931 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (931 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=931
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.911s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 44 / 296 (676 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (676 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=676
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.623s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 45 / 296 (1182 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1182 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1182
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.970s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 46 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.770s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 47 / 296 (215 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (215 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=215
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.402s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 48 / 296 (1034 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1034 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1034
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.900s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 49 / 296 (1179 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1179 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1179
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.929s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 50 / 296 (322 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (322 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=322
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.294s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 51 / 296 (1092 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1092 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1092
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.906s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 52 / 296 (617 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (617 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=617
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.575s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 53 / 296 (1141 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1141 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1141
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.819s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 54 / 296 (1126 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1126 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1126
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.761s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 55 / 296 (373 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (373 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=373
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.341s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 56 / 296 (1128 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1128 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1128
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.880s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 57 / 296 (1156 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1156 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1156
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.798s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 58 / 296 (1040 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1040 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1040
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.749s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 59 / 296 (798 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (798 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=798
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.600s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 60 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.701s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 61 / 296 (1108 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1108 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1108
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.629s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 62 / 296 (1157 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1157 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1157
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.671s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 63 / 296 (279 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (279 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=279
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.249s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 64 / 296 (1076 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1076 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1076
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.648s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 65 / 296 (318 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (318 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=318
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.264s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 66 / 296 (1113 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1113 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1113
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.701s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 67 / 296 (1097 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1097 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1097
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.643s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 68 / 296 (1133 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1133 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1133
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.681s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 69 / 296 (1149 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1149 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1149
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.655s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 70 / 296 (1058 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1058 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1058
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.654s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 71 / 296 (975 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (975 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=975
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.757s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 72 / 296 (1112 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1112 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1112
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.015s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 73 / 296 (1179 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1179 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1179
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.690s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 74 / 296 (1153 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1153 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1153
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.675s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 75 / 296 (1141 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1141 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1141
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.652s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 76 / 296 (380 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (380 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=380
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.295s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 77 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.681s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 78 / 296 (1143 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1143 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1143
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.658s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 79 / 296 (1156 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1156 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1156
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.636s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 80 / 296 (1156 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1156 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1156
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.624s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 81 / 296 (1176 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1176 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1176
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.602s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 82 / 296 (1161 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1161 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1161
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.617s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 83 / 296 (391 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (391 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=391
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.314s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 84 / 296 (1178 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1178 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1178
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.618s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 85 / 296 (1155 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1155 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1155
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.738s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 86 / 296 (1141 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1141 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1141
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.890s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 87 / 296 (1149 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1149 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1149
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.834s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 88 / 296 (1044 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1044 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1044
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.745s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 89 / 296 (1174 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1174 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1174
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.669s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 90 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.650s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 91 / 296 (337 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (337 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=337
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.250s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 92 / 296 (1099 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1099 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1099
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.669s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 93 / 296 (1178 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1178 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1178
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.723s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 94 / 296 (1124 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1124 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1124
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.719s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 95 / 296 (1159 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1159 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1159
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.676s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 96 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.758s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 97 / 296 (1180 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1180 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1180
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.614s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 98 / 296 (561 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (561 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=561
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.331s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 99 / 296 (1118 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1118 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1118
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.593s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 100 / 296 (1154 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1154 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1154
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.672s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 101 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.591s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 102 / 296 (1145 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1145 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1145
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.717s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 103 / 296 (737 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (737 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=737
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.618s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 104 / 296 (1169 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1169 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1169
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.769s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 105 / 296 (1130 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1130 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1130
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.574s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 106 / 296 (691 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (691 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=691
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.399s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 107 / 296 (1188 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1188 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1188
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.741s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 108 / 296 (1154 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1154 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1154
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.613s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 109 / 296 (1159 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1159 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1159
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.577s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 110 / 296 (1160 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1160 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1160
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.620s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 111 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.579s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 112 / 296 (302 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (302 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=302
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.224s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 113 / 296 (1038 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1038 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1038
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.537s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 114 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.570s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 115 / 296 (1162 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1162 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1162
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.730s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 116 / 296 (776 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (776 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=776
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.599s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 117 / 296 (1108 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1108 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1108
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.637s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 118 / 296 (1164 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1164 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1164
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.606s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 119 / 296 (851 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (851 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=851
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.600s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 120 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.757s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 121 / 296 (1152 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1152 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1152
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.608s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 122 / 296 (1126 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1126 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1126
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.532s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 123 / 296 (1157 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1157 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1157
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.634s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 124 / 296 (1127 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1127 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1127
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.529s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 125 / 296 (957 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (957 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=957
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.448s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 126 / 296 (1045 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1045 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1045
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.489s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 127 / 296 (1122 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1122 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1122
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.591s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 128 / 296 (1140 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1140 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1140
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.574s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 129 / 296 (1069 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1069 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1069
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.614s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 130 / 296 (1144 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1144 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1144
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.654s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 131 / 296 (1130 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1130 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1130
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.610s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 132 / 296 (1169 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1169 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1169
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.580s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 133 / 296 (1174 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1174 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1174
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.559s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 134 / 296 (1180 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1180 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1180
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.644s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 135 / 296 (589 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (589 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=589
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.340s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 136 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.744s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 137 / 296 (1116 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1116 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1116
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.757s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 138 / 296 (1140 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1140 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1140
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.675s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 139 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.633s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 140 / 296 (1132 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1132 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1132
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.711s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 141 / 296 (1179 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1179 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1179
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.645s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 142 / 296 (880 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (880 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=880
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.521s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 143 / 296 (1113 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1113 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1113
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.686s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 144 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.739s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 145 / 296 (1148 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1148 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1148
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.577s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 146 / 296 (1072 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1072 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1072
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.619s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 147 / 296 (1133 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1133 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1133
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.731s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 148 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.662s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 149 / 296 (1030 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1030 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1030
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.649s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 150 / 296 (960 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (960 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=960
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.465s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 151 / 296 (1103 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1103 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1103
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.655s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 152 / 296 (565 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (565 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=565
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.608s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 153 / 296 (1164 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1164 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1164
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.909s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 154 / 296 (1171 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1171 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1171
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.712s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 155 / 296 (1157 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1157 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1157
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.675s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 156 / 296 (1177 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1177 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1177
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.585s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 157 / 296 (770 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (770 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=770
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.511s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 158 / 296 (1128 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1128 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1128
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.694s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 159 / 296 (1124 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1124 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1124
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.572s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 160 / 296 (1107 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1107 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1107
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.566s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 161 / 296 (1121 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1121 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1121
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.600s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 162 / 296 (1100 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1100 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1100
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.673s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 163 / 296 (926 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (926 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=926
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.559s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 164 / 296 (567 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (567 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=567
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.467s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 165 / 296 (1181 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1181 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1181
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.757s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 166 / 296 (1156 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1156 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1156
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.624s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 167 / 296 (1146 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1146 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1146
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.718s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 168 / 296 (810 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (810 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=810
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.747s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 169 / 296 (1156 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1156 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1156
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.872s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 170 / 296 (374 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (374 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=374
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.274s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 171 / 296 (1082 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1082 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1082
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.567s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 172 / 296 (1171 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1171 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1171
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.776s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 173 / 296 (1165 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1165 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1165
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.784s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 174 / 296 (1126 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1126 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1126
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.558s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 175 / 296 (1032 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1032 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1032
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.553s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 176 / 296 (1125 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1125 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1125
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.646s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 177 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.654s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 178 / 296 (682 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (682 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=682
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.396s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 179 / 296 (1119 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1119 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1119
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.647s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 180 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.645s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 181 / 296 (1151 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1151 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1151
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.665s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 182 / 296 (720 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (720 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=720
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.417s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 183 / 296 (1125 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1125 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1125
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.911s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 184 / 296 (1178 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1178 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1178
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.027s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 185 / 296 (1177 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1177 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1177
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.236s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 186 / 296 (1154 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1154 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1154
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.150s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 187 / 296 (1162 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1162 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1162
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.716s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 188 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.668s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 189 / 296 (1011 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1011 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1011
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.621s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 190 / 296 (1124 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1124 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1124
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.595s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 191 / 296 (1128 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1128 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1128
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.731s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 192 / 296 (1148 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1148 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1148
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.634s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 193 / 296 (530 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (530 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=530
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.347s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 194 / 296 (1140 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1140 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1140
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.579s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 195 / 296 (1147 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1147 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1147
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.614s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 196 / 296 (1165 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1165 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1165
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.654s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 197 / 296 (465 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (465 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=465
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.381s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 198 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.659s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 199 / 296 (1151 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1151 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1151
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.633s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 200 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.772s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 201 / 296 (1124 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1124 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1124
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.682s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 202 / 296 (822 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (822 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=822
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.488s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 203 / 296 (1162 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1162 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1162
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.608s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 204 / 296 (1179 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1179 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1179
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.629s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 205 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.736s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 206 / 296 (1148 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1148 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1148
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.705s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 207 / 296 (824 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (824 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=824
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.498s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 208 / 296 (1148 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1148 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1148
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.593s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 209 / 296 (517 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (517 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=517
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.285s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 210 / 296 (1126 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1126 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1126
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.579s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 211 / 296 (1153 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1153 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1153
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.662s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 212 / 296 (503 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (503 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=503
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.385s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 213 / 296 (1185 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1185 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1185
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.647s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 214 / 296 (1161 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1161 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1161
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.799s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 215 / 296 (619 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (619 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=619
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.615s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 216 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.818s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 217 / 296 (1135 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1135 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1135
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.625s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 218 / 296 (1123 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1123 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1123
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.586s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 219 / 296 (1170 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1170 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1170
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.595s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 220 / 296 (1168 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1168 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1168
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.551s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 221 / 296 (1128 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1128 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1128
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.542s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 222 / 296 (1174 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1174 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1174
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.681s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 223 / 296 (1151 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1151 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1151
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.583s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 224 / 296 (1163 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1163 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1163
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.559s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 225 / 296 (886 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (886 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=886
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.462s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 226 / 296 (1122 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1122 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1122
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.601s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 227 / 296 (1130 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1130 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1130
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.632s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 228 / 296 (1064 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1064 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1064
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.681s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 229 / 296 (1141 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1141 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1141
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.763s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 230 / 296 (1154 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1154 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1154
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.866s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 231 / 296 (1085 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1085 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1085
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.867s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 232 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.697s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 233 / 296 (1166 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1166 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1166
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.762s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 234 / 296 (1159 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1159 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1159
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.635s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 235 / 296 (1032 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1032 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1032
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.657s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 236 / 296 (972 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (972 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=972
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.578s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 237 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.661s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 238 / 296 (1153 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1153 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1153
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.531s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 239 / 296 (1158 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1158 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1158
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.628s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 240 / 296 (1147 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1147 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1147
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.776s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 241 / 296 (1130 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1130 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1130
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.661s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 242 / 296 (522 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (522 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=522
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.345s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 243 / 296 (1162 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1162 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1162
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.689s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 244 / 296 (1175 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1175 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1175
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.525s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 245 / 296 (903 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (903 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=903
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.596s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 246 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.673s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 247 / 296 (1153 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1153 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1153
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.619s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 248 / 296 (1147 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1147 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1147
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.599s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 249 / 296 (1159 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1159 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1159
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.636s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 250 / 296 (1150 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1150 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1150
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.630s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 251 / 296 (516 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (516 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=516
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.442s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 252 / 296 (1147 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1147 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1147
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.933s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 253 / 296 (1186 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1186 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1186
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.930s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 254 / 296 (1127 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1127 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1127
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.695s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 255 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.741s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 256 / 296 (654 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (654 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=654
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.578s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 257 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.697s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 258 / 296 (1135 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1135 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1135
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.679s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 259 / 296 (1142 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1142 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1142
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.676s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 260 / 296 (1155 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1155 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1155
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.963s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 261 / 296 (1151 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1151 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1151
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.147s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 262 / 296 (1175 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1175 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1175
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.686s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 263 / 296 (426 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (426 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=426
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.395s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 264 / 296 (1151 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1151 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1151
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.672s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 265 / 296 (1179 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1179 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1179
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.785s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 266 / 296 (1164 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1164 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1164
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.753s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 267 / 296 (482 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (482 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=482
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.365s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 268 / 296 (1177 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1177 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1177
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.601s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 269 / 296 (1171 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1171 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1171
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.015s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 270 / 296 (1159 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1159 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1159
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.729s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 271 / 296 (1135 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1135 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1135
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.664s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 272 / 296 (752 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (752 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=752
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.454s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 273 / 296 (1178 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1178 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1178
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.689s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 274 / 296 (680 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (680 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=680
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.716s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 275 / 296 (1094 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1094 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1094
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.747s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 276 / 296 (1125 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1125 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1125
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.929s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 277 / 296 (1180 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1180 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1180
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.127s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 278 / 296 (1080 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1080 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1080
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.491s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 279 / 296 (1081 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1081 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1081
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.296s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 280 / 296 (1169 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1169 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1169
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.310s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 281 / 296 (1130 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1130 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1130
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.266s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 282 / 296 (1148 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1148 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1148
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.254s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 283 / 296 (1068 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1068 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1068
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.493s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 284 / 296 (1192 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1192 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1192
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.117s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 285 / 296 (1138 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1138 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1138
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.247s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 286 / 296 (474 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (474 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=474
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.431s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 287 / 296 (1140 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1140 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1140
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.781s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 288 / 296 (1155 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1155 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1155
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.882s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 289 / 296 (1174 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1174 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1174
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.623s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 290 / 296 (1175 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1175 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1175
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.581s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 291 / 296 (1154 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1154 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1154
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.605s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 292 / 296 (1165 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1165 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1165
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.680s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 293 / 296 (1165 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1165 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1165
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.613s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 294 / 296 (1134 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1134 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1134
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.627s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 295 / 296 (1175 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1175 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1175
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.653s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 296 / 296 (403 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (403 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=403
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.232s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Batch complete: 296 vectors in 203.63s (avg 0.688s/chunk)
+INFO:app.processing.document_indexer:[DocumentIndexer] Embedding complete (296 vectors).
+INFO:app.ai.services.qdrant_service:[QdrantService] Deleting all vectors for resource_id=4 from collection 'examforge_documents'...
+WARNING:app.ai.services.qdrant_service:[QdrantService] Attempt 1/3 to delete resource_id=4 failed: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `examforge_documents` doesn\'t exist!"},"time":0.009237438}'
+WARNING:app.ai.services.qdrant_service:[QdrantService] Attempt 2/3 to delete resource_id=4 failed: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `examforge_documents` doesn\'t exist!"},"time":0.000010267}'
+WARNING:app.ai.services.qdrant_service:[QdrantService] Attempt 3/3 to delete resource_id=4 failed: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `examforge_documents` doesn\'t exist!"},"time":0.000158588}'
+ERROR:app.ai.services.qdrant_service:[QdrantService] Failed to delete vectors for resource_id=4 after retries.
+INFO:app.processing.document_indexer:[DocumentIndexer] No prior Qdrant points to replace for resource_id=4.
+INFO:app.ai.services.qdrant_service:[QdrantService] Creating Qdrant collection 'examforge_documents' (vector_size=768, distance=Cosine)...
+INFO:app.ai.services.qdrant_service:[QdrantService] Collection 'examforge_documents' created successfully.
+INFO:app.ai.services.qdrant_service:[QdrantService] Upserting 296 vectors into collection 'examforge_documents' for resource_id=4...
+WARNING:app.ai.services.qdrant_service:[QdrantService] Attempt 1/3 to upsert chunks failed: timed out
+INFO:app.ai.services.qdrant_service:[QdrantService] Vectors inserted successfully (296 points in 6.222s).
+INFO:app.processing.document_indexer:[DocumentIndexer] Qdrant complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Database complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Finished indexing resource_id=4 successfully. Status: COMPLETED
+INFO:app.processing.document_indexer:[DocumentIndexer] Starting document indexing pipeline for resource_id=5 ('ECONOMICS-PAPER II-QP-CSM-25-010925.pdf')
+INFO:app.processing.document_processor:[DocumentProcessor] Starting pipeline for '63ecd845-3128-4823-9da4-0d33dcfcea06.pdf'
+INFO:app.processing.document_processor:[DocumentProcessor] OCR: extracting text from '63ecd845-3128-4823-9da4-0d33dcfcea06.pdf'
+Trying direct PDF extraction...
+Direct extraction length: 0
+Running OCR for scanned PDF...
+OCR Page 1
+OCR Page 2
+OCR Page 3
+OCR Page 4
+INFO:app.processing.document_processor:[DocumentProcessor] OCR complete: 7972 chars extracted in 25.18s
+INFO:app.processing.document_processor:[DocumentProcessor] Cleaner: processing 7972 chars from '63ecd845-3128-4823-9da4-0d33dcfcea06.pdf'
+INFO:app.processing.document_processor:[DocumentProcessor] Cleaning complete: 7970 chars remaining in 0.01s
+INFO:app.processing.document_processor:[DocumentProcessor] Chunker: splitting '63ecd845-3128-4823-9da4-0d33dcfcea06.pdf' (chunk_size=1000, overlap=200)
+INFO:app.processing.document_processor:[DocumentProcessor] Chunking complete: 10 chunks in 0.00s
+INFO:app.processing.document_processor:[DocumentProcessor] Finished '63ecd845-3128-4823-9da4-0d33dcfcea06.pdf' in 25.20s — 7970 chars, 1519 words, 10 chunks
+INFO:app.processing.document_indexer:[DocumentIndexer] OCR complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Cleaning complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Chunking complete (10 chunks).
+INFO:app.processing.metadata_extractor:[MetadataExtractor] Extracting metadata from 'ECONOMICS-PAPER II-QP-CSM-25-010925.pdf' (7970 chars)
+INFO:app.processing.metadata_extractor:[MetadataExtractor] Done: title='SLPM-B-ECO', lang='English', ~4 pages, 4 headings, 1 chapters
+INFO:app.processing.document_indexer:[DocumentIndexer] Metadata complete (title='SLPM-B-ECO', lang='English', ~4 pages).
+INFO:app.ai.services.embedding_service:[EmbeddingService] Starting batch embedding: 10 chunk(s)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 1 / 10 (996 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (996 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=996
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.238s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 2 / 10 (1129 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1129 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1129
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.827s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 3 / 10 (983 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (983 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=983
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.009s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 4 / 10 (1060 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1060 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1060
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.372s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 5 / 10 (407 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (407 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=407
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.474s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 6 / 10 (1119 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1119 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1119
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.007s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 7 / 10 (1093 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1093 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1093
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.155s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 8 / 10 (1103 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1103 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1103
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.109s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 9 / 10 (1193 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (1193 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=1193
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 1.231s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding chunk 10 / 10 (262 chars)
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding text (262 chars) with model 'nomic-embed-text'
+INFO:app.ai.services.embedding_service:[Embedding Diagnostics] Request | Request URL=http://host.docker.internal:11434/api/embeddings | Host=http://host.docker.internal:11434 | Endpoint=/api/embeddings | Model=nomic-embed-text | Text Length=262
+INFO:app.ai.services.embedding_service:[EmbeddingService] Embedding complete: 768-dim vector in 0.267s
+INFO:app.ai.services.embedding_service:[EmbeddingService] Batch complete: 10 vectors in 9.69s (avg 0.969s/chunk)
+INFO:app.processing.document_indexer:[DocumentIndexer] Embedding complete (10 vectors).
+INFO:app.ai.services.qdrant_service:[QdrantService] Deleting all vectors for resource_id=5 from collection 'examforge_documents'...
+INFO:app.ai.services.qdrant_service:[QdrantService] Deletion completed for resource_id=5.
+INFO:app.ai.services.qdrant_service:[QdrantService] Collection 'examforge_documents' already exists.
+INFO:app.ai.services.qdrant_service:[QdrantService] Upserting 10 vectors into collection 'examforge_documents' for resource_id=5...
+INFO:app.ai.services.qdrant_service:[QdrantService] Vectors inserted successfully (10 points in 0.023s).
+INFO:app.processing.document_indexer:[DocumentIndexer] Qdrant complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Database complete.
+INFO:app.processing.document_indexer:[DocumentIndexer] Finished indexing resource_id=5 successfully. Status: COMPLETED

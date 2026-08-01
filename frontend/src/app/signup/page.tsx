@@ -170,6 +170,7 @@ export default function SignupPage() {
     try {
       const response = await fetch(`${API_URL}/api/auth/verify-otp`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-Token": csrfToken,

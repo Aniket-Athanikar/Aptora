@@ -32,6 +32,7 @@ from app.models.newsletter import NewsletterDb
 # Account
 from app.models.account import AccountDeletionRequestDb
 from app.models.onboarding_profile import UserOnboardingProfileDb
+from app.models.knowledge_conversation import KnowledgeConversationDb, KnowledgeMessageDb
 
 
 __all__ = [
@@ -53,4 +54,6 @@ __all__ = [
     "NewsletterDb",
     "AccountDeletionRequestDb",
     "UserOnboardingProfileDb",
+    "KnowledgeConversationDb",
+    "KnowledgeMessageDb",
 ]

@@ -23,9 +23,8 @@ import re
 import time
 from typing import Final, List
 
-import ollama
-
-from app.core.config import LLM_MODEL
+from app.core.config import LLM_MODEL, settings
+from app.ai.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +88,8 @@ Document Text:
 JSON Array Output:"""
 
         logger.info(
-            "[TopicDetector] Detecting topics using model '%s' (%d chars scanned)...",
+            "[TopicDetector] Detecting topics | OLLAMA_HOST=%s | MODEL=%s | (%d chars scanned)...",
+            settings.OLLAMA_HOST,
             TopicDetector.MODEL_NAME,
             len(sample),
         )
@@ -98,7 +98,7 @@ JSON Array Output:"""
 
         for attempt in range(1, MAX_RETRIES + 1):
             try:
-                response = ollama.chat(
+                response = LLMService.get_client().chat(
                     model=TopicDetector.MODEL_NAME,
                     messages=[{"role": "user", "content": prompt}],
                     options={"temperature": 0.2},
@@ -121,9 +121,10 @@ JSON Array Output:"""
 
             except Exception as exc:
                 logger.warning(
-                    "[TopicDetector] Attempt %d/%d failed: %s",
+                    "[TopicDetector] Attempt %d/%d failed | OLLAMA_HOST=%s: %s",
                     attempt,
                     MAX_RETRIES,
+                    settings.OLLAMA_HOST,
                     exc,
                 )
                 if attempt < MAX_RETRIES:
@@ -140,16 +141,6 @@ JSON Array Output:"""
     def _parse_topics_response(response_text: str) -> List[str]:
         """
         Parse, clean, deduplicate, and limit the LLM response to valid topics.
-
-        Parameters
-        ----------
-        response_text : str
-            Raw text response from LLM.
-
-        Returns
-        -------
-        List[str]
-            Clean list of up to 20 topic strings.
         """
         cleaned_text = response_text.replace("```json", "").replace("```", "").strip()
 

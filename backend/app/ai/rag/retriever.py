@@ -22,7 +22,7 @@ class Retriever:
     Retrieves the most relevant document chunks for a query.
     """
 
-    DEFAULT_LIMIT = 5
+    DEFAULT_LIMIT = 12
 
     @classmethod
     def retrieve(
@@ -30,6 +30,8 @@ class Retriever:
         workspace_id: int,
         question: str,
         limit: int | None = None,
+        subject_id: int | None = None,
+        resource_types: list[str] | None = None,
     ) -> list[dict[str, Any]]:
         """
         Retrieve relevant chunks for a user question.
@@ -58,6 +60,8 @@ class Retriever:
             workspace_id=workspace_id,
             question=question,
             limit=top_k,
+            subject_id=subject_id,
+            resource_types=resource_types,
         )
 
         logger.info(

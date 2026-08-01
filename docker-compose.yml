@@ -64,6 +64,10 @@ services:
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - LLM_MODEL=qwen3:4b
+    volumes:
+      - ./backend/app/uploads:/app/app/uploads
     depends_on:
       - postgres
       - redis
@@ -75,6 +79,43 @@ services:
       resources:
         limits:
           memory: 256M
+
+  # Indexing is deliberately a separate long-running process.  Previously
+  # uploads were only enqueued, but no compose service consumed the queue.
+  # This left PostgreSQL rows in UPLOADED state and Qdrant empty.
+  resource-worker:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend.Dockerfile
+    command: python -m app.workers.resource_worker
+    environment:
+      - ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=Exame_forgeDB
+      - DB_USER=aniket
+      - DB_PASSWORD=admin123
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - LLM_MODEL=qwen3:4b
+      - EMBEDDING_MODEL=nomic-embed-text
+      - EMBEDDING_DIMENSION=768
+    volumes:
+      - ./backend/app/uploads:/app/app/uploads
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+    networks:
+      - examforge-network
+    restart: always
+    # This is a queue consumer, not an HTTP server; inheriting the backend
+    # image's /health probe would permanently mark a healthy worker unhealthy.
+    healthcheck:
+      disable: true
 
   frontend:
     build:

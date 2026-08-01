@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useWorkspace } from "../workspaceContext";
 import {
   Sparkles,
@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/lib/ToastContext";
+import { backendService, type Resource } from "@/services/backend.service";
+import { ResourceUploadButton } from "@/components/resources/ResourceUploadButton";
 
 export function AIChatStepFlow() {
   const { toast } = useToast();
@@ -53,8 +55,8 @@ export function AIChatStepFlow() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Active Subject details
-  const activeSubject = activeWorkspace?.subjects.find((s) => s.id === selectedSubjectId);
-  const activeResource = activeWorkspace?.resources.find((r) => r.id === selectedResourceId);
+  const activeSubject = activeWorkspace?.subjects.find((s) => s.id === selectedSubjectId)!;
+  const activeResource = activeWorkspace?.resources.find((r) => r.id === selectedResourceId)!;
 
   // Filtered Subjects
   const filteredSubjects = (activeWorkspace?.subjects || []).filter((s) =>
@@ -80,6 +82,8 @@ export function AIChatStepFlow() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
+
+  return <AiStudyHome />;
 
   return (
     <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
@@ -582,4 +586,219 @@ export function AIChatStepFlow() {
       )}
     </div>
   );
+}
+
+function AiStudyHome() {
+  const { activeWorkspace, activeWorkspaceId, flowStep, setFlowStep, selectedSubjectId, selectedResourceType, selectedResourceId, selectSubject, selectResourceType, selectResource, refreshResources } = useWorkspace();
+  const [subjectSearch, setSubjectSearch] = useState("");
+  const subjects = (activeWorkspace?.subjects ?? []).filter((subject) =>
+    subject.name.toLowerCase().includes(subjectSearch.trim().toLowerCase())
+  );
+  const selectedSubject = activeWorkspace?.subjects.find((subject) => subject.id === selectedSubjectId);
+
+  if (flowStep === 2 && selectedSubject) {
+    const subjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubject.id) ?? [];
+    const resourceTypes = [
+      { label: "Books", type: "Book", icon: BookOpen, tone: "text-purple-600 bg-purple-50" },
+      { label: "Notes", type: "Note", icon: FileCheck, tone: "text-amber-600 bg-amber-50" },
+      { label: "PYQs", type: "PYQ", icon: HelpCircle, tone: "text-blue-600 bg-blue-50" },
+      { label: "Syllabus", type: "Syllabus", icon: Layers, tone: "text-emerald-600 bg-emerald-50" },
+    ] as const;
+
+    return (
+      <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl mx-auto">
+          <button onClick={() => setFlowStep(1)} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to Subjects
+          </button>
+          <div className="flex flex-col items-center text-center p-6 bg-white border border-purple-100 rounded-3xl shadow-sm space-y-3">
+            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${selectedSubject.color} text-white flex items-center justify-center shadow-lg`}><BookOpen className="w-8 h-8" /></div>
+            <div><h2 className="text-2xl font-black text-slate-800">{selectedSubject.name}</h2><p className="text-xs text-slate-400 mt-1">Explore study material in different formats</p></div>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {resourceTypes.map(({ label, type, icon: Icon, tone }) => {
+              const count = subjectResources.filter((resource) => resource.type === type).length;
+              return <div key={type} className="p-5 bg-white border border-slate-200 hover:border-purple-300 rounded-2xl shadow-sm text-center flex flex-col items-center justify-center transition-all">
+                <div className={`w-12 h-12 rounded-xl ${tone} flex items-center justify-center mb-3`}><Icon className="w-6 h-6" /></div>
+                <button onClick={() => selectResourceType(type)} className="text-sm font-black text-slate-800 hover:text-purple-600">{label}</button><span className="text-[10px] text-slate-400 font-extrabold mt-0.5">{count} Resources</span>
+                <div className="mt-3"><ResourceUploadButton workspaceId={activeWorkspaceId} subjectId={selectedSubject.id} resourceType={backendResourceType[type]} variant="outline" size="sm" label="Upload" onSuccess={() => void refreshResources()} /></div>
+              </div>;
+            })}
+          </div>
+          <div className="flex justify-end"><button onClick={() => setFlowStep(5)} className="rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200">Next <ChevronRight className="inline w-4 h-4" /></button></div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (flowStep === 3 && selectedSubject && selectedResourceType) {
+    return <ResourceListStage subjectId={selectedSubject.id} subjectName={selectedSubject.name} resourceType={selectedResourceType} onBack={() => setFlowStep(2)} onSelect={selectResource} />;
+  }
+
+  if (flowStep === 4 && selectedResourceId) {
+    return <ResourcePreviewStage resourceId={selectedResourceId} onBack={() => setFlowStep(3)} />;
+  }
+
+  if (flowStep === 5 && selectedSubject) {
+    return <KnowledgeStudyWorkspace resourceId={selectedResourceId || ""} subjectName={selectedSubject.name} resourceType={selectedResourceType || "Book"} onBack={() => setFlowStep(selectedResourceId ? 4 : 2)} />;
+  }
+
+  return (
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100/80 text-purple-700 text-[11px] font-black uppercase tracking-wider"><Bot className="w-3.5 h-3.5" /><span>AI Study Assistant</span></div>
+          <h2 className="text-2xl font-black text-slate-800 tracking-tight">AI Study Assistant</h2>
+          <p className="text-xs text-slate-500">Select a subject to start learning with AI.</p>
+        </div>
+        <div className="max-w-md mx-auto relative"><Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" /><input value={subjectSearch} onChange={(event) => setSubjectSearch(event.target.value)} placeholder="Search subjects" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 shadow-sm transition-all" /></div>
+        {subjects.length ? <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">{subjects.map((subject) => <button key={subject.id} onClick={() => selectSubject(subject.id)} className="group relative flex flex-col items-center justify-center p-5 bg-white border border-slate-100 rounded-2xl hover:border-purple-300 hover:shadow-lg hover:shadow-purple-100/50 transition-all duration-300 text-center cursor-pointer"><div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform mb-3`}><BookOpen className="w-6 h-6" /></div><h3 className="text-xs font-black text-slate-800 group-hover:text-purple-600">{subject.name}</h3><span className="text-[10px] font-extrabold text-slate-400 mt-1">{subject.resourceCount} Resources</span></button>)}</div> : <div className="text-center py-14 bg-white border border-dashed border-slate-200 rounded-2xl"><p className="text-xs text-slate-400">No subjects available.</p><button onClick={() => window.location.reload()} className="mt-3 text-xs font-bold text-purple-600 hover:text-purple-700">Retry</button></div>}
+      </motion.div>
+    </div>
+  );
+}
+
+type ResourceTypeFilter = "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
+const backendResourceType: Record<ResourceTypeFilter, string> = { Book: "book", PDF: "pdf", Note: "notes", PYQ: "pyq", Syllabus: "syllabus" };
+
+function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSelect }: { subjectId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void; onSelect: (id: string) => void }) {
+  const { activeWorkspaceId } = useWorkspace();
+  const [query, setQuery] = useState("");
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const load = async () => {
+    const workspaceId = Number(activeWorkspaceId);
+    if (!Number.isInteger(workspaceId) || workspaceId <= 0) return;
+    setLoading(true); setError(null);
+    try {
+      const params = new URLSearchParams({ subject_id: subjectId, resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
+      setResources((await backendService.workspace.search(workspaceId, params)).items);
+    } catch (caught) { setResources([]); setError(caught instanceof Error ? caught.message : "Unable to load resources."); }
+    finally { setLoading(false); }
+  };
+  useEffect(() => { const timer = window.setTimeout(() => { void load(); }, 250); return () => window.clearTimeout(timer); }, [activeWorkspaceId, subjectId, resourceType, query]);
+  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
+    <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Resource Types</button>
+    <div className="flex items-center justify-between gap-3"><div><h2 className="text-2xl font-black text-slate-800">{subjectName} · {resourceType}s</h2><p className="text-xs text-slate-400 mt-1">Resources from your workspace library</p></div><button disabled={!selectedId} onClick={() => selectedId && onSelect(selectedId)} className="rounded-xl bg-purple-600 px-4 py-2 text-xs font-bold text-white disabled:bg-slate-300">Next <ChevronRight className="inline w-4 h-4" /></button></div>
+    <div className="relative"><Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search resources" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400" /></div>
+    {loading ? <div className="py-16 text-center text-xs text-slate-400">Loading resources…</div> : error ? <div className="py-16 text-center text-xs text-rose-500">{error}<button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button></div> : resources.length ? <div className="space-y-3">{resources.map((resource) => <button key={resource.id} onClick={() => setSelectedId(String(resource.id))} className={`w-full text-left flex items-center justify-between gap-3 p-4 bg-white hover:bg-purple-50/40 border rounded-2xl shadow-sm transition-all ${selectedId === String(resource.id) ? "border-purple-500 ring-2 ring-purple-100" : "border-slate-200 hover:border-purple-300"}`}><div className="min-w-0"><h3 className="text-xs font-black text-slate-800 truncate">{resource.title}</h3><p className="text-[10px] text-slate-400 mt-1">{resource.resource_type} · {new Date(resource.created_at).toLocaleDateString()} {resource.total_pages ? `· ${resource.total_pages} pages` : ""}</p></div><span className="text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span></button>)}</div> : <div className="py-16 text-center bg-white border border-dashed border-slate-200 rounded-2xl"><p className="text-xs text-slate-400">No resources uploaded yet.</p></div>}
+  </div>;
+}
+
+function ResourcePreviewStage({ resourceId, onBack }: { resourceId: string; onBack: () => void }) {
+  const [resource, setResource] = useState<Resource | null>(null); const [loading, setLoading] = useState(true); const [error, setError] = useState<string | null>(null);
+  const load = async () => { setLoading(true); setError(null); try { setResource(await backendService.documents.get(Number(resourceId))); } catch (caught) { setError(caught instanceof Error ? caught.message : "Unable to load resource."); } finally { setLoading(false); } };
+  useEffect(() => { void load(); }, [resourceId]);
+  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5"><button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Resources</button>{loading ? <div className="py-16 text-center text-xs text-slate-400">Loading resource…</div> : error || !resource ? <div className="py-16 text-center text-xs text-rose-500">{error || "Nothing found."}<button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button></div> : <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5"><aside className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3"><h2 className="text-lg font-black text-slate-800">{resource.title}</h2><p className="text-xs text-slate-500">{resource.resource_type}</p><p className="text-xs text-slate-500">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</p><p className="text-xs text-slate-500">Uploaded {new Date(resource.created_at).toLocaleDateString()}</p><span className="inline-block text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span></aside><section className="bg-white border border-dashed border-slate-200 rounded-2xl p-8 text-center text-xs text-slate-400">Preview unavailable.</section></div>}</div>;
+}
+
+type KnowledgeMessage = { role: "user" | "assistant"; content: string; confidence?: string; sources?: Array<{ resource_id?: number; document_title: string; subject: string; chapter?: string; page_number?: number; score: number }> };
+
+const AI_THINKING_STAGES = ["Searching Books", "Searching Notes", "Searching PYQs", "Searching Syllabus", "Retrieving Embeddings", "Ranking Results", "Building Context", "Thinking", "Generating Response"];
+const PROMPT_SUGGESTIONS = ["Explain this topic", "Generate revision notes", "Generate flashcards", "Generate UPSC MCQs", "Predict exam questions", "Teach like a beginner", "Explain with examples", "Memory tricks"];
+
+function AiThinkingPipeline({ active }: { active: boolean }) {
+  if (!active) return null;
+  return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mr-auto max-w-[90%] rounded-2xl border border-purple-100 bg-gradient-to-br from-white to-purple-50/60 p-4 shadow-sm">
+    <div className="flex items-center gap-2"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }} className="h-6 w-6 rounded-lg bg-purple-600 text-white flex items-center justify-center"><Sparkles className="w-3.5 h-3.5" /></motion.div><div><p className="text-xs font-black text-slate-800">ExamForge is working</p><p className="text-[10px] text-slate-500">Live request in progress</p></div></div>
+    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">{AI_THINKING_STAGES.map((stage) => <motion.div key={stage} initial={{ opacity: 0, x: -4 }} animate={{ opacity: 1, x: 0.25 }} className="flex items-center gap-2 text-[10px] font-semibold text-purple-700"><motion.span animate={{ scale: [1, 1.35, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.1, repeat: Infinity }} className="h-1.5 w-1.5 rounded-full bg-purple-500" />{stage}</motion.div>)}</div>
+  </motion.div>;
+}
+
+function StudyAnswer({ content }: { content: string }) {
+  const sections = content.split(/^##\s+/m).filter(Boolean);
+  if (sections.length < 2) return <p className="whitespace-pre-wrap">{content}</p>;
+  return <div className="space-y-3">{sections.map((section, index) => {
+    const [heading, ...body] = section.split("\n");
+    return <section key={`${heading}-${index}`} className="rounded-xl border border-purple-100 bg-white p-3"><h4 className="text-[10px] font-black uppercase tracking-wide text-purple-700">{heading}</h4><p className="mt-1 whitespace-pre-wrap leading-relaxed">{body.join("\n").trim()}</p></section>;
+  })}</div>;
+}
+
+function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack }: { resourceId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void }) {
+  const { activeWorkspace, activeWorkspaceId, selectedSubjectId, activeConversationId, setActiveConversationId, beginNewStudySession } = useWorkspace();
+  const [sessionId, setSessionId] = useState(activeConversationId);
+  const [messages, setMessages] = useState<KnowledgeMessage[]>([]);
+  const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [scope, setScope] = useState<"subject" | "resource" | "selected">(resourceId ? "resource" : "subject");
+  const [selectedResources, setSelectedResources] = useState<string[]>(resourceId ? [resourceId] : []);
+  const [sessionStartedAt] = useState(() => Date.now());
+  const [sessionDuration, setSessionDuration] = useState("0m");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const workspaceId = Number(activeWorkspaceId);
+  const hasWorkspace = Number.isInteger(workspaceId) && workspaceId > 0;
+  const hasSubject = Boolean(selectedSubjectId);
+  const subjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubjectId) ?? [];
+  const resourcesIncluded = scope === "subject" ? subjectResources.length : scope === "resource" ? 1 : selectedResources.length;
+  const lastQuestion = [...messages].reverse().find((message) => message.role === "user")?.content;
+  useEffect(() => {
+    const updateDuration = () => setSessionDuration(`${Math.max(0, Math.floor((Date.now() - sessionStartedAt) / 60000))}m`);
+    updateDuration();
+    const interval = window.setInterval(updateDuration, 60_000);
+    return () => window.clearInterval(interval);
+  }, [sessionStartedAt]);
+  const loadHistory = async () => {
+    if (!sessionId) return;
+    try { const conversation = await backendService.ai.conversation(sessionId); setMessages(conversation.messages.map((message) => ({ role: message.role, content: message.content, confidence: message.confidence || undefined, sources: message.sources || undefined }))); } catch { setMessages([]); }
+  };
+  useEffect(() => { void loadHistory(); }, [sessionId]);
+  useEffect(() => {
+    if (sessionId) return;
+    const workspaceId = Number(activeWorkspaceId);
+    if (!Number.isInteger(workspaceId) || workspaceId <= 0) return;
+    backendService.ai.createConversation({ workspace_id: workspaceId, subject_id: selectedSubjectId ? Number(selectedSubjectId) : undefined })
+      .then((conversation) => { setSessionId(conversation.session_id); setActiveConversationId(conversation.session_id); })
+      .catch(() => setError("Unable to start a study session."));
+  }, [activeWorkspaceId, selectedSubjectId, sessionId, setActiveConversationId]);
+  const ask = async (prompt = question) => {
+    if (!prompt.trim() || !hasWorkspace || !hasSubject) return;
+    setLoading(true); setError(null); setQuestion("");
+    try {
+      let activeSessionId = sessionId;
+      if (!activeSessionId) {
+        const conversation = await backendService.ai.createConversation({ workspace_id: workspaceId, subject_id: Number(selectedSubjectId) });
+        activeSessionId = conversation.session_id;
+        setSessionId(activeSessionId);
+        setActiveConversationId(activeSessionId);
+      }
+      setMessages((current) => [...current, { role: "user", content: prompt }]);
+      const response = await backendService.ai.knowledge({ session_id: activeSessionId, workspace_id: workspaceId, subject_id: Number(selectedSubjectId), question: prompt });
+      setMessages((current) => [...current, { role: "assistant", content: response.answer, confidence: response.confidence, sources: response.sources }]);
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Unable to contact AI service."); }
+    finally { setLoading(false); }
+  };
+  const composerDisabled = loading || !question.trim() || !hasWorkspace || !hasSubject;
+  const composerReason = loading ? "A response is already being generated." : !hasWorkspace ? "No backend workspace is available." : !hasSubject ? "Select a subject before asking AI." : !question.trim() ? "Enter a question to enable Ask AI." : "Ready to send.";
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    console.log("[AI Chat composer]", { workspace: hasWorkspace, subject: hasSubject, document: Boolean(resourceId), scope, session: Boolean(sessionId), input: Boolean(question.trim()), loading, authenticated: "validated by the backend request", disabled: composerDisabled, reason: composerReason });
+  }, [composerDisabled, composerReason, hasSubject, hasWorkspace, loading, question, resourceId, scope, sessionId]);
+  const startNewStudySession = () => {
+    if (messages.length > 0 && !window.confirm("Start New Study Session?\n\nYour current conversation will be closed. Your uploaded resources remain available.")) return;
+    setMessages([]);
+    setQuestion("");
+    setError(null);
+    // Changing the flow unmounts this workspace, discarding its local
+    // sessionId without calling a backend endpoint.
+    beginNewStudySession();
+  };
+  const clearConversation = async () => {
+    await backendService.ai.clearHistory(sessionId);
+    setMessages([]);
+    setQuestion("");
+    setError(null);
+    setSessionId(crypto.randomUUID());
+  };
+  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm flex flex-col gap-4">
+    <div className="flex flex-wrap items-start justify-between gap-3 bg-white border border-purple-100 rounded-2xl p-4"><div><button onClick={onBack} className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Preview</button><h2 className="text-lg font-black text-slate-800 mt-2">AI Study Workspace</h2><p className="text-xs text-slate-500 mt-1">{subjectName} · {resourceType} · Document #{resourceId}</p><p className="text-[10px] text-slate-400 mt-1">Workspace #{activeWorkspaceId} · Subject #{selectedSubjectId}</p></div><div className="flex gap-2"><button onClick={startNewStudySession} className="px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-50 text-purple-700">New Chat</button><button onClick={() => void clearConversation()} className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-600">Clear History</button></div></div>
+    <div className="rounded-2xl border border-slate-200 bg-white p-3"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-[10px] font-black uppercase tracking-wide text-slate-400">AI Context</p><p className="text-xs font-bold text-slate-700">{scope === "subject" ? "Entire Subject" : scope === "resource" ? "Current Resource" : "Selected Resources"} · {resourcesIncluded} resource{resourcesIncluded === 1 ? "" : "s"} included</p><p className="text-[10px] text-slate-400">Workspace {activeWorkspace?.title || activeWorkspaceId} · {subjectName} · {resourceType}</p></div><select value={scope} onChange={(event) => setScope(event.target.value as typeof scope)} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700"><option value="subject">Entire Subject</option><option value="resource">Current Resource</option><option value="selected">Selected Resources</option></select></div>{scope === "selected" && <div className="mt-3 flex flex-wrap gap-2">{subjectResources.map((resource) => <label key={resource.id} className="flex items-center gap-1 rounded-lg bg-slate-50 px-2 py-1 text-[10px] text-slate-600"><input type="checkbox" checked={selectedResources.includes(resource.id)} onChange={() => setSelectedResources((current) => current.includes(resource.id) ? current.filter((id) => id !== resource.id) : [...current, resource.id])} />{resource.title}</label>)}</div>}</div>
+    {messages.length === 0 && <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-purple-100 bg-white p-4"><p className="text-xs font-black text-slate-800">How would you like to study?</p><p className="mt-1 text-[10px] text-slate-500">Choose a prompt to edit before sending.</p><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">{PROMPT_SUGGESTIONS.map((suggestion) => <button key={suggestion} type="button" onClick={() => { setQuestion(suggestion); inputRef.current?.focus(); }} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-[10px] font-bold text-slate-700 transition hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200">{suggestion}</button>)}</div></motion.section>}
+    {sessionId && <section className="rounded-2xl border border-slate-200 bg-white p-3"><p className="text-[10px] font-black uppercase tracking-wide text-slate-400">AI Study Memory</p><dl className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-[10px]"><div><dt className="text-slate-400">Current Subject</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{subjectName}</dd></div><div><dt className="text-slate-400">Current Resource</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{resourceType}</dd></div><div><dt className="text-slate-400">Knowledge Scope</dt><dd className="mt-0.5 font-bold text-slate-700">{scope === "subject" ? "Subject" : scope === "resource" ? "Resource" : "Selected"}</dd></div><div><dt className="text-slate-400">Included</dt><dd className="mt-0.5 font-bold text-slate-700">{resourcesIncluded} resources</dd></div><div><dt className="text-slate-400">Last Question</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{lastQuestion || "—"}</dd></div><div><dt className="text-slate-400">Session Duration</dt><dd className="mt-0.5 font-bold text-slate-700">{sessionDuration}</dd></div></dl></section>}
+    <div className="flex-1 min-h-[360px] space-y-3 overflow-y-auto rounded-2xl bg-white border border-slate-200 p-4 scroll-smooth">{messages.length === 0 ? <p className="text-center text-xs text-slate-400 py-12">Start with a suggestion or ask your own question.</p> : messages.map((message, index) => <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} key={`${message.role}-${index}`} className={message.role === "user" ? "ml-auto max-w-[85%] rounded-2xl bg-purple-600 text-white p-3 text-xs whitespace-pre-wrap" : "mr-auto max-w-[90%] rounded-2xl bg-slate-50 text-slate-700 p-3 text-xs border border-slate-100 shadow-sm"}>{message.role === "assistant" ? <StudyAnswer content={message.content} /> : <p>{message.content}</p>}{message.confidence && <p className="mt-2 text-[10px] font-bold text-purple-600">Confidence: {message.confidence}</p>}{message.sources?.length ? <details className="mt-3 text-[10px]"><summary className="cursor-pointer font-bold">Sources ({message.sources.length})</summary>{message.sources.map((source, sourceIndex) => <p key={`${source.resource_id}-${sourceIndex}`} className="mt-1">{source.document_title} · {source.subject}{source.chapter ? ` · ${source.chapter}` : ""}{source.page_number ? ` · p. ${source.page_number}` : ""} · score {source.score.toFixed(2)}</p>)}</details> : null}</motion.div>)}<AiThinkingPipeline active={loading} /></div>
+    {error && <div className="text-xs text-rose-600 text-center">Unable to contact AI service. <button onClick={() => void ask(messages.filter((message) => message.role === "user").at(-1)?.content || "")} className="font-bold underline">Retry</button></div>}
+    <form onSubmit={(event) => { event.preventDefault(); void ask(); }} className="flex gap-2"><input ref={inputRef} value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Escape") setQuestion(""); if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); void ask(); } }} disabled={loading || !hasWorkspace || !hasSubject} placeholder="Ask about this study material…" className="flex-1 px-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs shadow-sm transition focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100" /><button disabled={composerDisabled} title={composerReason} className="px-5 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 text-white rounded-2xl text-xs font-bold shadow-sm transition focus:outline-none focus:ring-2 focus:ring-purple-200">Ask AI</button></form>
+  </div>;
 }

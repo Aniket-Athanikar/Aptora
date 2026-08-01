@@ -21,7 +21,6 @@ import uuid
 from typing import Any, Final, List, Dict, Optional
 
 from qdrant_client import QdrantClient
-from qdrant_client.http.exceptions import UnexpectedResponse
 from qdrant_client.http import models as qmodels
 
 from app.core.config import settings
@@ -37,14 +36,12 @@ DEFAULT_VECTOR_SIZE: Final[int] = 768
 MAX_RETRIES: Final[int] = 3
 RETRY_DELAY_SECONDS: Final[float] = 1.0
 
-
 class QdrantService:
     """
     Production-ready service for managing Qdrant vector storage and retrieval.
     """
 
     COLLECTION_NAME: str = getattr(settings, "QDRANT_COLLECTION", DEFAULT_COLLECTION_NAME)
-    # Ensure collection name defaults to examforge_documents if needed or specified
     if not COLLECTION_NAME or COLLECTION_NAME == "examforge_resources":
         COLLECTION_NAME = DEFAULT_COLLECTION_NAME
 
@@ -59,22 +56,49 @@ class QdrantService:
         First attempts to reuse database module client, falls back to direct instantiation.
         """
         if cls._client_instance is not None:
-            return cls._client_instance
+            try:
+                cls._client_instance.get_collections()
+                return cls._client_instance
+            except Exception:
+                cls._client_instance = None
 
         # Try to import global qdrant_client from database module if available
         try:
             from app.database import qdrant_client as db_qdrant_client
             if db_qdrant_client is not None:
+                db_qdrant_client.get_collections()
                 cls._client_instance = db_qdrant_client
                 return cls._client_instance
         except Exception as exc:
-            logger.debug("[QdrantService] Could not import qdrant_client from app.database: %s", exc)
+            logger.debug("[QdrantService] Could not import active qdrant_client from app.database: %s", exc)
 
         # Fallback to creating a new QdrantClient using configuration
         host = getattr(settings, "QDRANT_HOST", "127.0.0.1")
         port = int(getattr(settings, "QDRANT_PORT", 6333))
 
-        logger.info("[QdrantService] Initializing QdrantClient at %s:%d", host, port)
+        reachable_clients: list[tuple[QdrantClient, int, int]] = []
+        for try_port in ([port, 6433] if port != 6433 else [6433]):
+            try:
+                logger.info("[QdrantService] Initializing QdrantClient at %s:%d", host, try_port)
+                c = QdrantClient(host=host, port=try_port, timeout=5)
+                c.get_collections()
+                try:
+                    vector_count = c.count(collection_name=cls.COLLECTION_NAME, exact=True).count
+                except Exception:
+                    vector_count = 0
+                reachable_clients.append((c, try_port, vector_count))
+            except Exception as e:
+                logger.debug("[QdrantService] Connection attempt to %s:%d failed: %s", host, try_port, e)
+
+        if reachable_clients:
+            selected, selected_port, vector_count = max(reachable_clients, key=lambda item: item[2])
+            logger.info(
+                "[QdrantService] Selected Qdrant at %s:%d for collection '%s' (%d point(s)).",
+                host, selected_port, cls.COLLECTION_NAME, vector_count,
+            )
+            cls._client_instance = selected
+            return cls._client_instance
+
         cls._client_instance = QdrantClient(host=host, port=port, timeout=10)
         return cls._client_instance
 
@@ -82,27 +106,17 @@ class QdrantService:
     def create_collection(cls, collection_name: Optional[str] = None) -> bool:
         """
         Check if Qdrant collection exists. If missing, create it with Cosine distance.
-
-        Parameters
-        ----------
-        collection_name : str, optional
-            Name of collection to create. Defaults to cls.COLLECTION_NAME.
-
-        Returns
-        -------
-        bool
-            True if collection was created or already exists, False if creation failed.
         """
         target_collection = collection_name or cls.COLLECTION_NAME
         client = cls.get_client()
 
         for attempt in range(1, MAX_RETRIES + 1):
             try:
-                # Check if collection exists
                 collections_response = client.get_collections()
                 existing_names = [col.name for col in collections_response.collections]
 
                 if target_collection in existing_names:
+                    cls._ensure_payload_indexes(client, target_collection)
                     logger.info(
                         "[QdrantService] Collection '%s' already exists.",
                         target_collection,
@@ -122,6 +136,10 @@ class QdrantService:
                         distance=qmodels.Distance.COSINE,
                     ),
                 )
+
+                # These fields are used by every retrieval path.  Explicit
+                # payload indexes make filtered searches reliable at scale.
+                cls._ensure_payload_indexes(client, target_collection)
 
                 logger.info(
                     "[QdrantService] Collection '%s' created successfully.",
@@ -151,6 +169,15 @@ class QdrantService:
 
         return False
 
+    @staticmethod
+    def _ensure_payload_indexes(client: QdrantClient, collection_name: str) -> None:
+        for field_name, schema in (("workspace_id", qmodels.PayloadSchemaType.INTEGER), ("subject_id", qmodels.PayloadSchemaType.INTEGER), ("resource_id", qmodels.PayloadSchemaType.INTEGER), ("resource_type", qmodels.PayloadSchemaType.KEYWORD)):
+            try:
+                client.create_payload_index(collection_name, field_name=field_name, field_schema=schema, wait=True)
+            except Exception as exc:
+                # Qdrant may report an existing index; it is still safe for retrieval.
+                logger.debug("[QdrantService] Payload index %s check: %s", field_name, exc)
+
     @classmethod
     def upsert_chunks(
         cls,
@@ -159,6 +186,9 @@ class QdrantService:
         workspace_id: int,
         chunks: List[str],
         embeddings: List[List[float]],
+        resource_type: Optional[str] = None,
+        document_title: Optional[str] = None,
+        chunk_metadata: Optional[List[Dict[str, Any]]] = None,
         collection_name: Optional[str] = None,
     ) -> List[str]:
         """
@@ -191,6 +221,8 @@ class QdrantService:
             raise ValueError(
                 f"[QdrantService] Mismatched counts: {len(chunks)} chunks vs {len(embeddings)} embeddings."
             )
+        if chunk_metadata is not None and len(chunk_metadata) != len(chunks):
+            raise ValueError("[QdrantService] chunk_metadata must contain one item per chunk.")
 
         target_collection = collection_name or cls.COLLECTION_NAME
         client = cls.get_client()
@@ -211,12 +243,20 @@ class QdrantService:
             point_id = str(uuid.uuid4())
             point_ids.append(point_id)
 
+            metadata = chunk_metadata[idx] if chunk_metadata else {}
             payload: Dict[str, Any] = {
                 "resource_id": resource_id,
                 "workspace_id": workspace_id,
                 "subject_id": subject_id,
                 "chunk_index": idx,
+                "content": chunk_text,
                 "chunk_text": chunk_text,
+                "resource_type": resource_type,
+                "document_title": document_title,
+                "subject": metadata.get("subject"),
+                "chapter": metadata.get("chapter"),
+                "topic": metadata.get("topic"),
+                "page_number": metadata.get("page_number"),
             }
 
             points.append(
@@ -266,6 +306,20 @@ class QdrantService:
         return point_ids
 
     @classmethod
+    def diagnostics(cls, workspace_id: Optional[int] = None, resource_id: Optional[int] = None) -> Dict[str, Any]:
+        """Return a small, safe proof of what is actually indexed in Qdrant."""
+        client = cls.get_client()
+        cls.create_collection(cls.COLLECTION_NAME)
+        must = []
+        for key, value in (("workspace_id", workspace_id), ("resource_id", resource_id)):
+            if value is not None:
+                must.append(qmodels.FieldCondition(key=key, match=qmodels.MatchValue(value=value)))
+        query_filter = qmodels.Filter(must=must) if must else None
+        count = client.count(collection_name=cls.COLLECTION_NAME, count_filter=query_filter, exact=True).count
+        points, _ = client.scroll(collection_name=cls.COLLECTION_NAME, scroll_filter=query_filter, limit=1, with_payload=True, with_vectors=False)
+        return {"collection": cls.COLLECTION_NAME, "vector_size": cls.VECTOR_SIZE, "count": count, "sample_payload": points[0].payload if points else None}
+
+    @classmethod
     def search(
         cls,
         embedding: List[float],
@@ -274,29 +328,10 @@ class QdrantService:
         workspace_id: Optional[int] = None,
         subject_id: Optional[int] = None,
         collection_name: Optional[str] = None,
+        query_filter: Optional[qmodels.Filter] = None,
     ) -> List[Any]:
         """
         Search for top matching vector chunks in Qdrant.
-
-        Parameters
-        ----------
-        embedding : List[float]
-            Query embedding vector.
-        limit : int, default=5
-            Max number of results to return.
-        resource_id : int, optional
-            Filter by specific resource_id.
-        workspace_id : int, optional
-            Filter by specific workspace_id.
-        subject_id : int, optional
-            Filter by specific subject_id.
-        collection_name : str, optional
-            Target collection name.
-
-        Returns
-        -------
-        List[Any]
-            List of ScoredPoint objects from Qdrant search.
         """
         if not embedding or len(embedding) != cls.VECTOR_SIZE:
             raise ValueError(
@@ -330,7 +365,12 @@ class QdrantService:
                 )
             )
 
-        query_filter = qmodels.Filter(must=must_filters) if must_filters else None
+        if query_filter is not None:
+            if must_filters:
+                existing_must = list(query_filter.must) if query_filter.must else []
+                query_filter = qmodels.Filter(must=existing_must + must_filters)
+        else:
+            query_filter = qmodels.Filter(must=must_filters) if must_filters else None
 
         start_time = time.perf_counter()
         logger.info(
@@ -340,12 +380,28 @@ class QdrantService:
         )
 
         try:
-            results = client.search(
-                collection_name=target_collection,
-                query_vector=embedding,
-                limit=limit,
-                query_filter=query_filter,
-            )
+            cls.create_collection(target_collection)
+
+            if hasattr(client, "query_points"):
+                response = client.query_points(
+                    collection_name=target_collection,
+                    query=embedding,
+                    limit=limit,
+                    query_filter=query_filter,
+                    with_payload=True,
+                )
+                results = getattr(response, "points", [])
+            elif hasattr(client, "search"):
+                results = client.search(
+                    collection_name=target_collection,
+                    query_vector=embedding,
+                    limit=limit,
+                    query_filter=query_filter,
+                    with_payload=True,
+                )
+            else:
+                results = []
+
             elapsed = time.perf_counter() - start_time
             logger.info(
                 "[QdrantService] Search completed in %.3fs — returned %d result(s).",
@@ -366,13 +422,6 @@ class QdrantService:
     ) -> None:
         """
         Delete all vector points belonging to a specific resource_id.
-
-        Parameters
-        ----------
-        resource_id : int
-            Resource ID whose vector chunks should be deleted.
-        collection_name : str, optional
-            Target collection name.
         """
         target_collection = collection_name or cls.COLLECTION_NAME
         client = cls.get_client()
@@ -423,11 +472,6 @@ class QdrantService:
                     raise RuntimeError(
                         f"Qdrant deletion failed for resource_id={resource_id}: {exc}"
                     ) from exc
-
-
-# ---------------------------------------------------------------------------
-# Smoke Test
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     import random

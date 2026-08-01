@@ -13,7 +13,7 @@ Uses Ollama (Qwen3)
 import json
 import logging
 
-import ollama
+from app.ai.services.llm_service import client
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ Do not explain your answer.
 
         try:
 
-            response = ollama.chat(
+            response = client.chat(
                 model=cls.MODEL,
                 messages=[
                     {

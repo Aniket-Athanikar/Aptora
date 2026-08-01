@@ -653,15 +653,21 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
   const completeWizard = async (goal: GoalData, changeDesc: string) => {
     try {
       const workspaceState = await goalService.saveActiveGoal(goal, changeDesc);
-      dispatch({ type: "COMPLETE_WIZARD", payload: goal });
+
+      dispatch({
+        type: "COMPLETE_WIZARD",
+        payload: workspaceState.activeGoal ?? goal,
+      });
+
       dispatch({
         type: "HYDRATE_STATE",
         payload: {
           activeGoal: workspaceState.activeGoal,
           history: workspaceState.history || [],
-          wizardState: null
-        }
+          wizardState: null,
+        },
       });
+
       if (user?.email) {
         login({
           name: goal.profile.fullName,
@@ -669,8 +675,11 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
           avatar: goal.profile.avatar,
         });
       }
+
+      return true;
     } catch (err) {
-      console.warn("Database sync error in completeWizard:", err);
+      console.error(err);
+      return false;
     }
   };
 

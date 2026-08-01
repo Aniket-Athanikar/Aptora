@@ -19,7 +19,8 @@ from typing import Any, List, Dict
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_MAX_CHARS: int = 12_000   # ~3000 tokens limit for context window
+_DEFAULT_MAX_CHARS: int = 4_000
+_DEFAULT_MAX_CHUNKS: int = 5
 
 
 class ContextOptimizer:
@@ -79,7 +80,7 @@ class ContextOptimizer:
         unique_chunks: List[Dict[str, Any]] = []
         seen_texts: List[set[str]] = []
 
-        for chunk in chunks:
+        for chunk in chunks[:_DEFAULT_MAX_CHUNKS]:
             content = chunk.get("content", "").strip()
             if not content:
                 continue

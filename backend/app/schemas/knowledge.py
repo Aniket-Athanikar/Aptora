@@ -7,7 +7,8 @@ Pydantic schemas for the Knowledge Engine (multi-turn chat, session history, sou
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from datetime import datetime
+from typing import Any, Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -25,14 +26,16 @@ class KnowledgeChatRequest(BaseModel):
     workspace_id: int = Field(..., description="Workspace ID to search resources within")
     question: str = Field(..., min_length=1, description="Student question")
     limit: Optional[int] = Field(8, ge=1, le=20, description="Max chunks to retrieve")
+    subject_id: Optional[int] = Field(None, gt=0, description="Optional subject scope for vector retrieval")
 
 
 class KnowledgeChatResponse(BaseModel):
     success: bool = True
     session_id: str
     answer: str
-    confidence: str = Field(..., description="Retrieval confidence: 'high', 'medium', 'low', or 'none'")
+    confidence: Union[float, str] = Field(..., description="Retrieval confidence level, or 0 when no context is found")
     sources: list[SourceItem] = Field(default_factory=list, description="Source documents attribution")
+    context_found: bool = Field(..., description="Whether relevant uploaded study material was found")
     history_length: int = Field(0, description="Total messages in session memory")
 
 
@@ -46,3 +49,34 @@ class SessionHistoryResponse(BaseModel):
     session_id: str
     message_count: int
     messages: list[MessageItem]
+
+
+class ConversationCreateRequest(BaseModel):
+    workspace_id: int = Field(..., gt=0)
+    subject_id: Optional[int] = Field(None, gt=0)
+
+
+class ConversationRenameRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255)
+
+
+class PersistentMessageItem(MessageItem):
+    sources: Optional[list[dict[str, Any]]] = None
+    confidence: Optional[str] = None
+    created_at: datetime
+
+
+class ConversationSummary(BaseModel):
+    session_id: str
+    workspace_id: int
+    subject_id: Optional[int]
+    title: str
+    created_at: datetime
+    updated_at: datetime
+    last_message_at: Optional[datetime]
+    pinned: bool
+    last_message: Optional[str] = None
+
+
+class ConversationDetail(ConversationSummary):
+    messages: list[PersistentMessageItem] = Field(default_factory=list)

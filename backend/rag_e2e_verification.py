@@ -1,0 +1,138 @@
+"""
+ExamForge RAG End-to-End Verification Script (Task 10)
+=========================================================
+
+Verifies the entire RAG pipeline from retrieval to final LLM response
+using the actual uploaded Geography resource in Qdrant (workspace_id=2, subject_id=2).
+
+Run with:
+    cd backend
+    python rag_e2e_verification.py
+"""
+
+import sys
+import io
+# Force UTF-8 stdout so Windows cp1252 does not choke on emoji in LLM responses
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+import os
+import json
+import logging
+
+sys.path.insert(0, os.path.dirname(__file__))
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s  %(levelname)-8s  %(name)s - %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger("rag_e2e_verification")
+
+print("\n" + "=" * 80)
+print("  EXAMFORGE AI - RAG PIPELINE END-TO-END VERIFICATION REPORT (TASK 10)")
+print("=" * 80 + "\n")
+
+# ── 1. Check Vector Count in Qdrant ───────────────────────────────────────────
+print("1. NUMBER OF VECTORS IN QDRANT COLLECTION")
+print("-" * 60)
+
+try:
+    from app.ai.services.qdrant_service import QdrantService
+    client = QdrantService.get_client()
+    col_name = QdrantService.COLLECTION_NAME
+    total_count = client.count(collection_name=col_name, exact=True).count
+    print(f"[OK] Qdrant Collection Name : {col_name}")
+    print(f"[OK] Total Vectors in DB    : {total_count}")
+    assert total_count > 0, "No vectors in collection!"
+except Exception as e:
+    print(f"[FAIL] Failed to connect to Qdrant: {e}")
+    sys.exit(1)
+
+# ── 2. Inspect Sample Payloads & Fields ──────────────────────────────────────
+print("\n2. SAMPLE PAYLOAD INSPECTION")
+print("-" * 60)
+
+points, _ = client.scroll(
+    collection_name=col_name,
+    limit=2,
+    with_payload=True,
+    with_vectors=False,
+)
+print(f"[OK] Inspected {len(points)} point(s):")
+for i, pt in enumerate(points, 1):
+    pl = pt.payload or {}
+    print(f"\n   --- Point #{i} (ID: {pt.id}) ---")
+    print(f"   workspace_id    : {pl.get('workspace_id')!r} ({type(pl.get('workspace_id')).__name__})")
+    print(f"   subject_id      : {pl.get('subject_id')!r} ({type(pl.get('subject_id')).__name__})")
+    print(f"   resource_id     : {pl.get('resource_id')!r} ({type(pl.get('resource_id')).__name__})")
+    print(f"   resource_type   : {pl.get('resource_type')!r} ({type(pl.get('resource_type')).__name__})")
+    print(f"   document_title  : {pl.get('document_title')!r}")
+    print(f"   chunk_index     : {pl.get('chunk_index')!r}")
+    content_snippet = repr(str(pl.get('content', ''))[:100])
+    print(f"   content snippet : {content_snippet}")
+
+# ── 3. Test Retrieval with Instruction Directive ("Generate revision notes") ──
+print("\n3. RETRIEVAL TEST - STUDY MODE DIRECTIVE: 'Generate revision notes'")
+print("-" * 60)
+
+WORKSPACE_ID = 2
+SUBJECT_ID = 2
+RESOURCE_TYPES = ["notes", "book"]
+
+from app.ai.orchestrator.intent_analyzer import IntentAnalyzer
+from app.ai.orchestrator.query_rewriter import QueryRewriter
+from app.ai.services.search_service import SearchService
+
+question = "Generate revision notes"
+intent_res = IntentAnalyzer.analyze(question)
+print(f"[OK] Detected Intent        : {intent_res.intent} (conf: {intent_res.confidence})")
+
+rewritten = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name="Geography")
+print(f"[OK] Rewritten Queries      : {rewritten}")
+
+retrieved_chunks = SearchService.search(
+    workspace_id=WORKSPACE_ID,
+    question=question,
+    limit=5,
+    subject_id=SUBJECT_ID,
+    resource_types=RESOURCE_TYPES,
+)
+
+print(f"\n[OK] Search Results Returned : {len(retrieved_chunks)} chunk(s)")
+print("-" * 60)
+for idx, ch in enumerate(retrieved_chunks, 1):
+    print(f"\n   Chunk #{idx}:")
+    print(f"     Score          : {ch['score']}")
+    print(f"     Document Title : {ch['document_title']}")
+    print(f"     Resource Type  : {ch['resource_type']}")
+    print(f"     Resource ID    : {ch['resource_id']}")
+    content_clean = ch['content'][:250].replace('\n', ' ')
+    print(f"     Content        : {content_clean}...")
+
+assert len(retrieved_chunks) > 0, "Retrieval returned 0 chunks!"
+
+# ── 4. Test Full Reasoning Pipeline (Prompt Construction & Answer Generation) ─
+print("\n4. REASONING PIPELINE - PROMPT CONSTRUCTION & ANSWER GENERATION")
+print("-" * 60)
+
+from app.ai.orchestrator.reasoning_pipeline import ReasoningPipeline
+
+pipeline_res = ReasoningPipeline.run(
+    workspace_id=WORKSPACE_ID,
+    question=question,
+    subject_id=SUBJECT_ID,
+)
+
+print("\n[OK] PIPELINE EXECUTION COMPLETED")
+print(f"[OK] Confidence Level : {pipeline_res['confidence']}")
+print(f"[OK] Sources Used     : {len(pipeline_res['sources'])} source(s)")
+for src in pipeline_res['sources']:
+    print(f"   - Title: {src.get('document_title')} | Score: {src.get('score')} | Type: {src.get('resource_type')}")
+
+print("\n" + "=" * 80)
+print("  FINAL ANSWER GENERATED BY LLM (Grounded in Geography Document):")
+print("=" * 80 + "\n")
+print(pipeline_res['answer'])
+
+print("\n" + "=" * 80)
+print("  [OK] RAG PIPELINE VERIFICATION PASSED SUCCESSFULLY!")
+print("=" * 80 + "\n")

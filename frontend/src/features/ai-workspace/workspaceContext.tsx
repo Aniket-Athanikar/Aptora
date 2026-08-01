@@ -10,6 +10,7 @@ import {
   SubjectNode,
   ResourceItem
 } from "./types";
+import { backendService, type Resource as BackendResource, type SubjectDocuments } from "@/services/backend.service";
 
 interface WorkspaceContextProps {
   conversations: Conversation[];
@@ -40,14 +41,15 @@ interface WorkspaceContextProps {
   // 5-Step AI Flow State Navigation
   flowStep: 1 | 2 | 3 | 4 | 5;
   selectedSubjectId: string | null;
-  selectedResourceType: "Book" | "PDF" | "Note" | "PYQ" | null;
+  selectedResourceType: "Book" | "PDF" | "Note" | "PYQ" | "Syllabus" | null;
   selectedResourceId: string | null;
 
   setFlowStep: (step: 1 | 2 | 3 | 4 | 5) => void;
   selectSubject: (subjectId: string) => void;
-  selectResourceType: (type: "Book" | "PDF" | "Note" | "PYQ") => void;
+  selectResourceType: (type: "Book" | "PDF" | "Note" | "PYQ" | "Syllabus") => void;
   selectResource: (resourceId: string) => void;
   resetFlow: () => void;
+  beginNewStudySession: () => void;
   startChatWithResource: (resourceId: string) => void;
 
   // Actions
@@ -63,6 +65,8 @@ interface WorkspaceContextProps {
 
   // File Upload
   uploadFile: (file: File) => Promise<void>;
+  refreshResources: () => Promise<void>;
+
 
   // AI Actions
   triggerQuickAction: (actionType: string) => void;
@@ -309,9 +313,40 @@ const DEFAULT_UPLOADS: BookMetadata[] = [
   }
 ];
 
+function toResourceItem(resource: BackendResource, type: ResourceItem["type"]): ResourceItem {
+  const normalizedStatus = resource.status.toUpperCase();
+  return {
+    id: String(resource.id), subjectId: String(resource.subject_id), title: resource.title,
+    type, pages: resource.total_pages ?? 0,
+    size: `${(resource.file_size / (1024 * 1024)).toFixed(1)} MB`,
+    uploadDate: new Date(resource.created_at).toLocaleDateString(), chapters: [], chunksCount: 0,
+    vectorStatus: normalizedStatus === "READY" || normalizedStatus === "COMPLETED" ? "Indexed" : normalizedStatus === "PROCESSING" ? "Processing" : "Pending",
+  };
+}
+
+function flattenDocuments(groups: SubjectDocuments[]): ResourceItem[] {
+  return groups.flatMap((group) => [
+    ...group.books.map((resource) => toResourceItem(resource, "Book")),
+    ...group.notes.map((resource) => toResourceItem(resource, "Note")),
+    ...group.pyqs.map((resource) => toResourceItem(resource, "PYQ")),
+    ...group.syllabus.map((resource) => toResourceItem(resource, "Syllabus")),
+  ]);
+}
+
+function toBookMetadata(resource: ResourceItem): BookMetadata {
+  const completed = resource.vectorStatus === "Indexed";
+  return {
+    id: resource.id, name: resource.title, coverColor: "from-indigo-500 to-violet-600",
+    pages: resource.pages, language: "", ocrStatus: completed ? "completed" : "uploading",
+    ocrProgress: completed ? 100 : 0, aiStatus: resource.vectorStatus, conceptCount: 0,
+    readingTime: "", confidence: 0, chapters: [], uploadedDate: resource.uploadDate,
+    size: resource.size, resourceType: resource.type, subjectId: resource.subjectId,
+  };
+}
+
 export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
-  const [workspaces, setWorkspaces] = useState<GoalWorkspace[]>(INITIAL_WORKSPACES);
-  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string>("ws-upsc");
+  const [workspaces, setWorkspaces] = useState<GoalWorkspace[]>([]);
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string>("");
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string>("");
@@ -323,9 +358,9 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
   // 5-Step Flow state
   const [flowStep, setFlowStep] = useState<1 | 2 | 3 | 4 | 5>(1);
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>("subj-polity");
-  const [selectedResourceType, setSelectedResourceType] = useState<"Book" | "PDF" | "Note" | "PYQ" | null>("Book");
-  const [selectedResourceId, setSelectedResourceId] = useState<string | null>("res-laxmikanth");
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+  const [selectedResourceType, setSelectedResourceType] = useState<"Book" | "PDF" | "Note" | "PYQ" | "Syllabus" | null>(null);
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
 
   const [studyGoal] = useState<WorkspaceState["studyGoal"]>({
     todayGoal: "Complete Polity Chapter 1 & solve 20 PYQs",
@@ -335,44 +370,63 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     weeklyProgress: 75
   });
 
-  // Hydrate local storage
+  // Load only resources that exist for the authenticated backend workspace.
   useEffect(() => {
-    const savedWS = localStorage.getItem("examforge_workspaces");
-    const savedConvs = localStorage.getItem("examforge_conversations");
-    const savedUploads = localStorage.getItem("examforge_uploads");
-
-    if (savedWS) {
-      try { setWorkspaces(JSON.parse(savedWS)); } catch { /* noop */ }
-    }
-    if (savedConvs) {
-      try { setConversations(JSON.parse(savedConvs)); } catch { /* noop */ }
-    } else {
-      setConversations(DEFAULT_CONVERSATIONS);
-    }
-    if (savedUploads) {
-      try { setUploads(JSON.parse(savedUploads)); } catch { /* noop */ }
-    } else {
-      setUploads(DEFAULT_UPLOADS);
-    }
-    setActiveConversationId("conv-1");
+    const loadWorkspace = async () => {
+      try {
+        const workspace = await backendService.workspace.current();
+        const [subjects, documentGroups] = await Promise.all([
+          backendService.workspace.subjects(workspace.id),
+          backendService.workspace.documents(workspace.id),
+        ]);
+        const resources = flattenDocuments(documentGroups);
+        const subjectNodes: SubjectNode[] = subjects.map((subject) => ({
+          id: String(subject.id), name: subject.name, category: "General",
+          resourceCount: resources.filter((resource) => resource.subjectId === String(subject.id)).length,
+          iconName: subject.icon || "BookOpen", color: subject.color || "from-indigo-500 to-violet-600",
+          description: subject.description,
+        }));
+        setWorkspaces([{
+          id: String(workspace.id), title: workspace.target_exam, examName: workspace.target_exam,
+          description: workspace.exam_category, isDefault: true, subjects: subjectNodes, resources,
+        }]);
+        setActiveWorkspaceId(String(workspace.id));
+        setUploads(resources.map(toBookMetadata));
+        setConversations([]);
+        setActiveConversationId("");
+      } catch {
+        setWorkspaces([]);
+        setUploads([]);
+        setConversations([]);
+      }
+    };
+    void loadWorkspace();
   }, []);
-
-  // Save to localStorage
-  useEffect(() => {
-    if (workspaces.length > 0) {
-      localStorage.setItem("examforge_workspaces", JSON.stringify(workspaces));
-    }
-  }, [workspaces]);
-
-  useEffect(() => {
-    if (conversations.length > 0) {
-      localStorage.setItem("examforge_conversations", JSON.stringify(conversations));
-    }
-  }, [conversations]);
 
   const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId) || workspaces[0];
   const activeConversation = conversations.find((c) => c.id === activeConversationId);
   const activeBook = uploads.find((b) => b.id === (activeBookId || activeConversation?.bookId));
+
+  const refreshResources = async () => {
+    try {
+      const numWsId = Number(activeWorkspaceId);
+      if (!Number.isInteger(numWsId) || numWsId <= 0) return;
+      const fetchedDocs = await backendService.workspace.documents(numWsId);
+      {
+        const flattenedResources = flattenDocuments(fetchedDocs);
+        setUploads(flattenedResources.map(toBookMetadata));
+
+        setWorkspaces((prev) =>
+          prev.map((w) =>
+            w.id === activeWorkspaceId ? { ...w, resources: flattenedResources } : w
+          )
+        );
+      }
+    } catch {
+      /* Keep existing state if backend is unavailable */
+    }
+  };
+
 
   // Workspace & Tree CRUD operations
   const createWorkspace = (title: string, examName: string, description: string) => {
@@ -473,7 +527,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     setFlowStep(2);
   };
 
-  const selectResourceType = (type: "Book" | "PDF" | "Note" | "PYQ") => {
+  const selectResourceType = (type: "Book" | "PDF" | "Note" | "PYQ" | "Syllabus") => {
     setSelectedResourceType(type);
     setFlowStep(3);
   };
@@ -490,12 +544,20 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     setSelectedResourceId(null);
   };
 
+  const beginNewStudySession = () => {
+    // This only ends the active frontend study session.  It deliberately does
+    // not clear resources, workspace data, or persisted chat history.
+    setActiveConversationId("");
+    setActiveBookId(null);
+    setIsStreaming(false);
+    setThinkingStage(null);
+    setSearchQuery("");
+    resetFlow();
+  };
+
   const startChatWithResource = (resourceId: string) => {
     setSelectedResourceId(resourceId);
     setFlowStep(5);
-    const targetRes = activeWorkspace?.resources.find((r) => r.id === resourceId);
-    const title = targetRes ? `AI Chat: ${targetRes.title}` : "AI Resource Session";
-    createNewChat(title, undefined, resourceId);
   };
 
   // Chat actions
@@ -807,6 +869,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         selectResourceType,
         selectResource,
         resetFlow,
+        beginNewStudySession,
         startChatWithResource,
         setActiveConversationId,
         createNewChat,
@@ -818,6 +881,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         toggleArchiveConversation,
         setConversationColor,
         uploadFile,
+        refreshResources,
         triggerQuickAction,
         regenerateLastMessage,
         toggleMessageBookmark,
