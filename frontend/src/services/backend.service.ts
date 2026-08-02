@@ -58,6 +58,7 @@ export const backendService = {
     reprocess: (id: number) => apiClient.post<Resource>(`/documents/${id}/reprocess`),
     get: (id: number) => apiClient.get<Resource>(`/documents/${id}`),
     status: (id: number) => apiClient.get<{ resource_id: number; status: string }>(`/documents/${id}/status`),
+    preview: (id: number) => apiClient.get<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> }>(`/documents/${id}/preview`),
     remove: (id: number) => apiClient.delete(`/documents/${id}`),
   },
   ai: {
@@ -87,7 +88,7 @@ export type Workspace = WorkspaceInput & { id: number; user_id: number; created_
 export type WorkspaceSubject = { id: number; workspace_id: number; name: string; description?: string; display_order?: number; icon?: string; color?: string };
 export type WorkspaceInfo = Workspace & { exam_name: string; description: string; progress: number };
 export type WorkspaceStatistics = { subjects: number; documents: number; books: number; notes: number; pyqs: number; syllabus: number; chunks: number; embeddings: number };
-export type Resource = { id: number; workspace_id: number; subject_id: number; resource_type: string; title: string; description?: string; status: string; original_filename: string; stored_filename?: string; file_size: number; total_pages?: number; created_at: string; updated_at?: string };
+export type Resource = { id: number; workspace_id: number; subject_id: number; resource_type: string; title: string; description?: string; status: string; original_filename: string; stored_filename?: string; file_size: number; total_pages?: number; created_at: string; updated_at?: string; chunks_count: number };
 export type SubjectDocuments = { subject_id: number; subject_name?: string; subject?: string; books: Resource[]; notes: Resource[]; pyqs: Resource[]; syllabus: Resource[] };
 export type LibrarySearch = { total: number; limit: number; offset: number; items: Resource[] };
 export type OnboardingProfileInput = { avatar?: string | null; full_name: string; age: number; education: string; stream: string; city: string; occupation: string; syllabus_percent: number; current_confidence: number };

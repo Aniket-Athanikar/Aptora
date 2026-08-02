@@ -688,10 +688,72 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
 }
 
 function ResourcePreviewStage({ resourceId, onBack }: { resourceId: string; onBack: () => void }) {
-  const [resource, setResource] = useState<Resource | null>(null); const [loading, setLoading] = useState(true); const [error, setError] = useState<string | null>(null);
-  const load = async () => { setLoading(true); setError(null); try { setResource(await backendService.documents.get(Number(resourceId))); } catch (caught) { setError(caught instanceof Error ? caught.message : "Unable to load resource."); } finally { setLoading(false); } };
+  const [resource, setResource] = useState<Resource | null>(null);
+  const [preview, setPreview] = useState<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const resData = await backendService.documents.get(Number(resourceId));
+      setResource(resData);
+      try {
+        const previewData = await backendService.documents.preview(Number(resourceId));
+        setPreview(previewData);
+      } catch (err) {
+        console.error("Failed to load preview chunks:", err);
+      }
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unable to load resource.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => { void load(); }, [resourceId]);
-  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5"><button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Resources</button>{loading ? <div className="py-16 text-center text-xs text-slate-400">Loading resource…</div> : error || !resource ? <div className="py-16 text-center text-xs text-rose-500">{error || "Nothing found."}<button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button></div> : <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5"><aside className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3"><h2 className="text-lg font-black text-slate-800">{resource.title}</h2><p className="text-xs text-slate-500">{resource.resource_type}</p><p className="text-xs text-slate-500">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</p><p className="text-xs text-slate-500">Uploaded {new Date(resource.created_at).toLocaleDateString()}</p><span className="inline-block text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span></aside><section className="bg-white border border-dashed border-slate-200 rounded-2xl p-8 text-center text-xs text-slate-400">Preview unavailable.</section></div>}</div>;
+
+  return (
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600">
+        <ArrowLeft className="w-4 h-4" /> Back to Resources
+      </button>
+      {loading ? (
+        <div className="py-16 text-center text-xs text-slate-400">Loading resource…</div>
+      ) : error || !resource ? (
+        <div className="py-16 text-center text-xs text-rose-500">
+          {error || "Nothing found."}
+          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
+          <aside className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
+            <h2 className="text-lg font-black text-slate-800">{resource.title}</h2>
+            <p className="text-xs text-slate-500">{resource.resource_type}</p>
+            <p className="text-xs text-slate-500">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</p>
+            <p className="text-xs text-slate-500">Uploaded {new Date(resource.created_at).toLocaleDateString()}</p>
+            <span className="inline-block text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span>
+          </aside>
+          <section className="bg-white border border-slate-200 rounded-2xl p-6 text-xs text-slate-700 overflow-y-auto max-h-[500px] space-y-4 shadow-sm">
+            <h3 className="font-bold text-sm text-slate-800 border-b pb-2">Document Chunks ({preview?.chunks.length ?? 0})</h3>
+            {preview && preview.chunks.length > 0 ? (
+              <div className="space-y-3">
+                {preview.chunks.map((chunk) => (
+                  <div key={chunk.index} className="p-3 bg-slate-50 border border-slate-100 rounded-xl space-y-1">
+                    <div className="text-[10px] font-bold text-purple-600">Chunk #{chunk.index + 1}</div>
+                    <p className="leading-relaxed whitespace-pre-wrap text-slate-600">{chunk.content}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-slate-400 py-12">No preview text chunks available.</p>
+            )}
+          </section>
+        </div>
+      )}
+    </div>
+  );
 }
 
 type KnowledgeMessage = { role: "user" | "assistant"; content: string; confidence?: string; sources?: Array<{ resource_id?: number; document_title: string; subject: string; chapter?: string; page_number?: number; score: number }> };

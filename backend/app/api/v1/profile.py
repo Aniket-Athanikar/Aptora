@@ -60,6 +60,133 @@ def profile_to_dict(p: UserProfileDb, user: UserDb) -> dict:
         "updated_at": p.updated_at.isoformat() if p.updated_at else "",
     }
 
+def sync_onboarding_to_profile(profile: UserProfileDb, user: UserDb, db: Session, commit: bool = True):
+    from app.models.workspace import GoalWorkspaceDb
+    from app.models.onboarding_profile import UserOnboardingProfileDb
+    from app.models.timeline import GoalTimelineDb
+    from app.models.gap_analysis import GapAnalysisDb
+    from app.models.learning_mode import LearningModeDb
+
+    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.user_id == user.id).first()
+    if not workspace:
+        return
+
+    # 1. target_exam
+    if not profile.target_exam and workspace.target_exam:
+        profile.target_exam = workspace.target_exam
+
+    # 2. onboarding profile
+    onboarding = db.query(UserOnboardingProfileDb).filter(UserOnboardingProfileDb.workspace_id == workspace.id).first()
+    if onboarding:
+        if not profile.avatar_url and onboarding.avatar:
+            profile.avatar_url = onboarding.avatar
+        if not profile.education and onboarding.education:
+            profile.education = onboarding.education
+        if not profile.occupation and onboarding.occupation:
+            profile.occupation = onboarding.occupation
+        # city / location
+        if not profile.location and onboarding.city:
+            profile.location = onboarding.city
+
+    # 3. timeline (exam_date, daily_study_hours)
+    timeline = db.query(GoalTimelineDb).filter(GoalTimelineDb.workspace_id == workspace.id).first()
+    if timeline:
+        if not profile.study_hours_goal and timeline.daily_study_hours:
+            profile.study_hours_goal = float(timeline.daily_study_hours)
+        if not profile.target_date and timeline.exam_date:
+            profile.target_date = timeline.exam_date.isoformat()
+
+    # 4. gap analysis (weak subjects)
+    gaps = db.query(GapAnalysisDb).filter(GapAnalysisDb.workspace_id == workspace.id).all()
+    if gaps and not profile.weak_subjects:
+        profile.weak_subjects = [g.subject for g in gaps]
+
+    # 5. learning modes (favorite subjects)
+    modes = db.query(LearningModeDb).filter(LearningModeDb.workspace_id == workspace.id).all()
+    if modes and not profile.favorite_subjects:
+        profile.favorite_subjects = [m.learning_mode for m in modes]
+
+    if commit:
+        db.commit()
+
+
+def sync_profile_to_onboarding(profile: UserProfileDb, user: UserDb, db: Session, update_data: dict):
+    from app.models.workspace import GoalWorkspaceDb
+    from app.models.onboarding_profile import UserOnboardingProfileDb
+    from app.models.timeline import GoalTimelineDb
+    from app.models.gap_analysis import GapAnalysisDb
+    from app.models.learning_mode import LearningModeDb
+    import datetime
+
+    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.user_id == user.id).first()
+    if not workspace:
+        workspace = GoalWorkspaceDb(
+            user_id=user.id,
+            target_exam=update_data.get("target_exam") or "Competitive Exam",
+            exam_category="General"
+        )
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    else:
+        if "target_exam" in update_data and update_data["target_exam"]:
+            workspace.target_exam = update_data["target_exam"]
+
+    onboarding = db.query(UserOnboardingProfileDb).filter(UserOnboardingProfileDb.workspace_id == workspace.id).first()
+    if not onboarding:
+        onboarding = UserOnboardingProfileDb(workspace_id=workspace.id, full_name=user.name)
+        db.add(onboarding)
+        db.commit()
+        db.refresh(onboarding)
+
+    if "avatar_url" in update_data:
+        onboarding.avatar = update_data["avatar_url"]
+    if "education" in update_data:
+        onboarding.education = update_data["education"]
+    if "occupation" in update_data:
+        onboarding.occupation = update_data["occupation"]
+    if "name" in update_data:
+        onboarding.full_name = update_data["name"]
+    if "location" in update_data and update_data["location"]:
+        parts = update_data["location"].split(",")
+        city = parts[0].strip() if parts else update_data["location"]
+        onboarding.city = city
+
+    timeline = db.query(GoalTimelineDb).filter(GoalTimelineDb.workspace_id == workspace.id).first()
+    if not timeline:
+        timeline = GoalTimelineDb(
+            workspace_id=workspace.id,
+            exam_date=datetime.date.today() + datetime.timedelta(days=365),
+            daily_study_hours=int(update_data.get("study_hours_goal") or 4)
+        )
+        db.add(timeline)
+        db.commit()
+        db.refresh(timeline)
+    else:
+        if "study_hours_goal" in update_data and update_data["study_hours_goal"] is not None:
+            timeline.daily_study_hours = int(update_data["study_hours_goal"])
+        if "target_date" in update_data and update_data["target_date"]:
+            try:
+                date_str = update_data["target_date"].split("T")[0]
+                timeline.exam_date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            except Exception as e:
+                logger.error(f"Error parsing target_date {update_data['target_date']}: {e}")
+
+    if "weak_subjects" in update_data and update_data["weak_subjects"] is not None:
+        db.query(GapAnalysisDb).filter(GapAnalysisDb.workspace_id == workspace.id).delete()
+        for sub in update_data["weak_subjects"]:
+            gap = GapAnalysisDb(workspace_id=workspace.id, subject=sub, confidence=2, difficulty="Medium")
+            db.add(gap)
+
+    if "favorite_subjects" in update_data and update_data["favorite_subjects"] is not None:
+        db.query(LearningModeDb).filter(LearningModeDb.workspace_id == workspace.id).delete()
+        for mode in update_data["favorite_subjects"]:
+            learning_mode = LearningModeDb(workspace_id=workspace.id, learning_mode=mode)
+            db.add(learning_mode)
+
+    db.commit()
+
+
 @router.get("", response_model=ProfileResponse)
 async def get_profile(email: str, db: Session = Depends(get_db)):
     user = db.query(UserDb).filter(UserDb.email == email).first()
@@ -73,7 +200,11 @@ async def get_profile(email: str, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(profile)
 
+    # Sync any updates from the onboarding wizard tables
+    sync_onboarding_to_profile(profile, user, db)
+
     return {"success": True, "profile": profile_to_dict(profile, user)}
+
 
 @router.post("", response_model=ProfileResponse)
 async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session = Depends(get_db)):
@@ -98,6 +229,9 @@ async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session 
 
     db.commit()
     db.refresh(profile)
+
+    # Sync fields to onboarding wizard tables
+    sync_profile_to_onboarding(profile, user, db, update_data)
 
     logger.info(f"Profile updated for {email}: {list(update_data.keys())}")
     return {"success": True, "profile": profile_to_dict(profile, user)}

@@ -48,5 +48,6 @@ class ResourceResponse(ResourceBase):
 
     created_at: datetime
     updated_at: datetime
+    chunks_count: int = 0
 
     model_config = ConfigDict(from_attributes=True)

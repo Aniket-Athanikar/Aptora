@@ -37,3 +37,14 @@ class ProfileUpdatePayload(BaseModel):
 
     # Subscription
     plan: Optional[str] = None
+
+    # Exam preferences & goals (from wizard/profile)
+    target_exam: Optional[str] = None
+    secondary_exam: Optional[str] = None
+    target_score: Optional[str] = None
+    target_rank: Optional[str] = None
+    target_date: Optional[str] = None
+    study_hours_goal: Optional[float] = None
+    weak_subjects: Optional[list] = None
+    strong_subjects: Optional[list] = None
+    favorite_subjects: Optional[list] = None

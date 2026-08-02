@@ -178,3 +178,17 @@ def get_document_index_diagnostics(resource_id: int, db: Session = Depends(get_d
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found.")
     details = QdrantService.diagnostics(workspace_id=resource.workspace_id, resource_id=resource.id)
     return {"resource_id": resource.id, "resource_status": resource.status, "chunk_records": len(resource.chunks), **details}
+
+
+@router.get("/{resource_id}/preview")
+def get_document_preview(resource_id: int, db: Session = Depends(get_db), current_user: UserDb = Depends(get_current_user)):
+    resource = ResourceService.get_resource(db=db, resource_id=resource_id)
+    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.id == resource.workspace_id, GoalWorkspaceDb.user_id == current_user.id).first()
+    if workspace is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found.")
+    chunks = sorted(resource.chunks, key=lambda c: c.chunk_index)
+    return {
+        "resource_id": resource.id,
+        "title": resource.title,
+        "chunks": [{"index": c.chunk_index, "content": c.content} for c in chunks]
+    }

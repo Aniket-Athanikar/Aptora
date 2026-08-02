@@ -319,7 +319,7 @@ function toResourceItem(resource: BackendResource, type: ResourceItem["type"]): 
     id: String(resource.id), subjectId: String(resource.subject_id), title: resource.title,
     type, pages: resource.total_pages ?? 0,
     size: `${(resource.file_size / (1024 * 1024)).toFixed(1)} MB`,
-    uploadDate: new Date(resource.created_at).toLocaleDateString(), chapters: [], chunksCount: 0,
+    uploadDate: new Date(resource.created_at).toLocaleDateString(), chapters: [], chunksCount: resource.chunks_count ?? 0,
     vectorStatus: normalizedStatus === "READY" || normalizedStatus === "COMPLETED" ? "Indexed" : normalizedStatus === "PROCESSING" ? "Processing" : "Pending",
   };
 }

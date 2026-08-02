@@ -48,6 +48,17 @@ class UserProfileDb(Base):
     bio = Column(Text, default="")
     avatar_url = Column(Text, default="")
 
+    # Exam preferences
+    target_exam = Column(String(100), default="")
+    secondary_exam = Column(String(100), default="")
+    target_score = Column(String(20), default="")
+    target_rank = Column(String(20), default="")
+    target_date = Column(String(30), default="")
+    study_hours_goal = Column(Float, default=4.0)
+    weak_subjects = Column(JSON, default=list)
+    strong_subjects = Column(JSON, default=list)
+    favorite_subjects = Column(JSON, default=list)
+
     # Gamification
     xp = Column(Integer, default=0)
     coins = Column(Integer, default=0)
