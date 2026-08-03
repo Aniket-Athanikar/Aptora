@@ -147,3 +147,7 @@ class ResourceDb(Base):
         back_populates="resource",
         cascade="all, delete-orphan",
     )
+
+    @property
+    def chunks_count(self) -> int:
+        return len(self.chunks) if self.chunks else 0
