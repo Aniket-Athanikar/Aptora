@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useWorkspace } from "../workspaceContext";
 import { ChatMessage } from "./ChatMessage";
 import { InputToolbar } from "./InputToolbar";
@@ -11,6 +11,7 @@ import { Sparkles, Bot, Trash2 } from "lucide-react";
 export function ChatWindow() {
   const { activeConversation, isStreaming, thinkingStage, deleteConversation } = useWorkspace();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -51,17 +52,21 @@ export function ChatWindow() {
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            if (confirm("Delete this session? This action is irreversible.")) {
-              deleteConversation(activeConversation.id);
-            }
-          }}
-          className="p-2 text-slate-400 hover:text-red-500 rounded-xl hover:bg-slate-100 transition-colors"
-          title="Delete Session"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {showDeleteConfirm ? (
+          <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-xl text-[10px] shrink-0">
+            <span className="font-semibold text-rose-700">Delete session?</span>
+            <button onClick={() => { deleteConversation(activeConversation.id); setShowDeleteConfirm(false); }} className="font-bold text-rose-600 hover:text-rose-800">Yes</button>
+            <button onClick={() => setShowDeleteConfirm(false)} className="font-bold text-slate-500 hover:text-slate-700">No</button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="p-2 text-slate-400 hover:text-red-500 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+            title="Delete Session"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Messages Scroll Area */}
@@ -72,7 +77,7 @@ export function ChatWindow() {
               <Sparkles className="w-6 h-6" />
             </div>
             <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest">
-              AI Study Assistant Active
+              ExamForge AI Active
             </h4>
             <p className="text-xs text-gray-400 mt-2 leading-relaxed">
               Ask anything, request conceptual summaries, convert notes, or extract active recall quizzes to start studying.

@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import { AIWorkspace } from "@/features/ai-workspace/components/AIWorkspace";
+import dynamic from "next/dynamic";
+const AIWorkspace = dynamic(
+  () => import("@/features/ai-workspace/components/AIWorkspace").then((m) => m.AIWorkspace),
+  { ssr: false }
+);
 import { DashboardLayout } from "@/components/dashboard";
 import { GoalEngineProvider } from "@/contexts/goal-engine.context";
 

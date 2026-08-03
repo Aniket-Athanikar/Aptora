@@ -67,7 +67,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
       updateWizardDraft({
         profile: {
           fullName: user.name,
-          avatar: AVATAR_OPTIONS[0],
+          avatar: "",
           education: "Bachelor of Arts",
           stream: "Arts & Humanities",
           city: "Delhi",
@@ -391,7 +391,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
 
   if (isThinking) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/50 backdrop-blur-md">
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -463,7 +463,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   }
   if (isCelebrating && celebrationGoal) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/50 backdrop-blur-md">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -497,7 +497,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
           </p>
 
           {/* Metric Details Panel */}
-          <div className="grid grid-cols-2 gap-3.5 w-full mb-8 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full mb-8 text-left">
             <div className="p-4 rounded-2xl border border-emerald-100 bg-emerald-50/20 text-left">
               <span className="text-[10px] font-black uppercase text-emerald-600 tracking-wider">Target Goal</span>
               <p className="font-extrabold text-slate-800 text-sm mt-0.5">{celebrationGoal.targetExam}</p>
@@ -551,13 +551,13 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   const stepStyles = getStepStyles(currentStep);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/50 backdrop-blur-md">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 15 }}
         transition={{ type: "spring", damping: 30, stiffness: 250 }}
-        className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] bg-white/75 glass border border-white/30 overflow-hidden backdrop-blur-3xl transition-all duration-700 ${theme.shadow}`}
+        className={`relative w-full max-w-4xl h-[95vh] sm:h-auto max-h-[95vh] sm:max-h-[90vh] flex flex-col rounded-[24px] sm:rounded-[32px] bg-white/75 glass border border-white/30 overflow-hidden backdrop-blur-3xl transition-all duration-700 ${theme.shadow}`}
       >
         {/* Ambient background glows inside the modal with float motion */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -590,7 +590,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Top Header Navigation */}
-        <div className="p-6 border-b border-white/20 flex items-center justify-between bg-white/40 backdrop-blur-sm relative z-10">
+        <div className="p-4 sm:p-6 border-b border-white/20 flex items-center justify-between bg-white/40 backdrop-blur-sm relative z-10">
           <div className="flex items-center gap-4">
             <motion.div
               animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.03, 1] }}
@@ -712,7 +712,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -814,7 +814,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Footer Navigation Buttons */}
-        <div className="p-6 border-t border-slate-200/50 flex items-center justify-between bg-slate-55/60 bg-slate-50">
+        <div className="p-4 sm:p-6 border-t border-slate-200/50 flex items-center justify-between bg-slate-55/60 bg-slate-50">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}

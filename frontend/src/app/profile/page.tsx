@@ -247,7 +247,7 @@ const DEFAULT_ASPIRANT_PROFILE: AspirantProfileData = {
   pinCode: "400001",
   preferredLanguage: "English",
   timezone: "Asia/Kolkata",
-  avatarUrl: "https://api.dicebear.com/7.x/adventurer/svg?seed=Jack",
+  avatarUrl: "",
   coverPreset: "from-indigo-600 via-purple-600 to-pink-500",
 
   currentQualification: "Graduation",
@@ -490,7 +490,7 @@ function ProfileInner() {
             ...DEFAULT_ASPIRANT_PROFILE,
             fullName: activeGoal.profile.fullName || DEFAULT_ASPIRANT_PROFILE.fullName,
             preparingFor: activeGoal.targetExam || DEFAULT_ASPIRANT_PROFILE.preparingFor,
-            avatarUrl: activeGoal.profile.avatar || DEFAULT_ASPIRANT_PROFILE.avatarUrl,
+            avatarUrl: activeGoal.profile.avatar || "",
             studyHoursGoal: activeGoal.timeline.dailyStudyHours || DEFAULT_ASPIRANT_PROFILE.studyHoursGoal,
             burnoutRisk: activeGoal.timeline.burnoutRisk || DEFAULT_ASPIRANT_PROFILE.burnoutRisk
           };
@@ -736,11 +736,17 @@ function ProfileInner() {
             <div className="flex flex-col sm:flex-row gap-5 -mt-14 items-start sm:items-end relative z-10">
               <div className="relative group">
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 blur opacity-60 group-hover:opacity-85 transition" />
-                <img
-                  src={profile.avatarUrl}
-                  alt={profile.fullName}
-                  className="relative w-24 h-24 rounded-full border-4 border-white bg-slate-50 object-cover shadow"
-                />
+                {profile.avatarUrl ? (
+                  <img
+                    src={profile.avatarUrl}
+                    alt={profile.fullName}
+                    className="relative w-24 h-24 rounded-full border-4 border-white bg-slate-50 object-cover shadow"
+                  />
+                ) : (
+                  <div className="relative w-24 h-24 rounded-full border-4 border-white bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-3xl shadow uppercase">
+                    {profile.fullName ? profile.fullName.charAt(0).toUpperCase() : "?"}
+                  </div>
+                )}
                 <label className="absolute bottom-1 right-1 p-2 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-full cursor-pointer shadow transition">
                   <Camera className="w-3.5 h-3.5" />
                   <input

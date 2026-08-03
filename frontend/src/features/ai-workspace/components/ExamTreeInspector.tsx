@@ -56,6 +56,9 @@ export function ExamTreeInspector() {
   const [newResTitle, setNewResTitle] = useState("");
   const [newResType, setNewResType] = useState<"Book" | "PDF" | "Note" | "PYQ">("Book");
   const [targetSubjId, setTargetSubjId] = useState("");
+  const [deletingWorkspaceId, setDeletingWorkspaceId] = useState<string | null>(null);
+  const [deletingSubjectId, setDeletingSubjectId] = useState<string | null>(null);
+  const [deletingResourceId, setDeletingResourceId] = useState<string | null>(null);
 
   const toggleNode = (id: string) => {
     setExpandedNodes((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -109,11 +112,11 @@ export function ExamTreeInspector() {
         <div>
           <div className="flex items-center gap-2 text-[10px] font-black uppercase text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md w-fit">
             <FolderTree className="w-3.5 h-3.5" />
-            Goal Workspaces & Database Engine
+            Goal Workspaces
           </div>
           <h2 className="text-xl font-black text-slate-800 mt-2">Exam Data & Feature Tree Hierarchy</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Explore and edit exam goal workspaces, subjects, resources, and vector embeddings.
+            Explore and edit exam goal workspaces, subjects, resources, and vector embeddings
           </p>
         </div>
 
@@ -121,7 +124,7 @@ export function ExamTreeInspector() {
           <ResourceUploadButton variant="gradient" size="md" />
           <button
             onClick={() => setCreateWSModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-2xl transition-all shadow-md cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#6D4AFF] hover:bg-[#5B3EE0] text-white text-xs font-bold rounded-2xl transition-all shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" /> New Workspace
           </button>
@@ -129,7 +132,7 @@ export function ExamTreeInspector() {
       </div>
 
       {/* 7-STAGE AI PROCESSING PIPELINE DIAGRAM */}
-      <div className="bg-white border border-purple-100 rounded-3xl p-6 shadow-sm space-y-4">
+      {/* <div className="bg-white border border-purple-100 rounded-3xl p-6 shadow-sm space-y-4">
         <div className="flex items-center gap-2 text-xs font-black text-slate-800 uppercase tracking-wider">
           <Cpu className="w-4 h-4 text-purple-600" />
           <span>4. AI Processing Pipeline (7 Stages)</span>
@@ -151,7 +154,7 @@ export function ExamTreeInspector() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* WORKSPACES SELECTOR TABS & TREE VIEW */}
       <div className="bg-white border border-purple-100 rounded-3xl p-6 shadow-sm space-y-6">
@@ -161,11 +164,10 @@ export function ExamTreeInspector() {
               <button
                 key={ws.id}
                 onClick={() => setActiveWorkspaceId(ws.id)}
-                className={`px-4 py-2 text-xs font-black rounded-xl transition-all shrink-0 cursor-pointer ${
-                  activeWorkspaceId === ws.id
-                    ? "bg-purple-600 text-white shadow-md shadow-purple-200"
-                    : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
-                }`}
+                className={`px-4 py-2 text-xs font-black rounded-xl transition-all shrink-0 cursor-pointer ${activeWorkspaceId === ws.id
+                  ? "bg-purple-600 text-white shadow-md shadow-purple-200"
+                  : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
+                  }`}
               >
                 {ws.title}
               </button>
@@ -180,14 +182,20 @@ export function ExamTreeInspector() {
               + Add Subject
             </button>
             {workspaces.length > 1 && (
-              <button
-                onClick={() => {
-                  if (confirm(`Delete ${activeWS.title}?`)) deleteWorkspace(activeWS.id);
-                }}
-                className="p-1.5 text-slate-400 hover:text-rose-600 rounded-xl"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              deletingWorkspaceId === activeWS.id ? (
+                <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2 py-1 rounded-xl text-[10px]">
+                  <span className="font-semibold text-rose-700">Delete?</span>
+                  <button onClick={() => { deleteWorkspace(activeWS.id); setDeletingWorkspaceId(null); }} className="font-bold text-rose-600 hover:text-rose-800">Yes</button>
+                  <button onClick={() => setDeletingWorkspaceId(null)} className="font-bold text-slate-500 hover:text-slate-700">No</button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setDeletingWorkspaceId(activeWS.id)}
+                  className="p-1.5 text-slate-400 hover:text-rose-600 rounded-xl cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )
             )}
           </div>
         </div>
@@ -236,14 +244,20 @@ export function ExamTreeInspector() {
                       >
                         + Resource
                       </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`Delete subject ${subj.name}?`)) deleteSubjectFromWorkspace(activeWS.id, subj.id);
-                        }}
-                        className="p-1 text-slate-400 hover:text-rose-500"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {deletingSubjectId === subj.id ? (
+                        <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg text-[9px] shrink-0">
+                          <span className="font-bold text-rose-700">Delete?</span>
+                          <button onClick={() => { deleteSubjectFromWorkspace(activeWS.id, subj.id); setDeletingSubjectId(null); }} className="font-bold text-rose-600 hover:text-rose-800">Yes</button>
+                          <button onClick={() => setDeletingSubjectId(null)} className="font-bold text-slate-500 hover:text-slate-700">No</button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setDeletingSubjectId(subj.id)}
+                          className="p-1 text-slate-400 hover:text-rose-500 cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -264,14 +278,20 @@ export function ExamTreeInspector() {
 
                           <div className="flex items-center gap-3 shrink-0">
                             <span className="text-[10px] text-slate-400 font-semibold">{res.chunksCount} Chunks (Qdrant)</span>
-                            <button
-                              onClick={() => {
-                                if (confirm(`Delete resource ${res.title}?`)) deleteResource(activeWS.id, res.id);
-                              }}
-                              className="text-slate-400 hover:text-rose-600"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            {deletingResourceId === res.id ? (
+                              <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg text-[9px] shrink-0">
+                                <span className="font-bold text-rose-700">Delete?</span>
+                                <button onClick={() => { deleteResource(activeWS.id, res.id); setDeletingResourceId(null); }} className="font-bold text-rose-600 hover:text-rose-800">Yes</button>
+                                <button onClick={() => setDeletingResourceId(null)} className="font-bold text-slate-500 hover:text-slate-700">No</button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setDeletingResourceId(res.id)}
+                                className="text-slate-400 hover:text-rose-600 cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -290,7 +310,7 @@ export function ExamTreeInspector() {
 
       {/* CREATE WORKSPACE MODAL */}
       {createWSModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50">
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-black text-slate-800">Create New Goal Workspace</h3>
@@ -337,7 +357,7 @@ export function ExamTreeInspector() {
 
       {/* ADD SUBJECT MODAL */}
       {addSubjectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50">
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-black text-slate-800">Add Subject to {activeWS.title}</h3>
@@ -378,7 +398,7 @@ export function ExamTreeInspector() {
 
       {/* ADD RESOURCE MODAL */}
       {addResourceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50">
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-black text-slate-800">Add Resource</h3>

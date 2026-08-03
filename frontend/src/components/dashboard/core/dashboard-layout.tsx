@@ -134,11 +134,17 @@ export function DashboardLayout({
               onClick={openProfileModal}
               className="flex items-center gap-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all p-1 pl-1.5 pr-2.5 rounded-full"
             >
-              <img
-                src={user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix"}
-                alt="avatar"
-                className="w-7 h-7 rounded-full border border-white object-cover shadow-3xs"
-              />
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="avatar"
+                  className="w-7 h-7 rounded-full border border-white object-cover shadow-3xs"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-[10px] uppercase border border-white shadow-3xs">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                </div>
+              )}
               <span className="text-xs font-black text-slate-800 hidden sm:inline">
                 {user?.name || "Student"}
               </span>

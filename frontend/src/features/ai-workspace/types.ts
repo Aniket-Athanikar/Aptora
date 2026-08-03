@@ -114,4 +114,8 @@ export interface WorkspaceState {
     weeklyProgress: number; // percentage
   };
   promptHistory: string[];
+  settings?: {
+    libraryZoom: number;
+    themeColor: string;
+  };
 }

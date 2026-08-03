@@ -66,7 +66,7 @@ export function StepTimeline({
             <Sparkles className="w-4.5 h-4.5 text-amber-500 animate-pulse" /> AI Calculator Projections
           </h4>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-slate-150 shadow-xs text-left">
               <span className="text-[10px] uppercase font-bold text-slate-400">Days Remaining</span>
               <p className="text-lg font-black text-amber-600 mt-1">{draft.timeline?.remainingDays || 0} Days</p>
@@ -80,7 +80,7 @@ export function StepTimeline({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-slate-150 shadow-xs text-left">
               <span className="text-[10px] uppercase font-bold text-slate-400">Burnout Risk</span>
               <div className="flex items-center gap-2 mt-1.5">

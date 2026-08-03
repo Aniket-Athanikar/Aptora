@@ -275,6 +275,7 @@ export default function SignupPage() {
                 {...register("email")}
                 type="email"
                 placeholder="Email address"
+                autoComplete="username"
                 className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
               />
               {errors.email && (
@@ -290,6 +291,7 @@ export default function SignupPage() {
                 {...register("password")}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password (min 6 chars)"
+                autoComplete="new-password"
                 className="pl-10 pr-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
               />
               <button
@@ -336,6 +338,7 @@ export default function SignupPage() {
                 {...register("confirmPassword")}
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
+                autoComplete="new-password"
                 className="pl-10 pr-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
               />
               <button

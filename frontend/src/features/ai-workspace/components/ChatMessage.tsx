@@ -5,12 +5,14 @@ import { ChatMessage as ChatMessageType } from "../types";
 import { MessageToolbar } from "./MessageToolbar";
 import { Bot, User, FileText, Download } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "@/lib/ToastContext";
 
 interface ChatMessageProps {
   message: ChatMessageType;
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  const { toast } = useToast();
   const isAi = message.sender === "ai";
 
   // Simple, elegant parser for Markdown: lists, tables, bold text, blockquotes, and code blocks
@@ -195,8 +197,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
                     </div>
                   </div>
                   <button
-                    onClick={() => alert("Downloading PDF binary bundle file...")}
-                    className="p-1.5 hover:bg-slate-200/50 rounded-lg transition-colors shrink-0"
+                    onClick={() => toast("Downloading PDF binary bundle file...", "info")}
+                    className="p-1.5 hover:bg-slate-200/50 rounded-lg transition-colors shrink-0 cursor-pointer"
                     title="Download File"
                   >
                     <Download className="w-3.5 h-3.5" />

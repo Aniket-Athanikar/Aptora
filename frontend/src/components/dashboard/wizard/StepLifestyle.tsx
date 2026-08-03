@@ -89,7 +89,7 @@ export function StepLifestyle({
 
           <div>
             <label className="text-xs font-black text-slate-655 uppercase block mb-3 pl-1">Consistency Commits</label>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {["Everyday", "Weekdays Only", "Weekends Intensive", "Skip Festivals/Holidays"].map((item) => {
                 const selected = draft.lifestyle?.consistency?.includes(item) || false;
                 const CommitIcon = {

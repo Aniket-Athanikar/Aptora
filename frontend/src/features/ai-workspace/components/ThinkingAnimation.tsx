@@ -12,7 +12,7 @@ const STAGE_DETAILS = {
   thinking: {
     icon: Sparkles,
     label: "Thinking...",
-    color: "text-purple-600",
+    color: "text-purple-650",
     bgColor: "bg-purple-50",
     borderColor: "border-purple-100",
     pct: 20,
@@ -20,7 +20,7 @@ const STAGE_DETAILS = {
   reading: {
     icon: BookOpen,
     label: "Reading Book Pages...",
-    color: "text-indigo-600",
+    color: "text-indigo-650",
     bgColor: "bg-indigo-50",
     borderColor: "border-indigo-100",
     pct: 40,
@@ -28,7 +28,7 @@ const STAGE_DETAILS = {
   analyzing: {
     icon: BrainCircuit,
     label: "Analyzing Conceptual Structure...",
-    color: "text-blue-600",
+    color: "text-blue-650",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-100",
     pct: 60,
@@ -36,7 +36,7 @@ const STAGE_DETAILS = {
   notes: {
     icon: FileText,
     label: "Generating High-Yield Notes...",
-    color: "text-pink-600",
+    color: "text-pink-650",
     bgColor: "bg-pink-50",
     borderColor: "border-pink-100",
     pct: 80,
@@ -44,7 +44,7 @@ const STAGE_DETAILS = {
   knowledge: {
     icon: Network,
     label: "Mapping Connections into Knowledge Graph...",
-    color: "text-violet-600",
+    color: "text-violet-650",
     bgColor: "bg-violet-50",
     borderColor: "border-violet-100",
     pct: 95,
@@ -52,7 +52,7 @@ const STAGE_DETAILS = {
   done: {
     icon: CheckCircle2,
     label: "Workspace Synced!",
-    color: "text-emerald-600",
+    color: "text-emerald-650",
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-100",
     pct: 100,
@@ -66,42 +66,42 @@ export function ThinkingAnimation({ stage }: ThinkingAnimationProps) {
   const Icon = current.icon;
 
   return (
-    <div className="my-6 p-6 rounded-2xl border border-dashed border-purple-100 bg-purple-50/20 backdrop-blur-md max-w-xl">
+    <div className="my-6 p-5 rounded-3xl border border-dashed border-purple-150 bg-gradient-to-br from-white to-purple-50/20 max-w-xl shadow-sm">
       <div className="flex items-center gap-4">
         {/* Animated icon wrapper */}
         <motion.div
           animate={{
-            scale: [1, 1.1, 1],
-            rotate: stage === "done" ? 0 : [0, 10, -10, 0],
+            scale: stage === "done" ? 1 : [1, 1.1, 1],
+            rotate: stage === "done" ? 0 : [0, 8, -8, 0],
           }}
           transition={{
             repeat: stage === "done" ? 0 : Infinity,
             duration: 2,
             ease: "easeInOut",
           }}
-          className={`p-3.5 rounded-xl ${current.bgColor} ${current.borderColor} border ${current.color}`}
+          className={`p-3 rounded-2xl ${current.bgColor} ${current.borderColor} border ${current.color} shadow-sm`}
         >
-          <Icon className="w-6 h-6" />
+          <Icon className="w-5 h-5" />
         </motion.div>
 
         {/* Text descriptions */}
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            ExamForge AI Engine
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
+            ExamForge AI
           </p>
-          <h4 className="text-sm font-bold text-gray-800 truncate mt-0.5">
+          <h4 className="text-xs font-black text-slate-800 truncate mt-1.5">
             {current.label}
           </h4>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-5">
-        <div className="flex justify-between items-center text-[10px] font-bold text-purple-700/70 mb-1.5">
+      <div className="mt-5 pt-3.5 border-t border-slate-50">
+        <div className="flex justify-between items-center text-[10px] font-bold text-slate-550 mb-1.5">
           <span>PIPELINE PROGRESS</span>
-          <span>{current.pct}%</span>
+          <span className="text-purple-600 font-extrabold">{current.pct}%</span>
         </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: "0%" }}
             animate={{ width: `${current.pct}%` }}

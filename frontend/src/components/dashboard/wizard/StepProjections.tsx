@@ -71,7 +71,7 @@ export function StepProjections({
         {/* Left Column: Profile, Timeline & Environment */}
         <div className="md:col-span-2 space-y-5 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-3xs">
           <h5 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-3">Profile & Logistics</h5>
-          <div className="grid grid-cols-2 gap-5 text-xs font-semibold text-slate-700">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-semibold text-slate-700">
             <div className="space-y-1">
               <span className="text-[9px] text-slate-400 uppercase font-bold block">Aspirant Name</span>
               <p className="font-black text-slate-800">{draft.profile?.fullName || "Student"}</p>
@@ -88,7 +88,7 @@ export function StepProjections({
               <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Exam Date</span>
               <p className="font-black text-slate-800">{draft.timeline?.examDate} ({draft.timeline?.remainingDays} Days Left)</p>
             </div>
-            <div className="space-y-2 col-span-2 border-t border-slate-100 pt-4.5 grid grid-cols-2 gap-4">
+            <div className="space-y-2 col-span-2 border-t border-slate-100 pt-4.5 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <span className="text-[9px] text-slate-400 uppercase font-bold block">Study Environment</span>
                 <p className="font-bold text-slate-700">{draft.lifestyle?.learningEnvironment || "Quiet Study Room"}</p>

@@ -263,11 +263,17 @@ export function Sidebar({
               className="relative shrink-0 group cursor-pointer"
             >
               <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm scale-95 group-hover:scale-100" />
-              <img
-                src={user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix"}
-                alt="avatar"
-                className="relative w-11 h-11 rounded-full object-cover border-2 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
-              />
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="avatar"
+                  className="relative w-11 h-11 rounded-full object-cover border-2 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-sm uppercase border border-white shadow-md transition-transform duration-300 group-hover:scale-105">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                </div>
+              )}
               <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <Camera className="w-4 h-4 text-white" />
               </span>
@@ -388,11 +394,17 @@ export function Sidebar({
               {/* Mobile Footer */}
               <div className="mt-6 pt-5 border-t border-slate-150 flex flex-col gap-4.5">
                 <div className="flex items-center gap-3.5">
-                  <img
-                    src={user?.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix"}
-                    alt="avatar"
-                    className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
-                  />
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt="avatar"
+                      className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-sm uppercase border border-slate-200 shadow-sm">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                    </div>
+                  )}
                   <div className="min-w-0 flex-1">
                     <p className="text-[13px] font-black text-slate-800 truncate">
                       {user?.name || "Student User"}

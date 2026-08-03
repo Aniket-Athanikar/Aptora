@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Camera, Mic, FileText, Upload } from "lucide-react";
 import { ResourceUploadModal } from "@/components/resources/ResourceUploadModal";
+import { useToast } from "@/lib/ToastContext";
 
 export function UploadZone() {
+  const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -60,16 +62,16 @@ export function UploadZone() {
           </button>
           
           <button
-            onClick={() => alert("Simulating High-Fidelity OCR Camera scanner initialization...")}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm"
+            onClick={() => toast("Simulating High-Fidelity OCR Camera scanner initialization...", "info")}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm cursor-pointer"
           >
             <Camera className="w-3.5 h-3.5 text-pink-500" />
             Camera Scan
           </button>
 
           <button
-            onClick={() => alert("Simulating Speech-to-Text active tutoring recording...")}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm"
+            onClick={() => toast("Simulating Speech-to-Text active tutoring recording...", "info")}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm cursor-pointer"
           >
             <Mic className="w-3.5 h-3.5 text-indigo-500" />
             Voice Note

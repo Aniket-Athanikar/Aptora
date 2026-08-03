@@ -314,11 +314,16 @@ async def current_user(
             "data": None,
         }
 
+    from app.models.user_profile import UserProfileDb
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+    avatar = profile.avatar_url if profile else ""
+
     return {
         "success": True,
         "authenticated": True,
         "data": {
             "name": user.name,
             "email": user.email,
+            "avatar": avatar,
         },
     }

@@ -215,13 +215,9 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Image
-                      src={getAvatarUrl(user.name)}
-                      alt={user.name}
-                      fill
-                      sizes="32px"
-                      className="object-cover"
-                    />
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                    </div>
                   )}
                 </div>
                 <span className="text-sm font-bold text-neutral-800 max-w-[120px] truncate">
@@ -294,17 +290,17 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-neutral-300 hover:text-[#6D4AFF] transition-colors mt-1"
+          className="lg:hidden p-2 text-neutral-750 hover:text-[#6D4AFF] transition-colors mt-1"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
         </button>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - Premium White Glassmorphic Panel */}
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-[#060410]/95 backdrop-blur-xl border-b border-neutral-900 p-6 shadow-2xl flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-300">
-          <nav className="flex flex-col gap-2">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200/80 p-6 shadow-xl flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-300">
+          <nav className="flex flex-col gap-1.5">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -317,7 +313,7 @@ export default function Navbar() {
                   "relative text-base font-bold transition-all px-4 py-3 rounded-xl",
                   activeLink === link.href
                     ? "bg-[#6D4AFF]/5 text-[#6D4AFF]"
-                    : "text-neutral-300 hover:bg-neutral-900/50 hover:text-white"
+                    : "text-neutral-600 hover:bg-slate-50 hover:text-neutral-900"
                 )}
               >
                 {link.name}
@@ -332,12 +328,12 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <hr className="border-neutral-900" />
+          <hr className="border-slate-100" />
 
           {mounted && isAuthenticated && user ? (
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 px-4 py-3 bg-neutral-900/60 border border-neutral-800 rounded-xl">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-neutral-800 flex items-center justify-center bg-neutral-900">
+              <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-250/60 rounded-2xl shadow-sm">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 flex items-center justify-center bg-slate-100">
                   {user.avatar ? (
                     <img
                       src={user.avatar}
@@ -345,36 +341,32 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Image
-                      src={getAvatarUrl(user.name)}
-                      alt={user.name}
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                    />
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                    </div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{formatDisplayName(user.name)}</p>
-                  <p className="text-xs text-neutral-400">{user.email}</p>
+                  <p className="text-sm font-black text-slate-800">{formatDisplayName(user.name)}</p>
+                  <p className="text-xs text-slate-400 font-semibold">{user.email}</p>
                 </div>
               </div>
               <Link
                 href="/profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold text-neutral-300 border border-neutral-800 rounded-xl hover:bg-neutral-900/60 hover:border-neutral-700 transition-all block"
+                className="w-full text-center py-3.5 font-bold text-slate-705 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all block"
               >
                 View Profile
               </Link>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all cursor-pointer"
+                className="w-full text-center py-3.5 font-bold text-red-600 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer"
               >
                 Logout
               </button>
               <button
                 onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
-                className="w-full text-center py-3.5 font-bold text-red-400 border border-red-950/50 rounded-xl hover:bg-red-950/20 transition-all cursor-pointer text-sm"
+                className="w-full text-center py-3.5 font-bold text-red-500 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer text-sm"
               >
                 Delete Account
               </button>
@@ -384,14 +376,14 @@ export default function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold text-neutral-300 border border-neutral-800 rounded-xl hover:bg-neutral-900/60 hover:border-neutral-700 transition-all block"
+                className="w-full text-center py-3.5 font-bold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all block"
               >
                 Login
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
+                className="w-full text-center py-3.5 font-bold bg-gradient-to-r from-[#6D4AFF] to-purple-650 text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
               >
                 Get Started
               </Link>

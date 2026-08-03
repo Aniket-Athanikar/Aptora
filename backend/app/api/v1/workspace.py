@@ -75,7 +75,7 @@ def create_workspace(
 
 @router.get(
     "",
-    response_model=WorkspaceResponse,
+    response_model=Optional[WorkspaceResponse],
 )
 def get_user_workspace(
     db: Session = Depends(get_db),
@@ -88,13 +88,6 @@ def get_user_workspace(
         db,
         user_id=current_user.id,
     )
-
-    if workspace is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Workspace not found.",
-        )
-
     return workspace
 
 

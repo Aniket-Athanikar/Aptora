@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { useWorkspace } from "../workspaceContext";
 import { ChatMessage } from "../types";
 import { Copy, Bookmark, FileText, Layers, GitPullRequest, HelpCircle, Languages, Share2, ThumbsUp, ThumbsDown, Check } from "lucide-react";
+import { useToast } from "@/lib/ToastContext";
 
 interface MessageToolbarProps {
   message: ChatMessage;
 }
 
 export function MessageToolbar({ message }: MessageToolbarProps) {
+  const { toast } = useToast();
   const { toggleMessageBookmark, toggleMessageLike, triggerQuickAction } = useWorkspace();
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
@@ -83,10 +85,10 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
       {/* Convert to Study Formats */}
       <button
         onClick={() => {
-          alert("Creating notes from this response block in ExamForge Study Engine...");
+          toast("Creating notes from this response block in ExamForge Study Engine...", "info");
           triggerQuickAction("notes");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
         title="Save block as study notes"
       >
         <FileText className="w-3.5 h-3.5" />
@@ -95,10 +97,10 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
 
       <button
         onClick={() => {
-          alert("Generating active recall flashcards study set from this response...");
+          toast("Generating active recall flashcards study set from this response...", "info");
           triggerQuickAction("flashcards");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
         title="Extract Flashcards"
       >
         <Layers className="w-3.5 h-3.5" />
@@ -107,10 +109,10 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
 
       <button
         onClick={() => {
-          alert("Constructing interactive Mind Map conceptual nodes...");
+          toast("Constructing interactive Mind Map conceptual nodes...", "info");
           triggerQuickAction("mindmap");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
         title="Convert to Concept Map"
       >
         <GitPullRequest className="w-3.5 h-3.5" />
@@ -119,10 +121,10 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
 
       <button
         onClick={() => {
-          alert("Compiling 5 practice questions from response parameters...");
+          toast("Compiling 5 practice questions from response parameters...", "info");
           triggerQuickAction("questions");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
         title="Create quiz practice questions"
       >
         <HelpCircle className="w-3.5 h-3.5" />
@@ -133,8 +135,8 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
       <div className="w-[1px] h-4 bg-slate-100 mx-1" />
 
       <button
-        onClick={() => alert("Simulating translation to Hindi, Spanish, Sanskrit...")}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        onClick={() => toast("Simulating translation to Hindi, Spanish, Sanskrit...", "info")}
+        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
       >
         <Languages className="w-3.5 h-3.5" />
         <span>Translate</span>

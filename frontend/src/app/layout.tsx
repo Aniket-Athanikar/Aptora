@@ -57,9 +57,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
+    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                  if (
+                    args[0] &&
+                    typeof args[0] === 'string' &&
+                    (args[0].includes('THREE.Clock') ||
+                     args[0].includes('Skipping auto-scroll') ||
+                     args[0].includes('WebGLRenderer'))
+                  ) {
+                    return;
+                  }
+                  originalWarn.apply(console, args);
+                };
+              })();
+            `
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} antialiased min-h-screen text-slate-800 bg-slate-50 selection:bg-indigo-500/15 selection:text-[#6D4AFF]`}
+        suppressHydrationWarning
       >
         <AuthProvider>
           <ToastProvider>

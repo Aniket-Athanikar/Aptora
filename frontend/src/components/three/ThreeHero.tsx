@@ -1,24 +1,25 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
 
-// Suppress THREE.Clock deprecation warnings from third-party libraries (e.g. R3F)
 if (typeof window !== "undefined") {
   const originalWarn = console.warn;
-  console.warn = (...args) => {
+  console.warn = function (...args) {
     if (
       args[0] &&
       typeof args[0] === "string" &&
-      (args[0].includes("THREE.Clock") || args[0].includes("ThreeHero.tsx"))
+      (args[0].includes("THREE.Clock") || args[0].includes("Skipping auto-scroll") || args[0].includes("WebGLRenderer"))
     ) {
       return;
     }
-    originalWarn(...args);
+    originalWarn.apply(console, args);
   };
 }
+
+
 
 // Helper to create a high-quality radial glow texture dynamically
 function useGlowTexture() {
@@ -45,66 +46,102 @@ function useGlowTexture() {
   }, []);
 }
 
+// GPU Shader configuration for fast rendering
+const WaveShader = {
+  uniforms: {
+    uTime: { value: 0 },
+    uMouse: { value: new THREE.Vector2(0, 0) },
+    uTexture: { value: null as THREE.Texture | null },
+  },
+  vertexShader: `
+    uniform float uTime;
+    uniform vec2 uMouse;
+    varying float vY;
+    void main() {
+      vec3 pos = position;
+      
+      // Compute sine/cosine waves on GPU in parallel
+      float wave1 = sin(pos.x * 0.4 + uTime * 1.2) * 0.45;
+      float wave2 = cos(pos.z * 0.35 + uTime * 1.0) * 0.45;
+      float wave3 = sin((pos.x + pos.z) * 0.2 + uTime * 0.8) * 0.3;
+      
+      float dx = pos.x - uMouse.x * 6.0;
+      float dz = pos.z - uMouse.y * 6.0;
+      float distSq = dx * dx + dz * dz;
+      float mouseEffect = 0.0;
+      if (distSq < 9.0) {
+        mouseEffect = (3.0 - sqrt(distSq)) * 0.35;
+      }
+      
+      pos.y = wave1 + wave2 + wave3 + mouseEffect;
+      vY = pos.y;
+      
+      vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+      gl_PointSize = 12.0 / -mvPosition.z;
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D uTexture;
+    varying float vY;
+    void main() {
+      vec4 texColor = texture2D(uTexture, gl_PointCoord);
+      if (texColor.a < 0.1) discard;
+      vec3 color = mix(vec3(0.54, 0.36, 1.0), vec3(0.38, 0.4, 0.94), (vY + 1.0) * 0.5);
+      gl_FragColor = vec4(color, texColor.a * 0.9);
+    }
+  `
+};
+
 function GlowingWavingGrid() {
   const pointsRef = useRef<THREE.Points>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
   const { mouse } = useThree();
   const glowTexture = useGlowTexture();
 
   // Grid dimensions
-  const widthCount = 45;
-  const depthCount = 45;
+  const widthCount = 25;
+  const depthCount = 25;
   const count = widthCount * depthCount;
 
-  // Generate initial grid position coordinates
+  // Generate initial grid position coordinates (static on CPU)
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
-    const spacing = 0.25;
+    const spacing = 0.45;
 
     for (let i = 0; i < widthCount; i++) {
       for (let j = 0; j < depthCount; j++) {
         const index = (i * depthCount + j) * 3;
-        // Center the grid around origin
         const x = (i - widthCount / 2) * spacing;
         const z = (j - depthCount / 2) * spacing;
         pos[index] = x;
-        pos[index + 1] = 0; // Will be animated
+        pos[index + 1] = 0;
         pos[index + 2] = z;
       }
     }
     return pos;
   }, [count]);
 
-  useFrame((state) => {
-    if (!pointsRef.current) return;
-    const geo = pointsRef.current.geometry;
-    const posAttr = geo.attributes.position;
-    const time = state.clock.getElapsedTime();
-
-    for (let i = 0; i < widthCount; i++) {
-      for (let j = 0; j < depthCount; j++) {
-        const index = i * depthCount + j;
-        const x = posAttr.getX(index);
-        const z = posAttr.getZ(index);
-
-        // Multi-frequency wave pattern for organic, natural waving motion
-        const wave1 = Math.sin(x * 0.4 + time * 1.2) * 0.45;
-        const wave2 = Math.cos(z * 0.35 + time * 1.0) * 0.45;
-        const wave3 = Math.sin((x + z) * 0.2 + time * 0.8) * 0.3;
-
-        // Interactive mouse height distortion
-        const dx = x - mouse.x * 6;
-        const dz = z - mouse.y * 6;
-        const dist = Math.sqrt(dx * dx + dz * dz);
-        const mouseEffect = dist < 3.0 ? (3.0 - dist) * 0.35 : 0;
-
-        posAttr.setY(index, wave1 + wave2 + wave3 + mouseEffect);
-      }
+  // Bind the dynamically loaded texture to the shader uniforms
+  useEffect(() => {
+    if (materialRef.current && glowTexture) {
+      materialRef.current.uniforms.uTexture.value = glowTexture;
     }
-    posAttr.needsUpdate = true;
+  }, [glowTexture]);
 
-    // Gentle global rotation based on mouse or time
-    pointsRef.current.rotation.y = time * 0.05 + mouse.x * 0.15;
-    pointsRef.current.rotation.x = 0.3 + mouse.y * 0.1;
+  // Update uniforms and rotation (zero positions calculation on CPU)
+  useFrame((state) => {
+    const time = performance.now() * 0.001;
+    
+    if (materialRef.current) {
+      materialRef.current.uniforms.uTime.value = time;
+      materialRef.current.uniforms.uMouse.value.set(mouse.x, mouse.y);
+    }
+
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = time * 0.05 + mouse.x * 0.15;
+      pointsRef.current.rotation.x = 0.3 + mouse.y * 0.1;
+    }
   });
 
   return (
@@ -116,14 +153,12 @@ function GlowingWavingGrid() {
         />
       </bufferGeometry>
       {glowTexture && (
-        <pointsMaterial
-          size={0.24}
-          sizeAttenuation={true}
+        <shaderMaterial
+          ref={materialRef}
+          args={[WaveShader]}
           transparent={true}
-          opacity={0.9}
-          blending={THREE.AdditiveBlending}
           depthWrite={false}
-          map={glowTexture}
+          blending={THREE.AdditiveBlending}
         />
       )}
     </points>
@@ -137,16 +172,12 @@ function FloatingGlassmorphicShapes() {
       <Float speed={2.0} rotationIntensity={1.8} floatIntensity={1.5}>
         <mesh position={[2.8, 1.2, -1]}>
           <torusGeometry args={[0.7, 0.22, 16, 100]} />
-          <meshPhysicalMaterial
-            roughness={0.1}
-            transmission={0.95}
-            thickness={1.2}
-            ior={1.6}
-            clearcoat={1.0}
-            clearcoatRoughness={0.1}
+          <meshStandardMaterial
+            roughness={0.2}
+            metalness={0.1}
             color="#A855F7"
             emissive="#6D4AFF"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.5}
           />
         </mesh>
       </Float>
@@ -155,15 +186,12 @@ function FloatingGlassmorphicShapes() {
       <Float speed={2.5} rotationIntensity={2.5} floatIntensity={2.0}>
         <mesh position={[-3.2, -0.8, 1]}>
           <octahedronGeometry args={[0.7, 0]} />
-          <meshPhysicalMaterial
-            roughness={0.05}
-            transmission={0.9}
-            thickness={1.5}
-            ior={1.7}
-            clearcoat={1.0}
+          <meshStandardMaterial
+            roughness={0.1}
+            metalness={0.2}
             color="#06B6D4"
             emissive="#3B82F6"
-            emissiveIntensity={0.4}
+            emissiveIntensity={0.6}
           />
         </mesh>
       </Float>
@@ -172,14 +200,12 @@ function FloatingGlassmorphicShapes() {
       <Float speed={1.8} rotationIntensity={1.2} floatIntensity={1.2}>
         <mesh position={[-1.2, 2.0, -2]}>
           <sphereGeometry args={[0.45, 32, 32]} />
-          <meshPhysicalMaterial
-            roughness={0.15}
-            transmission={0.9}
-            thickness={0.8}
-            ior={1.45}
+          <meshStandardMaterial
+            roughness={0.25}
+            metalness={0.1}
             color="#EC4899"
             emissive="#A855F7"
-            emissiveIntensity={0.25}
+            emissiveIntensity={0.4}
           />
         </mesh>
       </Float>
@@ -190,7 +216,17 @@ function FloatingGlassmorphicShapes() {
 export default function ThreeHero() {
   return (
     <div className="w-full h-full relative min-h-[500px] lg:min-h-[650px] overflow-hidden">
-      <Canvas camera={{ position: [0, 2.5, 7.5], fov: 45 }}>
+      <Canvas
+        flat
+        gl={{
+          antialias: false,
+          powerPreference: "high-performance",
+          alpha: true,
+          stencil: false,
+          depth: false,
+        }}
+        camera={{ position: [0, 2.5, 7.5], fov: 45 }}
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[8, 12, 10]} intensity={2.0} color="#ffffff" />
         <pointLight position={[-10, 8, -5]} intensity={1.5} color="#8B5CF6" />

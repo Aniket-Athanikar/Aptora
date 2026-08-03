@@ -38,7 +38,7 @@ export function BookContextCard({ book }: BookContextCardProps) {
                 <BookOpen className="w-4 h-4 opacity-80" />
               </div>
               <div className="mb-4">
-                <p className="text-[10px] font-medium opacity-70">EXAM FORGE STUDY</p>
+                <p className="text-[10px] font-medium opacity-70">EXAMFORGE STUDY</p>
                 <h5 className="text-xs font-black line-clamp-3 leading-snug mt-1">
                   {book.name}
                 </h5>
@@ -50,7 +50,7 @@ export function BookContextCard({ book }: BookContextCardProps) {
             </motion.div>
 
             {/* Bottom floating page indicator */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[9px] text-white font-bold select-none">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white border border-slate-200/60 px-3 py-1 rounded-full text-[9px] text-slate-800 font-bold select-none shadow-sm">
               Zoom: {Math.round(zoom * 100)}% | Rot: {rotation}°
             </div>
           </div>
@@ -90,11 +90,10 @@ export function BookContextCard({ book }: BookContextCardProps) {
                 <p className="text-xs text-gray-400 mt-0.5">Study Resource Context</p>
               </div>
               <span
-                className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${
-                  isCompleted
+                className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${isCompleted
                     ? "bg-emerald-50 border-emerald-100 text-emerald-600"
                     : "bg-purple-50 border-purple-100 text-purple-600"
-                }`}
+                  }`}
               >
                 OCR: {book.ocrStatus.toUpperCase()}
               </span>

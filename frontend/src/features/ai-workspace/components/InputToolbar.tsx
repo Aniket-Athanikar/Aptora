@@ -4,8 +4,10 @@ import React, { useState, useRef } from "react";
 import { useWorkspace } from "../workspaceContext";
 import { Send, Paperclip, Mic, Camera, FileText, Sparkles, BookOpen, HelpCircle, Layers, GitPullRequest, Globe, Search, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "@/lib/ToastContext";
 
 export function InputToolbar() {
+  const { toast } = useToast();
   const { sendMessage, isStreaming, uploads, triggerQuickAction } = useWorkspace();
   const [text, setText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -96,8 +98,8 @@ export function InputToolbar() {
           
           <button
             type="button"
-            onClick={() => alert("Recording voice query...")}
-            className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-all shrink-0"
+            onClick={() => toast("Recording voice query...", "info")}
+            className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-all shrink-0 cursor-pointer"
             title="Voice Notes Input"
           >
             <Mic className="w-3.5 h-3.5" />
@@ -122,7 +124,7 @@ export function InputToolbar() {
             if (uploads.length > 0) {
               triggerQuickAction("pdf_analyze");
             } else {
-              alert("Please upload a study book first!");
+              toast("Please upload a study book first!", "error");
             }
           }}
           className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"

@@ -30,10 +30,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     authService.me()
       .then((result) => {
-        const value = result as { success?: boolean; data?: { name?: string; email?: string } | null };
+        const value = result as { success?: boolean; data?: { name?: string; email?: string; avatar?: string } | null };
         const sessionUser = value.data;
         setUser(value.success && sessionUser?.email
-          ? { name: sessionUser.name || sessionUser.email.split("@")[0], email: sessionUser.email }
+          ? {
+              name: sessionUser.name || sessionUser.email.split("@")[0],
+              email: sessionUser.email,
+              avatar: sessionUser.avatar || "",
+            }
           : null);
       })
       .catch(() => setUser(null));

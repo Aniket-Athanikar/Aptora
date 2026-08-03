@@ -29,6 +29,72 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/lib/ToastContext";
 import { backendService, type Resource } from "@/services/backend.service";
 import { ResourceUploadButton } from "@/components/resources/ResourceUploadButton";
+import { ChatMessage } from "./ChatMessage";
+
+const getSubjectTheme = (colorStr: string) => {
+  const s = colorStr.toLowerCase();
+  if (s.includes("purple") || s.includes("violet")) {
+    return {
+      hoverBg: "hover:bg-purple-50/40",
+      hoverBorder: "hover:border-purple-300",
+      hoverText: "group-hover:text-purple-700",
+      badgeBg: "bg-purple-50 text-purple-650",
+      iconBg: "bg-purple-50 text-purple-600",
+    };
+  }
+  if (s.includes("pink")) {
+    return {
+      hoverBg: "hover:bg-pink-50/40",
+      hoverBorder: "hover:border-pink-300",
+      hoverText: "group-hover:text-pink-700",
+      badgeBg: "bg-pink-50 text-pink-650",
+      iconBg: "bg-pink-50 text-pink-600",
+    };
+  }
+  if (s.includes("blue") || s.includes("sky")) {
+    return {
+      hoverBg: "hover:bg-blue-50/40",
+      hoverBorder: "hover:border-blue-300",
+      hoverText: "group-hover:text-blue-700",
+      badgeBg: "bg-blue-50 text-blue-650",
+      iconBg: "bg-blue-50 text-blue-600",
+    };
+  }
+  if (s.includes("emerald") || s.includes("green") || s.includes("teal")) {
+    return {
+      hoverBg: "hover:bg-emerald-50/40",
+      hoverBorder: "hover:border-emerald-300",
+      hoverText: "group-hover:text-emerald-700",
+      badgeBg: "bg-emerald-50 text-emerald-650",
+      iconBg: "bg-emerald-50 text-emerald-600",
+    };
+  }
+  if (s.includes("rose") || s.includes("red")) {
+    return {
+      hoverBg: "hover:bg-rose-50/40",
+      hoverBorder: "hover:border-rose-300",
+      hoverText: "group-hover:text-rose-700",
+      badgeBg: "bg-rose-50 text-rose-650",
+      iconBg: "bg-rose-50 text-rose-600",
+    };
+  }
+  if (s.includes("amber") || s.includes("orange") || s.includes("yellow")) {
+    return {
+      hoverBg: "hover:bg-amber-50/40",
+      hoverBorder: "hover:border-amber-300",
+      hoverText: "group-hover:text-amber-700",
+      badgeBg: "bg-amber-50 text-amber-650",
+      iconBg: "bg-amber-50 text-amber-600",
+    };
+  }
+  return {
+    hoverBg: "hover:bg-indigo-50/40",
+    hoverBorder: "hover:border-indigo-300",
+    hoverText: "group-hover:text-indigo-700",
+    badgeBg: "bg-indigo-50 text-indigo-650",
+    iconBg: "bg-indigo-50 text-indigo-600",
+  };
+};
 
 export function AIChatStepFlow() {
   const { toast } = useToast();
@@ -84,508 +150,6 @@ export function AIChatStepFlow() {
   };
 
   return <AiStudyHome />;
-
-  return (
-    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
-      {/* STEP 1: SHOW ALL SUBJECTS */}
-      {flowStep === 1 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
-          {/* Step Header */}
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100/80 text-purple-700 text-[11px] font-black uppercase tracking-wider">
-              <Bot className="w-3.5 h-3.5" />
-              <span>Step 1 of 5 • AI Study Assistant</span>
-            </div>
-            <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-              Select a subject to start learning with AI
-            </h2>
-            <p className="text-xs text-slate-500">
-              Pick any subject from <span className="font-bold text-purple-600">{activeWorkspace?.title}</span> to inspect study resources, generate notes, or launch RAG chat.
-            </p>
-          </div>
-
-          {/* Search bar */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
-            <input
-              type="text"
-              value={subjectSearch}
-              onChange={(e) => setSubjectSearch(e.target.value)}
-              placeholder="Search subjects..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 shadow-sm transition-all"
-            />
-          </div>
-
-          {/* Grid of Subjects */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-            {filteredSubjects.map((subject) => (
-              <button
-                key={subject.id}
-                onClick={() => selectSubject(subject.id)}
-                className="group relative flex flex-col items-center justify-center p-5 bg-white border border-slate-100 rounded-2xl hover:border-purple-300 hover:shadow-lg hover:shadow-purple-100/50 transition-all duration-300 text-center cursor-pointer"
-              >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform mb-3`}>
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <h3 className="text-xs font-black text-slate-800 group-hover:text-purple-600 transition-colors">
-                  {subject.name}
-                </h3>
-                <span className="text-[10px] font-extrabold text-slate-400 mt-1">
-                  {subject.resourceCount} Resources
-                </span>
-                {subject.subCategory && (
-                  <span className="mt-2 text-[9px] font-black uppercase tracking-wider text-purple-500 bg-purple-50 px-2 py-0.5 rounded-md">
-                    {subject.subCategory}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="text-center pt-2">
-            <span className="text-[11px] font-bold text-slate-400 italic">
-              💡 Tip: You can ask questions, generate notes, summarize topics and more with AI.
-            </span>
-          </div>
-        </motion.div>
-      )}
-
-      {/* STEP 2: SELECT SUBJECT -> SHOW RESOURCE TYPES */}
-      {flowStep === 2 && activeSubject && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6 max-w-4xl mx-auto"
-        >
-          {/* Top Back Nav */}
-          <button
-            onClick={() => setFlowStep(1)}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Subjects
-          </button>
-
-          {/* Subject Header Banner */}
-          <div className="flex flex-col items-center text-center p-6 bg-white border border-purple-100 rounded-3xl shadow-sm space-y-3">
-            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${activeSubject.color} text-white flex items-center justify-center shadow-lg`}>
-              <BookOpen className="w-8 h-8" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-black text-slate-800">{activeSubject.name}</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Explore study materials in different formats for {activeSubject.name}
-              </p>
-            </div>
-          </div>
-
-          {/* 4 Resource Type Cards (Books, PDFs, Notes, PYQs) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { type: "Book" as const, label: "Books", count: "28 Resources", icon: BookOpen, color: "text-purple-600", bg: "bg-purple-50" },
-              { type: "PDF" as const, label: "PDFs", count: "36 Resources", icon: FileText, color: "text-rose-600", bg: "bg-rose-50" },
-              { type: "Note" as const, label: "Notes", count: "42 Resources", icon: FileCheck, color: "text-amber-600", bg: "bg-amber-50" },
-              { type: "PYQ" as const, label: "PYQs", count: "21 Resources", icon: HelpCircle, color: "text-blue-600", bg: "bg-blue-50" },
-            ].map(({ type, label, count, icon: Icon, color, bg }) => (
-              <button
-                key={type}
-                onClick={() => selectResourceType(type)}
-                className="group p-5 bg-white border border-slate-200 hover:border-purple-300 rounded-2xl shadow-sm hover:shadow-md transition-all text-center flex flex-col items-center justify-center cursor-pointer"
-              >
-                <div className={`w-12 h-12 rounded-xl ${bg} ${color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <h4 className="text-sm font-black text-slate-800 group-hover:text-purple-600 transition-colors">{label}</h4>
-                <span className="text-[10px] text-slate-400 font-extrabold mt-0.5">{count}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Prompt Suggestion Card */}
-          <div className="p-6 bg-white border border-purple-100 rounded-3xl space-y-4 shadow-sm">
-            <h4 className="text-xs font-black text-slate-700 uppercase tracking-wider">What can I help you with?</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-600">
-              {[
-                `Explain a topic from ${activeSubject.name}`,
-                "Summarize a book or PDF",
-                "Generate notes on a topic",
-                "Solve PYQs with explanations",
-                "Compare two topics",
-                "Any other doubt?"
-              ].map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    selectResourceType("Book");
-                    startChatWithResource("res-laxmikanth");
-                  }}
-                  className="flex items-center gap-2 p-3 bg-slate-50 hover:bg-purple-50 text-slate-700 hover:text-purple-700 rounded-xl text-left border border-slate-100 hover:border-purple-200 transition-all cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0" />
-                  <span>{q}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                placeholder={`Ask me anything about ${activeSubject.name}...`}
-                className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-purple-400 focus:bg-white"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    selectResourceType("Book");
-                    startChatWithResource("res-laxmikanth");
-                  }
-                }}
-              />
-              <button
-                onClick={() => {
-                  selectResourceType("Book");
-                  startChatWithResource("res-laxmikanth");
-                }}
-                className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-xs font-bold transition-all"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* STEP 3: SELECT RESOURCE TYPE -> SHOW RESOURCES LIST */}
-      {flowStep === 3 && activeSubject && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6 max-w-4xl mx-auto"
-        >
-          {/* Breadcrumb Header */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => setFlowStep(2)}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to {activeSubject.name} Overview
-            </button>
-            <div className="text-xs font-extrabold text-slate-400">
-              {activeSubject.name} / <span className="text-purple-600">{selectedResourceType}s</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-purple-100 text-purple-700">
-              <BookOpen className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl font-black text-slate-800">{activeSubject.name} - {selectedResourceType}s</h2>
-              <p className="text-xs text-slate-400">Choose a {selectedResourceType?.toLowerCase()} to continue</p>
-            </div>
-          </div>
-
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
-            <input
-              type="text"
-              value={resourceSearch}
-              onChange={(e) => setResourceSearch(e.target.value)}
-              placeholder={`Search ${selectedResourceType?.toLowerCase()}s...`}
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 shadow-sm"
-            />
-          </div>
-
-          {/* Resources List */}
-          <div className="space-y-3">
-            {filteredResources.map((res) => (
-              <button
-                key={res.id}
-                onClick={() => selectResource(res.id)}
-                className="w-full flex items-center justify-between p-4 bg-white hover:bg-purple-50/40 border border-slate-200 hover:border-purple-300 rounded-2xl shadow-sm transition-all text-left cursor-pointer group"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className={`w-10 h-12 rounded-xl bg-gradient-to-br ${res.coverColor || "from-purple-500 to-indigo-600"} text-white flex items-center justify-center font-black text-[10px] shrink-0 shadow-sm group-hover:scale-105 transition-transform`}>
-                    {res.type}
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-black text-slate-800 group-hover:text-purple-600 transition-colors truncate">
-                      {res.title}
-                    </h4>
-                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
-                      Uploaded on {res.uploadDate} • {res.pages} Pages • {res.size}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[10px] font-extrabold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">
-                    {res.pages} Pages
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
-                </div>
-              </button>
-            ))}
-
-            {filteredResources.length === 0 && (
-              <div className="text-center py-10 bg-white border border-dashed border-slate-200 rounded-2xl">
-                <p className="text-xs text-slate-400">No resources found matching search in {selectedResourceType}.</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-      )}
-
-      {/* STEP 4: SELECT PARTICULAR RESOURCE -> PREVIEW & ASK */}
-      {flowStep === 4 && activeResource && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6 max-w-5xl mx-auto"
-        >
-          {/* Top Breadcrumb */}
-          <button
-            onClick={() => setFlowStep(3)}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to {selectedResourceType}s
-          </button>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column: Book Details & Outline */}
-            <div className="lg:col-span-4 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-4 text-center">
-                <div className={`w-32 h-44 mx-auto rounded-2xl bg-gradient-to-br ${activeResource.coverColor || "from-purple-600 to-indigo-700"} text-white flex flex-col items-center justify-center p-4 shadow-xl`}>
-                  <BookOpen className="w-10 h-10 mb-2" />
-                  <span className="text-xs font-black text-center leading-tight">{activeResource.title}</span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-black text-slate-800">{activeResource.title}</h3>
-                  <p className="text-[10px] font-bold text-slate-400 mt-1">
-                    {activeResource.pages} Pages • {activeResource.type} • {activeResource.size}
-                  </p>
-                  <p className="text-[10px] text-slate-400">Uploaded on {activeResource.uploadDate}</p>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <button
-                    onClick={() => startChatWithResource(activeResource.id)}
-                    className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-purple-200 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    Start Chat with this {activeResource.type}
-                  </button>
-                  <button
-                    onClick={() => toast("Document preview modal opened!", "info")}
-                    className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
-                  >
-                    <Eye className="w-4 h-4" />
-                    View Full Preview
-                  </button>
-                </div>
-              </div>
-
-              {/* Book Outline */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-3">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Book Outline</h4>
-                <div className="space-y-1.5 text-xs">
-                  {activeResource.chapters.map((ch, idx) => (
-                    <div key={idx} className="p-2 bg-slate-50 hover:bg-purple-50 rounded-xl text-slate-700 font-semibold cursor-pointer transition-colors flex items-center justify-between">
-                      <span>{ch}</span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Embedded Document Preview */}
-            <div className="lg:col-span-8 bg-slate-900 rounded-3xl p-6 text-white min-h-[500px] flex flex-col justify-between shadow-xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span className="text-xs font-extrabold text-slate-400">
-                  Preview (Page 1 / {activeResource.pages})
-                </span>
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <button className="p-1 hover:text-white">-</button>
-                  <span>125%</span>
-                  <button className="p-1 hover:text-white">+</button>
-                </div>
-              </div>
-
-              <div className="my-auto space-y-4 max-w-md mx-auto text-slate-200">
-                <h1 className="text-2xl font-black text-center text-white">The Constitution</h1>
-                <div className="space-y-2 text-xs leading-relaxed">
-                  <h3 className="font-bold text-purple-400">1.1 Salient Features</h3>
-                  <ul className="list-disc pl-4 space-y-1.5 text-slate-300">
-                    <li>The Constitution of India is the lengthiest written constitution in the world.</li>
-                    <li>It is a blend of rigid and flexible constitution.</li>
-                    <li>Parliamentary form of Government.</li>
-                    <li>Fundamental Rights and Directive Principles of State Policy.</li>
-                    <li>Independent Judiciary.</li>
-                    <li>Single Citizenship.</li>
-                    <li>Secular State.</li>
-                    <li>Universal Adult Franchise.</li>
-                    <li>Emergency Provisions.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="text-center text-[10px] text-slate-500 pt-4 border-t border-slate-800">
-                OCR Status: 100% Parsed & Stored in Vector Database
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* STEP 5: AI INTERFACE -> ASK & GET ANSWERS (RAG CHAT) */}
-      {flowStep === 5 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4 max-w-6xl mx-auto"
-        >
-          {/* Header Bar */}
-          <div className="flex items-center justify-between bg-white border border-purple-100 rounded-2xl p-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setFlowStep(4)}
-                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div>
-                <h3 className="text-sm font-black text-slate-800">
-                  {activeResource ? activeResource.title : "Indian Polity by M. Laxmikanth"}
-                </h3>
-                <span className="text-[10px] font-extrabold text-purple-600">Active RAG Document Context</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setFlowStep(3)}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer"
-            >
-              Change Resource
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Main RAG Chat Container */}
-            <div className="lg:col-span-8 bg-white border border-purple-100 rounded-3xl p-5 shadow-sm flex flex-col h-[560px]">
-              {/* Messages Scroll Area */}
-              <div className="flex-1 overflow-y-auto space-y-4 pr-1">
-                {activeConversation?.messages.map((msg) => (
-                  <div key={msg.id} className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
-                    {msg.sender === "user" ? (
-                      <div className="bg-purple-600 text-white px-4 py-3 rounded-2xl rounded-tr-none text-xs font-semibold max-w-md shadow-sm">
-                        {msg.text}
-                      </div>
-                    ) : (
-                      <div className="bg-slate-50 border border-slate-150 p-4 rounded-2xl rounded-tl-none text-xs text-slate-800 max-w-xl space-y-3">
-                        <div className="flex items-center gap-2 text-[10px] font-extrabold text-purple-600">
-                          <Bot className="w-4 h-4" />
-                          <span>AI Study Answer</span>
-                        </div>
-                        <div className="whitespace-pre-line leading-relaxed">{msg.text}</div>
-
-                        {/* Action buttons */}
-                        <div className="flex items-center gap-2 pt-2 border-t border-slate-200/60 text-[10px] font-bold text-slate-500">
-                          <button className="flex items-center gap-1 hover:text-purple-600">
-                            <ThumbsUp className="w-3.5 h-3.5" /> Helpful
-                          </button>
-                          <button className="flex items-center gap-1 hover:text-purple-600">
-                            <ThumbsDown className="w-3.5 h-3.5" /> Not Helpful
-                          </button>
-                          <button
-                            onClick={() => handleCopyText(msg.text, msg.id)}
-                            className="flex items-center gap-1 hover:text-purple-600 ml-auto"
-                          >
-                            <Copy className="w-3.5 h-3.5" /> {copiedId === msg.id ? "Copied!" : "Copy"}
-                          </button>
-                          <button className="flex items-center gap-1 hover:text-purple-600">
-                            <RotateCcw className="w-3.5 h-3.5" /> Regenerate
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {isStreaming && (
-                  <div className="flex items-center gap-2 text-xs font-bold text-purple-600 bg-purple-50 p-3 rounded-xl w-fit animate-pulse">
-                    <Sparkles className="w-4 h-4" />
-                    <span>Searching Qdrant Vector Store & Generating Response...</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Chat Input */}
-              <div className="pt-3 border-t border-slate-100 flex gap-2">
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Ask anything about this book..."
-                  className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-purple-400"
-                  onKeyDown={(e) => e.key === "Enter" && handleSendChat()}
-                />
-                <button
-                  onClick={handleSendChat}
-                  className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-xs font-bold shadow-md transition-all cursor-pointer"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Right Quick Actions & Source Info Column */}
-            <div className="lg:col-span-4 space-y-4">
-              <div className="bg-white border border-purple-100 rounded-3xl p-5 shadow-sm space-y-3">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Quick Actions</h4>
-                <div className="space-y-2 text-xs font-semibold">
-                  {[
-                    { label: "Summarize this chapter", action: "summarize" },
-                    { label: "Generate notes", action: "notes" },
-                    { label: "Create flashcards", action: "flashcards" },
-                    { label: "Show important PYQs", action: "questions" },
-                    { label: "Explain in simple terms", action: "explain" }
-                  ].map(({ label, action }, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => triggerQuickAction(action)}
-                      className="w-full flex items-center gap-2.5 p-3 bg-slate-50 hover:bg-purple-50 text-slate-700 hover:text-purple-700 rounded-xl text-left border border-slate-100 hover:border-purple-200 transition-all cursor-pointer"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0" />
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Source Info Card */}
-              <div className="bg-white border border-purple-100 rounded-3xl p-5 shadow-sm space-y-3">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Source Info</h4>
-                <div className="text-xs text-slate-600 space-y-1">
-                  <p><span className="font-bold">Book:</span> {activeResource ? activeResource.title : "Indian Polity by M. Laxmikanth"}</p>
-                  <p><span className="font-bold">Chapter:</span> The Constitution</p>
-                  <p><span className="font-bold">Pages:</span> 1 - 15</p>
-                </div>
-                <button
-                  onClick={() => setFlowStep(4)}
-                  className="w-full py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-xl transition-all cursor-pointer text-center block mt-2"
-                >
-                  View in Book
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </div>
-  );
 }
 
 function AiStudyHome() {
@@ -636,7 +200,7 @@ function AiStudyHome() {
   }
 
   if (flowStep === 4 && selectedResourceId) {
-    return <ResourcePreviewStage resourceId={selectedResourceId} onBack={() => setFlowStep(3)} />;
+    return <ResourcePreviewStage resourceId={selectedResourceId} onBack={() => setFlowStep(3)} onStudy={() => setFlowStep(5)} />;
   }
 
   if (flowStep === 5 && selectedSubject) {
@@ -648,11 +212,41 @@ function AiStudyHome() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         <div className="text-center max-w-xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100/80 text-purple-700 text-[11px] font-black uppercase tracking-wider"><Bot className="w-3.5 h-3.5" /><span>AI Study Assistant</span></div>
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">AI Study Assistant</h2>
-          <p className="text-xs text-slate-500">Select a subject to start learning with AI.</p>
+          <h2 className="text-2xl font-black text-slate-800 tracking-tight">AI Study</h2>
+          <p className="text-xs text-slate-500">Select a subject to start learning with AI</p>
         </div>
         <div className="max-w-md mx-auto relative"><Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" /><input value={subjectSearch} onChange={(event) => setSubjectSearch(event.target.value)} placeholder="Search subjects" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 shadow-sm transition-all" /></div>
-        {subjects.length ? <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">{subjects.map((subject) => <button key={subject.id} onClick={() => selectSubject(subject.id)} className="group relative flex flex-col items-center justify-center p-5 bg-white border border-slate-100 rounded-2xl hover:border-purple-300 hover:shadow-lg hover:shadow-purple-100/50 transition-all duration-300 text-center cursor-pointer"><div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform mb-3`}><BookOpen className="w-6 h-6" /></div><h3 className="text-xs font-black text-slate-800 group-hover:text-purple-600">{subject.name}</h3><span className="text-[10px] font-extrabold text-slate-400 mt-1">{subject.resourceCount} Resources</span></button>)}</div> : <div className="text-center py-14 bg-white border border-dashed border-slate-200 rounded-2xl"><p className="text-xs text-slate-400">No subjects available.</p><button onClick={() => window.location.reload()} className="mt-3 text-xs font-bold text-purple-600 hover:text-purple-700">Retry</button></div>}
+        {subjects.length ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            {subjects.map((subject) => {
+              const theme = getSubjectTheme(subject.color);
+              return (
+                <button
+                  key={subject.id}
+                  onClick={() => selectSubject(subject.id)}
+                  className={`group relative flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-3xl ${theme.hoverBg} ${theme.hoverBorder} hover:shadow-lg hover:shadow-purple-100/35 transition-all duration-350 text-center cursor-pointer`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform mb-3.5`}>
+                    <BookOpen className="w-6 h-6" />
+                  </div>
+                  <h3 className={`text-xs font-black text-slate-800 ${theme.hoverText} transition-colors`}>
+                    {subject.name}
+                  </h3>
+                  <span className="text-[10px] font-extrabold text-slate-400 mt-1.5">
+                    {subject.resourceCount} Resources
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-14 bg-white border border-dashed border-slate-200 rounded-2xl">
+            <p className="text-xs text-slate-400">No subjects available.</p>
+            <button onClick={() => window.location.reload()} className="mt-3 text-xs font-bold text-purple-650 hover:text-purple-750 cursor-pointer">
+              Retry
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -668,26 +262,126 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const load = async () => {
     const workspaceId = Number(activeWorkspaceId);
     if (!Number.isInteger(workspaceId) || workspaceId <= 0) return;
-    setLoading(true); setError(null);
+    setLoading(true);
+    setError(null);
     try {
       const params = new URLSearchParams({ subject_id: subjectId, resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
       setResources((await backendService.workspace.search(workspaceId, params)).items);
-    } catch (caught) { setResources([]); setError(caught instanceof Error ? caught.message : "Unable to load resources."); }
-    finally { setLoading(false); }
+    } catch (caught) {
+      setResources([]);
+      setError(caught instanceof Error ? caught.message : "Unable to load resources.");
+    } finally {
+      setLoading(false);
+    }
   };
-  useEffect(() => { const timer = window.setTimeout(() => { void load(); }, 250); return () => window.clearTimeout(timer); }, [activeWorkspaceId, subjectId, resourceType, query]);
-  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
-    <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Resource Types</button>
-    <div className="flex items-center justify-between gap-3"><div><h2 className="text-2xl font-black text-slate-800">{subjectName} · {resourceType}s</h2><p className="text-xs text-slate-400 mt-1">Resources from your workspace library</p></div><button disabled={!selectedId} onClick={() => selectedId && onSelect(selectedId)} className="rounded-xl bg-purple-600 px-4 py-2 text-xs font-bold text-white disabled:bg-slate-300">Next <ChevronRight className="inline w-4 h-4" /></button></div>
-    <div className="relative"><Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search resources" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400" /></div>
-    {loading ? <div className="py-16 text-center text-xs text-slate-400">Loading resources…</div> : error ? <div className="py-16 text-center text-xs text-rose-500">{error}<button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button></div> : resources.length ? <div className="space-y-3">{resources.map((resource) => <button key={resource.id} onClick={() => setSelectedId(String(resource.id))} className={`w-full text-left flex items-center justify-between gap-3 p-4 bg-white hover:bg-purple-50/40 border rounded-2xl shadow-sm transition-all ${selectedId === String(resource.id) ? "border-purple-500 ring-2 ring-purple-100" : "border-slate-200 hover:border-purple-300"}`}><div className="min-w-0"><h3 className="text-xs font-black text-slate-800 truncate">{resource.title}</h3><p className="text-[10px] text-slate-400 mt-1">{resource.resource_type} · {new Date(resource.created_at).toLocaleDateString()} {resource.total_pages ? `· ${resource.total_pages} pages` : ""}</p></div><span className="text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span></button>)}</div> : <div className="py-16 text-center bg-white border border-dashed border-slate-200 rounded-2xl"><p className="text-xs text-slate-400">No resources uploaded yet.</p></div>}
-  </div>;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void load(); }, 250);
+    return () => window.clearTimeout(timer);
+  }, [activeWorkspaceId, subjectId, resourceType, query]);
+
+  const getStatusStyle = (status: string) => {
+    const s = status.toLowerCase();
+    if (s === "completed" || s === "indexed" || s === "ready") {
+      return "text-emerald-700 bg-emerald-50 border border-emerald-100";
+    }
+    if (s === "failed" || s === "error") {
+      return "text-rose-700 bg-rose-50 border border-rose-100";
+    }
+    if (s === "processing") {
+      return "text-amber-700 bg-amber-50 border border-amber-100 animate-pulse";
+    }
+    return "text-blue-700 bg-blue-50 border border-blue-100";
+  };
+
+  return (
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors">
+        <ArrowLeft className="w-4 h-4" /> Back to Resource Types
+      </button>
+
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <h2 className="text-2xl font-black text-slate-800">{subjectName} · {resourceType}s</h2>
+          <p className="text-xs text-slate-450 mt-1">Resources from your workspace library</p>
+        </div>
+        <button
+          disabled={!selectedId}
+          onClick={() => selectedId && onSelect(selectedId)}
+          className="rounded-2xl bg-purple-600 hover:bg-purple-700 text-white disabled:bg-slate-200 px-5 py-2.5 text-xs font-black transition-all cursor-pointer shadow-md shadow-purple-100 disabled:shadow-none flex items-center gap-1.5"
+        >
+          <span>Next</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="relative">
+        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search resources..."
+          className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-50 shadow-sm"
+        />
+      </div>
+
+      {loading ? (
+        <div className="py-16 text-center text-xs text-slate-400">Loading resources…</div>
+      ) : error ? (
+        <div className="py-16 text-center text-xs text-rose-500">
+          {error}
+          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-650 font-bold hover:underline">Retry</button>
+        </div>
+      ) : resources.length ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {resources.map((resource) => {
+            const isSelected = selectedId === String(resource.id);
+            const statusClass = getStatusStyle(resource.status);
+            return (
+              <button
+                key={resource.id}
+                onClick={() => setSelectedId(String(resource.id))}
+                className={`w-full text-left flex items-start justify-between gap-4 p-4.5 bg-white border rounded-3xl shadow-sm transition-all duration-200 cursor-pointer ${isSelected
+                    ? "border-purple-500 ring-4 ring-purple-50/70"
+                    : "border-slate-200 hover:border-purple-300"
+                  }`}
+              >
+                <div className="flex gap-3 items-start min-w-0">
+                  <div className={`p-3 rounded-2xl shrink-0 ${isSelected ? "bg-purple-50 text-purple-600" : "bg-slate-50 text-slate-400"
+                    }`}>
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xs font-black text-slate-800 truncate leading-snug group-hover:text-purple-600 transition-colors">
+                      {resource.title}
+                    </h3>
+                    <p className="text-[10px] text-slate-450 mt-1.5 font-bold tracking-tight">
+                      {resource.resource_type} · {new Date(resource.created_at).toLocaleDateString()} {resource.total_pages ? `· ${resource.total_pages} pages` : ""}
+                    </p>
+                  </div>
+                </div>
+
+                <span className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${statusClass} shrink-0 mt-0.5`}>
+                  {resource.status}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="py-16 text-center bg-white border border-dashed border-slate-200 rounded-3xl">
+          <p className="text-xs text-slate-400">No resources uploaded yet.</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
-function ResourcePreviewStage({ resourceId, onBack }: { resourceId: string; onBack: () => void }) {
+function ResourcePreviewStage({ resourceId, onBack, onStudy }: { resourceId: string; onBack: () => void; onStudy: () => void }) {
   const [resource, setResource] = useState<Resource | null>(null);
   const [preview, setPreview] = useState<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -716,7 +410,7 @@ function ResourcePreviewStage({ resourceId, onBack }: { resourceId: string; onBa
 
   return (
     <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Resources
       </button>
       {loading ? (
@@ -724,25 +418,89 @@ function ResourcePreviewStage({ resourceId, onBack }: { resourceId: string; onBa
       ) : error || !resource ? (
         <div className="py-16 text-center text-xs text-rose-500">
           {error || "Nothing found."}
-          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-600 font-bold">Retry</button>
+          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-650 font-bold">Retry</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
-          <aside className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-            <h2 className="text-lg font-black text-slate-800">{resource.title}</h2>
-            <p className="text-xs text-slate-500">{resource.resource_type}</p>
-            <p className="text-xs text-slate-500">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</p>
-            <p className="text-xs text-slate-500">Uploaded {new Date(resource.created_at).toLocaleDateString()}</p>
-            <span className="inline-block text-[9px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{resource.status}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+          {/* Highlighted Book Template Card */}
+          <aside className="bg-white border border-purple-100/60 rounded-3xl p-5 space-y-5 shadow-sm">
+            {/* Visual Book Cover Representation */}
+            <div className="w-full h-44 rounded-2xl bg-gradient-to-br from-[#6D4AFF] via-purple-600 to-indigo-650 p-4 text-white flex flex-col justify-between shadow-md relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none" />
+              <div className="p-2.5 rounded-xl bg-white/15 w-fit border border-white/10">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[8px] font-black uppercase tracking-widest bg-white/25 px-1.5 py-0.5 rounded">
+                  {resource.resource_type}
+                </span>
+                <h3 className="text-sm font-black mt-2 line-clamp-2 text-white leading-snug drop-shadow-sm">
+                  {resource.title}
+                </h3>
+              </div>
+            </div>
+
+            {/* Metadata Table Format Points */}
+            <div className="border border-slate-100 rounded-2xl overflow-hidden text-xs">
+              <table className="w-full text-left border-collapse">
+                <tbody>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Format</td>
+                    <td className="px-3.5 py-2.5 font-black text-slate-800">{resource.resource_type}</td>
+                  </tr>
+                  <tr className="border-b border-slate-100">
+                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Size</td>
+                    <td className="px-3.5 py-2.5 font-black text-slate-800">{resource.file_size ? `${(resource.file_size / (1024 * 1024)).toFixed(1)} MB` : "N/A"}</td>
+                  </tr>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Pages</td>
+                    <td className="px-3.5 py-2.5 font-black text-purple-700">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</td>
+                  </tr>
+                  <tr className="border-b border-slate-100">
+                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Uploaded</td>
+                    <td className="px-3.5 py-2.5 font-black text-slate-800">{new Date(resource.created_at).toLocaleDateString()}</td>
+                  </tr>
+                  <tr className="bg-slate-50/50">
+                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Status</td>
+                    <td className="px-3.5 py-2.5">
+                      <span className="inline-block text-[9px] font-black uppercase text-emerald-700 bg-emerald-55/60 border border-emerald-100 px-2 py-0.5 rounded-md">
+                        {resource.status}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Sync Action Button */}
+            <button
+              onClick={onStudy}
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shadow-purple-100"
+            >
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+              <span>Sync & Ask AI</span>
+            </button>
           </aside>
-          <section className="bg-white border border-slate-200 rounded-2xl p-6 text-xs text-slate-700 overflow-y-auto max-h-[500px] space-y-4 shadow-sm">
-            <h3 className="font-bold text-sm text-slate-800 border-b pb-2">Document Chunks ({preview?.chunks.length ?? 0})</h3>
+
+          {/* Document Chunks Panel */}
+          <section data-lenis-prevent className="bg-white border border-purple-100/60 rounded-3xl p-6 text-xs text-slate-700 overflow-y-auto max-h-[520px] space-y-4 shadow-sm">
+            <h3 className="font-black text-sm text-slate-800 border-b border-slate-100 pb-2.5 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-purple-600" />
+              <span>Document Chunks ({preview?.chunks.length ?? 0})</span>
+            </h3>
             {preview && preview.chunks.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 {preview.chunks.map((chunk) => (
-                  <div key={chunk.index} className="p-3 bg-slate-50 border border-slate-100 rounded-xl space-y-1">
-                    <div className="text-[10px] font-bold text-purple-600">Chunk #{chunk.index + 1}</div>
-                    <p className="leading-relaxed whitespace-pre-wrap text-slate-600">{chunk.content}</p>
+                  <div key={chunk.index} className="p-4 bg-slate-50/60 border border-slate-150/40 rounded-2xl space-y-2 hover:bg-purple-50/15 hover:border-purple-200/50 transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-purple-650 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100/60">
+                        Chunk #{chunk.index + 1}
+                      </div>
+                      <span className="text-[9px] text-slate-400 font-bold group-hover:text-purple-600 transition-colors">
+                        Ready to search
+                      </span>
+                    </div>
+                    <p className="leading-relaxed whitespace-pre-wrap text-slate-600 font-semibold">{chunk.content}</p>
                   </div>
                 ))}
               </div>
@@ -785,6 +543,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showNewSessionConfirm, setShowNewSessionConfirm] = useState(false);
   const [scope, setScope] = useState<"subject" | "resource" | "selected">(resourceId ? "resource" : "subject");
   const [selectedResources, setSelectedResources] = useState<string[]>(resourceId ? [resourceId] : []);
   const [sessionStartedAt] = useState(() => Date.now());
@@ -838,14 +597,19 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
     if (process.env.NODE_ENV !== "development") return;
     console.log("[AI Chat composer]", { workspace: hasWorkspace, subject: hasSubject, document: Boolean(resourceId), scope, session: Boolean(sessionId), input: Boolean(question.trim()), loading, authenticated: "validated by the backend request", disabled: composerDisabled, reason: composerReason });
   }, [composerDisabled, composerReason, hasSubject, hasWorkspace, loading, question, resourceId, scope, sessionId]);
-  const startNewStudySession = () => {
-    if (messages.length > 0 && !window.confirm("Start New Study Session?\n\nYour current conversation will be closed. Your uploaded resources remain available.")) return;
+  const handleConfirmNewStudySession = () => {
     setMessages([]);
     setQuestion("");
     setError(null);
-    // Changing the flow unmounts this workspace, discarding its local
-    // sessionId without calling a backend endpoint.
+    setShowNewSessionConfirm(false);
     beginNewStudySession();
+  };
+  const startNewStudySession = () => {
+    if (messages.length > 0) {
+      setShowNewSessionConfirm(true);
+      return;
+    }
+    handleConfirmNewStudySession();
   };
   const clearConversation = async () => {
     await backendService.ai.clearHistory(sessionId);
@@ -854,13 +618,261 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
     setError(null);
     setSessionId(crypto.randomUUID());
   };
-  return <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm flex flex-col gap-4">
-    <div className="flex flex-wrap items-start justify-between gap-3 bg-white border border-purple-100 rounded-2xl p-4"><div><button onClick={onBack} className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-purple-600"><ArrowLeft className="w-4 h-4" /> Back to Preview</button><h2 className="text-lg font-black text-slate-800 mt-2">AI Study Workspace</h2><p className="text-xs text-slate-500 mt-1">{subjectName} · {resourceType} · Document #{resourceId}</p><p className="text-[10px] text-slate-400 mt-1">Workspace #{activeWorkspaceId} · Subject #{selectedSubjectId}</p></div><div className="flex gap-2"><button onClick={startNewStudySession} className="px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-50 text-purple-700">New Chat</button><button onClick={() => void clearConversation()} className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-600">Clear History</button></div></div>
-    <div className="rounded-2xl border border-slate-200 bg-white p-3"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-[10px] font-black uppercase tracking-wide text-slate-400">AI Context</p><p className="text-xs font-bold text-slate-700">{scope === "subject" ? "Entire Subject" : scope === "resource" ? "Current Resource" : "Selected Resources"} · {resourcesIncluded} resource{resourcesIncluded === 1 ? "" : "s"} included</p><p className="text-[10px] text-slate-400">Workspace {activeWorkspace?.title || activeWorkspaceId} · {subjectName} · {resourceType}</p></div><select value={scope} onChange={(event) => setScope(event.target.value as typeof scope)} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700"><option value="subject">Entire Subject</option><option value="resource">Current Resource</option><option value="selected">Selected Resources</option></select></div>{scope === "selected" && <div className="mt-3 flex flex-wrap gap-2">{subjectResources.map((resource) => <label key={resource.id} className="flex items-center gap-1 rounded-lg bg-slate-50 px-2 py-1 text-[10px] text-slate-600"><input type="checkbox" checked={selectedResources.includes(resource.id)} onChange={() => setSelectedResources((current) => current.includes(resource.id) ? current.filter((id) => id !== resource.id) : [...current, resource.id])} />{resource.title}</label>)}</div>}</div>
-    {messages.length === 0 && <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-purple-100 bg-white p-4"><p className="text-xs font-black text-slate-800">How would you like to study?</p><p className="mt-1 text-[10px] text-slate-500">Choose a prompt to edit before sending.</p><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">{PROMPT_SUGGESTIONS.map((suggestion) => <button key={suggestion} type="button" onClick={() => { setQuestion(suggestion); inputRef.current?.focus(); }} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-[10px] font-bold text-slate-700 transition hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200">{suggestion}</button>)}</div></motion.section>}
-    {sessionId && <section className="rounded-2xl border border-slate-200 bg-white p-3"><p className="text-[10px] font-black uppercase tracking-wide text-slate-400">AI Study Memory</p><dl className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-[10px]"><div><dt className="text-slate-400">Current Subject</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{subjectName}</dd></div><div><dt className="text-slate-400">Current Resource</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{resourceType}</dd></div><div><dt className="text-slate-400">Knowledge Scope</dt><dd className="mt-0.5 font-bold text-slate-700">{scope === "subject" ? "Subject" : scope === "resource" ? "Resource" : "Selected"}</dd></div><div><dt className="text-slate-400">Included</dt><dd className="mt-0.5 font-bold text-slate-700">{resourcesIncluded} resources</dd></div><div><dt className="text-slate-400">Last Question</dt><dd className="mt-0.5 font-bold text-slate-700 truncate">{lastQuestion || "—"}</dd></div><div><dt className="text-slate-400">Session Duration</dt><dd className="mt-0.5 font-bold text-slate-700">{sessionDuration}</dd></div></dl></section>}
-    <div className="flex-1 min-h-[360px] space-y-3 overflow-y-auto rounded-2xl bg-white border border-slate-200 p-4 scroll-smooth">{messages.length === 0 ? <p className="text-center text-xs text-slate-400 py-12">Start with a suggestion or ask your own question.</p> : messages.map((message, index) => <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} key={`${message.role}-${index}`} className={message.role === "user" ? "ml-auto max-w-[85%] rounded-2xl bg-purple-600 text-white p-3 text-xs whitespace-pre-wrap" : "mr-auto max-w-[90%] rounded-2xl bg-slate-50 text-slate-700 p-3 text-xs border border-slate-100 shadow-sm"}>{message.role === "assistant" ? <StudyAnswer content={message.content} /> : <p>{message.content}</p>}{message.confidence && <p className="mt-2 text-[10px] font-bold text-purple-600">Confidence: {message.confidence}</p>}{message.sources?.length ? <details className="mt-3 text-[10px]"><summary className="cursor-pointer font-bold">Sources ({message.sources.length})</summary>{message.sources.map((source, sourceIndex) => <p key={`${source.resource_id}-${sourceIndex}`} className="mt-1">{source.document_title} · {source.subject}{source.chapter ? ` · ${source.chapter}` : ""}{source.page_number ? ` · p. ${source.page_number}` : ""} · score {source.score.toFixed(2)}</p>)}</details> : null}</motion.div>)}<AiThinkingPipeline active={loading} /></div>
-    {error && <div className="text-xs text-rose-600 text-center">Unable to contact AI service. <button onClick={() => void ask(messages.filter((message) => message.role === "user").at(-1)?.content || "")} className="font-bold underline">Retry</button></div>}
-    <form onSubmit={(event) => { event.preventDefault(); void ask(); }} className="flex gap-2"><input ref={inputRef} value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Escape") setQuestion(""); if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); void ask(); } }} disabled={loading || !hasWorkspace || !hasSubject} placeholder="Ask about this study material…" className="flex-1 px-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs shadow-sm transition focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100" /><button disabled={composerDisabled} title={composerReason} className="px-5 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 text-white rounded-2xl text-xs font-bold shadow-sm transition focus:outline-none focus:ring-2 focus:ring-purple-200">Ask AI</button></form>
-  </div>;
+  return (
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm flex flex-col gap-5">
+      {/* Top Workspace Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-purple-100/60 rounded-3xl p-4.5 shadow-sm">
+        <div>
+          <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-600 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to Preview
+          </button>
+          <h2 className="text-lg font-black text-slate-800 mt-2.5 flex items-center gap-2">
+            <span>AI Study Workspace</span>
+            <span className="text-[10px] font-black uppercase text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-100/40">
+              {subjectName} · {resourceType}
+            </span>
+          </h2>
+          <p className="text-[10px] text-slate-400 mt-1 font-bold">
+            Workspace: {activeWorkspace?.title || `GATE #${activeWorkspaceId}`} · Subject #{selectedSubjectId} · Resource #{resourceId}
+          </p>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button onClick={startNewStudySession} className="px-3.5 py-2 text-xs font-black rounded-xl bg-purple-50 text-purple-700 border border-purple-100/40 hover:bg-purple-100/50 cursor-pointer transition-all">
+            New Chat
+          </button>
+          <button onClick={() => void clearConversation()} className="px-3.5 py-2 text-xs font-bold rounded-xl bg-slate-50 border border-slate-150 text-slate-600 hover:bg-slate-100 hover:text-slate-800 cursor-pointer transition-all">
+            Clear History
+          </button>
+        </div>
+      </div>
+
+      {/* Modern 2-Column Study Workspace Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Messages viewport & Input Composer */}
+        <div className="lg:col-span-8 flex flex-col gap-4">
+          <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm min-h-[460px] flex flex-col justify-between">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto max-h-[380px] space-y-4 pr-1.5 scroll-smooth">
+              {messages.length === 0 ? (
+                <div className="py-20 text-center">
+                  <Bot className="w-12 h-12 text-purple-400/80 mx-auto mb-4 animate-pulse" />
+                  <h4 className="text-xs font-black text-slate-700">RAG Chat Agent Online</h4>
+                  <p className="text-[10px] text-slate-400 max-w-sm mx-auto mt-1 font-semibold leading-relaxed">
+                    Select a suggestion or type your own prompt below. The study advisor will reference your indexed resource documents.
+                  </p>
+                </div>
+              ) : (
+                messages.map((message, index) => {
+                  const mappedMessage = {
+                    id: `${message.role}-${index}`,
+                    sender: message.role === "user" ? ("user" as const) : ("ai" as const),
+                    text: message.content,
+                    timestamp: new Date().toISOString(),
+                    confidence: message.confidence,
+                    sources: message.sources
+                  };
+                  return <ChatMessage key={mappedMessage.id} message={mappedMessage} />;
+                })
+              )}
+              <AiThinkingPipeline active={loading} />
+            </div>
+
+            {/* Input Composer Form */}
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void ask();
+              }}
+              className="mt-4 pt-4 border-t border-slate-100 flex gap-2"
+            >
+              <input
+                ref={inputRef}
+                value={question}
+                onChange={(event) => setQuestion(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") setQuestion("");
+                  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+                    event.preventDefault();
+                    void ask();
+                  }
+                }}
+                disabled={loading || !hasWorkspace || !hasSubject}
+                placeholder="Ask about this study material…"
+                className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-150 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:bg-white transition-all focus:ring-2 focus:ring-purple-50"
+              />
+              <button
+                disabled={composerDisabled}
+                title={composerReason}
+                className="px-5 py-2.5 bg-purple-650 hover:bg-purple-700 disabled:bg-slate-200 text-white rounded-2xl text-xs font-black shadow-md shadow-purple-100 disabled:shadow-none transition-all cursor-pointer flex items-center gap-1 shrink-0"
+              >
+                Ask AI
+              </button>
+            </form>
+
+            {error && (
+              <div className="text-[10px] text-rose-600 text-center mt-3 bg-rose-50 border border-rose-100/50 p-2 rounded-xl">
+                AI generation service is temporarily unavailable. Please start Ollama and retry.{" "}
+                <button
+                  onClick={() => void ask(messages.filter((m) => m.role === "user").at(-1)?.content || "")}
+                  className="font-black underline text-rose-700 hover:text-rose-900 ml-1 cursor-pointer"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: AI Context & AI Study Memory */}
+        <div className="lg:col-span-4 space-y-4">
+          {/* AI Context Card */}
+          <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm space-y-3.5">
+            <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest border-b border-slate-50 pb-2">
+              AI Context settings
+            </h4>
+            <div className="flex flex-col gap-3">
+              <div className="text-xs">
+                <p className="font-black text-slate-800 leading-snug">
+                  {scope === "subject" ? "Entire Subject" : scope === "resource" ? "Current Resource" : "Selected Resources"}
+                </p>
+                <p className="text-[10px] text-slate-450 font-bold mt-1">
+                  {resourcesIncluded} resource{resourcesIncluded === 1 ? "" : "s"} included in active prompt context
+                </p>
+              </div>
+              <select
+                value={scope}
+                onChange={(event) => setScope(event.target.value as typeof scope)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3.5 py-2.5 text-xs font-black text-slate-700 outline-none transition-colors cursor-pointer"
+              >
+                <option value="subject">Entire Subject</option>
+                <option value="resource">Current Resource</option>
+                <option value="selected">Selected Resources</option>
+              </select>
+            </div>
+            {scope === "selected" && (
+              <div className="mt-3.5 border-t border-slate-50 pt-3 flex flex-col gap-2 max-h-36 overflow-y-auto pr-1">
+                {subjectResources.map((resource) => (
+                  <label key={resource.id} className="flex items-center gap-2 rounded-xl bg-slate-50/60 border border-slate-150/40 px-3 py-2 text-[10px] text-slate-650 cursor-pointer hover:bg-slate-50">
+                    <input
+                      type="checkbox"
+                      checked={selectedResources.includes(resource.id)}
+                      onChange={() =>
+                        setSelectedResources((current) =>
+                          current.includes(resource.id)
+                            ? current.filter((id) => id !== resource.id)
+                            : [...current, resource.id]
+                        )
+                      }
+                      className="rounded border-slate-200 text-purple-600 focus:ring-purple-100 cursor-pointer"
+                    />
+                    <span className="truncate font-bold">{resource.title}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* AI Study Memory Card */}
+          {sessionId && (
+            <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm space-y-4">
+              <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest border-b border-slate-50 pb-2">
+                AI Study Memory
+              </h4>
+              <div className="border border-slate-100 rounded-2xl overflow-hidden text-[10px]">
+                <table className="w-full text-left border-collapse">
+                  <tbody>
+                    <tr className="border-b border-slate-100 bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Subject</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800 truncate max-w-[120px]" title={subjectName}>
+                        {subjectName}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Format</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800">{resourceType}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100 bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Scope</td>
+                      <td className="px-3.5 py-2.5 font-black text-purple-700">
+                        {scope === "subject" ? "Subject" : scope === "resource" ? "Resource" : "Selected"}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Included</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800">
+                        {resourcesIncluded} resources
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-100 bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Last Question</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800 truncate max-w-[120px]" title={lastQuestion || "—"}>
+                        {lastQuestion || "—"}
+                      </td>
+                    </tr>
+                    <tr className="">
+                      <td className="px-3.5 py-2.5 text-slate-450 font-bold">Duration</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800">{sessionDuration}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Prompt Suggestions */}
+          {messages.length === 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm space-y-3"
+            >
+              <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest border-b border-slate-50 pb-2">
+                Study Templates
+              </h4>
+              <div className="flex flex-col gap-2">
+                {PROMPT_SUGGESTIONS.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() => {
+                      setQuestion(suggestion);
+                      inputRef.current?.focus();
+                    }}
+                    className="w-full text-left rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-2 text-[10px] font-bold text-slate-750 hover:bg-purple-50/20 hover:border-purple-300 hover:text-purple-700 transition-all cursor-pointer"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </motion.section>
+          )}
+        </div>
+      </div>
+
+      {/* Reset Confirmation Overlay Modal */}
+      {showNewSessionConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-slate-100 shadow-xl space-y-4">
+            <h3 className="text-sm font-black text-slate-800">Start New Study Session?</h3>
+            <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+              Your current conversation history will be closed. Your uploaded resources remain fully available.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleConfirmNewStudySession}
+                className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
+              >
+                Yes, start new
+              </button>
+              <button
+                onClick={() => setShowNewSessionConfirm(false)}
+                className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-655 rounded-xl font-bold text-xs transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

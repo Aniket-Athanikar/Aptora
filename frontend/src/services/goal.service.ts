@@ -218,8 +218,8 @@ export const goalService = {
       : apiClient.post("/workspace", workspacePayload));
 
     const profilePayload = {
-      avatar: goal.profile.avatar || null,
-      full_name: goal.profile.fullName,
+      name: goal.profile.fullName,
+      avatar_url: goal.profile.avatar || null,
       age: goal.profile.age,
       education: goal.profile.education,
       stream: goal.profile.stream,

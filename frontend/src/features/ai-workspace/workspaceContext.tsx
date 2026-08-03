@@ -73,6 +73,12 @@ interface WorkspaceContextProps {
   regenerateLastMessage: () => void;
   toggleMessageBookmark: (messageId: string) => void;
   toggleMessageLike: (messageId: string, type: "like" | "dislike") => void;
+
+  // Zoom & Theme Settings
+  libraryZoom: number;
+  setLibraryZoom: (zoom: number) => void;
+  themeColor: string;
+  setThemeColor: (color: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextProps | undefined>(undefined);
@@ -356,6 +362,10 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const [thinkingStage, setThinkingStage] = useState<WorkspaceState["thinkingStage"]>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Zoom & Theme Color states
+  const [libraryZoom, setLibraryZoom] = useState(1);
+  const [themeColor, setThemeColor] = useState("purple");
+
   // 5-Step Flow state
   const [flowStep, setFlowStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
@@ -370,37 +380,34 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     weeklyProgress: 75
   });
 
-  // Load only resources that exist for the authenticated backend workspace.
+  const loadWorkspaceData = async () => {
+    try {
+      const workspace = await backendService.workspace.current();
+      const [subjects, documentGroups] = await Promise.all([
+        backendService.workspace.subjects(workspace.id),
+        backendService.workspace.documents(workspace.id),
+      ]);
+      const resources = flattenDocuments(documentGroups);
+      const subjectNodes: SubjectNode[] = subjects.map((subject) => ({
+        id: String(subject.id), name: subject.name, category: "General",
+        resourceCount: resources.filter((resource) => resource.subjectId === String(subject.id)).length,
+        iconName: subject.icon || "BookOpen", color: subject.color || "from-indigo-500 to-violet-600",
+        description: subject.description,
+      }));
+      setWorkspaces([{
+        id: String(workspace.id), title: workspace.target_exam, examName: workspace.target_exam,
+        description: workspace.exam_category, isDefault: true, subjects: subjectNodes, resources,
+      }]);
+      setActiveWorkspaceId(String(workspace.id));
+      setUploads(resources.map(toBookMetadata));
+    } catch {
+      setWorkspaces([]);
+      setUploads([]);
+    }
+  };
+
   useEffect(() => {
-    const loadWorkspace = async () => {
-      try {
-        const workspace = await backendService.workspace.current();
-        const [subjects, documentGroups] = await Promise.all([
-          backendService.workspace.subjects(workspace.id),
-          backendService.workspace.documents(workspace.id),
-        ]);
-        const resources = flattenDocuments(documentGroups);
-        const subjectNodes: SubjectNode[] = subjects.map((subject) => ({
-          id: String(subject.id), name: subject.name, category: "General",
-          resourceCount: resources.filter((resource) => resource.subjectId === String(subject.id)).length,
-          iconName: subject.icon || "BookOpen", color: subject.color || "from-indigo-500 to-violet-600",
-          description: subject.description,
-        }));
-        setWorkspaces([{
-          id: String(workspace.id), title: workspace.target_exam, examName: workspace.target_exam,
-          description: workspace.exam_category, isDefault: true, subjects: subjectNodes, resources,
-        }]);
-        setActiveWorkspaceId(String(workspace.id));
-        setUploads(resources.map(toBookMetadata));
-        setConversations([]);
-        setActiveConversationId("");
-      } catch {
-        setWorkspaces([]);
-        setUploads([]);
-        setConversations([]);
-      }
-    };
-    void loadWorkspace();
+    void loadWorkspaceData();
   }, []);
 
   const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId) || workspaces[0];
@@ -467,7 +474,15 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const deleteSubjectFromWorkspace = (workspaceId: string, subjectId: string) => {
+  const deleteSubjectFromWorkspace = async (workspaceId: string, subjectId: string) => {
+    const numId = Number(subjectId);
+    if (Number.isInteger(numId) && numId > 0) {
+      try {
+        await backendService.onboarding.gaps.remove(numId);
+      } catch (err) {
+        console.error("Failed to delete subject", err);
+      }
+    }
     setWorkspaces((prev) =>
       prev.map((w) => {
         if (w.id === workspaceId) {
@@ -480,6 +495,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         return w;
       })
     );
+    await loadWorkspaceData();
   };
 
   const addResourceToSubject = (resource: Omit<ResourceItem, "id">) => {
@@ -502,7 +518,15 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const deleteResource = (workspaceId: string, resourceId: string) => {
+  const deleteResource = async (workspaceId: string, resourceId: string) => {
+    const numId = Number(resourceId);
+    if (Number.isInteger(numId) && numId > 0) {
+      try {
+        await backendService.documents.remove(numId);
+      } catch (err) {
+        console.error("Failed to delete resource", err);
+      }
+    }
     setWorkspaces((prev) =>
       prev.map((w) => {
         if (w.id === workspaceId) {
@@ -519,6 +543,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         return w;
       })
     );
+    await loadWorkspaceData();
   };
 
   // 5-Step Flow Actions
@@ -885,7 +910,11 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         triggerQuickAction,
         regenerateLastMessage,
         toggleMessageBookmark,
-        toggleMessageLike
+        toggleMessageLike,
+        libraryZoom,
+        setLibraryZoom,
+        themeColor,
+        setThemeColor
       }}
     >
       {children}

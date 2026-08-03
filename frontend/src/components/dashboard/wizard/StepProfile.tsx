@@ -23,11 +23,17 @@ export function StepProfile({
         <div className={`md:col-span-1 flex flex-col items-center gap-4 p-6 rounded-3xl justify-center border ${stepStyles.cardBg}`}>
           <div className="relative group shrink-0">
             <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-emerald-500 to-teal-550 blur-md opacity-40 group-hover:opacity-75 transition-opacity" />
-            <img
-              src={draft.profile?.avatar || AVATAR_OPTIONS[0]}
-              alt="Avatar"
-              className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
-            />
+            {draft.profile?.avatar ? (
+              <img
+                src={draft.profile.avatar}
+                alt="Avatar"
+                className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
+              />
+            ) : (
+              <div className="relative w-24 h-24 rounded-full border-4 border-white bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-3xl shadow-md uppercase">
+                {draft.profile?.fullName ? draft.profile.fullName.charAt(0).toUpperCase() : "?"}
+              </div>
+            )}
           </div>
           <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block text-center">Aspirant Profile</label>
 
@@ -54,7 +60,7 @@ export function StepProfile({
         </div>
 
         <div className="md:col-span-2 space-y-5">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-black text-slate-600 uppercase pl-1">Full Name</label>
               <input
@@ -85,7 +91,7 @@ export function StepProfile({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CustomSelect
               label="Education / Degree"
               value={draft.profile?.education || "Bachelor of Arts"}
@@ -109,7 +115,7 @@ export function StepProfile({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5 text-left">
               <label className="text-xs font-black text-slate-600 uppercase pl-1">Target Exam City</label>
               <input
@@ -136,7 +142,7 @@ export function StepProfile({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CustomSelect
               label="Gender"
               value={draft.profile?.gender || "Male"}
