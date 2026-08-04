@@ -13,13 +13,13 @@ from pydantic import BaseModel, ConfigDict
 class OnboardingProfileCreate(BaseModel):
     avatar: str | None = None
     full_name: str
-    age: int
-    education: str
-    stream: str
-    city: str
-    occupation: str
-    syllabus_percent: int
-    current_confidence: int
+    age: int | None = None
+    education: str | None = None
+    stream: str | None = None
+    city: str | None = None
+    occupation: str | None = None
+    syllabus_percent: int | None = None
+    current_confidence: int | None = None
 
 
 # ==============================
@@ -29,13 +29,13 @@ class OnboardingProfileCreate(BaseModel):
 class OnboardingProfileUpdate(BaseModel):
     avatar: str | None = None
     full_name: str
-    age: int
-    education: str
-    stream: str
-    city: str
-    occupation: str
-    syllabus_percent: int
-    current_confidence: int
+    age: int | None = None
+    education: str | None = None
+    stream: str | None = None
+    city: str | None = None
+    occupation: str | None = None
+    syllabus_percent: int | None = None
+    current_confidence: int | None = None
 
 
 # ==============================
@@ -50,14 +50,14 @@ class OnboardingProfileResponse(BaseModel):
 
     avatar: str | None = None
     full_name: str
-    age: int
-    education: str
-    stream: str
-    city: str
-    occupation: str
+    age: int | None = None
+    education: str | None = None
+    stream: str | None = None
+    city: str | None = None
+    occupation: str | None = None
 
-    syllabus_percent: int
-    current_confidence: int
+    syllabus_percent: int | None = None
+    current_confidence: int | None = None
 
     created_at: datetime
     updated_at: datetime

@@ -12,10 +12,10 @@ from pydantic import BaseModel, ConfigDict
 # ==========================================
 
 class StudyLifestyleBase(BaseModel):
-    preferred_device: str
-    learning_environment: str
-    internet_availability: str
-    consistency_commit: str
+    preferred_device: str | None = None
+    learning_environment: str | None = None
+    internet_availability: str | None = None
+    consistency_commit: str | None = None
 
 
 # ==========================================

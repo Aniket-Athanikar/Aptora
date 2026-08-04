@@ -10,7 +10,8 @@ from app.models.user import UserDb, OtpDb
 from app.schemas.auth import (
     LoginPayload, LoginResponse, SignupPayload, SignupResponse,
     OtpPayload, OtpResponse, ForgotPayload, ForgotResponse,
-    ResetPasswordPayload, ResetPasswordResponse
+    ResetPasswordPayload, ResetPasswordResponse,
+    GoogleLoginPayload, GoogleLoginResponse
 )
 from app.services.email_service import generate_otp_email_html, send_real_email
 
@@ -327,3 +328,88 @@ async def current_user(
             "avatar": avatar,
         },
     }
+
+
+@router.post("/google", response_model=GoogleLoginResponse)
+async def google_login(
+    payload: GoogleLoginPayload,
+    response: Response,
+    db: Session = Depends(get_db)
+):
+    import requests
+    logger.info("Google OAuth login request received")
+
+    # 1. Verify token with Google API
+    try:
+        res = requests.get(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            headers={"Authorization": f"Bearer {payload.access_token}"},
+            timeout=5
+        )
+        if res.status_code != 200:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Google verification failed."
+            )
+        google_user = res.json()
+    except Exception as e:
+        logger.error(f"Google token verification failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Failed to verify token with Google."
+        )
+
+    email = google_user.get("email")
+    name = google_user.get("name") or google_user.get("given_name") or email.split("@")[0].capitalize()
+    avatar = google_user.get("picture") or ""
+
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Google profile does not contain a valid email."
+        )
+
+    # 2. Check if user exists. Auto-register if not.
+    user = db.query(UserDb).filter(UserDb.email == email).first()
+    if not user:
+        user = UserDb(name=name, email=email, password="")
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        logger.info(f"Auto-registered new Google user: {email}")
+
+    # 3. Create or update user profile to save Google avatar
+    from app.models.user_profile import UserProfileDb
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+    if not profile:
+        profile = UserProfileDb(user_id=user.id, avatar_url=avatar)
+        db.add(profile)
+    else:
+        profile.avatar_url = avatar
+    db.commit()
+
+    # 4. Set session cookies
+    response.set_cookie(
+        "ef_user_email",
+        email,
+        httponly=False,
+        path="/",
+        samesite="lax",
+        secure=False,
+        max_age=60 * 60 * 24 * 7
+    )
+
+    response.set_cookie(
+        key="csrf_token",
+        value="ef-csrf-" + email.split("@")[0],
+        httponly=True,
+        samesite="lax",
+        secure=False
+    )
+
+    return GoogleLoginResponse(
+        success=True,
+        message="Successfully authenticated with Google.",
+        email=email,
+        name=name
+    )

@@ -111,7 +111,12 @@ function generateDailyMissions(goal: GoalData | null): DailyMissionItem[] {
   }
 
   // Add practice slot
-  if (goal.preferences.includes("Practice") || goal.preferences.includes("PYQs")) {
+  const hasPractice = goal.preferences.some(p => 
+    p.includes("Practice") || 
+    p.includes("PYQ") || 
+    p.includes("Mock")
+  );
+  if (hasPractice) {
     const duration = 60; // 1 hour practice
     missions.push({
       id: "m2",
@@ -184,7 +189,12 @@ function generateRecommendations(goal: GoalData | null): RecommendationItem[] {
   }
 
   // Rule 3: Missing Practice preferences
-  if (!goal.preferences.includes("Practice") && !goal.preferences.includes("PYQs") && !goal.preferences.includes("Mock Tests")) {
+  const hasPracticeOrMock = goal.preferences.some(p =>
+    p.includes("Practice") ||
+    p.includes("PYQ") ||
+    p.includes("Mock")
+  );
+  if (!hasPracticeOrMock) {
     recs.push({
       id: "r3",
       title: "Practice Engine Deficiency",

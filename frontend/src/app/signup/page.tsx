@@ -260,6 +260,7 @@ export default function SignupPage() {
                 {...register("name")}
                 type="text"
                 placeholder="Full Name"
+                autoComplete="name"
                 className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
               />
               {errors.name && (
@@ -445,6 +446,7 @@ export default function SignupPage() {
                     value={val}
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    autoComplete="one-time-code"
                     className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 focus:outline-none transition-all"
                   />
                 ))}

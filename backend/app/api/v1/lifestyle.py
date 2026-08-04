@@ -5,6 +5,7 @@ ExamForge AI - Study Lifestyle API
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.database import get_db
 from app.models.workspace import GoalWorkspaceDb
 from app.models.user import UserDb
@@ -24,13 +25,11 @@ router = APIRouter(
 )
 
 
-def get_active_workspace(db: Session) -> GoalWorkspaceDb:
-    workspace = WorkspaceService.get_workspace(db, user_id=1)
+def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=user_id)
     if not workspace or isinstance(workspace, dict):
-        workspace = db.query(GoalWorkspaceDb).first()
+        workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.user_id == user_id).first()
     if not workspace:
-        user = db.query(UserDb).first()
-        user_id = user.id if user else 1
         workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
         db.add(workspace)
         db.commit()
@@ -49,8 +48,9 @@ def get_active_workspace(db: Session) -> GoalWorkspaceDb:
 def create_lifestyle(
     lifestyle: StudyLifestyleCreate,
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     existing = StudyLifestyleService.get_lifestyle(db, workspace.id)
 
     if existing:
@@ -74,8 +74,9 @@ def create_lifestyle(
 )
 def get_lifestyle(
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     lifestyle = StudyLifestyleService.get_lifestyle(db, workspace.id)
 
     if not lifestyle:
@@ -104,8 +105,9 @@ def get_lifestyle(
 def update_lifestyle(
     lifestyle: StudyLifestyleUpdate,
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     updated = StudyLifestyleService.update_lifestyle(
         db,
         workspace.id,
@@ -135,8 +137,9 @@ def update_lifestyle(
 @router.delete("/")
 def delete_lifestyle(
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     deleted = StudyLifestyleService.delete_lifestyle(
         db,
         workspace.id,

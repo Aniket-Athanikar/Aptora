@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -20,6 +20,7 @@ import {
 import PageLayout from "@/components/layout/PageLayout";
 import Link from "next/link";
 import { useToast } from "@/lib/ToastContext";
+import { getWhatsAppLink } from "@/lib/utils";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -78,12 +79,17 @@ const socialLinks = [
 export default function ContactPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -134,7 +140,7 @@ export default function ContactPage() {
               return (
                 <motion.a
                   key={idx}
-                  href={card.href}
+                  href={mounted && card.href.startsWith("https://wa.me/") ? getWhatsAppLink(card.href.split("/").pop() || "") : card.href}
                   variants={itemVariants}
                   className="flex items-start gap-4 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group block"
                 >
@@ -267,7 +273,7 @@ export default function ContactPage() {
               return (
                 <a
                   key={idx}
-                  href={social.href}
+                  href={mounted && social.href.startsWith("https://wa.me/") ? getWhatsAppLink(social.href.split("/").pop() || "") : social.href}
                   aria-label={social.label}
                   className="w-14 h-14 rounded-2xl bg-white/70 backdrop-blur-xl border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-[#6D4AFF]/30 transition-all duration-300 group"
                 >

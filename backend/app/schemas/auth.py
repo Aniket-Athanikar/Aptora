@@ -62,3 +62,15 @@ class ResetPasswordPayload(BaseModel):
 class ResetPasswordResponse(BaseModel):
     success: bool
     message: str
+
+
+class GoogleLoginPayload(BaseModel):
+    access_token: str
+
+
+class GoogleLoginResponse(BaseModel):
+    success: bool
+    message: str
+    email: str
+    name: str
+

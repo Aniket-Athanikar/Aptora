@@ -15,11 +15,13 @@ import {
   Loader2
 } from "lucide-react";
 import { useToast } from "@/lib/ToastContext";
+import { getWhatsAppLink } from "@/lib/utils";
 
 export default function Footer() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +54,7 @@ export default function Footer() {
   const [year, setYear] = useState<number | null>(null);
   useEffect(() => {
     setYear(new Date().getFullYear());
+    setMounted(true);
   }, []);
 
   const socialIcons = [
@@ -126,7 +129,7 @@ export default function Footer() {
               {socialIcons.map((soc, idx) => (
                 <motion.a
                   key={idx}
-                  href={soc.href}
+                  href={mounted && soc.href.startsWith("https://wa.me/") ? getWhatsAppLink(soc.href.split("/").pop() || "") : soc.href}
                   whileHover={{ scale: 1.15, y: -4 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}

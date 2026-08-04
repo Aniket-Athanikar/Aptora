@@ -46,7 +46,7 @@ class ReasoningPipeline:
     context optimization, knowledge synthesis, LLM generation, and formatting.
     """
 
-    MIN_CONTEXT_CHARS = 100
+    MIN_CONTEXT_CHARS = 50
     MIN_SIMILARITY_SCORE = 0.35
     NO_CONTEXT_ANSWER = (
         "This question is not available in your uploaded study material. "

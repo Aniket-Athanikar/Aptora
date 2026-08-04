@@ -5,6 +5,7 @@ ExamForge AI - Timeline API
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.database import get_db
 from app.models.workspace import GoalWorkspaceDb
 from app.models.user import UserDb
@@ -24,13 +25,11 @@ router = APIRouter(
 )
 
 
-def get_active_workspace(db: Session) -> GoalWorkspaceDb:
-    workspace = WorkspaceService.get_workspace(db, user_id=1)
+def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
+    workspace = WorkspaceService.get_workspace(db, user_id=user_id)
     if not workspace or isinstance(workspace, dict):
-        workspace = db.query(GoalWorkspaceDb).first()
+        workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.user_id == user_id).first()
     if not workspace:
-        user = db.query(UserDb).first()
-        user_id = user.id if user else 1
         workspace = GoalWorkspaceDb(user_id=user_id, target_exam="UPSC CSE", exam_category="Civil Services")
         db.add(workspace)
         db.commit()
@@ -49,8 +48,9 @@ def get_active_workspace(db: Session) -> GoalWorkspaceDb:
 def create_timeline(
     timeline: TimelineCreate,
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     existing = TimelineService.get_timeline(db, workspace.id)
 
     if existing:
@@ -74,8 +74,9 @@ def create_timeline(
 )
 def get_timeline(
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     timeline = TimelineService.get_timeline(db, workspace.id)
 
     if not timeline:
@@ -102,8 +103,9 @@ def get_timeline(
 def update_timeline(
     timeline: TimelineUpdate,
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     updated = TimelineService.update_timeline(
         db,
         workspace.id,
@@ -131,8 +133,9 @@ def update_timeline(
 @router.delete("/")
 def delete_timeline(
     db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
 ):
-    workspace = get_active_workspace(db)
+    workspace = get_active_workspace(db, current_user.id)
     deleted = TimelineService.delete_timeline(
         db,
         workspace.id,

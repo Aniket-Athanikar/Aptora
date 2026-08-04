@@ -138,16 +138,27 @@ export default function LoginPage() {
             });
             if (res.ok) {
               const googleUser = await res.json();
-              setAuthSuccess("✓ Authenticated with Google!");
-              login({
-                name: googleUser.name || googleUser.given_name || "Google User",
-                email: googleUser.email,
-                avatar: googleUser.picture,
+              
+              const backendRes = await fetch(`${API_URL}/api/auth/google`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ access_token: accessToken }),
               });
-              setTimeout(() => {
-                router.push(redirectTo);
-              }, 1200);
-              return;
+
+              if (backendRes.ok) {
+                setAuthSuccess("✓ Authenticated with Google!");
+                login({
+                  name: googleUser.name || googleUser.given_name || "Google User",
+                  email: googleUser.email,
+                  avatar: googleUser.picture,
+                });
+                setTimeout(() => {
+                  router.push(redirectTo);
+                }, 1200);
+                return;
+              } else {
+                setAuthError("Failed to register session with backend server.");
+              }
             }
           } catch (e) {
             console.error("Google user info fetch failed", e);
@@ -183,7 +194,12 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     setIsLoading(true);
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1067280841269-e77nbe4ep0p81s20q6i6d3qep5400d3r.apps.googleusercontent.com";
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      setAuthError("Google Client ID is not configured.");
+      setIsLoading(false);
+      return;
+    }
     const redirectUri = window.location.origin + "/login";
     const scope = encodeURIComponent("https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email");
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=google`;
@@ -330,6 +346,7 @@ export default function LoginPage() {
                 {...registerLogin("email")}
                 type="email"
                 placeholder="Email address"
+                autoComplete="username"
                 className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
               />
               {loginErrors.email && (
@@ -465,6 +482,7 @@ export default function LoginPage() {
                     value={val}
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    autoComplete="one-time-code"
                     className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 focus:outline-none transition-all"
                   />
                 ))}

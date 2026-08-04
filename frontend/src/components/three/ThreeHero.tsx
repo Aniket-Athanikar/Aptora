@@ -99,6 +99,15 @@ function GlowingWavingGrid() {
   const { mouse } = useThree();
   const glowTexture = useGlowTexture();
 
+  // Dispose texture on unmount to prevent GPU memory leaks
+  useEffect(() => {
+    return () => {
+      if (glowTexture) {
+        glowTexture.dispose();
+      }
+    };
+  }, [glowTexture]);
+
   // Grid dimensions
   const widthCount = 25;
   const depthCount = 25;
@@ -213,6 +222,21 @@ function FloatingGlassmorphicShapes() {
   );
 }
 
+function WebGLCleaner() {
+  const { gl } = useThree();
+  useEffect(() => {
+    return () => {
+      // Force immediate WebGL context loss to free browser GPU resources on unmount/HMR
+      gl.dispose();
+      const extension = gl.getContext().getExtension("WEBGL_lose_context");
+      if (extension) {
+        extension.loseContext();
+      }
+    };
+  }, [gl]);
+  return null;
+}
+
 export default function ThreeHero() {
   return (
     <div className="w-full h-full relative min-h-[500px] lg:min-h-[650px] overflow-hidden">
@@ -227,6 +251,7 @@ export default function ThreeHero() {
         }}
         camera={{ position: [0, 2.5, 7.5], fov: 45 }}
       >
+        <WebGLCleaner />
         <ambientLight intensity={0.5} />
         <directionalLight position={[8, 12, 10]} intensity={2.0} color="#ffffff" />
         <pointLight position={[-10, 8, -5]} intensity={1.5} color="#8B5CF6" />
