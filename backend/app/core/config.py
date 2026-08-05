@@ -2,15 +2,14 @@
 ExamForge AI — Core Configuration
 
 Centralized application configuration using Pydantic Settings.
-Includes automatic runtime environment detection (Docker vs Local host)
-and smart OLLAMA_HOST resolution.
+Includes centralized OpenAI model configuration.
 """
 
 import os
 import logging
 from typing import List
 
-from pydantic import Field, model_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
@@ -104,53 +103,15 @@ class Settings(BaseSettings):
     QDRANT_COLLECTION: str = "examforge_documents"
 
     # ======================================================
-    # Ollama / AI Models (Centralized Configuration)
+    # OpenAI / AI Models
     # ======================================================
 
-    # Which provider to use
-    # ollama | openrouter
-    LLM_PROVIDER: str = "ollama"
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4.1-mini"
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
 
-    # ---------- Ollama ----------
-    OLLAMA_HOST: str = Field(default="http://localhost:11434")
-
-    LLM_MODEL: str = "qwen3:4b"
-
-    EMBEDDING_MODEL: str = "nomic-embed-text"
-
-    # ---------- OpenRouter ----------
-    OPENROUTER_API_KEY: str = ""
-
-    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
-
-    OPENROUTER_MODEL: str = "openrouter/free"
-
-    # ---------- Shared ----------
+    # Kept at 768 so existing Qdrant collection dimensions remain compatible.
     EMBEDDING_DIMENSION: int = 768
-
-    @model_validator(mode="after")
-    def _resolve_ollama_host(self) -> "Settings":
-
-        in_docker = is_running_in_docker()
-        self.RUNNING_IN_DOCKER = in_docker
-
-        if not in_docker and "host.docker.internal" in self.OLLAMA_HOST:
-            self.OLLAMA_HOST = self.OLLAMA_HOST.replace(
-                "host.docker.internal",
-                "127.0.0.1",
-            )
-
-        elif in_docker and (
-            "localhost" in self.OLLAMA_HOST
-            or "127.0.0.1" in self.OLLAMA_HOST
-        ):
-            self.OLLAMA_HOST = (
-                self.OLLAMA_HOST
-                .replace("localhost", "host.docker.internal")
-                .replace("127.0.0.1", "host.docker.internal")
-            )
-
-        return self
 
     # ======================================================
     # Email
@@ -189,10 +150,6 @@ class Settings(BaseSettings):
             f"{self.DB_NAME}"
         )
 
-    def get_ollama_host(self) -> str:
-        """Return clean, sanitized OLLAMA_HOST without trailing slashes."""
-        return self.OLLAMA_HOST.rstrip("/")
-
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -209,7 +166,7 @@ settings = Settings()
 
 
 # Backward compatibility imports
-EMBEDDING_MODEL = settings.EMBEDDING_MODEL
+EMBEDDING_MODEL = settings.OPENAI_EMBEDDING_MODEL
 EMBEDDING_DIMENSION = settings.EMBEDDING_DIMENSION
 QDRANT_COLLECTION = settings.QDRANT_COLLECTION
-LLM_MODEL = settings.LLM_MODEL
+LLM_MODEL = settings.OPENAI_MODEL

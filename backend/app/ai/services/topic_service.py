@@ -7,20 +7,17 @@ Responsible for:
 3. Detecting topic
 4. Extracting keywords
 
-Uses Ollama (Qwen3)
+Uses OpenAI JSON mode.
 """
 
-import json
 import logging
 
-from app.ai.services.llm_service import client
+from app.ai.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
 
 
 class TopicService:
-
-    MODEL = "qwen3:4b"
 
     @classmethod
     def detect(cls, text: str) -> dict:
@@ -50,32 +47,7 @@ Do not explain your answer.
 
         try:
 
-            response = client.chat(
-                model=cls.MODEL,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    }
-                ],
-            )
-
-            content = response["message"]["content"]
-
-            # Remove markdown if present
-            content = (
-                content.replace("```json", "")
-                .replace("```", "")
-                .strip()
-            )
-            # Extract only the JSON object
-            start = content.find("{")
-            end = content.rfind("}")
-
-            if start != -1 and end != -1:
-                content = content[start:end + 1]
-
-            return json.loads(content)
+            return LLMService.generate_json(prompt)
 
         except Exception as e:
 

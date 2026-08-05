@@ -202,7 +202,7 @@ class ReasoningPipeline:
         except Exception:
             logger.exception("[ReasoningPipeline] LLM generation failed after context validation.")
             return {
-                "answer": "AI generation service is temporarily unavailable. Please start Ollama and retry.",
+                "answer": "AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry.",
                 "raw_answer": "",
                 "intent": intent_res.intent,
                 "confidence": confidence_result.level,
@@ -306,12 +306,12 @@ class ReasoningPipeline:
 
         # Stream tokens only after context validation.  Generator exceptions
         # occur during iteration, so handle them here rather than leaking an
-        # Ollama traceback through the streaming endpoint.
+        # Provider errors occur during generator iteration, so handle them here.
         try:
             yield from LLMService.stream(prompt)
         except Exception:
             logger.exception("[ReasoningPipeline] LLM streaming failed after context validation.")
-            yield "AI generation service is temporarily unavailable. Please start Ollama and retry."
+            yield "AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry."
 
     @staticmethod
     def _build_reasoning_prompt(

@@ -4,13 +4,10 @@ from openai import OpenAI
 
 load_dotenv()
 
-client = OpenAI(
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1",
-)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 response = client.chat.completions.create(
-    model="openrouter/free",
+    model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
     messages=[
         {
             "role": "user",

@@ -230,7 +230,7 @@ class ConversationMemory:
         session_id: str,
     ) -> list[dict[str, str]]:
         """
-        Return the history as an Ollama-compatible message list,
+        Return the history as an OpenAI-compatible message list,
         ready to pass directly to the chat API.
 
         Returns

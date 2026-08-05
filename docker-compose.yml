@@ -64,8 +64,9 @@ services:
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
-      - OLLAMA_HOST=http://host.docker.internal:11434
-      - LLM_MODEL=qwen3:4b
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
+      - OPENAI_EMBEDDING_MODEL=${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
     volumes:
       - ./backend/app/uploads:/app/app/uploads
     depends_on:
@@ -99,9 +100,9 @@ services:
       - REDIS_PORT=6379
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
-      - OLLAMA_HOST=http://host.docker.internal:11434
-      - LLM_MODEL=qwen3:4b
-      - EMBEDDING_MODEL=nomic-embed-text
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
+      - OPENAI_EMBEDDING_MODEL=${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
       - EMBEDDING_DIMENSION=768
     volumes:
       - ./backend/app/uploads:/app/app/uploads

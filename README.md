@@ -115,7 +115,7 @@ ExamForge/
 * **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Three.js, GSAP.
 * **Backend**: FastAPI, SQLAlchemy, Alembic, Pydantic, JWT Auth.
 * **Database**: PostgreSQL, Redis, Qdrant (Vector Database).
-* **AI & Orchestration**: OpenAI API, LangChain, RAG pipelines, Ollama.
+* **AI & Orchestration**: OpenAI API, LangChain, and RAG pipelines.
 * **DevOps & Infrastructure**: Docker, Docker Compose, Nginx, GitHub Actions, AWS.
 
 ---
@@ -156,6 +156,24 @@ For detailed guidance, see:
 ---
 
 ### Manual Development Setup
+
+#### OpenAI API configuration
+
+Before: the backend required a locally running Ollama server and downloaded
+models. After: it calls the OpenAI API directly; no local model runtime is
+needed.
+
+ExamForge uses the OpenAI API for generation and embeddings. Copy `.env.example`
+to `backend/.env` and set the required key before starting the backend:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-4.1-mini
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+```
+
+`EMBEDDING_DIMENSION` defaults to `768` so existing Qdrant collections remain
+compatible. No local model server or model download is required.
 
 #### 1. Backend Setup
 ```bash

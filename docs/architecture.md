@@ -60,7 +60,7 @@ The primary objective of ExamForge AI is to democratize high-quality, personaliz
 
 ### C. Services & Orchestration
 - **Goal Engine:** 7-step goal setting process mapping out targets, study hours, and weak/strong subjects.
-- **AI Agent & RAG Service:** Integrates LangChain/LangGraph to manage vector ingestion, context retrieval, and generation. Supports local model runs via Ollama or cloud models (GPT/Gemini).
+- **AI Agent & RAG Service:** Integrates LangChain/LangGraph to manage vector ingestion, context retrieval, and OpenAI-powered generation and embeddings.
 - **OCR Engine:** PyMuPDF / Tesseract integration for processing scanned answer copies, PDF notes, and books uploaded by aspirants.
 
 ---

@@ -5,12 +5,12 @@ ExamForge AI - Topic Detector
 Processing stage: DocumentProcessor -> TopicDetector
 
 Identifies main topics, key concepts, and important subject keywords from cleaned
-document text using local Ollama (qwen3:4b).
+document text using OpenAI.
 
 Design principles
 -----------------
 - Pure-function interface (TopicDetector.detect is stateless)
-- Uses local Ollama LLM for semantic topic extraction
+- Uses the configured OpenAI model for semantic topic extraction
 - Max 20 topics returned, deduplicated, sorted by importance
 - Graceful exception handling (returns [] on failure without crashing pipeline)
 """
@@ -23,7 +23,7 @@ import re
 import time
 from typing import Final, List
 
-from app.core.config import LLM_MODEL, settings
+from app.core.config import LLM_MODEL
 from app.ai.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL: Final[str] = LLM_MODEL or "qwen3:4b"
+DEFAULT_MODEL: Final[str] = LLM_MODEL
 MAX_TOPICS: Final[int] = 20
 MAX_TEXT_SCAN_CHARS: Final[int] = 5000
 MAX_RETRIES: Final[int] = 2
@@ -41,7 +41,7 @@ REQUEST_TIMEOUT_SECONDS: Final[float] = 15.0
 
 class TopicDetector:
     """
-    Production-ready service for detecting key topics and concepts from text using Ollama.
+    Production-ready service for detecting key topics and concepts using OpenAI.
     """
 
     MODEL_NAME: str = DEFAULT_MODEL
@@ -77,19 +77,18 @@ Follow these strict rules:
 1. Extract between 5 and 20 specific, high-level topics or concepts.
 2. Order them by importance (most central topic first).
 3. Keep each topic brief (1-4 words max, e.g., "Data Structures", "Linear Algebra").
-4. Output MUST be valid JSON: a single array of strings.
-5. Output ONLY the JSON array. Do not include markdown formatting or extra text.
+4. Output MUST be valid JSON in this object format: {"topics": ["topic"]}.
+5. Output ONLY that JSON object. Do not include markdown formatting or extra text.
 
 Document Text:
 \"\"\"
 {sample}
 \"\"\"
 
-JSON Array Output:"""
+JSON Output:"""
 
         logger.info(
-            "[TopicDetector] Detecting topics | OLLAMA_HOST=%s | MODEL=%s | (%d chars scanned)...",
-            settings.OLLAMA_HOST,
+            "[TopicDetector] Detecting topics | provider=OpenAI | MODEL=%s | (%d chars scanned)...",
             TopicDetector.MODEL_NAME,
             len(sample),
         )
@@ -98,18 +97,8 @@ JSON Array Output:"""
 
         for attempt in range(1, MAX_RETRIES + 1):
             try:
-                response = LLMService.get_client().chat(
-                    model=TopicDetector.MODEL_NAME,
-                    messages=[{"role": "user", "content": prompt}],
-                    options={"temperature": 0.2},
-                )
-
-                content = response.get("message", {}).get("content", "").strip()
-                if not content:
-                    logger.warning("[TopicDetector] Empty response from Ollama on attempt %d.", attempt)
-                    continue
-
-                topics = TopicDetector._parse_topics_response(content)
+                response = LLMService.generate_json(prompt)
+                topics = TopicDetector._parse_topics_response(json.dumps(response.get("topics", [])))
                 if topics:
                     elapsed = time.perf_counter() - start_time
                     logger.info(
@@ -121,10 +110,9 @@ JSON Array Output:"""
 
             except Exception as exc:
                 logger.warning(
-                    "[TopicDetector] Attempt %d/%d failed | OLLAMA_HOST=%s: %s",
+                    "[TopicDetector] Attempt %d/%d failed | provider=OpenAI: %s",
                     attempt,
                     MAX_RETRIES,
-                    settings.OLLAMA_HOST,
                     exc,
                 )
                 if attempt < MAX_RETRIES:

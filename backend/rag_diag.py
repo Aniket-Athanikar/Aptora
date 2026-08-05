@@ -3,15 +3,14 @@ ExamForge RAG Full Diagnostic
 Connect to Qdrant on port 6433 (Docker exposed port) and run all filter tests.
 """
 import sys
-import json
 import logging
-import urllib.request
 
 logging.basicConfig(level=logging.WARNING)
 sys.path.insert(0, ".")
 
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Filter, FieldCondition, MatchValue, MatchAny
+from app.ai.services.embedding_service import EmbeddingService
 
 # Connect to the actual Docker-exposed Qdrant port
 client = QdrantClient(host="127.0.0.1", port=6433, timeout=10)
@@ -83,22 +82,13 @@ print(f"resource_id values:  {sorted(resource_ids.items())}")
 
 print()
 print("=" * 60)
-print("STEP 4: Generate test embedding via Ollama")
+print("STEP 4: Generate test embedding via OpenAI")
 print("=" * 60)
-OLLAMA_URL = "http://localhost:11434/api/embeddings"
-payload_bytes = json.dumps(
-    {"model": "nomic-embed-text", "prompt": "Geography study material human geography"}
-).encode()
-req = urllib.request.Request(
-    OLLAMA_URL, data=payload_bytes,
-    headers={"Content-Type": "application/json"}, method="POST"
-)
 try:
-    with urllib.request.urlopen(req, timeout=30) as r:
-        embedding = json.loads(r.read())["embedding"]
+    embedding = EmbeddingService.embed("Geography study material human geography")
     print(f"Embedding dimension: {len(embedding)}")
 except Exception as e:
-    print(f"Ollama embedding failed: {e}")
+    print(f"OpenAI embedding failed: {e}")
     sys.exit(1)
 
 print()

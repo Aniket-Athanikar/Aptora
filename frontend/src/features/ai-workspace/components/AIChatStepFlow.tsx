@@ -710,7 +710,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
 
             {error && (
               <div className="text-[10px] text-rose-600 text-center mt-3 bg-rose-50 border border-rose-100/50 p-2 rounded-xl">
-                AI generation service is temporarily unavailable. Please start Ollama and retry.{" "}
+                AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry.{" "}
                 <button
                   onClick={() => void ask(messages.filter((m) => m.role === "user").at(-1)?.content || "")}
                   className="font-black underline text-rose-700 hover:text-rose-900 ml-1 cursor-pointer"

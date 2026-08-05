@@ -1,0 +1,43 @@
+docker exec -it examforge_postgres psql -U aniket -d Exame_forgeDB
+
+SELECT * FROM account_deletion_requests;
+
+SELECT * FROM alembic_version;
+
+SELECT * FROM contacts;
+
+SELECT * FROM gap_analysis;
+
+SELECT * FROM goal_timelines;
+
+SELECT * FROM goal_workspaces;
+
+SELECT * FROM knowledge_conversations;
+
+SELECT * FROM knowledge_messages;
+
+SELECT * FROM learning_modes;
+
+SELECT * FROM newsletter_subscribers;
+
+SELECT * FROM orders;
+
+SELECT * FROM otps;
+
+SELECT * FROM resource_chunks;
+
+SELECT * FROM resource_contents;
+
+SELECT * FROM resources;
+
+SELECT * FROM study_lifestyles;
+
+SELECT * FROM study_time_slots;
+
+SELECT * FROM user_onboarding_profiles;
+
+SELECT * FROM user_profiles;
+
+SELECT * FROM users;
+
+SELECT * FROM workspace_subjects;

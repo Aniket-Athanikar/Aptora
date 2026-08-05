@@ -61,25 +61,10 @@ async def lifespan(app: FastAPI):
     logger.info("ExamForge AI Backend Initialization Diagnostics")
     logger.info("==================================================")
     logger.info("  Running inside Docker : %s", settings.RUNNING_IN_DOCKER)
-    logger.info("  LLM Provider          : %s", settings.LLM_PROVIDER)
-    logger.info("  OLLAMA_HOST           : %s", settings.OLLAMA_HOST)
-    logger.info("  LLM Model             : %s", settings.OPENROUTER_MODEL if settings.LLM_PROVIDER.lower() == "openrouter" else settings.LLM_MODEL)
-    logger.info("  Embedding Model       : %s", settings.EMBEDDING_MODEL)
+    logger.info("  LLM Provider          : OpenAI")
+    logger.info("  LLM Model             : %s", settings.OPENAI_MODEL)
+    logger.info("  Embedding Model       : %s", settings.OPENAI_EMBEDDING_MODEL)
     logger.info("==================================================")
-
-    try:
-        import requests
-        tags_url = f"{settings.get_ollama_host()}/api/tags"
-        res = requests.get(tags_url, timeout=3)
-        if res.status_code == 200:
-            raw_models = res.json().get("models", [])
-            models = [m.get("name") for m in raw_models if isinstance(m, dict) and m.get("name")]
-            logger.info("[Startup] Ollama is reachable at %s | Available models: %s", settings.OLLAMA_HOST, models)
-        else:
-            logger.warning("[Startup WARNING] Ollama at %s returned status HTTP %d", settings.OLLAMA_HOST, res.status_code)
-    except Exception as exc:
-        logger.warning("[Startup WARNING] Ollama host '%s' unreachable on startup: %s", settings.OLLAMA_HOST, exc)
-
 
     try:
         # Base.metadata.create_all(bind=engine)
