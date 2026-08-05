@@ -216,9 +216,11 @@ export default function LoginPage() {
 
   const onLoginSubmit = async (data: LoginValues) => {
     setIsLoading(true);
+    console.log("STEP 1 - onLoginSubmit called", data);
     setAuthError(null);
     setAuthSuccess(null);
     try {
+      console.log("STEP 2 - About to call backend");
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         credentials: "include",
@@ -228,6 +230,7 @@ export default function LoginPage() {
         },
         body: JSON.stringify({ email: data.email, skip_email: false }),
       });
+      console.log("STEP 3 - Response received", response.status);
       const result = await response.json();
       if (response.ok && result.success) {
         setEmailForVerification(result.email || data.email);
