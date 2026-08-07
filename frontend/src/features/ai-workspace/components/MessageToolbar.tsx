@@ -28,33 +28,11 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-slate-400 select-none">
-      {/* Thumbs like/dislike */}
-      <button
-        onClick={() => toggleMessageLike(message.id, "like")}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors ${
-          message.liked ? "text-purple-600 bg-purple-50" : ""
-        }`}
-        title="Like response"
-      >
-        <ThumbsUp className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => toggleMessageLike(message.id, "dislike")}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors ${
-          message.disliked ? "text-red-500 bg-red-50" : ""
-        }`}
-        title="Dislike response"
-      >
-        <ThumbsDown className="w-3.5 h-3.5" />
-      </button>
-
-      <div className="w-[1px] h-4 bg-slate-100 mx-1" />
-
+    <div className="flex flex-wrap items-center gap-1.5 text-slate-400 select-none">
       {/* Copy */}
       <button
         onClick={handleCopy}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer"
         title="Copy response text"
       >
         {copied ? (
@@ -70,86 +48,67 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
         )}
       </button>
 
-      {/* Bookmark */}
-      <button
-        onClick={() => toggleMessageBookmark(message.id)}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold ${
-          message.bookmarked ? "text-amber-500 bg-amber-50" : ""
-        }`}
-        title="Bookmark answer"
-      >
-        <Bookmark className="w-3.5 h-3.5 fill-current" />
-        <span>{message.bookmarked ? "Bookmarked" : "Bookmark"}</span>
-      </button>
-
-      {/* Convert to Study Formats */}
+      {/* Save to Notes */}
       <button
         onClick={() => {
-          toast("Creating notes from this response block in ExamForge Study Engine...", "info");
+          toast("Creating study notes from response...", "info");
           triggerQuickAction("notes");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer text-indigo-600"
         title="Save block as study notes"
       >
         <FileText className="w-3.5 h-3.5" />
-        <span>Save to Notes</span>
+        <span>Save Notes</span>
       </button>
 
+      {/* Flashcards */}
       <button
         onClick={() => {
-          toast("Generating active recall flashcards study set from this response...", "info");
+          toast("Generating flashcards study set...", "info");
           triggerQuickAction("flashcards");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer text-violet-600"
         title="Extract Flashcards"
       >
         <Layers className="w-3.5 h-3.5" />
         <span>Flashcards</span>
       </button>
 
+      {/* Mind Map */}
       <button
         onClick={() => {
-          toast("Constructing interactive Mind Map conceptual nodes...", "info");
+          toast("Constructing interactive Mind Map...", "info");
           triggerQuickAction("mindmap");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer text-pink-600"
         title="Convert to Concept Map"
       >
         <GitPullRequest className="w-3.5 h-3.5" />
         <span>Mind Map</span>
       </button>
 
+      {/* Quiz */}
       <button
         onClick={() => {
-          toast("Compiling 5 practice questions from response parameters...", "info");
+          toast("Compiling practice quiz questions...", "info");
           triggerQuickAction("questions");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer text-blue-600"
         title="Create quiz practice questions"
       >
         <HelpCircle className="w-3.5 h-3.5" />
         <span>Create Quiz</span>
       </button>
 
-      {/* Share / Translate */}
-      <div className="w-[1px] h-4 bg-slate-100 mx-1" />
-
-      <button
-        onClick={() => toast("Simulating translation to Hindi, Spanish, Sanskrit...", "info")}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
-      >
-        <Languages className="w-3.5 h-3.5" />
-        <span>Translate</span>
-      </button>
-
+      {/* Share */}
       <button
         onClick={handleShare}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer"
       >
         {shared ? (
           <>
             <Check className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="text-emerald-600">Link Copied</span>
+            <span className="text-emerald-600">Copied</span>
           </>
         ) : (
           <>
