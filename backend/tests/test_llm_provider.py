@@ -41,8 +41,9 @@ class OpenAIProviderTests(TestCase):
             )))
         )
         with patch.object(llm_service, "get_openai_client", return_value=fake_client):
-            with self.assertRaisesRegex(RuntimeError, "invalid JSON"):
+            with self.assertRaisesRegex(RuntimeError, "[iI]nvalid JSON"):
                 llm_service.LLMService.generate_json("Return JSON.")
+
 
     def test_stream_keeps_string_chunk_contract(self):
         chunks = [

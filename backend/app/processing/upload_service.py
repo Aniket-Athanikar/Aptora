@@ -5,6 +5,8 @@ ExamForge AI - Upload Service
 import os
 import uuid
 import shutil
+import logging
+import threading
 from pathlib import Path
 
 from fastapi import UploadFile, HTTPException
@@ -13,7 +15,9 @@ from sqlalchemy.orm import Session
 from app.models.resource import ResourceDb
 from app.processing.redis_service import RedisService
 from app.repositories.resource_repository import ResourceRepository
+from app.workers.resource_worker import ResourceWorker
 
+logger = logging.getLogger(__name__)
 
 UPLOAD_DIR = Path("app/uploads")
 
@@ -105,6 +109,14 @@ class UploadService:
         # Queue Document for Processing
         # -------------------------
 
-        RedisService.enqueue_document(resource.id)
+        enqueued = RedisService.enqueue_document(resource.id)
+        if not enqueued:
+            logger.warning("Redis enqueue skipped/failed for resource %s. Triggering immediate background processing...", resource.id)
+            threading.Thread(
+                target=ResourceWorker.process_resource,
+                args=(db, resource),
+                daemon=True,
+                name=f"DirectWorker-{resource.id}"
+            ).start()
 
         return resource

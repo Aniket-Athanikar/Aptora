@@ -21,11 +21,59 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("backend")
 
+# Initialize database schemas
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    logger.info("==================================================")
+    logger.info("ExamForge AI Backend Initialization Diagnostics")
+    logger.info("==================================================")
+    logger.info("  Running inside Docker : %s", settings.RUNNING_IN_DOCKER)
+    logger.info("  LLM Provider          : OpenAI")
+    logger.info("  LLM Model             : %s", settings.OPENAI_MODEL)
+    logger.info("  Embedding Model       : %s", settings.OPENAI_EMBEDDING_MODEL)
+    logger.info("==================================================")
+
+    try:
+        from app.db.auto_sync import ensure_schema_synced
+        Base.metadata.create_all(bind=engine)
+        ensure_schema_synced(engine)
+        logger.info("Database initialized.")
+    except Exception as e:
+        logger.warning(f"Database initialization skipped (PostgreSQL is offline or unreachable: {e})")
+
+    try:
+        QdrantService.create_collection()
+        logger.info("Qdrant collection ready.")
+    except Exception as e:
+        logger.warning(f"Qdrant vector collection initialization skipped (Qdrant service is offline or unreachable: {e})")
+
+    try:
+        from app.workers.resource_worker import ResourceWorker
+        ResourceWorker.start_in_background()
+        logger.info("Resource worker background thread initialized.")
+    except Exception as e:
+        logger.warning(f"Resource worker initialization skipped: {e}")
+
+
+    yield
+
+    logger.info("Shutting down ExamForge AI Backend...")
+    try:
+        from app.workers.resource_worker import ResourceWorker
+        ResourceWorker.stop_background()
+    except Exception:
+        pass
+
+
+
 app = FastAPI(
     title=os.getenv("PROJECT_NAME", "ExamForge-AI-Backend"),
     description="Full-stack containerized backend API for ExamForge AI with DB integrations",
-    version="2.1.0"
+    version="2.1.0",
+    lifespan=lifespan
 )
+
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
@@ -53,34 +101,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database schemas
-@asynccontextmanager
-async def lifespan(app: FastAPI):
 
-    logger.info("==================================================")
-    logger.info("ExamForge AI Backend Initialization Diagnostics")
-    logger.info("==================================================")
-    logger.info("  Running inside Docker : %s", settings.RUNNING_IN_DOCKER)
-    logger.info("  LLM Provider          : OpenAI")
-    logger.info("  LLM Model             : %s", settings.OPENAI_MODEL)
-    logger.info("  Embedding Model       : %s", settings.OPENAI_EMBEDDING_MODEL)
-    logger.info("==================================================")
-
-    try:
-        # Base.metadata.create_all(bind=engine)
-        logger.info("Database initialized.")
-    except Exception as e:
-        logger.exception(e)
-
-    try:
-        QdrantService.create_collection()
-        logger.info("Qdrant collection ready.")
-    except Exception as e:
-        logger.exception(e)
-
-    yield
-
-    logger.info("Shutting down ExamForge AI Backend...")
 
 # Never flush Redis here: document_processing_queue is durable work, not cache.
 # Flushing it at every backend restart silently discarded uploads before the

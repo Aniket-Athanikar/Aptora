@@ -6,7 +6,7 @@ import json
 import logging
 from typing import Optional
 
-from app.db import redis_client
+from app.db.redis import get_redis_client
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ DOCUMENT_QUEUE = "document_processing_queue"
 
 class RedisService:
     """
-    Handles document processing queue.
+    Handles document processing queue using dynamic Redis client lookup.
     """
 
     @staticmethod
@@ -24,13 +24,14 @@ class RedisService:
         Push document resource ID onto queue.
         """
         try:
-            if redis_client is None:
-                logger.error("Redis client is None.")
+            client = get_redis_client()
+            if client is None:
+                logger.error("Redis client is None. Cannot enqueue document %s", resource_id)
                 return False
 
             job = json.dumps({"resource_id": resource_id})
-            redis_client.rpush(DOCUMENT_QUEUE, job)
-            logger.info("Enqueued document job for resource %s", resource_id)
+            client.rpush(DOCUMENT_QUEUE, job)
+            logger.info("Enqueued document job for resource %s on queue '%s'", resource_id, DOCUMENT_QUEUE)
             return True
 
         except Exception:
@@ -43,33 +44,25 @@ class RedisService:
         Pop next document from queue.
         """
         try:
-            if redis_client is None:
-                logger.error("Redis client is None.")
+            client = get_redis_client()
+            if client is None:
                 return None
 
-            queue_size = redis_client.llen(DOCUMENT_QUEUE)
-            logger.info(
-                "Queue '%s' size before dequeue = %s",
-                DOCUMENT_QUEUE,
-                queue_size,
-            )
+            queue_size = client.llen(DOCUMENT_QUEUE)
+            if queue_size > 0:
+                logger.info(
+                    "Queue '%s' size before dequeue = %s",
+                    DOCUMENT_QUEUE,
+                    queue_size,
+                )
 
-            item = redis_client.lpop(DOCUMENT_QUEUE)
-
-            logger.info(
-                "Queue '%s' raw item = %s",
-                DOCUMENT_QUEUE,
-                item,
-            )
+            item = client.lpop(DOCUMENT_QUEUE)
 
             if item is None:
-                logger.info("No job available in queue.")
                 return None
 
             job = json.loads(item)
-
-            logger.info("Dequeued document job: %s", job)
-
+            logger.info("Dequeued document job: %s from queue '%s'", job, DOCUMENT_QUEUE)
             return job
 
         except Exception:
@@ -85,10 +78,11 @@ class RedisService:
         Return current queue size.
         """
         try:
-            if redis_client is None:
+            client = get_redis_client()
+            if client is None:
                 return 0
 
-            return redis_client.llen(DOCUMENT_QUEUE)
+            return client.llen(DOCUMENT_QUEUE)
 
         except Exception:
             logger.exception("Failed to get queue size.")
@@ -100,10 +94,11 @@ class RedisService:
         Clear the processing queue.
         """
         try:
-            if redis_client is None:
+            client = get_redis_client()
+            if client is None:
                 return
 
-            redis_client.delete(DOCUMENT_QUEUE)
+            client.delete(DOCUMENT_QUEUE)
             logger.info("Queue '%s' cleared.", DOCUMENT_QUEUE)
 
         except Exception:

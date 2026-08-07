@@ -67,11 +67,13 @@ for port in ports_to_try:
 
 if not engine:
     fallback_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    logger.error("All PostgreSQL database connection attempts failed. Falling back to default URL structure.")
     engine = create_engine(fallback_url)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
+
 
 # Database Dependency
 def get_db():

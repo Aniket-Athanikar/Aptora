@@ -28,6 +28,8 @@ class UserDb(Base):
 
     password = Column(String(255), nullable=False)
 
+    is_active = Column(Boolean, default=True)
+
     created_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -57,3 +59,26 @@ class OtpDb(Base):
     )
 
     is_used = Column(Boolean, default=False)
+
+
+class SessionDb(Base):
+    __tablename__ = "user_sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, nullable=False)
+
+    refresh_token = Column(String(500), unique=True, nullable=False)
+
+    device_info = Column(String(255), default="")
+
+    ip_address = Column(String(50), default="")
+
+    is_revoked = Column(Boolean, default=False)
+
+    expires_at = Column(DateTime, nullable=False)
+
+    created_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+    )

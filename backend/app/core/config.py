@@ -70,6 +70,21 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(default=True)
 
     # ======================================================
+    # Authentication & Security
+    # ======================================================
+
+    AUTH_MODE: str = Field(default="passwordless")  # 'password' or 'passwordless'
+    JWT_SECRET_KEY: str = Field(default="examforge-jwt-secret-key-change-in-prod")
+    JWT_REFRESH_SECRET_KEY: str = Field(default="examforge-jwt-refresh-secret-key-change-in-prod")
+    JWT_ALGORITHM: str = Field(default="HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24)  # 24 hours
+    REFRESH_TOKEN_EXPIRE_DAYS: int = Field(default=30)
+    OTP_EXPIRE_MINUTES: int = Field(default=5)
+    OTP_MAX_ATTEMPTS: int = Field(default=5)
+    OTP_COOLDOWN_SECONDS: int = Field(default=60)
+
+
+    # ======================================================
     # PostgreSQL
     # ======================================================
 

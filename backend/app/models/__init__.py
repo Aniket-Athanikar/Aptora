@@ -3,7 +3,7 @@ ExamForge AI — Models Package
 """
 
 # User Models
-from app.models.user import UserDb, OtpDb
+from app.models.user import UserDb, OtpDb, SessionDb
 
 # User Profile
 from app.models.user_profile import UserProfileDb
@@ -38,6 +38,7 @@ from app.models.knowledge_conversation import KnowledgeConversationDb, Knowledge
 __all__ = [
     "UserDb",
     "OtpDb",
+    "SessionDb",
     "UserProfileDb",
     "GoalWorkspaceDb",
     "GoalTimelineDb",

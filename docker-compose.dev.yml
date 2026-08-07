@@ -1,37 +1,34 @@
-version: '3.8'
-
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: ../docker/backend.dev.Dockerfile
-    volumes:
-      - ./backend:/app
+  postgres:
+    image: postgres:15-alpine
+    container_name: examforge_postgres
     environment:
-      - ENV=development
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=Exame_forgeDB
-      - DB_USER=aniket
-      - DB_PASSWORD=admin123
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - QDRANT_HOST=qdrant
-      - QDRANT_PORT=6333
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
-      - OPENAI_EMBEDDING_MODEL=${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      POSTGRES_DB: Exame_forgeDB
+      POSTGRES_USER: aniket
+      POSTGRES_PASSWORD: admin123
     ports:
-      - "8000:8000"
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ../docker/frontend.dev.Dockerfile
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+  redis:
+    image: redis:7-alpine
+    container_name: examforge_redis
     ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - "6479:6379"
+    volumes:
+      - redis_data:/data
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: examforge_qdrant
+    ports:
+      - "6433:6333"
+      - "6434:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  pgdata:
+  redis_data:
+  qdrant_data:

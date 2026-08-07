@@ -61,14 +61,19 @@ for port in ports_to_try:
             logger.info(f"Successfully established connection to PostgreSQL on port {port}!")
             break
         except Exception:
+
             logger.info(f"Database exists on port {port} but target connection validation failed. Trying next port...")
 
 if not engine:
     fallback_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    logger.error("All PostgreSQL database connection attempts failed. Falling back to default URL structure.")
     engine = create_engine(fallback_url, echo=False)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+
+
+
 
 @event.listens_for(SessionLocal, "before_commit")
 def receive_before_commit(session: Session):

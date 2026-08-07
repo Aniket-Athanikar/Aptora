@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.db.base import Base
+import app.models
 from app.core.dependencies import get_db, get_current_user
 from app.models.user import UserDb
 from app.models.workspace import GoalWorkspaceDb
@@ -51,7 +52,11 @@ test_app.dependency_overrides[get_current_user] = mock_current_user
 client = TestClient(test_app)
 
 
-def setup_db_data():
+# pyrefly: ignore [missing-import]
+import pytest
+
+@pytest.fixture(autouse=True)
+def setup_and_teardown_db():
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
 
@@ -127,9 +132,10 @@ def setup_db_data():
     db.commit()
     db.close()
 
+    yield
 
-def teardown_db_data():
     Base.metadata.drop_all(bind=engine)
+
 
 
 def test_workspace_service():
@@ -221,12 +227,9 @@ def test_workspace_api_endpoints():
 
 
 if __name__ == "__main__":
-    setup_db_data()
-    try:
-        test_workspace_service()
-        print("PASS: test_workspace_service")
-        test_workspace_api_endpoints()
-        print("PASS: test_workspace_api_endpoints")
-    finally:
-        teardown_db_data()
+    test_workspace_service()
+    print("PASS: test_workspace_service")
+    test_workspace_api_endpoints()
+    print("PASS: test_workspace_api_endpoints")
     print("ALL TESTS PASSED SUCCESSFULLY!")
+
