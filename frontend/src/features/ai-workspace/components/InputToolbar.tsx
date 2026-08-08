@@ -2,23 +2,8 @@
 
 import React, { useState, useRef } from "react";
 import { useWorkspace } from "../workspaceContext";
-import {
-  Send,
-  Paperclip,
-  Mic,
-  FileText,
-  Sparkles,
-  BookOpen,
-  HelpCircle,
-  Layers,
-  GitPullRequest,
-  RefreshCw,
-  X,
-  Zap,
-  Flame,
-  Brain
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Send, Paperclip, Mic, Camera, FileText, Sparkles, BookOpen, HelpCircle, Layers, GitPullRequest, Globe, Search, RefreshCw } from "lucide-react";
+import { motion } from "framer-motion";
 import { useToast } from "@/lib/ToastContext";
 
 export function InputToolbar() {
@@ -26,12 +11,10 @@ export function InputToolbar() {
   const { sendMessage, isStreaming, uploads, triggerQuickAction } = useWorkspace();
   const [text, setText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [isRecording, setIsRecording] = useState(false);
-  const [aiMode, setAiMode] = useState<"rag" | "tutor" | "quiz" | "summary">("rag");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!text.trim() && selectedFiles.length === 0) return;
 
     const filesMeta = selectedFiles.map((f) => ({
@@ -40,16 +23,14 @@ export function InputToolbar() {
       size: f.size
     }));
 
-    sendMessage(text.trim(), filesMeta);
+    sendMessage(text, filesMeta);
     setText("");
     setSelectedFiles([]);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
-      toast(`Attached ${newFiles.length} file(s).`, "info");
+      setSelectedFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
     }
   };
 
@@ -57,98 +38,37 @@ export function InputToolbar() {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const toggleRecording = () => {
-    if (isRecording) {
-      setIsRecording(false);
-      toast("Stopped recording. Processing voice query...", "success");
-      setText((t) => (t ? `${t} [Voice Query: Explain Laxmikanth Chapter 3]` : "Explain Laxmikanth Chapter 3"));
-    } else {
-      setIsRecording(true);
-      toast("Microphone listening... Speak your question.", "info");
-    }
-  };
-
-  const getPlaceholder = () => {
-    switch (aiMode) {
-      case "quiz":
-        return "Ask AI to generate active recall questions, MCQs, or PYQ practice tests...";
-      case "tutor":
-        return "Ask conceptual questions, case studies, or step-by-step exam explanations...";
-      case "summary":
-        return "Ask for a high-yield summary, key bullet points, or chapter recap...";
-      default:
-        return "Ask AI Tutor about study materials, Laxmikanth polity, PYQ analysis (Ctrl+Enter to send)...";
-    }
-  };
-
   return (
-    <div className="bg-white border border-purple-100 rounded-3xl p-4 sm:p-5 shadow-sm space-y-3">
-      {/* Mode Selector & Status Header */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 no-scrollbar select-none">
-        <div className="flex items-center gap-1.5 bg-slate-50 p-1 rounded-2xl border border-slate-150 text-xs">
-          {[
-            { id: "rag", label: "Deep RAG", icon: Brain, color: "text-purple-600" },
-            { id: "tutor", label: "AI Tutor", icon: Zap, color: "text-amber-500" },
-            { id: "quiz", label: "Quiz Mode", icon: HelpCircle, color: "text-blue-500" },
-            { id: "summary", label: "Summary", icon: RefreshCw, color: "text-emerald-500" },
-          ].map((mode) => {
-            const Icon = mode.icon;
-            const isActive = aiMode === mode.id;
-            return (
-              <button
-                key={mode.id}
-                type="button"
-                onClick={() => setAiMode(mode.id as any)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-[11px] transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-white text-purple-900 shadow-sm border border-purple-200"
-                    : "text-slate-500 hover:text-slate-800"
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${mode.color}`} />
-                <span>{mode.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <span className="text-[10px] font-bold text-slate-400 hidden sm:inline-block">
-          Press <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600 font-mono">Ctrl + Enter</kbd> to send
-        </span>
-      </div>
-
-      {/* File Attachment Preview Chips */}
+    <div className="bg-white border border-purple-100 rounded-3xl p-4 shadow-sm">
+      {/* File attachment preview chips */}
       {selectedFiles.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-2 mb-3">
           {selectedFiles.map((file, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-1.5 bg-purple-50 border border-purple-200 px-3 py-1.5 rounded-2xl text-xs font-bold text-purple-700 shadow-xs"
+              className="flex items-center gap-1.5 bg-purple-50 border border-purple-150 px-3 py-1 rounded-xl text-[10px] font-bold text-purple-700"
             >
-              <FileText className="w-3.5 h-3.5 text-purple-500" />
-              <span className="truncate max-w-[130px]">{file.name}</span>
-              <span className="text-[9px] opacity-70">({(file.size / 1024).toFixed(0)} KB)</span>
+              <FileText className="w-3 h-3" />
+              <span className="truncate max-w-[120px]">{file.name}</span>
               <button
                 type="button"
                 onClick={() => removeFile(idx)}
-                className="hover:text-rose-600 font-extrabold cursor-pointer ml-1"
-                title="Remove attachment"
+                className="hover:text-red-500 font-extrabold ml-1"
               >
-                <X className="w-3.5 h-3.5" />
+                ×
               </button>
             </div>
           ))}
         </div>
       )}
 
-      {/* Input Composer Form */}
-      <form onSubmit={handleSubmit} className="flex gap-2.5 items-end">
-        {/* Attachment Paperclip Button */}
+      <form onSubmit={handleSubmit} className="flex gap-3 items-end">
+        {/* Attachment paperclip */}
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-purple-600 rounded-2xl transition-all shrink-0 cursor-pointer"
-          title="Attach PDF, DOCX, TXT, or Image"
+          className="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-150 text-slate-500 rounded-2xl transition-colors shrink-0"
+          title="Attach PDF, DOCX, TXT, images"
         >
           <Paperclip className="w-4 h-4" />
         </button>
@@ -161,107 +81,101 @@ export function InputToolbar() {
           accept=".pdf,.docx,.pptx,.txt,.md,.jpg,.png"
         />
 
-        {/* Dynamic Textarea Container */}
-        <div className="flex-1 min-w-0 bg-slate-50 border border-slate-200 focus-within:border-purple-400 focus-within:bg-white rounded-2xl px-4 py-2.5 transition-all flex items-end gap-2 shadow-xs">
+        {/* Text Input area */}
+        <div className="flex-1 min-w-0 bg-slate-50 border border-slate-150 rounded-2xl px-4 py-2.5 focus-within:border-purple-500 focus-within:bg-white transition-all flex items-end gap-2">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                handleSubmit();
+                handleSubmit(e);
               }
             }}
-            placeholder={getPlaceholder()}
-            className="flex-1 bg-transparent text-xs font-semibold text-slate-800 outline-none resize-none max-h-28 min-h-[42px] leading-relaxed py-1"
+            placeholder="Ask AI Tutor about Laxmikanth, solve constitutional cases, design mind maps..."
+            className="flex-1 bg-transparent text-xs font-semibold text-slate-700 outline-none resize-none max-h-24 min-h-[40px] leading-relaxed py-1"
           />
-
-          {/* Voice Input Trigger Button */}
+          
           <button
             type="button"
-            onClick={toggleRecording}
-            className={`p-2 rounded-xl transition-all shrink-0 cursor-pointer ${
-              isRecording
-                ? "bg-rose-500 text-white animate-pulse"
-                : "text-slate-400 hover:text-purple-600 hover:bg-slate-100"
-            }`}
-            title={isRecording ? "Click to stop recording" : "Voice Query Input"}
+            onClick={() => toast("Recording voice query...", "info")}
+            className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-all shrink-0 cursor-pointer"
+            title="Voice Notes Input"
           >
-            <Mic className="w-4 h-4" />
+            <Mic className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* High-Visibility Gradient Send Button */}
+        {/* Submit Send */}
         <button
           type="submit"
           disabled={isStreaming || (!text.trim() && selectedFiles.length === 0)}
-          className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-40 text-white p-3.5 rounded-2xl transition-all shadow-md shadow-purple-200 shrink-0 cursor-pointer"
-          title="Send query to AI Tutor"
+          className="bg-purple-600 hover:bg-purple-700 disabled:opacity-40 text-white p-3.5 rounded-2xl transition-all shadow-md shadow-purple-150 shrink-0"
         >
-          <Send className="w-4.5 h-4.5" />
+          <Send className="w-4 h-4" />
         </button>
       </form>
 
-      {/* Quick Action Preset Chips Bar */}
-      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 select-none">
+      {/* Input quick shortcuts buttons */}
+      <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-slate-400 select-none">
         <button
           type="button"
           onClick={() => {
             if (uploads.length > 0) {
               triggerQuickAction("pdf_analyze");
             } else {
-              toast("Please upload a study book or document first!", "info");
+              toast("Please upload a study book first!", "error");
             }
           }}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-purple-50 hover:border-purple-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <BookOpen className="w-3.5 h-3.5 text-purple-600" />
-          <span>Book Analyze</span>
+          <BookOpen className="w-3 h-3 text-purple-500" />
+          OCR Book Analyze
         </button>
 
         <button
           type="button"
           onClick={() => triggerQuickAction("notes")}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <FileText className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Generate Notes</span>
+          <FileText className="w-3 h-3 text-indigo-500" />
+          Generate Notes
         </button>
 
         <button
           type="button"
           onClick={() => triggerQuickAction("questions")}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
-          <span>Generate Quiz</span>
+          <HelpCircle className="w-3 h-3 text-blue-500" />
+          Generate Quiz
         </button>
 
         <button
           type="button"
           onClick={() => triggerQuickAction("mindmap")}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-pink-50 hover:border-pink-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <GitPullRequest className="w-3.5 h-3.5 text-pink-600" />
-          <span>Mind Map</span>
+          <GitPullRequest className="w-3 h-3 text-pink-500" />
+          Generate Mind Map
         </button>
 
         <button
           type="button"
           onClick={() => triggerQuickAction("flashcards")}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <Layers className="w-3.5 h-3.5 text-violet-600" />
-          <span>Flashcards</span>
+          <Layers className="w-3 h-3 text-violet-500" />
+          Flashcards
         </button>
 
         <button
           type="button"
           onClick={() => triggerQuickAction("summarize")}
-          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 border border-slate-150 text-[10px] font-black text-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 text-[10px] font-bold text-slate-600 flex items-center gap-1"
         >
-          <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Summarize</span>
+          <RefreshCw className="w-3 h-3 text-rose-500" />
+          Summarize
         </button>
       </div>
     </div>

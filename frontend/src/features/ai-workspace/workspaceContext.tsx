@@ -67,6 +67,7 @@ interface WorkspaceContextProps {
   uploadFile: (file: File) => Promise<void>;
   refreshResources: () => Promise<void>;
 
+
   // AI Actions
   triggerQuickAction: (actionType: string) => void;
   regenerateLastMessage: () => void;
@@ -91,24 +92,34 @@ const INITIAL_WORKSPACES: GoalWorkspace[] = [
     description: "Civil Services Examination preparation workspace covering Prelims, Mains, and Interview.",
     isDefault: true,
     subjects: [
-      { id: "subj-polity", name: "Polity & Governance", category: "Prelims", subCategory: "GS Paper I", resourceCount: 88, iconName: "Building2", color: "from-purple-500 to-indigo-600", description: "Indian Constitution, Political System & Governance" },
-      { id: "subj-history", name: "Modern History", category: "Prelims", subCategory: "GS Paper I", resourceCount: 120, iconName: "Landmark", color: "from-amber-500 to-orange-600", description: "Ancient, Medieval, Modern & World History" },
+      { id: "subj-history", name: "History", category: "Prelims", subCategory: "GS Paper I", resourceCount: 120, iconName: "Landmark", color: "from-amber-500 to-orange-600", description: "Ancient, Medieval, Modern & World History" },
       { id: "subj-geography", name: "Geography", category: "Prelims", subCategory: "GS Paper I", resourceCount: 112, iconName: "Globe", color: "from-emerald-500 to-teal-600", description: "Physical, Human & Economic Geography" },
+      { id: "subj-polity", name: "Polity", category: "Prelims", subCategory: "GS Paper I", resourceCount: 88, iconName: "Building2", color: "from-purple-500 to-indigo-600", description: "Indian Constitution, Political System & Governance" },
       { id: "subj-economy", name: "Economy", category: "Prelims", subCategory: "GS Paper I", resourceCount: 55, iconName: "Coins", color: "from-blue-500 to-cyan-600", description: "Macroeconomics, Budgeting, Banking & Growth" },
-      { id: "subj-gsiv", name: "Ethics & Integrity", category: "Mains", subCategory: "GS IV", resourceCount: 40, iconName: "Scale", color: "from-amber-500 to-red-500", description: "Ethics, Integrity, Aptitude & Case Studies" },
+      { id: "subj-environment", name: "Environment", category: "Prelims", subCategory: "GS Paper I", resourceCount: 72, iconName: "TreePine", color: "from-green-500 to-emerald-600", description: "Ecology, Biodiversity & Climate Change" },
+      { id: "subj-science", name: "Science & Tech", category: "Prelims", subCategory: "GS Paper I", resourceCount: 64, iconName: "Atom", color: "from-violet-500 to-purple-600", description: "Biotech, Space, IT, Nanotech & Defence" },
+      { id: "subj-ca", name: "Current Affairs", category: "Prelims", subCategory: "GS Paper I", resourceCount: 150, iconName: "Newspaper", color: "from-rose-500 to-pink-600", description: "Monthly Compilations & Daily News Analysis" },
+      { id: "subj-csat", name: "CSAT", category: "Prelims", subCategory: "CSAT", resourceCount: 45, iconName: "Calculator", color: "from-amber-600 to-yellow-500", description: "Comprehension, Reasoning & Quantitative Aptitude" },
+      { id: "subj-essay", name: "Essay", category: "Mains", subCategory: "Essay", resourceCount: 30, iconName: "PenTool", color: "from-pink-500 to-rose-600", description: "Philosophical & Topical Essay Writing Strategies" },
+      { id: "subj-gsi", name: "GS-I", category: "Mains", subCategory: "GS I", resourceCount: 85, iconName: "BookOpen", color: "from-indigo-500 to-blue-600", description: "Indian Heritage, History & Geography of the World" },
+      { id: "subj-gsii", name: "GS-II", category: "Mains", subCategory: "GS II", resourceCount: 80, iconName: "Shield", color: "from-sky-500 to-indigo-600", description: "Governance, Constitution, Polity & IR" },
+      { id: "subj-gsiii", name: "GS-III", category: "Mains", subCategory: "GS III", resourceCount: 92, iconName: "Cpu", color: "from-teal-500 to-emerald-600", description: "Economy, Science, Environment & Security" },
+      { id: "subj-gsiv", name: "GS-IV", category: "Mains", subCategory: "GS IV", resourceCount: 40, iconName: "Scale", color: "from-amber-500 to-red-500", description: "Ethics, Integrity, Aptitude & Case Studies" },
+      { id: "subj-optional", name: "Optional", category: "Mains", subCategory: "Optional", resourceCount: 76, iconName: "Award", color: "from-fuchsia-500 to-purple-600", description: "Optional Subject Paper I & Paper II Material" },
+      { id: "subj-interview", name: "Interview", category: "Interview", subCategory: "Personality Test", resourceCount: 25, iconName: "Users", color: "from-indigo-600 to-violet-700", description: "DAF Analysis & Mock Interview Transcripts" }
     ],
     resources: [
       {
         id: "res-laxmikanth",
         subjectId: "subj-polity",
-        title: "Indian Polity by M. Laxmikanth (6th Ed)",
+        title: "Indian Polity by M. Laxmikanth",
         type: "Book",
         author: "M. Laxmikanth",
         pages: 245,
         size: "28.4 MB",
         uploadDate: "12 May 2024",
         coverColor: "from-purple-600 to-indigo-700",
-        chapters: ["1. The Constitution", "1.1 Salient Features", "1.2 Preamble", "1.3 Fundamental Rights", "1.4 Directive Principles", "1.5 Fundamental Duties"],
+        chapters: ["1. The Constitution", "1.1 Salient Features", "1.2 Preamble", "1.3 Fundamental Rights", "1.4 Directive Principles", "1.5 Fundamental Duties", "2. Union Government"],
         chunksCount: 412,
         vectorStatus: "Indexed"
       },
@@ -122,8 +133,50 @@ const INITIAL_WORKSPACES: GoalWorkspace[] = [
         size: "14.2 MB",
         uploadDate: "20 Apr 2024",
         coverColor: "from-purple-500 to-pink-600",
-        chapters: ["Preamble", "Part I: The Union & Its Territory", "Part II: Citizenship", "Part III: Fundamental Rights"],
+        chapters: ["Preamble", "Part I: The Union & Its Territory", "Part II: Citizenship", "Part III: Fundamental Rights", "Part IV: Directive Principles"],
         chunksCount: 195,
+        vectorStatus: "Indexed"
+      },
+      {
+        id: "res-padhiyar",
+        subjectId: "subj-polity",
+        title: "Polity Simplified by Dr. Padhiyar",
+        type: "Book",
+        author: "Dr. Padhiyar",
+        pages: 210,
+        size: "18.8 MB",
+        uploadDate: "18 Mar 2026",
+        coverColor: "from-indigo-600 to-blue-600",
+        chapters: ["Constitutional Framework", "System of Government", "Central Government", "State Government"],
+        chunksCount: 320,
+        vectorStatus: "Indexed"
+      },
+      {
+        id: "res-ncert-polity",
+        subjectId: "subj-polity",
+        title: "Indian Government and Politics - NCERT",
+        type: "Book",
+        author: "NCERT Class XI",
+        pages: 174,
+        size: "12.5 MB",
+        uploadDate: "10 Feb 2024",
+        coverColor: "from-emerald-600 to-teal-600",
+        chapters: ["Constitution: Why and How?", "Rights in the Indian Constitution", "Election and Representation"],
+        chunksCount: 210,
+        vectorStatus: "Indexed"
+      },
+      {
+        id: "res-ethics-lexicon",
+        subjectId: "subj-gsiv",
+        title: "Lexicon for Ethics, Integrity & Aptitude",
+        type: "Book",
+        author: "Chronicle Editorial",
+        pages: 56,
+        size: "6.1 MB",
+        uploadDate: "05 Jan 2024",
+        coverColor: "from-amber-500 to-orange-600",
+        chapters: ["Ethics and Human Interface", "Attitude and Aptitude", "Emotional Intelligence"],
+        chunksCount: 95,
         vectorStatus: "Indexed"
       },
       {
@@ -139,31 +192,75 @@ const INITIAL_WORKSPACES: GoalWorkspace[] = [
         chapters: ["Constitutional Amendments PYQs", "Fundamental Rights PYQs", "Judiciary PYQs"],
         chunksCount: 88,
         vectorStatus: "Indexed"
+      },
+      {
+        id: "res-history-spectrum",
+        subjectId: "subj-history",
+        title: "A Brief History of Modern India (Spectrum)",
+        type: "Book",
+        author: "Rajiv Ahir (IPS)",
+        pages: 820,
+        size: "34.1 MB",
+        uploadDate: "15 Jan 2024",
+        coverColor: "from-amber-600 to-orange-700",
+        chapters: ["Advent of the Europeans", "Rising Resentment against Company Rule", "1857 Revolt", "Indian National Congress"],
+        chunksCount: 940,
+        vectorStatus: "Indexed"
       }
     ]
   },
   {
     id: "ws-jee",
-    title: "Workspace 2 (JEE Advanced)",
-    examName: "JEE Advanced",
+    title: "Workspace 2 (JEE)",
+    examName: "JEE Main & Advanced",
     description: "Joint Entrance Examination engineering prep workspace.",
     isDefault: false,
     subjects: [
-      { id: "subj-jee-physics", name: "Physics Mechanics", category: "General", resourceCount: 65, iconName: "Zap", color: "from-blue-500 to-indigo-600", description: "Mechanics, Electrodynamics & Modern Physics" }
+      { id: "subj-jee-physics", name: "Physics", category: "General", resourceCount: 65, iconName: "Zap", color: "from-blue-500 to-indigo-600", description: "Mechanics, Electrodynamics, Optics & Modern Physics" },
+      { id: "subj-jee-chemistry", name: "Chemistry", category: "General", resourceCount: 70, iconName: "FlaskConical", color: "from-emerald-500 to-teal-600", description: "Physical, Organic & Inorganic Chemistry" },
+      { id: "subj-jee-maths", name: "Mathematics", category: "General", resourceCount: 80, iconName: "Calculator", color: "from-purple-500 to-pink-600", description: "Calculus, Algebra, Coordinate Geometry & Trigonometry" }
     ],
     resources: [
       {
         id: "res-hc-verma",
         subjectId: "subj-jee-physics",
-        title: "Concepts of Physics - Vol 1 (H.C. Verma)",
+        title: "Concepts of Physics - Vol 1 & 2 (H.C. Verma)",
         type: "Book",
         author: "H.C. Verma",
         pages: 460,
         size: "32.0 MB",
         uploadDate: "02 Jan 2026",
         coverColor: "from-blue-600 to-cyan-600",
-        chapters: ["Rest and Motion", "Newton's Laws of Motion", "Work and Energy"],
+        chapters: ["Rest and Motion", "Newton's Laws of Motion", "Work and Energy", "Rotational Mechanics"],
         chunksCount: 610,
+        vectorStatus: "Indexed"
+      }
+    ]
+  },
+  {
+    id: "ws-neet",
+    title: "Workspace 3 (NEET)",
+    examName: "NEET UG",
+    description: "National Eligibility cum Entrance Test medical prep workspace.",
+    isDefault: false,
+    subjects: [
+      { id: "subj-neet-physics", name: "Physics", category: "General", resourceCount: 50, iconName: "Zap", color: "from-sky-500 to-blue-600", description: "NCERT Physics & Medical entrance practice" },
+      { id: "subj-neet-chemistry", name: "Chemistry", category: "General", resourceCount: 55, iconName: "FlaskConical", color: "from-teal-500 to-emerald-600", description: "NCERT Chemistry & Organic reactions" },
+      { id: "subj-neet-biology", name: "Biology", category: "General", resourceCount: 110, iconName: "Dna", color: "from-rose-500 to-pink-600", description: "Botany, Zoology, Genetics & Human Physiology" }
+    ],
+    resources: [
+      {
+        id: "res-ncert-bio",
+        subjectId: "subj-neet-biology",
+        title: "NCERT Biology Class XI & XII",
+        type: "Book",
+        author: "NCERT",
+        pages: 340,
+        size: "24.5 MB",
+        uploadDate: "10 Feb 2026",
+        coverColor: "from-pink-600 to-rose-600",
+        chapters: ["Diversity in Living World", "Structural Organisation", "Cell Structure", "Plant Physiology", "Human Physiology"],
+        chunksCount: 520,
         vectorStatus: "Indexed"
       }
     ]
@@ -185,26 +282,21 @@ const DEFAULT_CONVERSATIONS: Conversation[] = [
       {
         id: "m1",
         sender: "user",
-        text: "Explain Article 21 and key supreme court landmark judgments.",
+        text: "Explain the salient features of the Indian Constitution.",
         timestamp: new Date(Date.now() - 3600000).toISOString()
       },
       {
         id: "m2",
         sender: "ai",
-        text: "### Article 21: Protection of Life and Personal Liberty\n\nArticle 21 states that no person shall be deprived of his life or personal liberty except according to procedure established by law.\n\n#### Landmark Supreme Court Judgments:\n1. **A.K. Gopalan Case (1950)**: Narrow interpretation of 'procedure established by law'.\n2. **Maneka Gandhi Case (1978)**: Introduced the concept of 'Due Process of Law' and fundamental dignity.\n3. **K.S. Puttaswamy Case (2017)**: Unanimously declared Right to Privacy as a fundamental right under Article 21.",
+        text: "Here are the salient features of the Indian Constitution:\n\n1. **Lengthiest written constitution in the world**.\n2. **Federal in structure but unitary in spirit**.\n3. **Parliamentary form of Government**.\n4. **Fundamental Rights and Directive Principles of State Policy**.\n5. **Independent Judiciary**.\n6. **Single Citizenship**.\n7. **Secular State**.\n8. **Universal Adult Franchise**.\n9. **Emergency Provisions**.",
         timestamp: new Date(Date.now() - 3500000).toISOString(),
-        confidence: "High",
-        sources: [
-          {
-            document_title: "Indian Polity by M. Laxmikanth (6th Ed)",
-            subject: "Polity & Governance",
-            chapter: "Fundamental Rights",
-            page_number: 84,
-            score: 0.96
-          }
-        ],
         liked: true,
-        bookmarked: false
+        bookmarked: false,
+        sourceInfo: {
+          bookTitle: "Indian Polity by M. Laxmikanth",
+          chapter: "1.1 Salient Features",
+          pages: "1 - 15"
+        }
       }
     ]
   }
@@ -212,14 +304,14 @@ const DEFAULT_CONVERSATIONS: Conversation[] = [
 
 const DEFAULT_UPLOADS: BookMetadata[] = [
   {
-    id: "res-laxmikanth",
+    id: "book-1",
     name: "Indian Polity - Laxmikanth",
-    coverColor: "from-purple-600 to-indigo-700",
+    coverColor: "from-purple-500 to-indigo-600",
     pages: 840,
     language: "English",
     ocrStatus: "completed",
     ocrProgress: 100,
-    aiStatus: "Indexed",
+    aiStatus: "Ready",
     conceptCount: 142,
     readingTime: "28 hrs",
     confidence: 99.4,
@@ -250,33 +342,35 @@ function flattenDocuments(groups: SubjectDocuments[]): ResourceItem[] {
 function toBookMetadata(resource: ResourceItem): BookMetadata {
   const completed = resource.vectorStatus === "Indexed";
   return {
-    id: resource.id, name: resource.title, coverColor: "from-purple-600 to-indigo-700",
-    pages: resource.pages, language: "English", ocrStatus: completed ? "completed" : "uploading",
-    ocrProgress: completed ? 100 : 0, aiStatus: resource.vectorStatus, conceptCount: resource.chunksCount || 120,
-    readingTime: "4 hrs", confidence: 99.2, chapters: resource.chapters || [], uploadedDate: resource.uploadDate,
+    id: resource.id, name: resource.title, coverColor: "from-indigo-500 to-violet-600",
+    pages: resource.pages, language: "", ocrStatus: completed ? "completed" : "uploading",
+    ocrProgress: completed ? 100 : 0, aiStatus: resource.vectorStatus, conceptCount: 0,
+    readingTime: "", confidence: 0, chapters: [], uploadedDate: resource.uploadDate,
     size: resource.size, resourceType: resource.type, subjectId: resource.subjectId,
   };
 }
 
 export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
-  const [workspaces, setWorkspaces] = useState<GoalWorkspace[]>(INITIAL_WORKSPACES);
-  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string>("ws-upsc");
+  const [workspaces, setWorkspaces] = useState<GoalWorkspace[]>([]);
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string>("");
 
-  const [conversations, setConversations] = useState<Conversation[]>(DEFAULT_CONVERSATIONS);
-  const [activeConversationId, setActiveConversationId] = useState<string>("conv-1");
-  const [uploads, setUploads] = useState<BookMetadata[]>(DEFAULT_UPLOADS);
-  const [activeBookId, setActiveBookId] = useState<string | null>("res-laxmikanth");
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string>("");
+  const [uploads, setUploads] = useState<BookMetadata[]>([]);
+  const [activeBookId, setActiveBookId] = useState<string | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [thinkingStage, setThinkingStage] = useState<WorkspaceState["thinkingStage"]>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Zoom & Theme Color states
   const [libraryZoom, setLibraryZoom] = useState(1);
   const [themeColor, setThemeColor] = useState("purple");
 
+  // 5-Step Flow state
   const [flowStep, setFlowStep] = useState<1 | 2 | 3 | 4 | 5>(1);
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>("subj-polity");
-  const [selectedResourceType, setSelectedResourceType] = useState<"Book" | "PDF" | "Note" | "PYQ" | "Syllabus" | null>("Book");
-  const [selectedResourceId, setSelectedResourceId] = useState<string | null>("res-laxmikanth");
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+  const [selectedResourceType, setSelectedResourceType] = useState<"Book" | "PDF" | "Note" | "PYQ" | "Syllabus" | null>(null);
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
 
   const [studyGoal] = useState<WorkspaceState["studyGoal"]>({
     todayGoal: "Complete Polity Chapter 1 & solve 20 PYQs",
@@ -289,31 +383,26 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const loadWorkspaceData = async () => {
     try {
       const workspace = await backendService.workspace.current();
-      if (!workspace || !workspace.id) return;
-
       const [subjects, documentGroups] = await Promise.all([
         backendService.workspace.subjects(workspace.id),
         backendService.workspace.documents(workspace.id),
       ]);
-
       const resources = flattenDocuments(documentGroups);
       const subjectNodes: SubjectNode[] = subjects.map((subject) => ({
         id: String(subject.id), name: subject.name, category: "General",
         resourceCount: resources.filter((resource) => resource.subjectId === String(subject.id)).length,
-        iconName: subject.icon || "BookOpen", color: subject.color || "from-[#6D4AFF] to-indigo-600",
+        iconName: subject.icon || "BookOpen", color: subject.color || "from-indigo-500 to-violet-600",
         description: subject.description,
       }));
-
-      if (subjectNodes.length > 0) {
-        setWorkspaces([{
-          id: String(workspace.id), title: workspace.target_exam, examName: workspace.target_exam,
-          description: workspace.exam_category, isDefault: true, subjects: subjectNodes, resources,
-        }]);
-        setActiveWorkspaceId(String(workspace.id));
-        setUploads(resources.map(toBookMetadata));
-      }
+      setWorkspaces([{
+        id: String(workspace.id), title: workspace.target_exam, examName: workspace.target_exam,
+        description: workspace.exam_category, isDefault: true, subjects: subjectNodes, resources,
+      }]);
+      setActiveWorkspaceId(String(workspace.id));
+      setUploads(resources.map(toBookMetadata));
     } catch {
-      // Retain INITIAL_WORKSPACES fallback gracefully if backend API is offline
+      setWorkspaces([]);
+      setUploads([]);
     }
   };
 
@@ -330,20 +419,23 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       const numWsId = Number(activeWorkspaceId);
       if (!Number.isInteger(numWsId) || numWsId <= 0) return;
       const fetchedDocs = await backendService.workspace.documents(numWsId);
-      const flattenedResources = flattenDocuments(fetchedDocs);
-      setUploads(flattenedResources.map(toBookMetadata));
+      {
+        const flattenedResources = flattenDocuments(fetchedDocs);
+        setUploads(flattenedResources.map(toBookMetadata));
 
-      setWorkspaces((prev) =>
-        prev.map((w) =>
-          w.id === activeWorkspaceId ? { ...w, resources: flattenedResources } : w
-        )
-      );
+        setWorkspaces((prev) =>
+          prev.map((w) =>
+            w.id === activeWorkspaceId ? { ...w, resources: flattenedResources } : w
+          )
+        );
+      }
     } catch {
-      /* Retain local state fallback */
+      /* Keep existing state if backend is unavailable */
     }
   };
 
-  // Workspace CRUD Operations
+
+  // Workspace & Tree CRUD operations
   const createWorkspace = (title: string, examName: string, description: string) => {
     const newWS: GoalWorkspace = {
       id: `ws-${Date.now()}`,
@@ -352,7 +444,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       description,
       isDefault: false,
       subjects: [
-        { id: `subj-1-${Date.now()}`, name: "Core Subject Paper I", category: "General", resourceCount: 0, iconName: "BookOpen", color: "from-purple-500 to-indigo-600" }
+        { id: `subj-1-${Date.now()}`, name: "Core Paper I", category: "General", resourceCount: 0, iconName: "BookOpen", color: "from-purple-500 to-indigo-600" }
       ],
       resources: []
     };
@@ -388,7 +480,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       try {
         await backendService.onboarding.gaps.remove(numId);
       } catch (err) {
-        console.error("Failed to delete subject:", err);
+        console.error("Failed to delete subject", err);
       }
     }
     setWorkspaces((prev) =>
@@ -403,6 +495,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         return w;
       })
     );
+    await loadWorkspaceData();
   };
 
   const addResourceToSubject = (resource: Omit<ResourceItem, "id">) => {
@@ -410,6 +503,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     setWorkspaces((prev) =>
       prev.map((w) => {
         if (w.id === activeWorkspaceId) {
+          // Increment subject resource count
           const updatedSubjects = w.subjects.map((s) =>
             s.id === resource.subjectId ? { ...s, resourceCount: s.resourceCount + 1 } : s
           );
@@ -430,7 +524,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       try {
         await backendService.documents.remove(numId);
       } catch (err) {
-        console.error("Failed to delete resource:", err);
+        console.error("Failed to delete resource", err);
       }
     }
     setWorkspaces((prev) =>
@@ -449,9 +543,10 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         return w;
       })
     );
+    await loadWorkspaceData();
   };
 
-  // 5-Step Flow State Handlers
+  // 5-Step Flow Actions
   const selectSubject = (subjectId: string) => {
     setSelectedSubjectId(subjectId);
     setFlowStep(2);
@@ -475,6 +570,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const beginNewStudySession = () => {
+    // This only ends the active frontend study session.  It deliberately does
+    // not clear resources, workspace data, or persisted chat history.
     setActiveConversationId("");
     setActiveBookId(null);
     setIsStreaming(false);
@@ -488,7 +585,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     setFlowStep(5);
   };
 
-  // Chat Management Handlers
+  // Chat actions
   const createNewChat = (title?: string, bookId?: string, resourceId?: string) => {
     const id = `conv-${Date.now()}`;
     const newConv: Conversation = {
@@ -550,14 +647,14 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
     for (const stage of stages) {
       setThinkingStage(stage);
-      await new Promise((r) => setTimeout(r, 550));
+      await new Promise((r) => setTimeout(r, 600));
     }
     setThinkingStage(null);
 
     const activeRes = activeWorkspace?.resources.find((r) => r.id === selectedResourceId);
     const resourceTitle = activeRes ? activeRes.title : "Indian Polity by M. Laxmikanth";
 
-    let fullResponse = `Here is the comprehensive breakdown and analysis for your query:\n\n1. **Core Examination Principles**: Structured according to syllabus directives.\n2. **High-Yield Recall Summaries**: Key constitutional articles, legal precedents, and structural frameworks.\n3. **Active Recall & PYQ Analysis**: Practice recent exam trends to master conceptual application.`;
+    let fullResponse = `Here are the salient features and breakdown for your request:\n\n1. **Comprehensive Examination Overview**: Structured according to the syllabus requirements.\n2. **High-Yield Recall Points**: Focus on core constitutional/subject fundamentals.\n3. **Application & PYQs**: Practice recent questions to test conceptual clarity.\n\nWould you like me to construct flashcards or generate exam-style questions for this resource?`;
 
     const queryLower = textQuery.toLowerCase();
     if (queryLower.includes("salient features") || queryLower.includes("constitution") || queryLower.includes("article")) {
@@ -571,16 +668,11 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       sender: "ai",
       text: "",
       timestamp: new Date().toISOString(),
-      confidence: "High",
-      sources: [
-        {
-          document_title: resourceTitle,
-          subject: "Polity & Governance",
-          chapter: "Fundamental Rights",
-          page_number: 84,
-          score: 0.96
-        }
-      ]
+      sourceInfo: {
+        bookTitle: resourceTitle,
+        chapter: "The Constitution",
+        pages: "1 - 15"
+      }
     };
 
     setConversations((prev) =>
@@ -600,7 +692,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
           return c;
         })
       );
-      await new Promise((r) => setTimeout(r, 22));
+      await new Promise((r) => setTimeout(r, 25));
     }
     setIsStreaming(false);
   };
@@ -637,7 +729,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     const newBook: BookMetadata = {
       id: bookId,
       name: file.name.replace(/\.[^/.]+$/, ""),
-      coverColor: "from-purple-600 to-indigo-700",
+      coverColor: "from-purple-600 to-fuchsia-600",
       pages: Math.floor(Math.random() * 200) + 50,
       language: "English",
       ocrStatus: "uploading",
@@ -661,11 +753,11 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       "Extracting chapters...",
       "Generating summary notes...",
       "Creating Knowledge Graph...",
-      "Indexed"
+      "Ready for AI Chat"
     ];
 
     for (let i = 0; i < statuses.length; i++) {
-      await new Promise((r) => setTimeout(r, 700));
+      await new Promise((r) => setTimeout(r, 800));
       setUploads((prev) =>
         prev.map((b) =>
           b.id === bookId

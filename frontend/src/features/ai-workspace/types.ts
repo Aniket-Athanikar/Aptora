@@ -9,8 +9,6 @@ export interface ChatMessage {
   notesSaved?: boolean;
   flashcardsCount?: number;
   mindMapUrl?: string;
-  confidence?: string;
-  sources?: Array<{ resource_id?: number; document_title: string; subject: string; chapter?: string; page_number?: number; score: number }>;
   files?: Array<{ name: string; type: string; size: number; url?: string }>;
   sourceInfo?: {
     bookTitle: string;
