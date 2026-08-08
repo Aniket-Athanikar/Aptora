@@ -79,6 +79,23 @@ interface WorkspaceContextProps {
   setLibraryZoom: (zoom: number) => void;
   themeColor: string;
   setThemeColor: (color: string) => void;
+
+  // Extra AI Capabilities & Settings Helpers
+  aiReasoningModel: "standard" | "deep_reasoning" | "ml_analytics" | "dl_neural" | "llm_multimodal";
+  setAiReasoningModel: (model: "standard" | "deep_reasoning" | "ml_analytics" | "dl_neural" | "llm_multimodal") => void;
+  highYieldMode: boolean;
+  setHighYieldMode: (enabled: boolean) => void;
+  clearActiveChatHistory: () => Promise<void>;
+  exportConversationAsPDF: () => void;
+
+  // Deep Supportive AI & ML/DL/LLM Model Features
+  isVoiceActive: boolean;
+  toggleVoiceQueryMode: () => void;
+  generateActiveRecallQuiz: (topic?: string) => Promise<void>;
+  buildConceptMindMap: (topic?: string) => Promise<void>;
+  generateDeepMlInsights: (subjectId?: string) => Promise<void>;
+  updateStudyGoal: (updates: Partial<WorkspaceState["studyGoal"]>) => void;
+  incrementStudyStreak: () => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextProps | undefined>(undefined);
@@ -372,7 +389,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const [selectedResourceType, setSelectedResourceType] = useState<"Book" | "PDF" | "Note" | "PYQ" | "Syllabus" | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
 
-  const [studyGoal] = useState<WorkspaceState["studyGoal"]>({
+  const [studyGoal, setStudyGoal] = useState<WorkspaceState["studyGoal"]>({
     todayGoal: "Complete Polity Chapter 1 & solve 20 PYQs",
     streak: 14,
     studyTimeMinutes: 180,
@@ -762,19 +779,19 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         prev.map((b) =>
           b.id === bookId
             ? {
-                ...b,
-                ocrStatus: statuses[i],
-                ocrProgress: progressValues[i],
-                aiStatus: aiStatuses[i],
-                ...(statuses[i] === "completed"
-                  ? {
-                      conceptCount: 45,
-                      readingTime: "4 hrs",
-                      confidence: 99.1,
-                      chapters: ["Chapter 1: Foundations", "Chapter 2: Frameworks"]
-                    }
-                  : {})
-              }
+              ...b,
+              ocrStatus: statuses[i],
+              ocrProgress: progressValues[i],
+              aiStatus: aiStatuses[i],
+              ...(statuses[i] === "completed"
+                ? {
+                  conceptCount: 45,
+                  readingTime: "4 hrs",
+                  confidence: 99.1,
+                  chapters: ["Chapter 1: Foundations", "Chapter 2: Frameworks"]
+                }
+                : {})
+            }
             : b
         )
       );
@@ -788,7 +805,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         prompt = "Explain the salient features and key concepts of this resource.";
         break;
       case "notes":
-        prompt = "Generate comprehensive notes for this chapter.";
+        prompt = "Generate comprehensive high-yield study notes for this resource.";
         break;
       case "questions":
         prompt = "Show important PYQs and practice questions with detailed explanations.";
@@ -798,6 +815,21 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         break;
       case "flashcards":
         prompt = "Create 5 interactive flashcards for active recall study.";
+        break;
+      case "mindmap":
+        prompt = "Build a detailed hierarchical mind map breakdown of this topic showing Articles, Core Doctrines, and Exceptions.";
+        break;
+      case "revision":
+        prompt = "Formulate a 3-day rapid revision schedule and landmark case checklist for this topic.";
+        break;
+      case "pdf_analyze":
+        prompt = "Perform high-fidelity OCR vector analysis on the uploaded study document and highlight core exam facts.";
+        break;
+      case "study_strategy":
+        prompt = "Evaluate my syllabus retention and generate an optimized 7-day study strategy based on weak topic areas.";
+        break;
+      case "image_diagram":
+        prompt = "Generate a visual AI concept diagram and flowchart for this study topic.";
         break;
       default:
         prompt = `Perform study tool action: ${actionType}`;
@@ -860,6 +892,71 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  // Extra AI & ML/DL/LLM Model State
+  const [aiReasoningModel, setAiReasoningModel] = useState<"standard" | "deep_reasoning" | "ml_analytics" | "dl_neural" | "llm_multimodal">("deep_reasoning");
+  const [highYieldMode, setHighYieldMode] = useState<boolean>(true);
+  const [isVoiceActive, setIsVoiceActive] = useState<boolean>(false);
+
+  const toggleVoiceQueryMode = () => {
+    setIsVoiceActive((prev) => !prev);
+  };
+
+  const updateStudyGoal = (updates: Partial<WorkspaceState["studyGoal"]>) => {
+    setStudyGoal((prev) => ({ ...prev, ...updates }));
+  };
+
+  const incrementStudyStreak = () => {
+    setStudyGoal((prev) => ({
+      ...prev,
+      streak: prev.streak + 1,
+      weeklyProgress: Math.min(100, prev.weeklyProgress + 5)
+    }));
+  };
+
+  const generateActiveRecallQuiz = async (topic?: string) => {
+    const promptTopic = topic || selectedResourceType || "UPSC Polity & Governance";
+    await sendMessage(`Generate an active-recall practice quiz on ${promptTopic} with 5 high-yield MCQs, detailed explanations, and landmark case references.`);
+  };
+
+  const buildConceptMindMap = async (topic?: string) => {
+    const promptTopic = topic || selectedResourceType || "Constitutional Framework";
+    await sendMessage(`Build a detailed hierarchical mind map breakdown of ${promptTopic} showing Articles, Core Doctrines, Exceptions, and Key Case Laws.`);
+  };
+
+  const generateDeepMlInsights = async (subjectId?: string) => {
+    const targetSubject = activeWorkspace?.subjects.find((s) => s.id === (subjectId || selectedSubjectId))?.name || "General Studies";
+    await sendMessage(
+      `Run Deep ML & Neural Insight Analysis on ${targetSubject}: Evaluate syllabus retention probability, identify high-yield revision gaps, detect weak topic clusters via Qdrant vector embeddings, and construct a prioritized 7-day mastery roadmap.`
+    );
+  };
+
+  const clearActiveChatHistory = async () => {
+    if (!activeConversationId) return;
+    try {
+      await backendService.ai.clearHistory(activeConversationId);
+      setConversations((prev) =>
+        prev.map((c) => (c.id === activeConversationId ? { ...c, messages: [] } : c))
+      );
+    } catch (err) {
+      console.error("Failed to clear chat history:", err);
+    }
+  };
+
+  const exportConversationAsPDF = () => {
+    if (!activeConversation || activeConversation.messages.length === 0) return;
+    const textContent = activeConversation.messages
+      .map((m) => `[${m.sender.toUpperCase()}] ${new Date(m.timestamp).toLocaleString()}\n${m.text}\n`)
+      .join("\n----------------------------------------\n\n");
+
+    const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ExamForge_Study_Notes_${activeConversation.title.replace(/\s+/g, "_")}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -914,7 +1011,20 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         libraryZoom,
         setLibraryZoom,
         themeColor,
-        setThemeColor
+        setThemeColor,
+        aiReasoningModel,
+        setAiReasoningModel,
+        highYieldMode,
+        setHighYieldMode,
+        clearActiveChatHistory,
+        exportConversationAsPDF,
+        isVoiceActive,
+        toggleVoiceQueryMode,
+        generateActiveRecallQuiz,
+        buildConceptMindMap,
+        generateDeepMlInsights,
+        updateStudyGoal,
+        incrementStudyStreak
       }}
     >
       {children}

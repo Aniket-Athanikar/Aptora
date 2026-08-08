@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Camera, Mic, FileText, Upload } from "lucide-react";
+import { Camera, Mic, FileText, Upload, Sparkles } from "lucide-react";
 import { ResourceUploadModal } from "@/components/resources/ResourceUploadModal";
 import { useToast } from "@/lib/ToastContext";
 
@@ -33,47 +33,45 @@ export function UploadZone() {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => setIsModalOpen(true)}
-        whileHover={{ y: -2 }}
-        className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[180px] bg-slate-50/50 hover:bg-white ${
-          isDragging
-            ? "border-purple-500 bg-purple-50/40"
-            : "border-purple-100 hover:border-purple-300"
-        }`}
+        className={`border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[195px] shadow-md backdrop-blur-xs ${isDragging
+            ? "border-purple-600 bg-purple-100/80 ring-4 ring-purple-200"
+            : "border-purple-300 bg-gradient-to-br from-white via-purple-50/50 to-indigo-50/30 hover:border-purple-500 hover:bg-purple-50/70"
+          }`}
       >
-        <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-[#6D4AFF] mb-4 shadow-sm">
-          <Upload className="w-5 h-5" />
+        <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-violet-700 border border-purple-400 flex items-center justify-center text-white mb-3.5 shadow-lg shadow-purple-200">
+          <Upload className="w-6 h-6" />
         </div>
 
-        <h4 className="text-sm font-black text-slate-800">
-          Upload Book, PDF or Document
+        <h4 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
+          Upload Study Book, PDF or PYQ Notes <Sparkles className="w-4 h-4 text-purple-600 animate-pulse" />
         </h4>
-        <p className="text-xs text-slate-400 mt-1.5 max-w-sm font-semibold">
-          Drag and drop study files here, or click to browse. Supports PDF, DOCX, and TXT.
+        <p className="text-xs text-slate-600 mt-1 max-w-sm font-extrabold leading-relaxed">
+          Drag and drop study files here, or click to browse. Supports PDF, DOCX, TXT, and Images up to 25MB.
         </p>
 
         {/* Input shortcut tabs */}
         <div className="flex flex-wrap gap-2.5 mt-5 justify-center" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-purple-200 text-xs font-black text-purple-950 hover:bg-purple-100/80 hover:border-purple-400 transition-all shadow-2xs cursor-pointer"
           >
-            <FileText className="w-3.5 h-3.5 text-purple-500" />
-            Upload PDF / Document
+            <FileText className="w-3.5 h-3.5 text-purple-600" />
+            Upload PDF / Book
           </button>
-          
+
           <button
-            onClick={() => toast("Simulating High-Fidelity OCR Camera scanner initialization...", "info")}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm cursor-pointer"
+            onClick={() => toast("Initializing High-Fidelity OCR Camera scanner...", "info")}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-purple-200 text-xs font-black text-pink-950 hover:bg-pink-100/80 hover:border-pink-300 transition-all shadow-2xs cursor-pointer"
           >
-            <Camera className="w-3.5 h-3.5 text-pink-500" />
+            <Camera className="w-3.5 h-3.5 text-pink-600" />
             Camera Scan
           </button>
 
           <button
-            onClick={() => toast("Simulating Speech-to-Text active tutoring recording...", "info")}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-150 text-[10px] font-bold text-slate-600 hover:border-purple-300 transition-colors shadow-sm cursor-pointer"
+            onClick={() => toast("Initializing Speech-to-Text Voice Query...", "info")}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-purple-200 text-xs font-black text-indigo-950 hover:bg-indigo-100/80 hover:border-indigo-300 transition-all shadow-2xs cursor-pointer"
           >
-            <Mic className="w-3.5 h-3.5 text-indigo-500" />
+            <Mic className="w-3.5 h-3.5 text-indigo-600" />
             Voice Note
           </button>
         </div>
@@ -86,4 +84,3 @@ export function UploadZone() {
     </div>
   );
 }
-

@@ -6,26 +6,43 @@ import { ChatMessage } from "./ChatMessage";
 import { InputToolbar } from "./InputToolbar";
 import { PromptSuggestions } from "./PromptSuggestions";
 import { ThinkingAnimation } from "./ThinkingAnimation";
-import { Sparkles, Bot, Trash2 } from "lucide-react";
+import { Sparkles, Bot, Trash2, ArrowDown, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function ChatWindow() {
   const { activeConversation, isStreaming, thinkingStage, deleteConversation } = useWorkspace();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showScrollBottom, setShowScrollBottom] = useState(false);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   }, [activeConversation?.messages, isStreaming, thinkingStage]);
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    setShowScrollBottom(scrollHeight - scrollTop - clientHeight > 150);
+  };
 
   if (!activeConversation) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50/20 border border-purple-50 rounded-3xl min-h-[400px]">
-        <div className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-purple-600 mb-4 animate-bounce">
-          <Sparkles className="w-8 h-8" />
-        </div>
-        <h3 className="text-base font-black text-gray-800">No Active Study Session</h3>
-        <p className="text-xs text-gray-400 mt-2 max-w-sm">
-          Select an existing session from the history sidebar or upload a book to start a context-guided study workspace.
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-white via-purple-50/20 to-indigo-50/20 border border-purple-200/80 rounded-3xl min-h-[420px] shadow-sm">
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="bg-gradient-to-br from-purple-600 to-indigo-600 border border-purple-300 p-5 rounded-3xl text-white mb-5 shadow-lg shadow-purple-200"
+        >
+          <Sparkles className="w-9 h-9" />
+        </motion.div>
+        <h3 className="text-lg font-black text-slate-800 tracking-tight">No Active Study Session</h3>
+        <p className="text-xs text-slate-500 mt-2 max-w-md font-semibold leading-relaxed">
+          Select an existing chat session from the study history or click <span className="font-extrabold text-purple-700">&ldquo;New Chat&rdquo;</span> to launch an AI context-guided study workspace.
         </p>
       </div>
     );
@@ -34,34 +51,52 @@ export function ChatWindow() {
   const hasMessages = activeConversation.messages.length > 0;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white border border-purple-100/60 rounded-3xl overflow-hidden shadow-sm">
+    <div className="flex-1 flex flex-col h-full bg-white border border-purple-200/80 rounded-3xl overflow-hidden shadow-sm relative">
       {/* Active Conversation Header */}
-      <div className="bg-slate-50 border-b border-purple-100/50 px-6 py-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-slate-50 via-purple-50/30 to-slate-50 border-b border-purple-100 px-6 py-4 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="bg-purple-100 text-purple-700 p-2 rounded-xl border border-purple-200">
+          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-2.5 rounded-2xl border border-purple-400 shadow-sm">
             <Bot className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-xs font-black text-gray-800 truncate max-w-[200px] sm:max-w-md">
+            <h4 className="text-xs font-black text-slate-900 truncate max-w-[200px] sm:max-w-md">
               {activeConversation.title}
             </h4>
-            <p className="text-[9px] text-purple-600 font-extrabold flex items-center gap-1.5 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-ping" />
-              Active Study Context
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-[9px] text-purple-700 font-black flex items-center gap-1.5 bg-purple-100/80 px-2 py-0.5 rounded-full border border-purple-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-pulse" />
+                Active Context
+              </span>
+              <span className="text-[9px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                <ShieldCheck className="w-3 h-3 text-emerald-600" /> Grounded AI
+              </span>
+            </div>
           </div>
         </div>
 
         {showDeleteConfirm ? (
-          <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-xl text-[10px] shrink-0">
-            <span className="font-semibold text-rose-700">Delete session?</span>
-            <button onClick={() => { deleteConversation(activeConversation.id); setShowDeleteConfirm(false); }} className="font-bold text-rose-600 hover:text-rose-800">Yes</button>
-            <button onClick={() => setShowDeleteConfirm(false)} className="font-bold text-slate-500 hover:text-slate-700">No</button>
+          <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl text-xs shrink-0 shadow-xs">
+            <span className="font-bold text-rose-800">Delete session?</span>
+            <button
+              onClick={() => {
+                deleteConversation(activeConversation.id);
+                setShowDeleteConfirm(false);
+              }}
+              className="font-black text-rose-700 hover:text-rose-900 px-1.5 py-0.5 bg-rose-100 rounded-md cursor-pointer"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="font-bold text-slate-600 hover:text-slate-800 px-1 py-0.5 cursor-pointer"
+            >
+              No
+            </button>
           </div>
         ) : (
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="p-2 text-slate-400 hover:text-red-500 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+            className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-all cursor-pointer border border-transparent hover:border-rose-200"
             title="Delete Session"
           >
             <Trash2 className="w-4 h-4" />
@@ -70,19 +105,23 @@ export function ChatWindow() {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/20">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-gradient-to-b from-slate-50/40 via-white to-purple-50/10"
+      >
         {!hasMessages && (
-          <div className="flex flex-col items-center justify-center text-center py-12 max-w-lg mx-auto">
-            <div className="bg-purple-50 text-purple-600 p-3 rounded-2xl border border-purple-100 mb-4">
-              <Sparkles className="w-6 h-6" />
+          <div className="flex flex-col items-center justify-center text-center py-10 max-w-lg mx-auto">
+            <div className="bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-700 p-4 rounded-3xl border border-purple-200 mb-4 shadow-sm">
+              <Sparkles className="w-7 h-7" />
             </div>
             <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest">
-              ExamForge AI Active
+              ExamForge-AI Assistant Ready
             </h4>
-            <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-              Ask anything, request conceptual summaries, convert notes, or extract active recall quizzes to start studying.
+            <p className="text-xs text-slate-500 mt-2.5 leading-relaxed font-semibold">
+              Ask any question, request conceptual summaries, convert notes into active recall quizzes, or start asking from uploaded PDFs.
             </p>
-            <div className="mt-8 w-full border-t border-purple-50 pt-6">
+            <div className="mt-8 w-full border-t border-purple-100 pt-6">
               <PromptSuggestions />
             </div>
           </div>
@@ -102,8 +141,24 @@ export function ChatWindow() {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Floating Scroll to Bottom Indicator */}
+      <AnimatePresence>
+        {showScrollBottom && (
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            onClick={scrollToBottom}
+            className="absolute bottom-24 right-8 bg-purple-600 text-white p-2.5 rounded-full shadow-lg hover:bg-purple-700 transition-all z-20 flex items-center justify-center cursor-pointer border border-purple-400"
+            title="Scroll to bottom"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* Input controls footer */}
-      <div className="border-t border-purple-100/50 p-4 bg-white">
+      <div className="border-t border-purple-100 p-3.5 sm:p-4 bg-white">
         <InputToolbar />
       </div>
     </div>

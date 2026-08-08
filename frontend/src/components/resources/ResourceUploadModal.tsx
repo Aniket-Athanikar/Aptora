@@ -331,7 +331,7 @@ export function ResourceUploadModal({
 
   const modal = (
     <AnimatePresence>
-      <div onMouseDown={() => !isUploading && onClose()} className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-3 backdrop-blur-md sm:p-6" role="presentation">
+      <div onMouseDown={() => !isUploading && onClose()} className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/70 p-3 backdrop-blur-md sm:p-6" role="presentation">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -340,36 +340,36 @@ export function ResourceUploadModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="resource-upload-title"
-          className="relative flex max-h-[90vh] w-[95vw] max-w-[900px] flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl sm:w-[90vw] lg:w-[min(90vw,900px)]"
+          className="relative flex max-h-[92vh] w-[95vw] max-w-[850px] flex-col overflow-hidden rounded-[32px] border border-purple-200/90 bg-white shadow-2xl shadow-purple-950/20 sm:w-[90vw] lg:w-[min(90vw,850px)]"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#6D4AFF]/10 text-[#6D4AFF] flex items-center justify-center font-bold">
-                <Upload className="w-5 h-5" />
+          <div className="flex items-center justify-between px-7 py-5 border-b border-purple-100 bg-gradient-to-r from-purple-50 via-indigo-50/40 to-white">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-700 text-white flex items-center justify-center font-bold shadow-md shadow-purple-200/60">
+                <Upload className="w-5.5 h-5.5" />
               </div>
               <div>
-                <h3 id="resource-upload-title" className="text-base font-black text-slate-900 tracking-tight">
+                <h3 id="resource-upload-title" className="text-lg font-black text-slate-900 tracking-tight">
                   Upload Study Resource
                 </h3>
-                <p className="text-xs text-slate-500 font-medium">
-                  Index books, notes, PYQs, and syllabus into ExamForge AI
+                <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                  Index books, notes, PYQs, and syllabus into ExamForge-AI
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
               disabled={isUploading}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors disabled:opacity-50"
+              className="p-2.5 text-slate-400 hover:text-purple-900 hover:bg-purple-100/60 rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Form Content */}
-          <div className="p-6 space-y-5 overflow-y-auto flex-1">
+          <div className="p-7 space-y-6 overflow-y-auto flex-1 bg-gradient-to-b from-white via-purple-50/10 to-white">
             {errorMessage && (
-              <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2.5">
+              <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2.5 shadow-2xs">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{errorMessage}</span>
               </div>
@@ -378,15 +378,15 @@ export function ResourceUploadModal({
             {/* Selectors Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Workspace Selector */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
                   Target Exam Workspace <span className="text-rose-500">*</span>
                 </label>
                 <select
                   value={selectedWorkspaceId}
                   onChange={(e) => setSelectedWorkspaceId(e.target.value)}
                   disabled={isUploading}
-                  className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#6D4AFF] outline-none transition-all disabled:opacity-60"
+                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 cursor-pointer text-slate-900"
                 >
                   {workspaces.map((ws) => (
                     <option key={ws.id} value={ws.id}>
@@ -397,11 +397,11 @@ export function ResourceUploadModal({
               </div>
 
               {/* Subject Selector */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest flex items-center justify-between">
                   <span>Subject <span className="text-rose-500">*</span></span>
                   {isLoadingSubjects && (
-                    <span className="text-[10px] text-purple-600 flex items-center gap-1">
+                    <span className="text-[10px] text-purple-700 font-bold flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" /> Loading...
                     </span>
                   )}
@@ -410,7 +410,7 @@ export function ResourceUploadModal({
                   value={selectedSubjectId}
                   onChange={(e) => setSelectedSubjectId(e.target.value)}
                   disabled={isUploading || isLoadingSubjects}
-                  className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#6D4AFF] outline-none transition-all disabled:opacity-60"
+                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 cursor-pointer text-slate-900"
                 >
                   {availableSubjects.map((sub) => (
                     <option key={sub.id} value={sub.id}>
@@ -422,11 +422,11 @@ export function ResourceUploadModal({
             </div>
 
             {/* Resource Type Selector Pills */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
                 Resource Category <span className="text-rose-500">*</span>
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 {[
                   { id: "book", label: "Book", icon: BookOpen },
                   { id: "notes", label: "Notes", icon: FileText },
@@ -442,13 +442,12 @@ export function ResourceUploadModal({
                       key={type.id}
                       onClick={() => setResourceType(type.id)}
                       disabled={isUploading}
-                      className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs font-black transition-all ${
-                        isActive
-                          ? "bg-[#6D4AFF] text-white border-[#6D4AFF] shadow-md shadow-purple-500/20"
-                          : "bg-slate-50 text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-white"
-                      } disabled:opacity-60`}
+                      className={`flex items-center justify-center gap-2 px-3 py-3 rounded-2xl border text-xs font-black transition-all cursor-pointer ${isActive
+                          ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-transparent shadow-md shadow-purple-200 scale-[1.02]"
+                          : "bg-purple-50/40 text-slate-700 border-purple-200/60 hover:border-purple-300 hover:bg-purple-100/50"
+                        } disabled:opacity-60`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
+                      <Icon className="w-4 h-4" />
                       <span>{type.label}</span>
                     </button>
                   );
@@ -457,9 +456,9 @@ export function ResourceUploadModal({
             </div>
 
             {/* Title & Description */}
-            <div className="space-y-3">
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
                   Resource Title <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -468,13 +467,13 @@ export function ResourceUploadModal({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={isUploading}
-                  className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#6D4AFF] outline-none transition-all disabled:opacity-60"
+                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 text-slate-900"
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
-                  Description <span className="text-slate-400 font-normal">(Optional)</span>
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
+                  Description <span className="text-slate-400 font-semibold">(Optional)</span>
                 </label>
                 <textarea
                   rows={2}
@@ -482,14 +481,14 @@ export function ResourceUploadModal({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={isUploading}
-                  className="w-full px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#6D4AFF] outline-none transition-all resize-none disabled:opacity-60"
+                  className="w-full px-4 py-3 text-xs font-semibold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all resize-none disabled:opacity-60 text-slate-900"
                 />
               </div>
             </div>
 
             {/* Drag & Drop File Upload Box */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
                 Upload File <span className="text-rose-500">*</span>
               </label>
               <div
@@ -497,13 +496,12 @@ export function ResourceUploadModal({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => !isUploading && fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${
-                  isDragging
-                    ? "border-[#6D4AFF] bg-purple-50/50"
+                className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${isDragging
+                    ? "border-purple-600 bg-purple-100/60 scale-[1.01]"
                     : selectedFile
-                    ? "border-emerald-300 bg-emerald-50/20"
-                    : "border-slate-200 bg-slate-50/60 hover:border-purple-300 hover:bg-white"
-                } ${isUploading ? "pointer-events-none opacity-80" : ""}`}
+                      ? "border-emerald-400 bg-emerald-50/30"
+                      : "border-purple-200/90 bg-gradient-to-br from-purple-50/40 via-white to-indigo-50/30 hover:border-purple-400 hover:bg-purple-50/60"
+                  } ${isUploading ? "pointer-events-none opacity-80" : ""}`}
               >
                 <input
                   type="file"
@@ -514,28 +512,28 @@ export function ResourceUploadModal({
                 />
 
                 {selectedFile ? (
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                      <FileCheck className="w-5 h-5" />
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
+                      <FileCheck className="w-6 h-6" />
                     </div>
                     <div className="text-left">
-                      <p className="text-xs font-black text-slate-800 truncate max-w-xs">
+                      <p className="text-xs font-black text-slate-900 truncate max-w-xs">
                         {selectedFile.name}
                       </p>
-                      <p className="text-[10px] text-slate-500 font-semibold">
+                      <p className="text-[10.5px] text-slate-500 font-bold mt-0.5">
                         {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready for upload
                       </p>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6D4AFF] flex items-center justify-center mb-2">
-                      <Upload className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-200 flex items-center justify-center mb-3">
+                      <Upload className="w-6 h-6" />
                     </div>
-                    <p className="text-xs font-black text-slate-800">
-                      Drag & drop file here, or <span className="text-[#6D4AFF] underline">Browse</span>
+                    <p className="text-xs font-black text-slate-900">
+                      Drag & drop file here, or <span className="text-purple-600 underline font-black">Browse</span>
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-1 font-semibold">
+                    <p className="text-[10.5px] text-slate-500 font-bold mt-1.5">
                       Supported formats: PDF, DOCX, DOC, TXT (Max 50MB)
                     </p>
                   </>
@@ -545,21 +543,21 @@ export function ResourceUploadModal({
 
             {/* Upload Progress Bar & State */}
             {isUploading && (
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+              <div className="p-4 rounded-2xl bg-purple-50 border border-purple-200 space-y-2 shadow-2xs">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-[#6D4AFF]" />
+                    <Loader2 className="w-4 h-4 animate-spin text-purple-700" />
                     <span>{statusMessage}</span>
                   </div>
-                  <span className="text-[#6D4AFF] font-black">{uploadProgress}%</span>
+                  <span className="text-purple-700 font-black">{uploadProgress}%</span>
                 </div>
 
-                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-purple-100 h-2.5 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${uploadProgress}%` }}
                     transition={{ duration: 0.3 }}
-                    className="bg-gradient-to-r from-[#6D4AFF] to-purple-500 h-full rounded-full"
+                    className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 h-full rounded-full"
                   />
                 </div>
               </div>
@@ -567,12 +565,12 @@ export function ResourceUploadModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/50">
+          <div className="flex items-center justify-end gap-3.5 px-7 py-4.5 border-t border-purple-100 bg-slate-50/80">
             <button
               type="button"
               onClick={onClose}
               disabled={isUploading}
-              className="px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:text-slate-900 rounded-xl transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 text-xs font-extrabold text-slate-600 hover:text-purple-900 hover:bg-purple-100/60 rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
               Cancel
             </button>
@@ -581,7 +579,7 @@ export function ResourceUploadModal({
               type="button"
               onClick={handleUploadSubmit}
               disabled={isUploading || !selectedFile}
-              className="flex items-center gap-2 px-5 py-2.5 text-xs font-black rounded-xl bg-[#6D4AFF] text-white hover:bg-[#5b3ce0] transition-all shadow-md shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-3 text-xs font-black rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isUploading ? (
                 <>

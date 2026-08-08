@@ -32,28 +32,28 @@ export function ResourceUploadButton({
   const getVariantStyles = () => {
     switch (variant) {
       case "secondary":
-        return "bg-slate-800 text-white hover:bg-slate-700 border border-slate-700 shadow-sm";
+        return "bg-slate-900 text-white hover:bg-slate-800 border border-slate-800 shadow-2xs font-extrabold";
       case "outline":
-        return "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 hover:border-purple-300 shadow-sm";
+        return "bg-white text-purple-950 hover:bg-purple-50/80 border border-purple-200/90 hover:border-purple-400 font-extrabold shadow-2xs";
       case "ghost":
-        return "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900";
+        return "bg-transparent text-purple-900 hover:bg-purple-100/60 font-bold";
       case "gradient":
-        return "bg-gradient-to-r from-[#6D4AFF] via-purple-600 to-indigo-600 text-white hover:opacity-95 shadow-md shadow-purple-500/25";
+        return "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md shadow-purple-200 font-black";
       case "primary":
       default:
-        return "bg-[#6D4AFF] text-white hover:bg-[#5b3ce0] shadow-md shadow-purple-500/20";
+        return "bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-200 font-black";
     }
   };
 
   const getSizeStyles = () => {
     switch (size) {
       case "sm":
-        return iconOnly ? "p-1.5 rounded-lg text-xs" : "px-3 py-1.5 rounded-xl text-xs font-bold gap-1.5";
+        return iconOnly ? "p-2 rounded-xl text-xs" : "px-3.5 py-1.5 rounded-xl text-xs font-black gap-1.5";
       case "lg":
-        return iconOnly ? "p-3 rounded-2xl text-base" : "px-6 py-3.5 rounded-2xl text-sm font-black gap-2.5";
+        return iconOnly ? "p-3.5 rounded-2xl text-base" : "px-6 py-3.5 rounded-2xl text-sm font-black gap-2.5";
       case "md":
       default:
-        return iconOnly ? "p-2.5 rounded-xl text-sm" : "px-4 py-2.5 rounded-xl text-xs font-black gap-2";
+        return iconOnly ? "p-2.5 rounded-xl text-sm" : "px-4 py-2.5 rounded-2xl text-xs font-black gap-2";
     }
   };
 

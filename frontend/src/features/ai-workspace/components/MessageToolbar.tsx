@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useWorkspace } from "../workspaceContext";
 import { ChatMessage } from "../types";
-import { Copy, Bookmark, FileText, Layers, GitPullRequest, HelpCircle, Languages, Share2, ThumbsUp, ThumbsDown, Check } from "lucide-react";
+import { Copy, Bookmark, FileText, Layers, GitPullRequest, HelpCircle, Share2, ThumbsUp, ThumbsDown, Check, RefreshCw } from "lucide-react";
 import { useToast } from "@/lib/ToastContext";
 
 interface MessageToolbarProps {
@@ -12,148 +12,167 @@ interface MessageToolbarProps {
 
 export function MessageToolbar({ message }: MessageToolbarProps) {
   const { toast } = useToast();
-  const { toggleMessageBookmark, toggleMessageLike, triggerQuickAction } = useWorkspace();
+  const { toggleMessageBookmark, toggleMessageLike, triggerQuickAction, sendMessage } = useWorkspace();
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.text);
     setCopied(true);
+    toast("Response copied to clipboard!", "success");
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleShare = () => {
     setShared(true);
+    toast("Shareable link copied!", "success");
     setTimeout(() => setShared(false), 2000);
   };
 
+  const handleRegenerate = () => {
+    toast("Re-generating AI response with enhanced depth...", "info");
+    sendMessage("Please elaborate on the previous point with more detailed examples.", []);
+  };
+
   return (
-    <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-slate-400 select-none">
-      {/* Thumbs like/dislike */}
-      <button
-        onClick={() => toggleMessageLike(message.id, "like")}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors ${
-          message.liked ? "text-purple-600 bg-purple-50" : ""
-        }`}
-        title="Like response"
-      >
-        <ThumbsUp className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => toggleMessageLike(message.id, "dislike")}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors ${
-          message.disliked ? "text-red-500 bg-red-50" : ""
-        }`}
-        title="Dislike response"
-      >
-        <ThumbsDown className="w-3.5 h-3.5" />
-      </button>
+    <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-purple-200/70 select-none">
+      {/* Thumbs Feedback */}
+      <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-300/80 shadow-2xs">
+        <button
+          onClick={() => {
+            toggleMessageLike(message.id, "like");
+            toast("Feedback saved: Liked", "success");
+          }}
+          className={`p-1.5 rounded-lg transition-all cursor-pointer ${message.liked
+              ? "text-purple-900 bg-purple-200 font-black shadow-2xs"
+              : "text-slate-600 hover:text-purple-800 hover:bg-white"
+            }`}
+          title="Helpful response"
+        >
+          <ThumbsUp className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={() => {
+            toggleMessageLike(message.id, "dislike");
+            toast("Feedback saved: Needs improvement", "info");
+          }}
+          className={`p-1.5 rounded-lg transition-all cursor-pointer ${message.disliked
+              ? "text-rose-700 bg-rose-200 font-black shadow-2xs"
+              : "text-slate-600 hover:text-rose-700 hover:bg-white"
+            }`}
+          title="Not helpful"
+        >
+          <ThumbsDown className="w-3.5 h-3.5" />
+        </button>
+      </div>
 
-      <div className="w-[1px] h-4 bg-slate-100 mx-1" />
-
-      {/* Copy */}
+      {/* Copy Pill */}
       <button
         onClick={handleCopy}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-purple-50 border border-slate-300/80 hover:border-purple-400 text-slate-800 hover:text-purple-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
         title="Copy response text"
       >
         {copied ? (
           <>
             <Check className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="text-emerald-600">Copied</span>
+            <span className="text-emerald-700 font-black">Copied</span>
           </>
         ) : (
           <>
-            <Copy className="w-3.5 h-3.5" />
+            <Copy className="w-3.5 h-3.5 text-slate-600" />
             <span>Copy</span>
           </>
         )}
       </button>
 
-      {/* Bookmark */}
+      {/* Bookmark Pill */}
       <button
-        onClick={() => toggleMessageBookmark(message.id)}
-        className={`p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold ${
-          message.bookmarked ? "text-amber-500 bg-amber-50" : ""
-        }`}
+        onClick={() => {
+          toggleMessageBookmark(message.id);
+          toast(message.bookmarked ? "Bookmark removed" : "Saved to Bookmarks!", "success");
+        }}
+        className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer ${message.bookmarked
+            ? "bg-amber-100/90 border-amber-400 text-amber-950 font-black"
+            : "bg-white border-slate-300/80 hover:border-amber-400 text-slate-800 hover:text-amber-900 hover:bg-amber-50/50"
+          }`}
         title="Bookmark answer"
       >
-        <Bookmark className="w-3.5 h-3.5 fill-current" />
+        <Bookmark className={`w-3.5 h-3.5 ${message.bookmarked ? "fill-amber-500 text-amber-600" : "text-amber-600"}`} />
         <span>{message.bookmarked ? "Bookmarked" : "Bookmark"}</span>
+      </button>
+
+      {/* Re-generate */}
+      <button
+        onClick={handleRegenerate}
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-purple-50 border border-slate-300/80 hover:border-purple-400 text-slate-800 hover:text-purple-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
+        title="Re-generate response"
+      >
+        <RefreshCw className="w-3.5 h-3.5 text-purple-700" />
+        <span>Retry</span>
       </button>
 
       {/* Convert to Study Formats */}
       <button
         onClick={() => {
-          toast("Creating notes from this response block in ExamForge Study Engine...", "info");
+          toast("Converting response block to study notes...", "success");
           triggerQuickAction("notes");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-indigo-50 border border-slate-300/80 hover:border-indigo-400 text-slate-800 hover:text-indigo-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
         title="Save block as study notes"
       >
-        <FileText className="w-3.5 h-3.5" />
-        <span>Save to Notes</span>
+        <FileText className="w-3.5 h-3.5 text-indigo-600" />
+        <span>Save Notes</span>
       </button>
 
       <button
         onClick={() => {
-          toast("Generating active recall flashcards study set from this response...", "info");
+          toast("Extracting active recall flashcards...", "success");
           triggerQuickAction("flashcards");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-slate-300/80 hover:border-pink-400 text-slate-800 hover:text-pink-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
         title="Extract Flashcards"
       >
-        <Layers className="w-3.5 h-3.5" />
+        <Layers className="w-3.5 h-3.5 text-pink-600" />
         <span>Flashcards</span>
       </button>
 
       <button
         onClick={() => {
-          toast("Constructing interactive Mind Map conceptual nodes...", "info");
+          toast("Generating interactive Mind Map...", "success");
           triggerQuickAction("mindmap");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
-        title="Convert to Concept Map"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-violet-50 border border-slate-300/80 hover:border-violet-400 text-slate-800 hover:text-violet-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
+        title="Convert to Mind Map"
       >
-        <GitPullRequest className="w-3.5 h-3.5" />
+        <GitPullRequest className="w-3.5 h-3.5 text-violet-600" />
         <span>Mind Map</span>
       </button>
 
       <button
         onClick={() => {
-          toast("Compiling 5 practice questions from response parameters...", "info");
+          toast("Compiling practice quiz questions...", "success");
           triggerQuickAction("questions");
         }}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
-        title="Create quiz practice questions"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-blue-50 border border-slate-300/80 hover:border-blue-400 text-slate-800 hover:text-blue-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
+        title="Create quiz"
       >
-        <HelpCircle className="w-3.5 h-3.5" />
-        <span>Create Quiz</span>
+        <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+        <span>Quiz</span>
       </button>
 
-      {/* Share / Translate */}
-      <div className="w-[1px] h-4 bg-slate-100 mx-1" />
-
-      <button
-        onClick={() => toast("Simulating translation to Hindi, Spanish, Sanskrit...", "info")}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold cursor-pointer"
-      >
-        <Languages className="w-3.5 h-3.5" />
-        <span>Translate</span>
-      </button>
-
+      {/* Share */}
       <button
         onClick={handleShare}
-        className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-[10px] font-bold"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-emerald-50 border border-slate-300/80 hover:border-emerald-400 text-slate-800 hover:text-emerald-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer ml-auto"
       >
         {shared ? (
           <>
             <Check className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="text-emerald-600">Link Copied</span>
+            <span className="text-emerald-700 font-bold">Link Copied</span>
           </>
         ) : (
           <>
-            <Share2 className="w-3.5 h-3.5" />
+            <Share2 className="w-3.5 h-3.5 text-emerald-600" />
             <span>Share</span>
           </>
         )}
