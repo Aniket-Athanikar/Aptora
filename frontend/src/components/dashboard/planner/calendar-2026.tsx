@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { GoalData, SubjectWeakness } from "@/types/goal.types";
+import { GoalData } from "@/types/goal.types";
 import { useToast } from "@/lib/ToastContext";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronRight, Calendar as CalendarIcon, Sparkles,
-  Plus, Trash2, Edit3, Save, X, Clock, BookOpen, Star, AlertCircle,
-  TrendingUp, Award, Compass, Zap, CheckCircle2, ChevronRightCircle
+  Trash2, Edit3, X, Clock, BookOpen, AlertCircle, Compass
 } from "lucide-react";
 
 interface Calendar2026Props {
@@ -40,10 +39,11 @@ export function Calendar2026({ goal }: Calendar2026Props) {
   const [editHours, setEditHours] = useState<number>(4);
   const [editSubject, setEditSubject] = useState<string>("");
   const [editNotes, setEditNotes] = useState<string>("");
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   // Hydrate CRUD state from local storage on mount
   useEffect(() => {
-    if (!goal) return;
+    if (!goal || typeof window === "undefined") return;
     const storageKey = `examforge_calendar_sessions_${goal.id}_${currentMonthIdx}`;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -55,38 +55,38 @@ export function Calendar2026({ goal }: Calendar2026Props) {
         console.error("Failed to parse calendar sessions:", e);
       }
     } else {
-      // Seed initial dummy logs to make it look active on first view
       const defaultSubjects = goal.weaknesses.map((w) => w.subject);
       const seedDetails: Record<number, StudySession> = {};
       const seedDays: number[] = [];
 
-      // Seed 5 random days
       [4, 8, 12, 18, 22].forEach((day) => {
         const sub = defaultSubjects[day % defaultSubjects.length] || "General Revision";
         seedDays.push(day);
         seedDetails[day] = {
           hours: Math.round(5 + (day % 4)),
           subject: sub,
-          notes: `Completed targeted syllabus sprint for ${sub} focusing on main core gaps.`,
+          notes: `Completed targeted syllabus sprint for ${sub} focusing on core gaps.`,
           timestamp: new Date().toISOString()
         };
       });
 
       setSessionDetails(seedDetails);
       setStudyDays(seedDays);
-      localStorage.setItem(storageKey, JSON.stringify({ details: seedDetails, days: seedDays }));
+      if (typeof window !== "undefined") {
+        localStorage.setItem(storageKey, JSON.stringify({ details: seedDetails, days: seedDays }));
+      }
     }
   }, [goal, currentMonthIdx]);
 
   if (!goal) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white border border-slate-200/60 rounded-[32px] shadow-sm text-center space-y-4 max-w-md mx-auto my-12">
+      <div className="flex flex-col items-center justify-center p-12 bg-white border border-slate-200/80 rounded-[32px] shadow-xs text-center space-y-4 max-w-md mx-auto my-12">
         <div className="w-12 h-12 bg-indigo-50 text-[#6D4AFF] rounded-2xl flex items-center justify-center animate-pulse">
           <CalendarIcon className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h4 className="text-sm font-black text-slate-800">Calibrating Planner</h4>
-          <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+          <h4 className="text-sm font-black text-slate-900">Calibrating Planner</h4>
+          <p className="text-xs text-slate-500 font-semibold leading-relaxed">
             Please run the Calibration Wizard or update your Active Goal to unlock the success calendar.
           </p>
         </div>
@@ -103,11 +103,12 @@ export function Calendar2026({ goal }: Calendar2026Props) {
     const storageKey = `examforge_calendar_sessions_${goal.id}_${currentMonthIdx}`;
     setSessionDetails(updatedDetails);
     setStudyDays(updatedDays);
-    localStorage.setItem(storageKey, JSON.stringify({ details: updatedDetails, days: updatedDays }));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(storageKey, JSON.stringify({ details: updatedDetails, days: updatedDays }));
+    }
   };
 
   const getMonthConfig = (idx: number) => {
-    // 2026 baseline offsets (Jan 2026 starts Thursday = offset 4)
     switch (idx) {
       case 0: return { offset: 4, days: 31 };
       case 1: return { offset: 0, days: 28 };
@@ -130,6 +131,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
 
   const handleCellClick = (date: number) => {
     setSelectedDate(date);
+    setValidationError(null);
     const existing = sessionDetails[date];
     if (existing) {
       setEditHours(existing.hours);
@@ -144,15 +146,24 @@ export function Calendar2026({ goal }: Calendar2026Props) {
     }
   };
 
-  // Create & Update (CRUD)
+  // Validation & Save (Create/Update CRUD)
   const handleSaveSession = () => {
-    if (!editSubject.trim() || selectedDate === null) return;
+    if (!editSubject.trim()) {
+      setValidationError("Please select a subject module.");
+      return;
+    }
+    if (editHours <= 0 || editHours > 18) {
+      setValidationError("Study hours must be between 1 and 18 hours.");
+      return;
+    }
+    if (selectedDate === null) return;
+
     const updatedDetails = {
       ...sessionDetails,
       [selectedDate]: {
         hours: editHours,
         subject: editSubject,
-        notes: editNotes,
+        notes: editNotes.trim(),
         timestamp: new Date().toISOString()
       }
     };
@@ -160,7 +171,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
     saveSessions(updatedDetails, updatedDays);
     setIsEditing(false);
     setSelectedDate(null);
-    toast(`Logged study block for ${editSubject} successfully!`, "success");
+    toast(`Logged ${editHours}h study block for ${editSubject}!`, "success");
   };
 
   // Delete (CRUD)
@@ -178,15 +189,15 @@ export function Calendar2026({ goal }: Calendar2026Props) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto pb-10">
       
       {/* LEFT: Calendar view (2/3 width) */}
-      <div className="lg:col-span-2 bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-6">
+      <div className="lg:col-span-2 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-6">
         
         {/* Header Controls */}
         <div className="flex justify-between items-center pb-3 border-b border-slate-100 flex-wrap gap-3">
           <div>
-            <h3 className="font-black text-slate-800 text-sm flex items-center gap-1.5">
-              <CalendarIcon className="w-4.5 h-4.5 text-[#6D4AFF] animate-pulse-subtle" /> Success Calendar
+            <h3 className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+              <CalendarIcon className="w-4.5 h-4.5 text-[#6D4AFF]" /> Success Calendar 2026
             </h3>
-            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Custom study block calendar. Click cells to log sessions.</p>
+            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Interactive daily study block scheduler. Click cells to log or edit sessions.</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -196,7 +207,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-xs font-black text-slate-800 min-w-[100px] text-center uppercase tracking-wide">
+            <span className="text-xs font-black text-slate-900 min-w-[100px] text-center uppercase tracking-wide">
               {currentMonth} 2026
             </span>
             <button
@@ -242,7 +253,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                   <>
                     <span className="text-xs">{date}</span>
                     {isStudied && !isExam && (
-                      <span className="absolute bottom-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-subtle" />
+                      <span className="absolute bottom-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     )}
                     {isExam && (
                       <span className="absolute -top-1.5 right-0 text-[7px] bg-white text-rose-600 font-black border border-rose-100 px-1 rounded-md shadow-xs">EXAM</span>
@@ -257,49 +268,51 @@ export function Calendar2026({ goal }: Calendar2026Props) {
         </div>
 
         {/* Current Month Statistics */}
-        <div className="p-4 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center justify-between flex-wrap gap-3">
+        <div className="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex items-center justify-between flex-wrap gap-3">
           <span className="text-xs text-emerald-800 font-bold flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse" /> Consistency streak: {studyDays.length} Days logged this month
+            <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse" /> Consistency streak: {studyDays.length} Days logged in {currentMonth}
           </span>
           <span className="text-[10px] bg-emerald-100 text-emerald-700 font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">On Target</span>
         </div>
 
       </div>
 
-      {/* RIGHT: Cockpit and Weakness subjects (1/3 width) */}
+      {/* RIGHT: Cockpit & Syllabus Priorities (1/3 width) */}
       <div className="space-y-6">
         
-        {/* Calibration Stats Card */}
-        <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden border border-slate-800">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20 pointer-events-none" />
-          <h3 className="text-xs font-black text-indigo-300 uppercase tracking-widest mb-4">Cockpit Calibration</h3>
+        {/* Cockpit Calibration Card - Crisp Light Gradient */}
+        <div className="bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-indigo-100/90 space-y-4">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#6D4AFF]/10 rounded-full blur-2xl pointer-events-none" />
+          <h3 className="text-xs font-black text-[#6D4AFF] uppercase tracking-widest border-b border-indigo-100/60 pb-2 flex items-center gap-1.5">
+            <Compass className="w-4 h-4" /> Cockpit Calibration
+          </h3>
 
-          <div className="space-y-4 text-xs">
+          <div className="space-y-3.5 text-xs">
             <div>
-              <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">Exam Target</span>
-              <p className="font-black text-slate-200 mt-0.5">{goal.targetExam}</p>
+              <span className="text-[9px] text-slate-400 block font-black uppercase tracking-wider">Exam Target</span>
+              <p className="font-black text-slate-900 mt-0.5">{goal.targetExam}</p>
             </div>
             <div>
-              <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">Target Date</span>
-              <p className="font-black text-slate-200 mt-0.5">{goal.timeline.examDate} ({goal.timeline.remainingDays} Days Left)</p>
+              <span className="text-[9px] text-slate-400 block font-black uppercase tracking-wider">Target Date</span>
+              <p className="font-black text-slate-900 mt-0.5">{goal.timeline.examDate} ({goal.timeline.remainingDays} Days Left)</p>
             </div>
             <div>
-              <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">Daily Hours Target</span>
+              <span className="text-[9px] text-slate-400 block font-black uppercase tracking-wider">Daily Hours Target</span>
               <p className="font-black text-[#6D4AFF] mt-0.5">{goal.timeline.dailyStudyHours} Hours Study Slot</p>
             </div>
           </div>
         </div>
 
-        {/* Wizard Syllabus priority list */}
-        <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-xs font-black text-slate-450 uppercase tracking-widest border-b border-slate-100 pb-2">Wizard Priority Gaps</h3>
-          <p className="text-[9px] text-slate-400 font-semibold pl-0.5">Rate priorities calibrated during guided onboarding.</p>
+        {/* Wizard Syllabus Priority List */}
+        <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Wizard Priority Gaps</h3>
+          <p className="text-[9px] text-slate-400 font-semibold pl-0.5">Syllabus priorities calibrated during onboarding.</p>
 
           <div className="space-y-2.5">
             {goal.weaknesses.map((w) => (
               <div 
                 key={w.subject}
-                className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/40 rounded-2xl"
+                className="flex items-center justify-between p-3 bg-slate-50/60 border border-slate-200/50 rounded-2xl"
               >
                 <div>
                   <h4 className="text-xs font-black text-slate-800 leading-tight">{w.subject}</h4>
@@ -324,7 +337,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
       {/* CRUD Session Log Overlay Modal */}
       <AnimatePresence>
         {selectedDate !== null && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -332,7 +345,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
               className="w-full max-w-sm bg-white border border-slate-200 p-6 rounded-[32px] shadow-2xl space-y-5"
             >
               
-              {/* Header */}
+              {/* Modal Header */}
               <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
                   <CalendarIcon className="w-4 h-4 text-[#6D4AFF]" />
@@ -342,15 +355,22 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                 </div>
                 <button
                   onClick={() => setSelectedDate(null)}
-                  className="p-1 rounded-lg hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                  className="p-1 rounded-lg hover:bg-slate-50 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
+              {validationError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl flex items-center gap-2 text-rose-700 text-xs font-bold">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
               {isEditing ? (
                 <div className="space-y-4">
-                  {/* Slider */}
+                  {/* Duration Slider */}
                   <div className="space-y-1">
                     <div className="flex justify-between pl-1">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Study Duration</label>
@@ -366,12 +386,15 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                     />
                   </div>
 
-                  {/* Dropdown/Input */}
+                  {/* Subject Module Select */}
                   <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Subject Module</label>
                     <select
                       value={editSubject}
-                      onChange={(e) => setEditSubject(e.target.value)}
+                      onChange={(e) => {
+                        setEditSubject(e.target.value);
+                        setValidationError(null);
+                      }}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#6D4AFF] focus:bg-white"
                     >
                       {goal.weaknesses.map((w) => (
@@ -382,7 +405,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                     </select>
                   </div>
 
-                  {/* Notes */}
+                  {/* Outcomes & Notes */}
                   <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Study Outcomes & Notes</label>
                     <textarea
@@ -411,8 +434,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  
-                  {/* Read Only Data */}
+                  {/* Read Only Session Overview */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 bg-indigo-50/40 border border-indigo-100/50 p-3.5 rounded-2xl">
                       <Clock className="w-4 h-4 text-[#6D4AFF] shrink-0" />
@@ -438,7 +460,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                     )}
                   </div>
 
-                  {/* Actions */}
+                  {/* Modal Actions */}
                   <div className="flex gap-2.5 pt-2 border-t border-slate-100">
                     <button
                       onClick={() => setIsEditing(true)}
@@ -448,7 +470,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                     </button>
                     <button
                       onClick={handleDeleteSession}
-                      className="px-4.5 py-2.5 bg-rose-50 border border-rose-200 text-rose-705 text-rose-700 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer flex items-center justify-center gap-1.5"
+                      className="px-4.5 py-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-rose-600" /> Delete
                     </button>

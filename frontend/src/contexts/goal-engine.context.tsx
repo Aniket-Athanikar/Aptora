@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect } from "react";
+import React, { createContext, useContext, useReducer, useEffect, useRef } from "react";
 import {
   GoalData,
   HistorySnapshot,
@@ -594,7 +594,6 @@ const mapGoalToProfilePayload = (goal: GoalData) => {
     name: goal.profile.fullName,
     location: goal.profile.city,
     education: goal.profile.education,
-    avatar_url: goal.profile.avatar,
     target_exam: goal.targetExam,
     study_hours_goal: goal.timeline.dailyStudyHours,
     target_date: goal.timeline.examDate,
@@ -608,9 +607,15 @@ const mapGoalToProfilePayload = (goal: GoalData) => {
 export function GoalEngineProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(goalEngineReducer, initialState);
   const { user, login } = useAuth();
+  const hasLoadedUserIdRef = useRef<string | null>(null);
+  const userId = user?.email;
 
-  // Load from services and backend database on mount
+  // Load from services and backend database on mount when user is authenticated
   useEffect(() => {
+    if (!userId) return;
+    if (hasLoadedUserIdRef.current === userId && state.activeGoal) return;
+    hasLoadedUserIdRef.current = userId;
+
     const loadGoal = async () => {
       try {
         const workspaceState = await goalService.getWorkspace();
@@ -627,7 +632,7 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
       }
     };
     loadGoal();
-  }, [user]);
+  }, [userId, state.activeGoal]);
 
   // Tick study timer
   useEffect(() => {
@@ -682,7 +687,6 @@ export function GoalEngineProvider({ children }: { children: React.ReactNode }) 
         login({
           name: goal.profile.fullName,
           email: user.email,
-          avatar: goal.profile.avatar,
         });
       }
 

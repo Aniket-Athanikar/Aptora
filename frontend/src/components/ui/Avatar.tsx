@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { getAvatarUrl } from '@/lib/avatar';
 import { forwardRef, HTMLAttributes } from 'react';
 
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
@@ -18,6 +19,8 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       xl: 'h-16 w-16 text-lg',
     };
 
+    const avatarUrl = getAvatarUrl(src);
+
     return (
       <div
         ref={ref}
@@ -28,8 +31,8 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
         {...props}
       >
-        {src ? (
-          <img src={src} alt={alt || fallback || 'Avatar'} className="aspect-square h-full w-full object-cover" />
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={alt || fallback || 'Avatar'} className="aspect-square h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted font-medium">
             {fallback ? fallback.slice(0, 2).toUpperCase() : '?'}

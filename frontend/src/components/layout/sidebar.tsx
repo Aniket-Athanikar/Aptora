@@ -25,7 +25,8 @@ import {
   ChevronRight,
   FileText,
 } from "lucide-react";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, useProfile } from "@/contexts";
+import { getAvatarUrl } from "@/lib/avatar";
 import { NAV_ITEMS, QUOTES, COACH_TEMPLATES } from "./sidebar-constants";
 import { navigate } from "./sidebar-helpers";
 
@@ -33,17 +34,25 @@ interface SidebarProps {
   activeTab: string;
   mobileOpen: boolean;
   setMobileOpen: (open: boolean) => void;
-  openProfileModal: () => void;
+  openProfileModal?: () => void;
 }
 
 export function Sidebar({
   activeTab,
   mobileOpen,
   setMobileOpen,
-  openProfileModal,
+  openProfileModal: customOpenProfileModal,
 }: SidebarProps) {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const { profile } = useProfile();
   const router = useRouter();
+  const openProfileModal = () => {
+    if (customOpenProfileModal) {
+      customOpenProfileModal();
+    } else {
+      router.push("/profile");
+    }
+  };
   const pathname = usePathname();
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -97,12 +106,12 @@ export function Sidebar({
               transition={{ duration: 0.3 }}
               className="leading-tight flex-1"
             >
-              <h1 className="font-black text-lg tracking-tight text-slate-900 flex items-center gap-1">
+              <h1 className="font-black text-lg tracking-tight text-slate-900 flex items-center gap-0.5">
                 <span>Exam</span>
-                <span className="bg-gradient-to-r from-[#6D4AFF] via-purple-500 to-indigo-650 bg-clip-text text-transparent">Forge</span>
+                <span className="bg-gradient-to-r from-[#6D4AFF] via-purple-500 to-indigo-650 bg-clip-text text-transparent">Forge-AI</span>
               </h1>
               <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#6D4AFF]">
-                AI STUDY
+                STUDY ENGINE
               </p>
             </motion.div>
           )}
@@ -263,15 +272,15 @@ export function Sidebar({
               className="relative shrink-0 group cursor-pointer"
             >
               <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm scale-95 group-hover:scale-100" />
-              {user?.avatar ? (
+              {profile?.avatar_url ? (
                 <img
-                  src={user.avatar}
+                  src={getAvatarUrl(profile.avatar_url)}
                   alt="avatar"
                   className="relative w-11 h-11 rounded-full object-cover border-2 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
                 <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-sm uppercase border border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                  {profile?.name ? profile.name.charAt(0).toUpperCase() : "?"}
                 </div>
               )}
               <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -283,10 +292,10 @@ export function Sidebar({
               <>
                 <div className="min-w-0 flex-1 text-left">
                   <p className="text-[13px] font-black text-slate-800 truncate hover:text-[#6D4AFF] transition cursor-pointer" onClick={openProfileModal}>
-                    {user?.name || "Student User"}
+                    {profile?.name || "Student User"}
                   </p>
                   <p className="text-[10.5px] text-slate-400 truncate">
-                    {user?.email || "student@examforge.ai"}
+                    {profile?.email || "student@examforge.ai"}
                   </p>
                 </div>
                 <button
@@ -342,7 +351,7 @@ export function Sidebar({
                     />
                   </div>
                   <h1 className="font-black text-lg tracking-tight text-slate-900">
-                    Exam<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-500 bg-clip-text text-transparent">Forge</span>
+                    Exam<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-500 bg-clip-text text-transparent">Forge-AI</span>
                   </h1>
                 </div>
                 <button
@@ -394,23 +403,23 @@ export function Sidebar({
               {/* Mobile Footer */}
               <div className="mt-6 pt-5 border-t border-slate-150 flex flex-col gap-4.5">
                 <div className="flex items-center gap-3.5">
-                  {user?.avatar ? (
+                  {profile?.avatar_url ? (
                     <img
-                      src={user.avatar}
+                      src={getAvatarUrl(profile.avatar_url)}
                       alt="avatar"
                       className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
                     />
                   ) : (
                     <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-sm uppercase border border-slate-200 shadow-sm">
-                      {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                      {profile?.name ? profile.name.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-[13px] font-black text-slate-800 truncate">
-                      {user?.name || "Student User"}
+                      {profile?.name || "Student User"}
                     </p>
                     <p className="text-[10.5px] text-slate-400 truncate">
-                      {user?.email || "student@examforge.ai"}
+                      {profile?.email || "student@examforge.ai"}
                     </p>
                   </div>
                 </div>

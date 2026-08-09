@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
 import { GoalData, SubjectWeakness } from "@/types/goal.types";
 import { useToast } from "@/lib/ToastContext";
 import * as LucideIcons from "lucide-react";
 
 const {
-  Flame, Clock, BookOpen, AlertCircle, CheckCircle2, ChevronDown,
+  Clock, AlertCircle, CheckCircle2, ChevronDown,
   Sun, Sunrise, Moon, Laptop, Smartphone, Monitor, BookOpenCheck,
   FileText, Building, Atom, Activity, Settings, TrendingUp, Target,
-  Calendar, Award, Brain, Zap, User, Compass, Sparkles
+  Brain, Compass, Sparkles
 } = LucideIcons;
 
 const EXAMS_LIST = [
@@ -42,7 +41,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
   const { activeGoal, history, completeWizard, startWizard } = useGoalEngine();
   const { toast } = useToast();
 
-  // Local state representing the goal form fields
   const [targetExam, setTargetExam] = useState<string>("UPSC CSE");
   const [fullName, setFullName] = useState<string>("Student");
   const [age, setAge] = useState<number>(22);
@@ -55,12 +53,10 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
   const [modes, setModes] = useState<string[]>(["Flashcards", "Practice Loops"]);
   const [weaknesses, setWeaknesses] = useState<SubjectWeakness[]>([]);
 
-  // Dropdown UI state variables
   const [examDropdownOpen, setExamDropdownOpen] = useState(false);
   const [slotDropdownOpen, setSlotDropdownOpen] = useState(false);
   const [deviceDropdownOpen, setDeviceDropdownOpen] = useState(false);
 
-  // Hydrate local state when activeGoal is loaded or changes
   useEffect(() => {
     const defaultGoal = activeGoal || (history && history.length > 0 ? history[0].goalData : null);
     if (defaultGoal) {
@@ -85,7 +81,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
       setModes(defaultGoal.preferences || ["Flashcards", "Practice Loops"]);
       setWeaknesses(defaultGoal.weaknesses);
     } else {
-      // Setup defaults for building a new goal
       setTargetExam("UPSC CSE");
       setFullName("Aspirant");
       setAge(23);
@@ -105,7 +100,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
     }
   }, [activeGoal, history]);
 
-  // Adjust weaknesses list automatically when target exam changes
   const handleExamChange = (newExam: string) => {
     setTargetExam(newExam);
     const presets = PRESET_SUBJECTS[newExam] || ["General Knowledge", "Analytical Ability"];
@@ -122,7 +116,6 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
     toast(`Exam set to ${newExam}. Loaded default syllabus subjects.`, "info");
   };
 
-  // Compute stats on the fly
   const calculateDaysRemaining = () => {
     const today = new Date();
     const target = new Date(examDate);
@@ -169,7 +162,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
       examCategory: activeGoal?.examCategory || "General",
       profile: {
         fullName,
-        avatar: activeGoal?.profile.avatar || "Felix",
+        avatar: "",
         education: activeGoal?.profile.education || "Undergraduate",
         stream: activeGoal?.profile.stream || "General",
         city: activeGoal?.profile.city || "New Delhi",
@@ -212,12 +205,12 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
   const getSlotIcon = (slot: string) => {
     if (slot.includes("Morning")) return <Sun className="w-4 h-4 text-amber-500" />;
     if (slot.includes("Afternoon")) return <Sunrise className="w-4 h-4 text-orange-500" />;
-    return <Moon className="w-4 h-4 text-indigo-400" />;
+    return <Moon className="w-4 h-4 text-[#6D4AFF]" />;
   };
 
   const getDeviceIcon = (device: string) => {
     if (device.includes("Phone")) return <Smartphone className="w-4 h-4 text-emerald-500" />;
-    if (device.includes("Laptop")) return <Laptop className="w-4 h-4 text-indigo-550" />;
+    if (device.includes("Laptop")) return <Laptop className="w-4 h-4 text-[#6D4AFF]" />;
     if (device.includes("Desktop")) return <Monitor className="w-4 h-4 text-blue-500" />;
     return <BookOpenCheck className="w-4 h-4 text-amber-500" />;
   };
@@ -228,10 +221,10 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
       {/* Welcome Title */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-            Success Goal <span className="gradient-text">Calibration Panel</span>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-2 tracking-tight">
+            Success Goal <span className="text-[#6D4AFF]">Calibration Panel</span>
           </h1>
-          <p className="text-xs text-gray-500 font-semibold mt-0.5">
+          <p className="text-xs text-slate-500 font-semibold mt-0.5">
             {activeGoal
               ? "View, select, and recalibrate your active exam preparation goals."
               : "Establish your custom success model by tailoring your schedule, targets, and study metrics."}
@@ -241,9 +234,9 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         <button
           type="button"
           onClick={onLaunchWizard || startWizard}
-          className="bg-indigo-50 border border-indigo-200/50 hover:bg-indigo-100 text-indigo-650 text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-1.5 transition-all shadow-3xs cursor-pointer"
+          className="bg-white border border-indigo-200/80 hover:bg-indigo-50/50 text-[#6D4AFF] text-xs font-black px-4.5 py-2.5 rounded-2xl flex items-center gap-1.5 transition-all shadow-3xs cursor-pointer"
         >
-          <Sparkles className="w-4 h-4" /> Launch Guided Wizard
+          <Sparkles className="w-4 h-4 text-amber-500" /> Launch Guided Wizard
         </button>
       </div>
 
@@ -254,9 +247,9 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         <div className="lg:col-span-2 space-y-6">
 
           {/* Card 1: Exam & Basics */}
-          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-black text-gray-800 border-b border-slate-100 pb-2 flex items-center gap-2">
-              <Compass className="w-4 h-4 text-[#6D4AFF]" /> Target Exam & Basics
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
+            <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Compass className="w-4.5 h-4.5 text-[#6D4AFF]" /> Target Exam & Basics
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -265,7 +258,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                 <button
                   type="button"
                   onClick={() => setExamDropdownOpen(!examDropdownOpen)}
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     {(() => {
@@ -275,7 +268,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                     })()}
                     <span>{targetExam}</span>
                   </span>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${examDropdownOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${examDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
                 {examDropdownOpen && (
                   <>
@@ -299,7 +292,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                           })()}
                           <div>
                             <p className="text-[11px] font-bold leading-tight">{exam.name}</p>
-                            <p className="text-[9px] text-gray-400 mt-0.5">{exam.desc}</p>
+                            <p className="text-[9px] text-slate-400 mt-0.5">{exam.desc}</p>
                           </div>
                         </button>
                       ))}
@@ -315,7 +308,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
                 />
               </div>
 
@@ -328,7 +321,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={age}
                   onChange={(e) => setAge(Number(e.target.value))}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
                 />
               </div>
 
@@ -339,16 +332,16 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={examDate}
                   onChange={(e) => setExamDate(e.target.value)}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
                 />
               </div>
             </div>
           </div>
 
           {/* Card 2: Timeline & Schedule */}
-          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-black text-gray-800 border-b border-slate-100 pb-2 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#6D4AFF]" /> Daily Timeline & Study Slots
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
+            <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Clock className="w-4.5 h-4.5 text-[#6D4AFF]" /> Daily Timeline & Study Slots
             </h2>
 
             <div className="space-y-4">
@@ -374,13 +367,13 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <button
                     type="button"
                     onClick={() => setSlotDropdownOpen(!slotDropdownOpen)}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
                     <span className="flex items-center gap-2">
                       {getSlotIcon(preferredSlot)}
                       <span>{preferredSlot}</span>
                     </span>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-slate-400" />
                   </button>
                   {slotDropdownOpen && (
                     <>
@@ -394,7 +387,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                               setPreferredSlot(slot);
                               setSlotDropdownOpen(false);
                             }}
-                            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-slate-55 transition-colors text-xs font-bold cursor-pointer ${
+                            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-slate-50 transition-colors text-xs font-bold cursor-pointer ${
                               preferredSlot === slot ? "bg-indigo-50 text-indigo-700 font-extrabold" : "text-slate-600"
                             }`}
                           >
@@ -412,13 +405,13 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <button
                     type="button"
                     onClick={() => setDeviceDropdownOpen(!deviceDropdownOpen)}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
                     <span className="flex items-center gap-2">
                       {getDeviceIcon(primaryDevice)}
                       <span>{primaryDevice}</span>
                     </span>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-slate-400" />
                   </button>
                   {deviceDropdownOpen && (
                     <>
@@ -449,15 +442,15 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
           </div>
 
           {/* Card 3: Subjects Gap Audit */}
-          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-black text-gray-800 border-b border-slate-100 pb-2 flex items-center gap-2">
-              <Brain className="w-4 h-4 text-[#6D4AFF]" /> Syllabus Subject Confidence
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
+            <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Brain className="w-4.5 h-4.5 text-[#6D4AFF]" /> Syllabus Subject Confidence
             </h2>
             <p className="text-[10px] text-slate-400 font-semibold pl-1">Rate your confidence (1 = Weak, 5 = Mastered). Priorities are adjusted dynamically.</p>
 
             <div className="space-y-3">
               {weaknesses.map((item, index) => (
-                <div key={item.subject} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/40">
+                <div key={item.subject} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50/60 border border-slate-200/50">
                   <div className="space-y-0.5">
                     <span className="text-xs font-black text-slate-800">{item.subject}</span>
                     <span className={`text-[9px] font-black uppercase tracking-wider block px-2 py-0.5 rounded-full w-max mt-0.5 ${
@@ -507,49 +500,53 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         {/* Dynamic Sidebar Predictions */}
         <div className="space-y-6">
 
-          {/* Card: Projections */}
-          <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden border border-slate-800">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20 pointer-events-none" />
-            <h3 className="text-xs font-black text-indigo-300 uppercase tracking-widest mb-4">Goal Engine Projections</h3>
+          {/* Projections Card - Crisp Light Gradient */}
+          <div className="bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-indigo-100/90 space-y-5">
+            <div className="absolute top-0 right-0 w-28 h-28 bg-[#6D4AFF]/10 rounded-full blur-2xl pointer-events-none" />
+            <h3 className="text-xs font-black text-[#6D4AFF] uppercase tracking-widest pb-2 border-b border-indigo-100/60">
+              Goal Engine Projections
+            </h3>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               <div>
-                <span className="text-[10px] text-slate-400 block font-semibold">SUCCESS PREDICTION</span>
+                <span className="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider block">SUCCESS PREDICTION</span>
                 <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-3xl font-black text-white">{calculateSuccessPrediction()}%</span>
-                  <span className="text-xs text-indigo-400 font-bold">Accuracy</span>
+                  <span className="text-3xl font-black text-slate-900">{calculateSuccessPrediction()}%</span>
+                  <span className="text-xs text-[#6D4AFF] font-bold">Accuracy</span>
                 </div>
-                <div className="w-full h-1.5 bg-white/10 rounded-full mt-2 overflow-hidden">
+                <div className="w-full h-2 bg-slate-100 rounded-full mt-2 overflow-hidden border border-slate-200/50">
                   <div
-                    className="h-full bg-gradient-to-r from-[#6D4AFF] to-fuchsia-500 transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-[#6D4AFF] via-purple-500 to-pink-500 transition-all duration-500 rounded-full"
                     style={{ width: `${calculateSuccessPrediction()}%` }}
                   />
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] text-slate-400 block font-semibold">REMAINING PREPARATION TIMELINE</span>
+                <span className="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider block">REMAINING TIMELINE</span>
                 <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-2xl font-black text-white">{calculateDaysRemaining()} Days</span>
-                  <span className="text-[10px] text-slate-400 font-bold">until exam</span>
+                  <span className="text-2xl font-black text-slate-900">{calculateDaysRemaining()} Days</span>
+                  <span className="text-[10px] text-slate-500 font-bold">until exam</span>
                 </div>
               </div>
 
               {dailyHours >= 12 && (
-                <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex gap-2.5">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <div className="p-3.5 bg-rose-50 border border-rose-200/80 rounded-2xl flex gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-rose-200">Burnout Warning Triggered</span>
-                    <p className="text-[9px] text-rose-300 font-medium leading-relaxed">Studying {dailyHours}h daily compromises retention. Limit study to &lt; 12 hours.</p>
+                    <span className="text-[10px] font-bold text-rose-800">Burnout Warning Triggered</span>
+                    <p className="text-[9px] text-rose-600 font-medium leading-relaxed">Studying {dailyHours}h daily compromises retention. Limit study to &lt; 12 hours.</p>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Card: Study Modes selection */}
-          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="text-xs font-black text-slate-450 uppercase tracking-widest border-b border-slate-100 pb-2 pl-1">Active Study Modes</h3>
+          {/* Active Study Modes Selection */}
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 pl-1">
+              Active Study Modes
+            </h3>
 
             <div className="space-y-2">
               {["Flashcards", "Practice Loops", "Mock Exams", "PYQ Retrieval"].map((mode) => {
@@ -561,8 +558,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                     onClick={() => handleToggleMode(mode)}
                     className={`w-full flex items-center justify-between p-3.5 rounded-2xl border text-xs font-bold text-left transition-all cursor-pointer ${
                       isActive
-                        ? "bg-indigo-50/50 border-[#6D4AFF] text-indigo-700 font-extrabold shadow-3xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-indigo-50/60 border-[#6D4AFF] text-indigo-700 font-extrabold shadow-3xs"
+                        : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
                     }`}
                   >
                     <span>{mode}</span>

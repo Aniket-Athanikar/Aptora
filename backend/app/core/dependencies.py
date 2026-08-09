@@ -48,25 +48,27 @@ def get_db():
 
 def get_current_user(
     request: Request,
-    token: str | None = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ) -> UserDb:
     """
-    Temporary authentication.
-
-    TODO:
-    Replace this with JWT token verification.
+    Get current authenticated user using JWT access token.
     """
-    email = request.cookies.get("ef_user_email")
+    from app.services.jwt_service import JWTService
+
+    token = None
+    auth_header = request.headers.get("authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+    if not token:
+        token = request.cookies.get("access_token")
 
     user = None
-
-    if email:
-        user = db.query(UserDb).filter(UserDb.email == email).first()
-
-    # Preserve the development bearer-token path used by the existing API.
-    if user is None and token:
-        user = db.query(UserDb).first()
+    if token:
+        payload = JWTService.verify_access_token(token)
+        if payload:
+            email = payload.get("email")
+            if email:
+                user = db.query(UserDb).filter(UserDb.email == email).first()
 
     if user is None:
         raise HTTPException(
@@ -75,6 +77,7 @@ def get_current_user(
         )
 
     return user
+
 
 
 # ==========================================================

@@ -21,6 +21,10 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("backend")
 
+# Suppress noisy websocket protocol & frame debug logs (PING/PONG/TEXT spam)
+for noisy_name in ["websockets", "websockets.client", "websockets.server", "websockets.protocol", "uvicorn.error"]:
+    logging.getLogger(noisy_name).setLevel(logging.WARNING)
+
 # Initialize database schemas
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -111,81 +115,35 @@ app.add_middleware(
 from app.api.router import api_router
 app.include_router(api_router)
 
+from fastapi.staticfiles import StaticFiles
+os.makedirs("app/uploads/profile", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
+
+
 from fastapi import WebSocket, WebSocketDisconnect
-import asyncio
-import random
 
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: list[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
-
-    async def broadcast(self, message: str):
-        for connection in self.active_connections:
-            try:
-                await connection.send_text(message)
-            except Exception as e:
-                logger.exception(e)
-
-manager = ConnectionManager()
+from app.core.websocket import ws_manager
 
 @app.websocket("/ws/dashboard")
 async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
+    await ws_manager.connect(websocket)
     try:
-        # Send initial sync metrics
+        # Send initial connection status package
         await websocket.send_json({
             "type": "connection_status",
             "status": "connected",
-            "message": "Real-time sync established with ExamForge AI Engine",
-            "active_users": random.randint(142, 198)
+            "message": "Real-time sync established with ExamForge AI Engine"
         })
         
         while True:
-            await asyncio.sleep(10)
-            event_type = random.choice(["xp_gain", "active_session", "community_milestone", "calibration_alert"])
-            if event_type == "xp_gain":
-                data = {
-                    "type": "realtime_update",
-                    "title": "Companion Milestone",
-                    "description": f"User_{random.randint(1000, 9999)} completed custom sprint: +120 XP earned!",
-                    "badge": "XP Boost",
-                    "color": "emerald"
-                }
-            elif event_type == "active_session":
-                data = {
-                    "type": "realtime_update",
-                    "title": "Lobby Active",
-                    "description": f"Active study sprint started for exam: {random.choice(['GATE', 'UPSC', 'JEE', 'MCAT'])}.",
-                    "badge": "Live Sprint",
-                    "color": "indigo"
-                }
-            elif event_type == "community_milestone":
-                data = {
-                    "type": "realtime_update",
-                    "title": "AI Syllabus Calibration",
-                    "description": "Calculated adaptive weights. Goal calibration predictions updated.",
-                    "badge": "AI Calibrate",
-                    "color": "purple"
-                }
-            else:
-                data = {
-                    "type": "realtime_update",
-                    "title": "Quest Pool Sync",
-                    "description": "Daily targeted syllabus sprints refreshed.",
-                    "badge": "Quest Sync",
-                    "color": "amber"
-                }
-            await websocket.send_json(data)
+            # Maintain active connection state
+            await websocket.receive_text()
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        ws_manager.disconnect(websocket)
+    except Exception:
+        ws_manager.disconnect(websocket)
+    finally:
+        ws_manager.disconnect(websocket)
 
 @app.get("/", status_code=status.HTTP_200_OK)
 async def read_root():

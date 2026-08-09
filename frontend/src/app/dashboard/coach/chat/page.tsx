@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { GoalEngineProvider, useGoalEngine } from "@/contexts/goal-engine.context";
+import { GoalEngineProvider } from "@/contexts/goal-engine.context";
 import { DashboardLayout } from "@/components/dashboard";
 import { ChatAssistant } from "@/features/ai-coach/components/ChatAssistant";
 import { useAICoachStore } from "@/features/ai-coach/store/aiCoachStore";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 function CoachChatContent() {
@@ -13,7 +13,6 @@ function CoachChatContent() {
 
   useEffect(() => {
     loadCoachData();
-    // Refresh state when local storage undergoes CRUD operations
     const handleSync = () => {
       loadCoachData();
     };
@@ -25,20 +24,28 @@ function CoachChatContent() {
 
   return (
     <DashboardLayout activeTab="coach">
-      <div className="space-y-5">
+      <div className="space-y-5 max-w-6xl mx-auto">
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
           <Link
             href="/dashboard/coach"
-            className="p-1.5 hover:bg-white border border-transparent hover:border-gray-150 rounded-xl text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-1 text-xs font-bold"
+            className="p-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 text-xs font-black shadow-3xs cursor-pointer"
           >
-            <ChevronLeft className="w-4 h-4" /> Back to Coach Dashboard
+            <ChevronLeft className="w-4 h-4 text-[#6D4AFF]" /> Back to Coach Dashboard
           </Link>
+
+          <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#6D4AFF] uppercase tracking-wider bg-[#6D4AFF]/10 border border-[#6D4AFF]/20 px-3 py-1 rounded-full">
+            <Sparkles className="w-3 h-3" /> Live Context Synced
+          </span>
         </div>
 
         <div className="space-y-1">
-          <h1 className="text-2xl font-black text-gray-900">Personal AI Mentor Chat</h1>
-          <p className="text-xs text-gray-500 font-semibold">Simulated chat powered by user context memories.</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Personal AI Mentor Chat
+          </h1>
+          <p className="text-xs text-slate-500 font-semibold">
+            Context-aware AI mentor calibrated to your syllabus goals and daily focus targets.
+          </p>
         </div>
 
         {/* Chat assistant container */}

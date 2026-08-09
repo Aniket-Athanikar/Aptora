@@ -68,6 +68,17 @@ def ensure_schema_synced(engine: Engine) -> None:
             expires_at TIMESTAMP NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS notifications (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            type VARCHAR(30) NOT NULL DEFAULT 'study',
+            priority VARCHAR(20) NOT NULL DEFAULT 'medium',
+            message TEXT NOT NULL,
+            read BOOLEAN NOT NULL DEFAULT FALSE,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
         """
     ]
 

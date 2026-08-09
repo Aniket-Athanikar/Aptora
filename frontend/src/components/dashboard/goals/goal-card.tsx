@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { GoalData } from "@/types/goal.types";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
+import { useProfile } from "@/contexts";
+import { getAvatarUrl } from "@/lib/avatar";
 import { motion } from "framer-motion";
-// import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock, Calendar, CheckCircle, Target } from "lucide-react";
 import { Edit2, Trash2, Pin, Star, Archive, Share2, Award, Clock, Calendar, Target } from "lucide-react";
 
 interface GoalCardProps {
@@ -14,7 +15,9 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, onEdit }: GoalCardProps) {
   const { deleteGoal } = useGoalEngine();
+  const { profile } = useProfile();
   const [copied, setCopied] = useState(false);
+  const displayAvatar = getAvatarUrl(profile?.avatar_url);
 
   const togglePin = () => console.log("Pin clicked");
   const toggleFavorite = () => console.log("Favorite clicked");
@@ -43,7 +46,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`relative p-6 min-h-[320px] rounded-3xl premium-card premium-card-hover flex flex-col justify-between overflow-hidden ${
+      className={`relative p-4 sm:p-6 min-h-0 sm:min-h-[320px] rounded-3xl premium-card premium-card-hover flex flex-col justify-between overflow-hidden ${
         // goal.isPinned 
         false? "ring-2 ring-indigo-500/10 shadow-indigo-100/50": ""
       }`}
@@ -54,12 +57,11 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
         false ? "bg-indigo-100/40" : "bg-slate-50"
       }`} />
 
-      {/* Header Info */}
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex gap-4">
-          <div className="relative shrink-0 w-14 h-14 rounded-2xl bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center shadow-xs overflow-hidden">
-            {goal.profile.avatar ? (
-              <img src={goal.profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
+        <div className="flex gap-3 sm:gap-4 min-w-0">
+          <div className="relative shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center shadow-xs overflow-hidden">
+            {displayAvatar ? (
+              <img src={displayAvatar} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
               <Target className="w-6 h-6 text-indigo-500" />
             )}
@@ -83,7 +85,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
         </div>
 
         {/* Toolbar Controls */}
-        <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-1 rounded-xl shrink-0">
+        <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-1 rounded-xl shrink-0 self-start">
           <button
             onClick={togglePin}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
@@ -143,26 +145,26 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
       </div>
 
       {/* Center Metrics (Visual Grid) */}
-      <div className="grid grid-cols-3 gap-3 border-y border-slate-100 py-3.5 my-1">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 border-y border-slate-100 py-3 sm:py-3.5 my-1">
         <div className="flex flex-col items-center justify-center text-center">
           <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider flex items-center gap-1">
             <Clock className="w-3 h-3 text-indigo-500" /> Rem. Days
           </span>
-          <span className="text-base font-black text-slate-800 mt-1">{goal.timeline.remainingDays} Days</span>
+          <span className="text-sm sm:text-base font-black text-slate-800 mt-1">{goal.timeline.remainingDays} Days</span>
         </div>
 
         <div className="flex flex-col items-center justify-center text-center border-x border-slate-100">
           <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider flex items-center gap-1">
             <Award className="w-3 h-3 text-amber-500 animate-bounce" /> Success Predictor
           </span>
-          <span className="text-base font-black text-indigo-600 mt-1">{goal.timeline.successPrediction}%</span>
+          <span className="text-sm sm:text-base font-black text-indigo-600 mt-1">{goal.timeline.successPrediction}%</span>
         </div>
 
         <div className="flex flex-col items-center justify-center text-center">
           <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider flex items-center gap-1">
             <Calendar className="w-3 h-3 text-emerald-500" /> Daily Target
           </span>
-          <span className="text-base font-black text-slate-800 mt-1">{goal.timeline.dailyStudyHours} Hrs</span>
+          <span className="text-sm sm:text-base font-black text-slate-800 mt-1">{goal.timeline.dailyStudyHours} Hrs</span>
         </div>
       </div>
 

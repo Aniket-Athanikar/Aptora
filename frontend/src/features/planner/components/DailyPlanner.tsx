@@ -47,7 +47,7 @@ export function DailyPlanner({ tasks, onStatusChange, onReschedule }: DailyPlann
   };
 
   return (
-    <div className="glass border border-white/20 rounded-3xl p-6">
+    <div className="glass border border-white/20 rounded-3xl p-4 sm:p-6">
       <div className="flex items-center justify-between mb-6 border-b border-gray-50 pb-4">
         <div className="flex items-center gap-2">
           <ListTodo className="w-5 h-5 text-indigo-600 animate-pulse" />

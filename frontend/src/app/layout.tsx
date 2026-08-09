@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/ToastContext";
+import { ProfileProvider } from "@/contexts";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -86,18 +87,20 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AuthProvider>
-          <ToastProvider>
-            <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
-              {/* Premium Background Mesh Glows */}
-              <div className="pointer-events-none fixed inset-0 -z-10 bg-mesh opacity-45" />
-              <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-25" />
-              
-              {/* Main Content Tree */}
-              <div className="flex-grow w-full flex flex-col">
-                {children}
+          <ProfileProvider>
+            <ToastProvider>
+              <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
+                {/* Premium Background Mesh Glows */}
+                <div className="pointer-events-none fixed inset-0 -z-10 bg-mesh opacity-45" />
+                <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-25" />
+
+                {/* Main Content Tree */}
+                <div className="flex-grow w-full flex flex-col">
+                  {children}
+                </div>
               </div>
-            </div>
-          </ToastProvider>
+            </ToastProvider>
+          </ProfileProvider>
         </AuthProvider>
       </body>
     </html>

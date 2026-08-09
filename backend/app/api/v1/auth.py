@@ -185,11 +185,6 @@ async def get_me(
             user = user_repo.get_by_email(token)
 
     if not user:
-        user_repo = UserRepository(db)
-        # Check first existing user if in demo mode
-        user = db.query(UserDb).first()
-
-    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not authenticated."

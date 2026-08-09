@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { SubjectProgressData } from "@/features/progress/store/progressStore";
+
+interface SubjectChartProps {
+  subjects?: SubjectProgressData[];
+}
 
 interface SubjectData {
   subject: string;
@@ -6,18 +11,29 @@ interface SubjectData {
   color: string;
 }
 
-export function SubjectChart() {
-  const data: SubjectData[] = [
-    { subject: "History", percentage: 30, color: "#6366F1" }, // Indigo
-    { subject: "Polity", percentage: 25, color: "#8B5CF6" }, // Violet
-    { subject: "Economy", percentage: 20, color: "#F59E0B" }, // Amber
-    { subject: "Geography", percentage: 15, color: "#3B82F6" }, // Blue
-    { subject: "Others", percentage: 10, color: "#64748B" }, // Slate
-  ];
+const colorPalette = ["#6366F1", "#8B5CF6", "#F59E0B", "#10B981", "#EC4899", "#3B82F6", "#64748B"];
+
+export function SubjectChart({ subjects }: SubjectChartProps) {
+  const data: SubjectData[] = useMemo(() => {
+    if (subjects && subjects.length > 0) {
+      const total = subjects.reduce((acc, s) => acc + s.completedTasks, 0) || 1;
+      return subjects.slice(0, 5).map((s, idx) => ({
+        subject: s.subject,
+        percentage: Math.max(5, Math.round((s.completedTasks / total) * 100)),
+        color: colorPalette[idx % colorPalette.length],
+      }));
+    }
+    return [
+      { subject: "History", percentage: 30, color: "#6366F1" },
+      { subject: "Polity", percentage: 25, color: "#8B5CF6" },
+      { subject: "Economy", percentage: 20, color: "#F59E0B" },
+      { subject: "Geography", percentage: 15, color: "#3B82F6" },
+      { subject: "Others", percentage: 10, color: "#64748B" },
+    ];
+  }, [subjects]);
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  // Math variables for Donut Chart
   const radius = 50;
   const strokeWidth = 16;
   const circumference = 2 * Math.PI * radius;
@@ -25,14 +41,13 @@ export function SubjectChart() {
   let accumulatedPercent = 0;
 
   return (
-    <div className="bg-white border border-gray-150 rounded-3xl p-5 space-y-4">
+    <div className="bg-white border border-gray-150 rounded-3xl p-5 space-y-4 shadow-xs">
       <div>
         <h3 className="text-sm font-black text-gray-900">Subject Distribution</h3>
-        <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Study time investment per subject area</p>
+        <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Real-time study task distribution per subject area</p>
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-around gap-6 pt-2">
-        {/* SVG Donut */}
         <div className="relative w-36 h-36">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
             <circle
@@ -80,7 +95,6 @@ export function SubjectChart() {
           </div>
         </div>
 
-        {/* Legend */}
         <div className="space-y-2">
           {data.map((item, idx) => (
             <div
@@ -92,7 +106,7 @@ export function SubjectChart() {
               onMouseLeave={() => setHoveredIdx(null)}
             >
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-              <span className="text-xs font-bold text-gray-700 w-24">{item.subject}</span>
+              <span className="text-xs font-bold text-gray-700 w-24 truncate">{item.subject}</span>
               <span className="text-xs font-black text-gray-900">{item.percentage}%</span>
             </div>
           ))}

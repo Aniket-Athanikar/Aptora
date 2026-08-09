@@ -62,8 +62,8 @@ export default function InvoicePrintPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start justify-between border-b-2 border-neutral-100 pb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-black text-neutral-900 uppercase">
-              EXAM FORGE<span className="text-[#6D4AFF]"> AI</span>
+            <h1 className="text-2xl font-black text-neutral-900 tracking-tight">
+              Exam<span className="text-[#6D4AFF]">Forge-AI</span>
             </h1>
             <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider mt-1">Smart learning ecosystems</p>
           </div>

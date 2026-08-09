@@ -58,30 +58,33 @@ export function AIPlanner() {
 
   return (
     <div className="space-y-6">
-      {/* Header and Stats overview */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-br from-white via-indigo-50/40 to-purple-50/30 border border-indigo-100/80 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            AI Study Workspace: <span className="text-indigo-600">{candidateName}</span> 👋
+          <span className="inline-flex items-center gap-1.5 bg-[#6D4AFF]/10 text-[#6D4AFF] border border-[#6D4AFF]/20 px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase mb-2">
+            <Sparkles className="w-3.5 h-3.5" /> AI Study Workspace
+          </span>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Welcome, <span className="text-[#6D4AFF]">{candidateName}</span> 👋
           </h1>
-          <p className="text-xs text-gray-500 font-semibold mt-0.5">
-            Active Target Exam: {targetExamName}
+          <p className="text-xs text-slate-500 font-semibold mt-1">
+            Active Target Exam: <span className="text-slate-800 font-bold">{targetExamName}</span>
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50/20 border border-amber-200/50 px-4 py-2.5 rounded-2xl shadow-xs transition-all hover:scale-[1.02]">
-            <Flame className="w-4 h-4 text-amber-500 animate-bounce" />
+          <div className="flex items-center gap-2.5 bg-white/90 border border-amber-200/60 px-4 py-2.5 rounded-2xl shadow-xs transition-all hover:scale-[1.02]">
+            <Flame className="w-5 h-5 text-amber-500 animate-bounce" />
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase leading-none">Streak</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase leading-none">Streak</p>
               <p className="text-xs font-black text-amber-700 leading-none mt-1">{streak} Days</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-gradient-to-br from-indigo-50 to-violet-50/20 border border-indigo-200/50 px-4 py-2.5 rounded-2xl shadow-xs transition-all hover:scale-[1.02]">
-            <Trophy className="w-4 h-4 text-indigo-500 animate-pulse" />
+          <div className="flex items-center gap-2.5 bg-white/90 border border-indigo-200/60 px-4 py-2.5 rounded-2xl shadow-xs transition-all hover:scale-[1.02]">
+            <Trophy className="w-5 h-5 text-[#6D4AFF] animate-pulse" />
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase leading-none">XP Earned</p>
-              <p className="text-xs font-black text-indigo-700 leading-none mt-1">{xpPoints} XP</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase leading-none">XP Earned</p>
+              <p className="text-xs font-black text-[#6D4AFF] leading-none mt-1">{xpPoints} XP</p>
             </div>
           </div>
         </div>

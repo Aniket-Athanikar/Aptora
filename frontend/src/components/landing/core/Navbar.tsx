@@ -3,15 +3,17 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2 } from "lucide-react";
+import { Menu, X, LogOut, LogIn, User, ChevronDown, Compass, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import GlowButton from "@/components/ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
+import { useProfile } from "@/contexts";
+import { getAvatarUrl } from "@/lib/avatar";
 import Image from "next/image";
 import DeleteAccountModal from "@/components/modals/DeleteAccountModal";
 
-const getAvatarUrl = (name: string) => {
+const getFallbackAvatarUrl = (name: string) => {
   const seed = encodeURIComponent(name || "User");
   return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
 };
@@ -28,12 +30,11 @@ const formatDisplayName = (name: string) => {
   return clean || name;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, login, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
+  const { profile } = useProfile();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(pathname || "/");
@@ -46,29 +47,16 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  // Sync profile details (such as avatar_url) from DB to Navbar
-  useEffect(() => {
-    if (isAuthenticated && user?.email && !user.avatar) {
-      const syncProfile = async () => {
-        try {
-          const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.success && data.profile) {
-              login({
-                name: data.profile.name || user.name,
-                email: user.email,
-                avatar: data.profile.avatar_url || ""
-              });
-            }
-          }
-        } catch (err) {
-          console.error("Error syncing profile to navbar:", err);
-        }
-      };
-      syncProfile();
-    }
-  }, [isAuthenticated, user?.email, user?.avatar, login, user?.name]);
+  const displayAvatar = getAvatarUrl(profile?.avatar_url);
+  const displayName = profile?.name || user?.name || "";
+
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Features", href: "/features" },
+    { name: "Exams", href: "/exams" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Blog", href: "/blog" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,12 +66,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Sync active link with current pathname
-  useEffect(() => {
-    setActiveLink(pathname || "/");
-  }, [pathname]);
-
-  // Close user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
@@ -94,18 +76,9 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navLinks = [
-    { name: "Home", href: "/" },
-    // ...(isAuthenticated ? [{ name: "Dashboard", href: "/dashboard" }] : []),
-    { name: "Features", href: "/features" },
-    { name: "Exams", href: "/exams" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Blog", href: "/blog" },
-  ];
-
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
     setUserMenuOpen(false);
+    await logout();
     router.push("/");
   };
 
@@ -135,19 +108,19 @@ export default function Navbar() {
       </div>
       <div className="absolute top-0 left-[35%] w-[30%] h-full bg-gradient-to-r from-[#6D4AFF]/5 to-[#A855F7]/5 blur-[50px] pointer-events-none z-0" />
 
-      <div className="w-full px-8 md:px-12 flex items-center justify-between relative z-10">
+      <div className="w-full px-4 sm:px-8 md:px-12 flex items-center justify-between relative z-10">
 
         {/* Logo */}
         <Link
           href="/"
           onClick={() => setActiveLink("/")}
-          className="flex items-center gap-3 font-black text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
+          className="flex items-center gap-2 sm:gap-3 font-black text-lg sm:text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
         >
           <div className="relative shrink-0" style={{ perspective: 1000 }}>
             <motion.div
               whileHover={{ rotateY: 180, scale: 1.05 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="relative w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-slate-150 shadow-md flex items-center justify-center bg-white"
+              className="relative w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border-2 border-slate-150 shadow-md flex items-center justify-center bg-white"
             >
               <Image
                 src="/favicon.ico"
@@ -159,7 +132,7 @@ export default function Navbar() {
               />
             </motion.div>
           </div>
-          <span className="font-black tracking-tight text-neutral-950 text-2xl md:text-3xl mt-1">
+          <span className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1">
             ExamForge-<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-600 bg-clip-text text-transparent">AI</span>
           </span>
         </Link>
@@ -208,15 +181,15 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-[#ECECEC] bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
               >
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#ECECEC] flex items-center justify-center bg-neutral-100">
-                  {user.avatar ? (
+                  {displayAvatar ? (
                     <img
-                      src={user.avatar}
-                      alt={user.name}
+                      src={displayAvatar}
+                      alt={displayName}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
-                      {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                      {displayName ? displayName.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}
                 </div>
@@ -274,13 +247,17 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
           ) : (
-            /* â”€â”€ Guest Actions â”€â”€ */
+            /* ── Guest Actions ── */
             <>
-              <Link href="/login" className="text-sm font-bold text-neutral-600 hover:text-[#6D4AFF] cursor-pointer transition-colors px-4 py-2">
+              <Link
+                href="/login"
+                className="text-xs font-black text-slate-700 hover:text-[#6D4AFF] px-4 py-2.5 rounded-xl border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all cursor-pointer shadow-3xs flex items-center gap-1.5"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#6D4AFF]" />
                 Login
               </Link>
               <Link href="/login">
-                <GlowButton variant="gradient" className="text-xs px-6 py-3 font-bold" magnetic={false}>
+                <GlowButton variant="gradient" className="text-xs px-6 py-2.5 font-black shadow-md" magnetic={false}>
                   Get Started
                 </GlowButton>
               </Link>
@@ -334,15 +311,15 @@ export default function Navbar() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-250/60 rounded-2xl shadow-sm">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 flex items-center justify-center bg-slate-100">
-                  {user.avatar ? (
+                  {displayAvatar ? (
                     <img
-                      src={user.avatar}
-                      alt={user.name}
+                      src={displayAvatar}
+                      alt={displayName}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
-                      {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                      {displayName ? displayName.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}
                 </div>
@@ -376,14 +353,15 @@ export default function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all block"
+                className="w-full text-center py-3 font-black text-slate-800 border border-slate-250 bg-white rounded-xl hover:bg-indigo-50/60 hover:text-[#6D4AFF] hover:border-indigo-200 transition-all flex items-center justify-center gap-2 shadow-xs"
               >
+                <LogIn className="w-4 h-4 text-[#6D4AFF]" />
                 Login
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold bg-gradient-to-r from-[#6D4AFF] to-purple-650 text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
+                className="w-full text-center py-3 font-black bg-gradient-to-r from-[#6D4AFF] to-purple-650 text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
               >
                 Get Started
               </Link>

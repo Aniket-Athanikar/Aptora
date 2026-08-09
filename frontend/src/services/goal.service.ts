@@ -93,7 +93,7 @@ function toGoal(
 
     profile: {
       fullName: profile.full_name,
-      avatar: profile.avatar || "",
+      avatar: "",
       age: profile.age,
       education: profile.education,
       stream: profile.stream,
@@ -147,57 +147,73 @@ function toGoal(
   };
 }
 
+let inFlightWorkspacePromise: Promise<WorkspaceState> | null = null;
+
 export const goalService = {
   async getWorkspace(): Promise<WorkspaceState> {
-    const workspace = await optional(
-      apiClient.get<WorkspaceDto>("/workspace")
-    );
-
-    if (!workspace) {
-      return {
-        activeGoal: null,
-        wizardState: null,
-        history: [],
-      };
+    if (inFlightWorkspacePromise) {
+      return inFlightWorkspacePromise;
     }
 
-    const [
-      profile,
-      timeline,
-      lifestyle,
-      slots,
-      modes,
-      gaps,
-    ] = await Promise.all([
-      optional(apiClient.get<ProfileDto>("/profile/")),
-      optional(apiClient.get<TimelineDto>("/timeline/")),
-      optional(apiClient.get<LifestyleDto>("/lifestyle/")),
-      optional(apiClient.get<SlotDto[]>("/study-slots/")),
-      optional(apiClient.get<ModeDto[]>("/learning-modes/")),
-      optional(apiClient.get<GapDto[]>("/gap-analysis/")),
-    ]);
+    inFlightWorkspacePromise = (async () => {
+      try {
+        const workspace = await optional(
+          apiClient.get<WorkspaceDto>("/workspace")
+        );
 
-    if (!profile || !timeline || !lifestyle) {
-      return {
-        activeGoal: null,
-        wizardState: null,
-        history: [],
-      };
-    }
+        if (!workspace) {
+          return {
+            activeGoal: null,
+            wizardState: null,
+            history: [],
+          };
+        }
 
-    return {
-      activeGoal: toGoal(
-        workspace,
-        profile,
-        timeline,
-        lifestyle,
-        slots || [],
-        modes || [],
-        gaps || []
-      ),
-      wizardState: null,
-      history: [],
-    };
+        const [
+          profile,
+          timeline,
+          lifestyle,
+          slots,
+          modes,
+          gaps,
+        ] = await Promise.all([
+          optional(apiClient.get<ProfileDto>("/profile/")),
+          optional(apiClient.get<TimelineDto>("/timeline/")),
+          optional(apiClient.get<LifestyleDto>("/lifestyle/")),
+          optional(apiClient.get<SlotDto[]>("/study-slots/")),
+          optional(apiClient.get<ModeDto[]>("/learning-modes/")),
+          optional(apiClient.get<GapDto[]>("/gap-analysis/")),
+        ]);
+
+        if (!profile || !timeline || !lifestyle) {
+          return {
+            activeGoal: null,
+            wizardState: null,
+            history: [],
+          };
+        }
+
+        return {
+          activeGoal: toGoal(
+            workspace,
+            profile,
+            timeline,
+            lifestyle,
+            slots || [],
+            modes || [],
+            gaps || []
+          ),
+          wizardState: null,
+          history: [],
+        };
+      } finally {
+        setTimeout(() => {
+          inFlightWorkspacePromise = null;
+        }, 1500);
+      }
+    })();
+
+    return inFlightWorkspacePromise;
   },
 
   async saveActiveGoal(
@@ -218,7 +234,6 @@ export const goalService = {
       : apiClient.post("/workspace", workspacePayload));
 
     const profilePayload = {
-      avatar: goal.profile.avatar || null,
       full_name: goal.profile.fullName,
       age: goal.profile.age,
       education: goal.profile.education,

@@ -40,7 +40,7 @@ async def subscribe_newsletter(payload: NewsletterPayload, db: Session = Depends
 </head>
 <body>
   <div class="container">
-    <span class="logo">EXAM FORGE<span class="logo-ai"> AI</span></span>
+    <span class="logo" style="font-size: 22px; font-weight: 900; color: #0F172A;">Exam<span class="logo-ai" style="color: #6D4AFF;">Forge-AI</span></span>
     <h1>You are Subscribed! 🎉</h1>
     <p>
       Thank you for subscribing to the ExamForge AI newsletter list. We will send you weekly study hacks, PYQ analysis tricks, and major platform feature rollouts.

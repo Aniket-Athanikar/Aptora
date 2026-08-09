@@ -18,7 +18,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
 
   // Map colors based on status and hour density
   const getColorClass = (status: "completed" | "partial" | "missed" | undefined, hours: number) => {
-    if (!status || hours === 0) return "bg-slate-100 hover:bg-slate-200 border-slate-200/40 dark:bg-slate-800 dark:border-slate-700/30";
+    if (!status || hours === 0) return "bg-slate-100 hover:bg-slate-200 border-slate-200/50";
     switch (status) {
       case "completed":
         return "bg-emerald-500 hover:bg-emerald-600 border-emerald-600/20 shadow-sm shadow-emerald-500/10";

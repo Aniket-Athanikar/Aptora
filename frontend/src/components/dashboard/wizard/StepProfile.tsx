@@ -3,6 +3,8 @@ import { Upload } from "lucide-react";
 import { GoalData } from "@/types/goal.types";
 import { CustomSelect } from "./CustomSelect";
 import { AVATAR_OPTIONS } from "./constants";
+import { useProfile } from "@/contexts";
+import { getAvatarUrl } from "@/lib/avatar";
 
 interface StepProfileProps {
   draft: Partial<GoalData>;
@@ -17,21 +19,24 @@ export function StepProfile({
   stepStyles,
   updateWizardDraft
 }: StepProfileProps) {
+  const { profile } = useProfile();
+  const displayAvatar = getAvatarUrl(profile?.avatar_url);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className={`md:col-span-1 flex flex-col items-center gap-4 p-6 rounded-3xl justify-center border ${stepStyles.cardBg}`}>
           <div className="relative group shrink-0">
             <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-emerald-500 to-teal-550 blur-md opacity-40 group-hover:opacity-75 transition-opacity" />
-            {draft.profile?.avatar ? (
+            {displayAvatar ? (
               <img
-                src={draft.profile.avatar}
+                src={displayAvatar}
                 alt="Avatar"
                 className="relative w-24 h-24 rounded-full border-4 border-white object-cover bg-white shadow-md"
               />
             ) : (
               <div className="relative w-24 h-24 rounded-full border-4 border-white bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-3xl shadow-md uppercase">
-                {draft.profile?.fullName ? draft.profile.fullName.charAt(0).toUpperCase() : "?"}
+                {profile?.name ? profile.name.charAt(0).toUpperCase() : (draft.profile?.fullName ? draft.profile.fullName.charAt(0).toUpperCase() : "?")}
               </div>
             )}
           </div>

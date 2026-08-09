@@ -149,7 +149,7 @@ async def send_invoice(payload: InvoiceEmailPayload, db: Session = Depends(get_d
 <body>
   <div class="container">
     <div class="header">
-      <span class="logo">EXAM FORGE<span class="logo-ai"> AI</span></span>
+      <span class="logo" style="font-size: 22px; font-weight: 900; color: #0F172A;">Exam<span class="logo-ai" style="color: #6D4AFF;">Forge-AI</span></span>
       <div class="invoice-title">Invoice Approved</div>
     </div>
     

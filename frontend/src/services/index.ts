@@ -9,3 +9,4 @@ export { backendService } from "./backend.service";
 export { contactService } from "./contact.service";
 export { examService } from "./exam.service";
 export { userService } from "./user.service";
+export { notificationService } from "./notification.service";

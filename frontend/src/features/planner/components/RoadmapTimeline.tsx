@@ -15,7 +15,7 @@ export function RoadmapTimeline() {
   const currentPhaseId = 2; // Default active phase
 
   return (
-    <div className="premium-card rounded-3xl p-6">
+    <div className="premium-card rounded-3xl p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-6">
         <Compass className="w-5 h-5 text-indigo-600 animate-spin-slow" />
         <div>

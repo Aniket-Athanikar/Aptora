@@ -137,8 +137,12 @@ def generate_otp_email_html(name: str, otp: str):
       <circle cx="340" cy="45" r="6" fill="#6D4AFF" />
     </svg>
 
-    <div class="logo-container">
-      <span class="logo">EXAM FORGE<span class="logo-ai"> AI</span></span>
+    <div class="logo-container" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+        <rect width="32" height="32" rx="10" fill="#6D4AFF"/>
+        <path d="M17 6L8 18H15L13 26L24 13H16L17 6Z" fill="white"/>
+      </svg>
+      <span class="logo" style="font-size: 26px; font-weight: 900; color: #111827;">Exam<span class="logo-ai" style="color: #6D4AFF;">Forge-AI</span></span>
     </div>
     
     <div class="cheer-badge">🎉 Celebration! Success Intercepted!</div>
@@ -180,7 +184,7 @@ def send_real_email(recipient_email: str, subject: str, html_content: str):
         msg["From"] = SMTP_USER
         msg["To"] = recipient_email
         
-        part = MIMEText(html_content, "html")
+        part = MIMEText(html_content, "html", "utf-8")
         msg.attach(part)
         
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
@@ -284,7 +288,13 @@ def generate_account_deletion_email_html(name: str, otp: str):
 </head>
 <body>
   <div class="email-container">
-    <div class="logo">EXAM FORGE<span class="logo-ai"> AI</span></div>
+    <div class="logo" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 25px;">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+        <rect width="32" height="32" rx="10" fill="#DC2626"/>
+        <path d="M17 6L8 18H15L13 26L24 13H16L17 6Z" fill="white"/>
+      </svg>
+      <span style="font-size: 26px; font-weight: 900; color: #111827;">Exam<span class="logo-ai" style="color: #DC2626;">Forge-AI</span></span>
+    </div>
     <div class="warning-badge">⚠️ Account Deletion Request</div>
     <h1>Permanent Account Deletion</h1>
     <p class="body-text">

@@ -46,7 +46,7 @@ async def submit_contact_form(payload: ContactForm, db: Session = Depends(get_db
 </head>
 <body>
   <div class="container">
-    <span class="logo">EXAM FORGE<span class="logo-ai"> AI</span></span>
+    <span class="logo" style="font-size: 22px; font-weight: 900; color: #0F172A;">Exam<span class="logo-ai" style="color: #6D4AFF;">Forge-AI</span></span>
     <h1>Message Received Successfully</h1>
     <p style="font-size: 14px; font-weight: 500; color: #4B5563; line-height: 1.6;">
       Hi {payload.name}, thanks for reaching out. We have logged your support message in our system and our team will get back to you within 24 hours. Here is a copy of your ticket:

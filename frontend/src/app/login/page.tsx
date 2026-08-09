@@ -276,6 +276,13 @@ export default function LoginPage() {
       const result = await response.json();
       if (response.ok && result.success) {
         setAuthSuccess("✓ Verified! Redirecting...");
+        if (typeof window !== "undefined") {
+          if (result.access_token) {
+            localStorage.setItem("access_token", result.access_token);
+          }
+          localStorage.removeItem("token");
+          localStorage.removeItem("auth_token");
+        }
         login({
           name: result.name || nameForSignup || emailForVerification.split("@")[0],
           email: emailForVerification,

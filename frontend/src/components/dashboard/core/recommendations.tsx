@@ -54,7 +54,7 @@ export function Recommendations() {
   };
 
   return (
-    <div className="p-6 glass border border-white/20 rounded-3xl space-y-6 relative overflow-hidden">
+    <div className="p-4 sm:p-6 glass border border-white/20 rounded-3xl space-y-4 sm:space-y-6 relative overflow-hidden">
       {/* Background glow highlights */}
       <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full blur-2xl pointer-events-none -z-10" />
 

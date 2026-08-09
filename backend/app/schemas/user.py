@@ -48,3 +48,8 @@ class ProfileUpdatePayload(BaseModel):
     weak_subjects: Optional[list] = None
     strong_subjects: Optional[list] = None
     favorite_subjects: Optional[list] = None
+
+
+class EventLogPayload(BaseModel):
+    event_type: str
+    details: Optional[dict] = None

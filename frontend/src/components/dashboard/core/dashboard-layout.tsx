@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useGoalEngine } from "@/contexts/goal-engine.context";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, useProfile } from "@/contexts";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Sidebar } from "@/components/layout/sidebar";
+import { useNotificationStore } from "@/features/notifications/store/notificationStore";
 import {
   Bell,
   Camera,
@@ -26,17 +29,24 @@ export function DashboardLayout({
   activeTab = "dashboard",
   noPadding = false,
 }: DashboardLayoutProps) {
-  const { user, logout, login } = useAuth();
-  const { notifications, markNotificationRead, clearAllNotifications } = useGoalEngine();
+  const { user, logout } = useAuth();
+  const { profile } = useProfile();
+  const { notifications, markAsRead, markAllAsRead, loadNotifications } = useNotificationStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
   const openProfileModal = () => {
     router.push("/profile");
   };
 
+  const displayAvatar = getAvatarUrl(profile?.avatar_url);
+  const displayName = profile?.name || user?.name || "Student";
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
@@ -55,7 +65,7 @@ export function DashboardLayout({
           <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-pink-100/10 rounded-full filter blur-[120px]" />
         </div>
 
-        <header className="h-16 px-5 lg:px-7 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-3xs relative z-30 select-none">
+        <header className="h-14 sm:h-16 px-3 sm:px-5 lg:px-7 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-3xs relative z-30 select-none">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
@@ -84,16 +94,16 @@ export function DashboardLayout({
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 mt-2.5 w-[320px] max-h-[420px] overflow-y-auto rounded-2xl bg-white border border-slate-150 shadow-2xl p-4.5 z-50 space-y-3">
+                <div className="absolute right-0 mt-2.5 w-[calc(100vw-2rem)] sm:w-[320px] max-h-[420px] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-4.5 z-50 space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                     <span className="text-xs font-black text-slate-800">
                       Notifications ({unreadCount})
                     </span>
                     <button
-                      onClick={clearAllNotifications}
-                      className="text-[10px] text-slate-400 hover:text-slate-600 font-extrabold"
+                      onClick={markAllAsRead}
+                      className="text-[10px] text-slate-400 hover:text-slate-600 font-extrabold cursor-pointer"
                     >
-                      Clear all
+                      Mark all read
                     </button>
                   </div>
                   <div className="space-y-1.5">
@@ -102,29 +112,41 @@ export function DashboardLayout({
                         No notifications yet.
                       </p>
                     ) : (
-                      notifications.map((n) => (
+                      notifications.slice(0, 5).map((n) => (
                         <button
                           key={n.id}
-                          onClick={() => markNotificationRead(n.id)}
-                          className={`w-full text-left p-2.5 rounded-xl border text-xs transition-all
-                                      ${
-                                        n.read
-                                          ? "bg-slate-50/50 border-slate-100 text-slate-400"
-                                          : "bg-indigo-50/50 border-indigo-100 text-slate-700 font-bold"
-                                      }`}
+                          onClick={() => {
+                            markAsRead(n.id);
+                            router.push("/dashboard/notifications");
+                            setNotifOpen(false);
+                          }}
+                          className={`w-full text-left p-2.5 rounded-xl border text-xs transition-all cursor-pointer ${
+                            n.read
+                              ? "bg-slate-50/50 border-slate-100 text-slate-400"
+                              : "bg-indigo-50/60 border-indigo-100 text-slate-800 font-bold"
+                          }`}
                         >
                           <div className="flex items-start justify-between gap-1">
-                            <span className="font-black text-[11px]">{n.title}</span>
+                            <span className="font-black text-[11px] text-slate-800">{n.message}</span>
                             {!n.read && (
                               <span className="w-1.5 h-1.5 rounded-full bg-[#6D4AFF] mt-1 shrink-0" />
                             )}
                           </div>
-                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed font-semibold">
-                            {n.description}
+                          <p className="text-[9px] text-slate-400 mt-1 font-semibold">
+                            {n.type} • {new Date(n.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                           </p>
                         </button>
                       ))
                     )}
+                  </div>
+                  <div className="pt-1 border-t border-slate-100">
+                    <Link
+                      href="/dashboard/notifications"
+                      onClick={() => setNotifOpen(false)}
+                      className="block text-center py-2 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-colors shadow-xs"
+                    >
+                      View All Notifications
+                    </Link>
                   </div>
                 </div>
               )}
@@ -134,19 +156,19 @@ export function DashboardLayout({
               onClick={openProfileModal}
               className="flex items-center gap-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all p-1 pl-1.5 pr-2.5 rounded-full"
             >
-              {user?.avatar ? (
+              {displayAvatar ? (
                 <img
-                  src={user.avatar}
-                  alt="avatar"
+                  src={displayAvatar}
+                  alt={displayName}
                   className="w-7 h-7 rounded-full border border-white object-cover shadow-3xs"
                 />
               ) : (
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-[10px] uppercase border border-white shadow-3xs">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
+                  {displayName ? displayName.charAt(0).toUpperCase() : "?"}
                 </div>
               )}
               <span className="text-xs font-black text-slate-800 hidden sm:inline">
-                {user?.name || "Student"}
+                {displayName}
               </span>
             </button>
           </div>
@@ -154,7 +176,7 @@ export function DashboardLayout({
 
         <main
           className={`flex-1 ${
-            noPadding ? "overflow-y-auto" : "p-4 md:p-6 space-y-5 overflow-y-auto"
+            noPadding ? "overflow-y-auto" : "p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 overflow-y-auto"
           }`}
         >
           {children}

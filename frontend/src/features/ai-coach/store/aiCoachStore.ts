@@ -15,6 +15,7 @@ export interface ChatMessage {
   sender: "user" | "coach";
   text: string;
   timestamp: string;
+  isEdited?: boolean;
 }
 
 interface AICoachStore {
@@ -26,6 +27,9 @@ interface AICoachStore {
   initializeCoach: (userName: string, targetExam: string, weakSubjects: string[]) => void;
   updateDailyScore: (score: number) => void;
   sendChatMessage: (text: string) => void;
+  deleteChatMessage: (msgId: string) => void;
+  editChatMessage: (msgId: string, newText: string) => void;
+  clearChatHistory: () => void;
   loadCoachData: () => void;
 }
 
@@ -58,7 +62,7 @@ const predefinedChatResponses: { pattern: RegExp; reply: string }[] = [
   },
   {
     pattern: /hello|hi|hey/i,
-    reply: "Hello Rahul! How is your study block going today? How can I help you calibrate your focus?"
+    reply: "Hello! How is your study block going today? How can I help you calibrate your focus?"
   }
 ];
 
@@ -66,7 +70,7 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
   memory: defaultMemory,
   dailyScore: 87,
   chatHistory: [
-    { id: "msg_1", sender: "coach", text: "Hello Rahul 👋 How can I help today?", timestamp: new Date(Date.now() - 600000).toISOString() }
+    { id: "msg_1", sender: "coach", text: "Hello! 👋 I'm your ExamForge AI Coach. How can I help calibrate your study plan today?", timestamp: new Date(Date.now() - 600000).toISOString() }
   ],
 
   initializeCoach: (userName, targetExam, weakSubjects) => {
@@ -99,7 +103,7 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
 
     // Evaluate simulated predefined reply
     setTimeout(() => {
-      let replyText = "That is a great question. Break it down into smaller focus tasks, and concentrate on active recall revisions.";
+      let replyText = "That's a great question. Break it down into smaller focus tasks, and concentrate on active recall revisions.";
 
       for (const rule of predefinedChatResponses) {
         if (rule.pattern.test(text)) {
@@ -118,7 +122,32 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
       const updatedHistory = [...get().chatHistory, coachMsg];
       set({ chatHistory: updatedHistory });
       localStorage.setItem("examforge_chat_history", JSON.stringify(updatedHistory));
-    }, 850);
+    }, 700);
+  },
+
+  deleteChatMessage: (msgId) => {
+    const updated = get().chatHistory.filter((m) => m.id !== msgId);
+    set({ chatHistory: updated });
+    localStorage.setItem("examforge_chat_history", JSON.stringify(updated));
+  },
+
+  editChatMessage: (msgId, newText) => {
+    const updated = get().chatHistory.map((m) =>
+      m.id === msgId ? { ...m, text: newText, isEdited: true } : m
+    );
+    set({ chatHistory: updated });
+    localStorage.setItem("examforge_chat_history", JSON.stringify(updated));
+  },
+
+  clearChatHistory: () => {
+    const initialMsg: ChatMessage = {
+      id: `msg_${Date.now()}`,
+      sender: "coach",
+      text: "Hello! Let's start fresh. Ask me about your study plan or daily targets.",
+      timestamp: new Date().toISOString()
+    };
+    set({ chatHistory: [initialMsg] });
+    localStorage.setItem("examforge_chat_history", JSON.stringify([initialMsg]));
   },
 
   loadCoachData: () => {
@@ -131,7 +160,6 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
       const storedScore = localStorage.getItem("examforge_daily_score");
       if (storedScore) {
         const parsed = JSON.parse(storedScore);
-        // Only load if it's from today, otherwise keep default or re-evaluate
         set({ dailyScore: parsed.score });
       }
 

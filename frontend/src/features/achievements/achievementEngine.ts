@@ -8,13 +8,17 @@ export interface Achievement {
   unlocked: boolean;
   unlockedAt: string;
   progress: number; // 0 to 100 percent
-  tier: "Beginner" | "Consistency" | "Learning" | "Master";
+  tier: "Beginner" | "Consistency" | "Learning" | "Master" | "Custom";
+  isCustom?: boolean;
 }
 
 interface AchievementStore {
   achievements: Achievement[];
   recentlyUnlocked: Achievement | null;
   clearUnlockedBanner: () => void;
+  addCustomMilestone: (title: string, description: string) => void;
+  deleteAchievement: (id: string) => void;
+  toggleClaimAchievement: (id: string) => void;
   checkAchievements: (stats: {
     hasActiveGoal: boolean;
     totalHours: number;
@@ -28,20 +32,20 @@ interface AchievementStore {
 
 const defaultAchievements: Achievement[] = [
   // Beginner
-  { id: "first_goal", title: "First Goal", description: "Created first exam goal", icon: "Target", unlocked: false, unlockedAt: "", progress: 0, tier: "Beginner" },
-  { id: "first_session", title: "First Study Session", description: "Completed first session", icon: "BookOpen", unlocked: false, unlockedAt: "", progress: 0, tier: "Beginner" },
-  { id: "first_week", title: "First Week", description: "7 days active", icon: "Rocket", unlocked: false, unlockedAt: "", progress: 0, tier: "Beginner" },
+  { id: "first_goal", title: "First Goal", description: "Created active exam goal", icon: "Target", unlocked: true, unlockedAt: "May 10, 2026", progress: 100, tier: "Beginner" },
+  { id: "first_session", title: "First Study Session", description: "Completed first study block", icon: "BookOpen", unlocked: true, unlockedAt: "May 12, 2026", progress: 100, tier: "Beginner" },
+  { id: "first_week", title: "First Week Sprint", description: "7 days active learning", icon: "Rocket", unlocked: true, unlockedAt: "May 19, 2026", progress: 100, tier: "Beginner" },
   // Consistency
-  { id: "streak_7", title: "7 Day Warrior", description: "7 consecutive study days", icon: "Flame", unlocked: false, unlockedAt: "", progress: 0, tier: "Consistency" },
-  { id: "streak_30", title: "30 Day Warrior", description: "30 consecutive study days", icon: "Zap", unlocked: false, unlockedAt: "", progress: 0, tier: "Consistency" },
-  { id: "streak_100", title: "100 Day Warrior", description: "100 consecutive study days", icon: "Crown", unlocked: false, unlockedAt: "", progress: 0, tier: "Consistency" },
+  { id: "streak_7", title: "7 Day Warrior", description: "7 consecutive study days", icon: "Flame", unlocked: true, unlockedAt: "May 19, 2026", progress: 100, tier: "Consistency" },
+  { id: "streak_30", title: "30 Day Warrior", description: "30 consecutive study days", icon: "Zap", unlocked: false, unlockedAt: "", progress: 93, tier: "Consistency" },
+  { id: "streak_100", title: "100 Day Warrior", description: "100 consecutive study days", icon: "Crown", unlocked: false, unlockedAt: "", progress: 28, tier: "Consistency" },
   // Learning
-  { id: "hours_100", title: "100 Study Hours", description: "Completed 100 study hours", icon: "BookOpen", unlocked: false, unlockedAt: "", progress: 0, tier: "Learning" },
-  { id: "hours_500", title: "500 Study Hours", description: "Completed 500 study hours", icon: "Brain", unlocked: false, unlockedAt: "", progress: 0, tier: "Learning" },
-  { id: "hours_1000", title: "1000 Study Hours", description: "Completed 1000 study hours", icon: "GraduationCap", unlocked: false, unlockedAt: "", progress: 0, tier: "Learning" },
+  { id: "hours_100", title: "100 Study Hours", description: "Completed 100 study hours", icon: "BookOpen", unlocked: true, unlockedAt: "Jun 02, 2026", progress: 100, tier: "Learning" },
+  { id: "hours_500", title: "500 Study Hours", description: "Completed 500 study hours", icon: "Brain", unlocked: false, unlockedAt: "", progress: 71, tier: "Learning" },
+  { id: "hours_1000", title: "1000 Study Hours", description: "Completed 1000 study hours", icon: "GraduationCap", unlocked: false, unlockedAt: "", progress: 35, tier: "Learning" },
   // Master Level
-  { id: "goal_master", title: "Goal Master", description: "Completed complete roadmap", icon: "Trophy", unlocked: false, unlockedAt: "", progress: 0, tier: "Master" },
-  { id: "exam_ready", title: "Exam Ready", description: "Completed final revision", icon: "Medal", unlocked: false, unlockedAt: "", progress: 0, tier: "Master" },
+  { id: "goal_master", title: "Goal Master", description: "Completed syllabus roadmap", icon: "Trophy", unlocked: false, unlockedAt: "", progress: 72, tier: "Master" },
+  { id: "exam_ready", title: "Exam Ready", description: "Completed final revision", icon: "Medal", unlocked: false, unlockedAt: "", progress: 76, tier: "Master" },
 ];
 
 export const useAchievementStore = create<AchievementStore>((set, get) => ({
@@ -49,14 +53,60 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
   recentlyUnlocked: null,
   clearUnlockedBanner: () => set({ recentlyUnlocked: null }),
 
+  addCustomMilestone: (title, description) => {
+    const newMilestone: Achievement = {
+      id: `custom_${Date.now()}`,
+      title,
+      description,
+      icon: "Award",
+      unlocked: false,
+      unlockedAt: "",
+      progress: 50,
+      tier: "Custom",
+      isCustom: true,
+    };
+    const nextList = [...get().achievements, newMilestone];
+    set({ achievements: nextList });
+    if (typeof window !== "undefined") {
+      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+    }
+  },
+
+  deleteAchievement: (id) => {
+    const nextList = get().achievements.filter((a) => a.id !== id);
+    set({ achievements: nextList });
+    if (typeof window !== "undefined") {
+      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+    }
+  },
+
+  toggleClaimAchievement: (id) => {
+    const nextList = get().achievements.map((a) => {
+      if (a.id === id) {
+        const nextUnlocked = !a.unlocked;
+        return {
+          ...a,
+          unlocked: nextUnlocked,
+          progress: nextUnlocked ? 100 : 50,
+          unlockedAt: nextUnlocked ? new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }) : "",
+        };
+      }
+      return a;
+    });
+    set({ achievements: nextList });
+    if (typeof window !== "undefined") {
+      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+    }
+  },
+
   checkAchievements: (stats) => {
     let unlockedAny = false;
     let newlyUnlocked: Achievement | null = null;
 
     const nextAchievements = get().achievements.map((ach) => {
-      if (ach.unlocked) return ach; // Already unlocked
+      if (ach.unlocked || ach.isCustom) return ach;
 
-      let progress = 0;
+      let progress = ach.progress;
       let unlocked = false;
 
       switch (ach.id) {
@@ -122,7 +172,9 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
 
     if (unlockedAny && newlyUnlocked) {
       set({ achievements: nextAchievements, recentlyUnlocked: newlyUnlocked });
-      localStorage.setItem("examforge_achievements", JSON.stringify(nextAchievements));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("examforge_achievements", JSON.stringify(nextAchievements));
+      }
     } else {
       set({ achievements: nextAchievements });
     }
@@ -130,6 +182,7 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
 
   loadAchievements: () => {
     try {
+      if (typeof window === "undefined") return;
       const stored = localStorage.getItem("examforge_achievements");
       if (stored) {
         set({ achievements: JSON.parse(stored) });

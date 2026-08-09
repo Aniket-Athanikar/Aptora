@@ -2,6 +2,7 @@
 
 import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/ToastContext";
+import { ProfileProvider } from "@/contexts";
 
 /**
  * AppProviders — Wraps all context providers in a single component
@@ -10,9 +11,11 @@ import { ToastProvider } from "@/lib/ToastContext";
 export default function AppProviders({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <ToastProvider>
-        {children}
-      </ToastProvider>
+      <ProfileProvider>
+        <ToastProvider>
+          {children}
+        </ToastProvider>
+      </ProfileProvider>
     </AuthProvider>
   );
 }

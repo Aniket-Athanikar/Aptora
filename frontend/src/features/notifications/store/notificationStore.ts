@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { notificationService } from "@/services/notification.service";
 
 export interface NotificationItem {
   id: string;
@@ -11,93 +12,105 @@ export interface NotificationItem {
 
 interface NotificationStore {
   notifications: NotificationItem[];
-  addNotification: (notification: Omit<NotificationItem, "id" | "createdAt" | "read">) => void;
-  markAsRead: (id: string) => void;
-  markAllAsRead: () => void;
-  clearNotification: (id: string) => void;
-  loadNotifications: () => void;
+  isLoading: boolean;
+  error: string | null;
+  addNotification: (notification: Omit<NotificationItem, "id" | "createdAt" | "read">) => Promise<void>;
+  markAsRead: (id: string) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
+  clearNotification: (id: string) => Promise<void>;
+  clearAllNotifications: () => Promise<void>;
+  loadNotifications: () => Promise<void>;
 }
 
-const defaultNotifications: NotificationItem[] = [
-  {
-    id: "notif_1",
-    type: "study",
-    priority: "high",
-    message: "📚 Your History revision is pending. Complete before 8 PM.",
-    read: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "notif_2",
-    type: "motivation",
-    priority: "medium",
-    message: "🔥 You are on a 28-day streak. Don't break it today!",
-    read: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "notif_3",
-    type: "progress",
-    priority: "low",
-    message: "📈 Your study efficiency improved 12% this week.",
-    read: true,
-    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
-  {
-    id: "notif_4",
-    type: "warning",
-    priority: "high",
-    message: "⚠️ Economy progress is falling behind schedule (only 35%). Spend extra focus here.",
-    read: false,
-    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-  },
-];
-
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
-  notifications: defaultNotifications,
+  notifications: [],
+  isLoading: false,
+  error: null,
 
-  addNotification: (item) => {
-    const newItem: NotificationItem = {
+  loadNotifications: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await notificationService.getNotifications();
+      if (res.success && Array.isArray(res.notifications)) {
+        set({ notifications: res.notifications, isLoading: false });
+      } else {
+        set({ isLoading: false });
+      }
+    } catch (err: any) {
+      console.warn("Failed to load notifications from API, using cached state.", err);
+      set({ isLoading: false, error: "Failed to connect to notification engine." });
+    }
+  },
+
+  addNotification: async (item) => {
+    const tempId = `notif_temp_${Date.now()}`;
+    const optimistic: NotificationItem = {
       ...item,
-      id: `notif_${Date.now()}`,
+      id: tempId,
       read: false,
       createdAt: new Date().toISOString(),
     };
-    const updated = [newItem, ...get().notifications];
-    set({ notifications: updated });
-    localStorage.setItem("examforge_notifications", JSON.stringify(updated));
-  },
+    set((state) => ({ notifications: [optimistic, ...state.notifications] }));
 
-  markAsRead: (id) => {
-    const updated = get().notifications.map((n) =>
-      n.id === id ? { ...n, read: true } : n
-    );
-    set({ notifications: updated });
-    localStorage.setItem("examforge_notifications", JSON.stringify(updated));
-  },
-
-  markAllAsRead: () => {
-    const updated = get().notifications.map((n) => ({ ...n, read: true }));
-    set({ notifications: updated });
-    localStorage.setItem("examforge_notifications", JSON.stringify(updated));
-  },
-
-  clearNotification: (id) => {
-    const updated = get().notifications.filter((n) => n.id !== id);
-    set({ notifications: updated });
-    localStorage.setItem("examforge_notifications", JSON.stringify(updated));
-  },
-
-  loadNotifications: () => {
     try {
-      const stored = localStorage.getItem("examforge_notifications");
-      if (stored) {
-        set({ notifications: JSON.parse(stored) });
-      } else {
-        localStorage.setItem("examforge_notifications", JSON.stringify(defaultNotifications));
+      const res = await notificationService.createNotification(item);
+      if (res.success && res.notification) {
+        set((state) => ({
+          notifications: state.notifications.map((n) =>
+            n.id === tempId ? res.notification : n
+          ),
+        }));
       }
-    } catch (e) {
-      console.error("Failed to load notifications from localStorage", e);
+    } catch (err) {
+      console.error("Failed to persist notification on server", err);
+    }
+  },
+
+  markAsRead: async (id) => {
+    set((state) => ({
+      notifications: state.notifications.map((n) =>
+        n.id === id ? { ...n, read: true } : n
+      ),
+    }));
+
+    try {
+      await notificationService.markAsRead(id);
+    } catch (err) {
+      console.error("Failed to mark notification read on server", err);
+    }
+  },
+
+  markAllAsRead: async () => {
+    set((state) => ({
+      notifications: state.notifications.map((n) => ({ ...n, read: true })),
+    }));
+
+    try {
+      await notificationService.markAllAsRead();
+    } catch (err) {
+      console.error("Failed to mark all notifications read on server", err);
+    }
+  },
+
+  clearNotification: async (id) => {
+    set((state) => ({
+      notifications: state.notifications.filter((n) => n.id !== id),
+    }));
+
+    try {
+      await notificationService.deleteNotification(id);
+    } catch (err) {
+      console.error("Failed to delete notification on server", err);
+    }
+  },
+
+  clearAllNotifications: async () => {
+    set({ notifications: [] });
+
+    try {
+      await notificationService.clearAll();
+    } catch (err) {
+      console.error("Failed to clear notifications on server", err);
     }
   },
 }));

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button, Avatar } from '@/components/ui';
-import { useAuthStore } from '@/store/auth';
+import { useAuth, useProfile } from '@/contexts';
 import { Search, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -17,7 +17,8 @@ const marketingNav = [
 
 export function Header() {
   const pathname = usePathname();
-  const { user, isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
+  const { profile } = useProfile();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-[var(--surface)]/70 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.03)]">
@@ -33,7 +34,7 @@ export function Header() {
               />
             </div>
             <span className="text-lg font-black tracking-tight text-slate-900">
-              Exam<span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Forge</span>
+              Exam<span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Forge-AI</span>
             </span>
           </Link>
 
@@ -79,7 +80,7 @@ export function Header() {
               </Link>
               <Link href="/profile" className="relative group shrink-0 transition-transform duration-300 hover:scale-105">
                 <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-60 blur-xs" />
-                <Avatar src={user?.avatar || user?.avatarUrl} fallback={user?.name || user?.email} size="sm" className="relative border-2 border-white shadow-sm" />
+                <Avatar src={profile?.avatar_url} fallback={profile?.name || profile?.email} size="sm" className="relative border-2 border-white shadow-sm" />
               </Link>
             </div>
           ) : (

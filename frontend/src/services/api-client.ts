@@ -20,11 +20,7 @@ class ApiClient {
 
   private getAuthToken(): string | null {
     if (typeof window === "undefined") return null;
-    return (
-      localStorage.getItem("token") ||
-      localStorage.getItem("auth_token") ||
-      localStorage.getItem("access_token")
-    );
+    return localStorage.getItem("access_token");
   }
 
   private async request<T>(

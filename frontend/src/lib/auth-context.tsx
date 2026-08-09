@@ -28,15 +28,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // The server session is the source of truth after a refresh.
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setUser(null);
+        return;
+      }
+    }
     authService.me()
       .then((result) => {
-        const value = result as { success?: boolean; data?: { name?: string; email?: string; avatar?: string } | null };
-        const sessionUser = value.data;
-        setUser(value.success && sessionUser?.email
+        const value = result as { success?: boolean; name?: string; email?: string; avatar?: string };
+        setUser(value.success && value.email
           ? {
-              name: sessionUser.name || sessionUser.email.split("@")[0],
-              email: sessionUser.email,
-              avatar: sessionUser.avatar || "",
+              name: value.name || value.email.split("@")[0],
+              email: value.email,
+              avatar: value.avatar || "",
             }
           : null);
       })
@@ -52,6 +58,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await authService.logout();
     } catch (e) {
       console.warn("Could not sync logout state to backend server:", e);
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("auth_token");
     }
     setUser(null);
   };

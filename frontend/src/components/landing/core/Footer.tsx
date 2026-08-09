@@ -90,10 +90,10 @@ export default function Footer() {
       {/* Glowing Top Border Line - Matching Navbar brand colors */}
       <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent shadow-[0_0_25px_6px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
 
-      <div className="w-full px-8 md:px-12 relative z-10">
+      <div className="w-full px-4 sm:px-8 md:px-12 relative z-10">
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-neutral-200/50">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-12 pb-8 sm:pb-12 border-b border-neutral-200/50">
 
           {/* Col 1: Logo & Info */}
           <div className="lg:col-span-2 flex flex-col gap-6">

@@ -1,14 +1,21 @@
-import logging
-from fastapi import APIRouter, HTTPException, Depends
+﻿import logging
+import os
+import uuid
+import io
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
+from PIL import Image
 
-from app.core.dependencies import get_db
+from app.core.dependencies import get_db, get_current_user
 from app.models.user import UserDb
 from app.models.user_profile import UserProfileDb
-from app.schemas.user import ProfileResponse, ProfileUpdatePayload
+from app.schemas.user import ProfileResponse, ProfileUpdatePayload, EventLogPayload
+from app.core.websocket import ws_manager
 
 logger = logging.getLogger("backend")
 router = APIRouter(prefix="/api/profile", tags=["profile"])
+
+UPLOAD_DIR = "app/uploads/profile"
 
 def profile_to_dict(p: UserProfileDb, user: UserDb) -> dict:
     return {
@@ -60,55 +67,6 @@ def profile_to_dict(p: UserProfileDb, user: UserDb) -> dict:
         "updated_at": p.updated_at.isoformat() if p.updated_at else "",
     }
 
-def sync_onboarding_to_profile(profile: UserProfileDb, user: UserDb, db: Session, commit: bool = True):
-    from app.models.workspace import GoalWorkspaceDb
-    from app.models.onboarding_profile import UserOnboardingProfileDb
-    from app.models.timeline import GoalTimelineDb
-    from app.models.gap_analysis import GapAnalysisDb
-    from app.models.learning_mode import LearningModeDb
-
-    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.user_id == user.id).first()
-    if not workspace:
-        return
-
-    # 1. target_exam
-    if not profile.target_exam and workspace.target_exam:
-        profile.target_exam = workspace.target_exam
-
-    # 2. onboarding profile
-    onboarding = db.query(UserOnboardingProfileDb).filter(UserOnboardingProfileDb.workspace_id == workspace.id).first()
-    if onboarding:
-        if not profile.avatar_url and onboarding.avatar:
-            profile.avatar_url = onboarding.avatar
-        if not profile.education and onboarding.education:
-            profile.education = onboarding.education
-        if not profile.occupation and onboarding.occupation:
-            profile.occupation = onboarding.occupation
-        # city / location
-        if not profile.location and onboarding.city:
-            profile.location = onboarding.city
-
-    # 3. timeline (exam_date, daily_study_hours)
-    timeline = db.query(GoalTimelineDb).filter(GoalTimelineDb.workspace_id == workspace.id).first()
-    if timeline:
-        if not profile.study_hours_goal and timeline.daily_study_hours:
-            profile.study_hours_goal = float(timeline.daily_study_hours)
-        if not profile.target_date and timeline.exam_date:
-            profile.target_date = timeline.exam_date.isoformat()
-
-    # 4. gap analysis (weak subjects)
-    gaps = db.query(GapAnalysisDb).filter(GapAnalysisDb.workspace_id == workspace.id).all()
-    if gaps and not profile.weak_subjects:
-        profile.weak_subjects = [g.subject for g in gaps]
-
-    # 5. learning modes (favorite subjects)
-    modes = db.query(LearningModeDb).filter(LearningModeDb.workspace_id == workspace.id).all()
-    if modes and not profile.favorite_subjects:
-        profile.favorite_subjects = [m.learning_mode for m in modes]
-
-    if commit:
-        db.commit()
-
 
 def sync_profile_to_onboarding(profile: UserProfileDb, user: UserDb, db: Session, update_data: dict):
     from app.models.workspace import GoalWorkspaceDb
@@ -139,8 +97,6 @@ def sync_profile_to_onboarding(profile: UserProfileDb, user: UserDb, db: Session
         db.commit()
         db.refresh(onboarding)
 
-    if "avatar_url" in update_data:
-        onboarding.avatar = update_data["avatar_url"]
     if "education" in update_data:
         onboarding.education = update_data["education"]
     if "occupation" in update_data:
@@ -188,41 +144,38 @@ def sync_profile_to_onboarding(profile: UserProfileDb, user: UserDb, db: Session
 
 
 @router.get("", response_model=ProfileResponse)
-async def get_profile(email: str, db: Session = Depends(get_db)):
-    user = db.query(UserDb).filter(UserDb.email == email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-
-    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+async def get_profile(
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == current_user.id).first()
     if not profile:
-        profile = UserProfileDb(user_id=user.id)
+        profile = UserProfileDb(user_id=current_user.id)
         db.add(profile)
         db.commit()
         db.refresh(profile)
 
-    # Sync any updates from the onboarding wizard tables
-    sync_onboarding_to_profile(profile, user, db)
-
-    return {"success": True, "profile": profile_to_dict(profile, user)}
+    return {"success": True, "profile": profile_to_dict(profile, current_user)}
 
 
 @router.post("", response_model=ProfileResponse)
-async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session = Depends(get_db)):
-    user = db.query(UserDb).filter(UserDb.email == email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-
-    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+@router.patch("", response_model=ProfileResponse)
+async def update_profile(
+    payload: ProfileUpdatePayload,
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == current_user.id).first()
     if not profile:
-        profile = UserProfileDb(user_id=user.id)
+        profile = UserProfileDb(user_id=current_user.id)
         db.add(profile)
         db.commit()
         db.refresh(profile)
 
     update_data = payload.dict(exclude_unset=True)
-    if "name" in update_data:
-        user.name = update_data["name"]
-        
+    if "name" in update_data and update_data["name"]:
+        current_user.name = update_data["name"]
+
     for key, value in update_data.items():
         if hasattr(profile, key):
             setattr(profile, key, value)
@@ -230,8 +183,188 @@ async def update_profile(email: str, payload: ProfileUpdatePayload, db: Session 
     db.commit()
     db.refresh(profile)
 
-    # Sync fields to onboarding wizard tables
-    sync_profile_to_onboarding(profile, user, db, update_data)
+    sync_profile_to_onboarding(profile, current_user, db, update_data)
+    logger.info(f"Profile updated for {current_user.email}")
+    return {"success": True, "profile": profile_to_dict(profile, current_user)}
 
-    logger.info(f"Profile updated for {email}: {list(update_data.keys())}")
-    return {"success": True, "profile": profile_to_dict(profile, user)}
+
+@router.post("/avatar", response_model=ProfileResponse)
+async def upload_avatar(
+    avatar: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    allowed_types = ["image/jpeg", "image/png", "image/webp"]
+    if avatar.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid image format. Allowed formats: JPEG, PNG, WEBP."
+        )
+
+    max_size = 5 * 1024 * 1024
+    content = await avatar.read()
+    if len(content) > max_size:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="File is too large. Maximum allowed size is 5MB."
+        )
+
+    try:
+        image = Image.open(io.BytesIO(content))
+        image = image.resize((512, 512), Image.Resampling.LANCZOS)
+        output_buffer = io.BytesIO()
+        image.save(output_buffer, format="WEBP", quality=85)
+        processed_content = output_buffer.getvalue()
+    except Exception as e:
+        logger.error(f"Image processing failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Failed to process image. Make sure it is a valid image file."
+        )
+
+    user_upload_dir = os.path.join(UPLOAD_DIR, str(current_user.id))
+    os.makedirs(user_upload_dir, exist_ok=True)
+
+    try:
+        for file in os.listdir(user_upload_dir):
+            os.remove(os.path.join(user_upload_dir, file))
+    except Exception as e:
+        logger.warning(f"Failed to clear old avatar files: {e}")
+
+    safe_filename = f"avatar-{uuid.uuid4().hex}.webp"
+    filepath = os.path.join(user_upload_dir, safe_filename)
+    with open(filepath, "wb") as f:
+        f.write(processed_content)
+
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == current_user.id).first()
+    if not profile:
+        profile = UserProfileDb(user_id=current_user.id)
+        db.add(profile)
+
+    avatar_url = f"/uploads/profile/{current_user.id}/{safe_filename}"
+    profile.avatar_url = avatar_url
+    db.commit()
+    db.refresh(profile)
+
+    return {"success": True, "profile": profile_to_dict(profile, current_user)}
+
+
+@router.delete("/avatar", response_model=ProfileResponse)
+async def delete_avatar(
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == current_user.id).first()
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Profile not found."
+        )
+
+    if profile.avatar_url:
+        clean_url = profile.avatar_url.lstrip("/")
+        possible_paths = [clean_url, os.path.join("app", clean_url)]
+        for p in possible_paths:
+            if os.path.exists(p):
+                try:
+                    os.remove(p)
+                except Exception as e:
+                    logger.error(f"Failed to delete physical avatar file at {p}: {e}")
+
+    profile.avatar_url = ""
+    db.commit()
+    db.refresh(profile)
+
+    return {"success": True, "profile": profile_to_dict(profile, current_user)}
+
+
+@router.post("/event")
+async def report_event(
+    payload: EventLogPayload,
+    db: Session = Depends(get_db),
+    current_user: UserDb = Depends(get_current_user),
+):
+    profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == current_user.id).first()
+    if not profile:
+        profile = UserProfileDb(user_id=current_user.id)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+
+    event_type = payload.event_type
+    details = payload.details or {}
+
+    title = ""
+    description = ""
+    badge = ""
+    color = "indigo"
+
+    if event_type == "TIMER_STARTED":
+        title = "Focus Timer Started"
+        description = f"{current_user.name} started a focus session for '{details.get('subject', 'General Study')}'."
+        badge = "Timer"
+        color = "indigo"
+    elif event_type == "TIMER_PAUSED":
+        title = "Focus Timer Paused"
+        description = f"{current_user.name} paused the study timer."
+        badge = "Timer"
+        color = "amber"
+    elif event_type == "TIMER_COMPLETED" or event_type == "SESSION_COMPLETED":
+        duration = int(details.get("duration_minutes", 25))
+        xp_gain = 100
+        profile.xp += xp_gain
+        profile.study_hours_total += (duration / 60.0)
+        # Recalculate level
+        profile.level = int(profile.xp / 1000) + 1
+        db.commit()
+
+        title = "Study Session Completed"
+        description = f"{current_user.name} completed a {duration}m session: +{xp_gain} XP earned!"
+        badge = "Success"
+        color = "emerald"
+    elif event_type == "BREAK_STARTED":
+        title = "Break Started"
+        description = f"{current_user.name} started a well-deserved break."
+        badge = "Recess"
+        color = "purple"
+    elif event_type == "BREAK_COMPLETED":
+        title = "Break Completed"
+        description = f"{current_user.name} finished the break. Ready for next session!"
+        badge = "Recess"
+        color = "emerald"
+    elif event_type == "STREAK_UPDATED":
+        profile.streak += 1
+        db.commit()
+        title = "Streak Updated"
+        description = f"{current_user.name} reached a {profile.streak}-day study streak!"
+        badge = "Streak"
+        color = "orange"
+    elif event_type == "ACHIEVEMENT_UNLOCKED":
+        title = "Achievement Unlocked"
+        description = f"{current_user.name} unlocked: '{details.get('name', 'Milestone Master')}'!"
+        badge = "Trophy"
+        color = "amber"
+    elif event_type == "COACH_NOTIFICATION":
+        title = "AI Coach Notification"
+        description = f"Coach: '{details.get('message', 'Keep up the good work!')}'"
+        badge = "AI Coach"
+        color = "purple"
+    else:
+        title = event_type.replace("_", " ").title()
+        description = details.get("description", "")
+        badge = details.get("badge", "System")
+        color = details.get("color", "indigo")
+
+    broadcast_payload = {
+        "type": "realtime_update",
+        "title": title,
+        "description": description,
+        "badge": badge,
+        "color": color,
+        "xp": profile.xp,
+        "streak": profile.streak,
+        "level": profile.level
+    }
+
+    await ws_manager.broadcast(broadcast_payload)
+    return {"success": True, "event": broadcast_payload}

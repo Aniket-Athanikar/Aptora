@@ -82,14 +82,14 @@ function DashboardContent() {
           ) : activeTab === "knowledge" ? (
             <KnowledgeEngine />
           ) : activeGoal ? (
-            <div className="space-y-4.5">
+            <div className="space-y-3 sm:space-y-4.5">
               {/* Header Title */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-                    Success Engine: <span className="gradient-text">{activeGoal.targetExam}</span> <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
+                  <h1 className="text-lg sm:text-2xl font-black text-gray-900 flex items-center gap-2 flex-wrap">
+                    Success Engine: <span className="gradient-text">{activeGoal.targetExam}</span> <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 animate-pulse" />
                   </h1>
-                  <p className="text-xs text-gray-500 font-semibold mt-0.5">Welcome back, {activeGoal.profile.fullName}! Monitor your calibration progress.</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 font-semibold mt-0.5">Welcome back, {activeGoal.profile.fullName}! Monitor your calibration progress.</p>
                 </div>
 
                 <button
@@ -98,16 +98,16 @@ function DashboardContent() {
                     setIsEditMode(true);
                     setShowWizard(true);
                   }}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-1.5 transition-all shadow-sm"
+                  className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center justify-center gap-1.5 transition-all shadow-sm"
                 >
                   <Sparkles className="w-4 h-4" /> Recalibrate Success Goal
                 </button>
               </div>
 
               {/* Restructured Grid Widgets layout */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Row 1: Focus & Active Goal (3 Columns) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   <GoalCard
                     goal={activeGoal}
                     onEdit={() => {
@@ -121,15 +121,15 @@ function DashboardContent() {
                 </div>
 
                 {/* Row 2: Action Planner & Recommendations (2 Columns) */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                   {/* Left (2/3): Timeline & Planner */}
-                  <div className="lg:col-span-2 space-y-6">
+                  <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                     <RoadmapTimeline />
                     <DailyPlanner tasks={todayTasks} onStatusChange={updateTaskStatus} onReschedule={rescheduleTask} />
                   </div>
 
                   {/* Right (1/3): AI Recommendations & History */}
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     <Recommendations />
                     <HistoryVersioning />
                   </div>
