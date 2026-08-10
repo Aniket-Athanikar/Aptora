@@ -33,16 +33,16 @@ export function SubjectProgress({ subjects, limit, showLink = false }: SubjectPr
   };
 
   return (
-    <div className="bg-white border border-gray-150 rounded-3xl p-5 space-y-4">
-      <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+    <div className="bg-white border border-slate-150 rounded-3xl p-5 space-y-4">
+      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
         <div>
-          <h3 className="text-sm font-black text-gray-900">Subject Coverage & Confidence</h3>
-          <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Track confidence and syllabus completion per area</p>
+          <h3 className="text-sm font-black text-slate-900">Subject Coverage & Confidence</h3>
+          <p className="text-[10px] text-slate-450 font-semibold mt-0.5">Track confidence and syllabus completion per area</p>
         </div>
         {showLink && (
           <Link
             href="/dashboard/progress/subjects"
-            className="text-xs text-indigo-600 hover:text-indigo-700 font-bold flex items-center gap-0.5 group"
+            className="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-0.5 group"
           >
             All Subjects <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -53,13 +53,13 @@ export function SubjectProgress({ subjects, limit, showLink = false }: SubjectPr
         {displaySubjects.map((sub) => (
           <div
             key={sub.subject}
-            className="p-4.5 rounded-2xl border border-gray-100 bg-gray-50/40 hover:bg-white hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-3"
+            className="p-4.5 rounded-2xl border border-slate-100 bg-slate-50/40 hover:bg-white hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-3"
           >
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="text-xs font-black text-gray-800">{sub.subject}</h4>
+                <h4 className="text-xs font-black text-slate-800">{sub.subject}</h4>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-[9px] font-extrabold text-gray-400 uppercase">Confidence</span>
+                  <span className="text-[9px] font-extrabold text-slate-400 uppercase">Confidence</span>
                   <div className="flex">{renderStars(sub.confidence)}</div>
                 </div>
               </div>
@@ -70,23 +70,23 @@ export function SubjectProgress({ subjects, limit, showLink = false }: SubjectPr
 
             {/* Progress Bar */}
             <div className="space-y-1">
-              <div className="flex justify-between text-[10px] font-bold text-gray-500">
+              <div className="flex justify-between text-[10px] font-bold text-slate-500">
                 <span>Completion</span>
                 <span>{sub.completionPercentage}%</span>
               </div>
-              <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     sub.completionPercentage > 75
-                      ? "bg-indigo-600"
+                      ? "bg-emerald-600"
                       : sub.completionPercentage > 50
-                      ? "bg-violet-500"
+                      ? "bg-emerald-500"
                       : "bg-amber-500"
                   }`}
                   style={{ width: `${sub.completionPercentage}%` }}
                 />
               </div>
-              <div className="text-[9px] text-gray-400 font-semibold mt-1">
+              <div className="text-[9px] text-slate-400 font-semibold mt-1">
                 {sub.completedTasks} of {sub.totalTasks} syllabus subtopics completed
               </div>
             </div>

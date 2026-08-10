@@ -65,12 +65,12 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
       {/* Background glass glows */}
       <div
         className={`absolute -right-16 -top-16 w-40 h-40 rounded-full blur-3xl opacity-15 transition-all duration-700 pointer-events-none ${
-          mode === "focus" ? "bg-indigo-600" : "bg-emerald-600"
+          mode === "focus" ? "bg-emerald-600" : "bg-teal-650"
         }`}
       />
       <div
         className={`absolute -left-16 -bottom-16 w-40 h-40 rounded-full blur-3xl opacity-15 transition-all duration-700 pointer-events-none ${
-          mode === "focus" ? "bg-violet-600" : "bg-teal-600"
+          mode === "focus" ? "bg-emerald-600" : "bg-teal-650"
         }`}
       />
 
@@ -79,7 +79,7 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
         <div className="flex items-center gap-2">
           <BookOpen
             className={`w-4 h-4 transition-all ${
-              mode === "focus" ? "text-indigo-600 animate-pulse" : "text-emerald-500 animate-pulse"
+              mode === "focus" ? "text-emerald-600 animate-pulse" : "text-teal-500 animate-pulse"
             }`}
           />
           <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">
@@ -91,8 +91,8 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
           <span
             className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl border ${
               mode === "focus"
-                ? "text-indigo-600 bg-indigo-50/60 border-indigo-100/60"
-                : "text-emerald-600 bg-emerald-50/60 border-emerald-100/60"
+                ? "text-emerald-700 bg-emerald-50/60 border-emerald-100/60"
+                : "text-teal-700 bg-teal-50/60 border-teal-100/60"
             }`}
           >
             {activeSession.subject || defaultSubject || "General study"}
@@ -111,7 +111,7 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
 
       {/* Completion Celebration Overlay */}
       {completionCelebration ? (
-        <div className="my-4 p-5 rounded-2xl bg-gradient-to-br from-indigo-50 via-purple-50 to-emerald-50 border border-indigo-200 z-20 w-full animate-in zoom-in-95 duration-200 text-center space-y-3 shadow-sm">
+        <div className="my-4 p-5 rounded-2xl bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-250 z-20 w-full animate-in zoom-in-95 duration-200 text-center space-y-3 shadow-sm">
           <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-md">
             <CheckCircle className="w-7 h-7" />
           </div>
@@ -120,16 +120,16 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
               🎉 Focus Session Completed!
             </h4>
             <p className="text-xs text-slate-600 font-semibold mt-1">
-              {Math.round(activeSession.plannedSeconds / 60)} minutes completed on <span className="font-extrabold text-indigo-700">{activeSession.subject}</span>.
+              {Math.round(activeSession.plannedSeconds / 60)} minutes completed on <span className="font-extrabold text-emerald-800">{activeSession.subject}</span>.
             </p>
-            <div className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full mt-2">
+            <div className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-750 bg-emerald-100 px-2.5 py-0.5 rounded-full mt-2">
               <Volume2 className="w-3 h-3 text-emerald-600" /> Completion Chime & Haptic Fired
             </div>
           </div>
           <div className="flex items-center justify-center gap-2 pt-1">
             <button
               onClick={repeatSession}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs"
             >
               Focus Again
             </button>
@@ -168,12 +168,12 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
             />
             <defs>
               <linearGradient id="focusGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4f46e5" />
-                <stop offset="100%" stopColor="#7c3aed" />
+                <stop offset="0%" stopColor="#059669" />
+                <stop offset="100%" stopColor="#10b981" />
               </linearGradient>
               <linearGradient id="breakGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#10b981" />
-                <stop offset="100%" stopColor="#059669" />
+                <stop offset="0%" stopColor="#0d9488" />
+                <stop offset="100%" stopColor="#14b8a6" />
               </linearGradient>
             </defs>
           </svg>
@@ -198,8 +198,8 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
             onClick={() => setTimerDuration(mins, "focus")}
             className={`text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-xl border transition-all cursor-pointer ${
               activeSession.plannedSeconds === mins * 60 && mode === "focus"
-                ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
-                : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-white"
+                ? "bg-emerald-600 border-emerald-600 text-white shadow-xs"
+                : "bg-slate-50 border-slate-200 text-slate-650 hover:bg-white"
             }`}
           >
             {mins}m
@@ -234,7 +234,7 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
             onClick={() => updatePreferences({ soundEnabled: !preferences.soundEnabled })}
             className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
               preferences.soundEnabled
-                ? "bg-indigo-50 border-indigo-100 text-indigo-600"
+                ? "bg-emerald-50 border-emerald-100 text-emerald-700"
                 : "bg-slate-50 border-slate-200 text-slate-400"
             }`}
             title={preferences.soundEnabled ? "Mute Sound (M)" : "Unmute Sound (M)"}
@@ -254,7 +254,7 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
 
             {showShortcutsTooltip && (
               <div className="absolute left-0 bottom-full mb-2 w-48 p-3 rounded-2xl bg-slate-900 text-white text-[10px] space-y-1 z-50 shadow-xl border border-slate-700">
-                <p className="font-bold border-b border-slate-700 pb-1 text-indigo-400">Shortcuts</p>
+                <p className="font-bold border-b border-slate-700 pb-1 text-emerald-400">Shortcuts</p>
                 <p><kbd className="bg-slate-800 px-1 rounded">Space</kbd> Start / Pause</p>
                 <p><kbd className="bg-slate-800 px-1 rounded">R</kbd> Resume</p>
                 <p><kbd className="bg-slate-800 px-1 rounded">M</kbd> Toggle Sound</p>
@@ -275,7 +275,7 @@ export function FocusTimer({ defaultSubject, defaultTaskId }: FocusTimerProps) {
         ) : (
           <button
             onClick={() => startTimer(defaultSubject, defaultTaskId)}
-            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl flex items-center gap-1.5 text-xs font-black shadow-md hover:scale-103 transition-all cursor-pointer"
+            className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl flex items-center gap-1.5 text-xs font-black shadow-md hover:scale-103 transition-all cursor-pointer"
           >
             <Play className="w-4 h-4" /> {activeSession.elapsedSeconds > 0 ? "Resume" : "Begin Focus"}
           </button>

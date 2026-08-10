@@ -11,7 +11,7 @@ interface SubjectData {
   color: string;
 }
 
-const colorPalette = ["#6366F1", "#8B5CF6", "#F59E0B", "#10B981", "#EC4899", "#3B82F6", "#64748B"];
+const colorPalette = ["#059669", "#0d9488", "#10B981", "#14b8a6", "#34d399", "#2dd4bf", "#64748B"];
 
 export function SubjectChart({ subjects }: SubjectChartProps) {
   const data: SubjectData[] = useMemo(() => {
@@ -24,10 +24,10 @@ export function SubjectChart({ subjects }: SubjectChartProps) {
       }));
     }
     return [
-      { subject: "History", percentage: 30, color: "#6366F1" },
-      { subject: "Polity", percentage: 25, color: "#8B5CF6" },
-      { subject: "Economy", percentage: 20, color: "#F59E0B" },
-      { subject: "Geography", percentage: 15, color: "#3B82F6" },
+      { subject: "History", percentage: 30, color: "#059669" },
+      { subject: "Polity", percentage: 25, color: "#0d9488" },
+      { subject: "Economy", percentage: 20, color: "#10B981" },
+      { subject: "Geography", percentage: 15, color: "#14b8a6" },
       { subject: "Others", percentage: 10, color: "#64748B" },
     ];
   }, [subjects]);

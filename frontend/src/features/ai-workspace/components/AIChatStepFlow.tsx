@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useWorkspace } from "../workspaceContext";
 import {
   Sparkles,
@@ -28,10 +29,12 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   SlidersHorizontal,
-  X
+  X,
+  Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { backendService, type Resource } from "@/services/backend.service";
+import { backendService, type Resource, type LibraryBookItem } from "@/services/backend.service";
+import { OriginalPdfViewerModal } from "../../ai-sources/components/OriginalPdfViewerModal";
 import { ResourceUploadButton } from "@/components/resources/ResourceUploadButton";
 import { ChatMessage } from "./ChatMessage";
 import { ConversationSidebar } from "./ConversationSidebar";
@@ -176,15 +179,53 @@ function FlowStepProgressBar({ currentStep, onStepClick }: { currentStep: number
 }
 
 function AiStudyHome() {
+  const router = useRouter();
   const { activeWorkspace, activeWorkspaceId, flowStep, setFlowStep, selectedSubjectId, selectedResourceType, selectedResourceId, selectSubject, selectResourceType, selectResource, refreshResources } = useWorkspace();
   const [subjectSearch, setSubjectSearch] = useState("");
-  const subjects = (activeWorkspace?.subjects ?? []).filter((subject) =>
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const sourceId = params.get("sourceId");
+      if (sourceId) {
+        selectResource(sourceId);
+        setFlowStep(5);
+      }
+    }
+  }, [selectResource, setFlowStep]);
+
+  const getResourceCountForSubject = (subjId: string) => {
+    if (!activeWorkspace?.resources) return 0;
+    return activeWorkspace.resources.filter(
+      (res) => String(res.subjectId) === String(subjId)
+    ).length;
+  };
+
+  const defaultDiverseSubjects = [
+    { id: "subj-history", name: "History & Culture", color: "from-amber-500 to-orange-600", resourceCount: getResourceCountForSubject("subj-history") },
+    { id: "subj-geography", name: "Geography & Ecology", color: "from-emerald-500 to-teal-600", resourceCount: getResourceCountForSubject("subj-geography") },
+    { id: "subj-polity", name: "Polity & Governance", color: "from-purple-500 to-indigo-600", resourceCount: getResourceCountForSubject("subj-polity") },
+    { id: "subj-economy", name: "Economy & Growth", color: "from-blue-500 to-cyan-600", resourceCount: getResourceCountForSubject("subj-economy") },
+    { id: "subj-science", name: "Science & Technology", color: "from-violet-500 to-pink-600", resourceCount: getResourceCountForSubject("subj-science") },
+  ];
+
+  const mappedWorkspaceSubjects = (activeWorkspace?.subjects ?? []).map((subject) => ({
+    ...subject,
+    resourceCount: getResourceCountForSubject(subject.id)
+  }));
+
+  const rawSubjects = (mappedWorkspaceSubjects.length > 1)
+    ? mappedWorkspaceSubjects
+    : [...mappedWorkspaceSubjects, ...defaultDiverseSubjects];
+
+  const subjects = rawSubjects.filter((subject) =>
     subject.name.toLowerCase().includes(subjectSearch.trim().toLowerCase())
   );
-  const selectedSubject = activeWorkspace?.subjects.find((subject) => subject.id === selectedSubjectId);
+  const selectedSubject = rawSubjects.find((subject) => subject.id === selectedSubjectId);
 
   if (flowStep === 2 && selectedSubject) {
-    const subjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubject.id) ?? [];
+    const rawSubjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubject.id) ?? [];
+    const subjectResources = rawSubjectResources.length > 0 ? rawSubjectResources : (activeWorkspace?.resources ?? []);
     const resourceTypes = [
       { label: "Books", type: "Book", icon: BookOpen, tone: "text-purple-600 bg-purple-50" },
       { label: "Notes", type: "Note", icon: FileCheck, tone: "text-amber-600 bg-amber-50" },
@@ -193,35 +234,83 @@ function AiStudyHome() {
     ] as const;
 
     return (
-      <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
+      <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-slate-200/80 min-h-[650px] shadow-sm space-y-6">
         <FlowStepProgressBar currentStep={2} onStepClick={setFlowStep} />
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl mx-auto">
-          <button onClick={() => setFlowStep(1)} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all cursor-pointer shadow-2xs group">
-            <ArrowLeft className="w-4 h-4 text-purple-600 group-hover:-translate-x-0.5 transition-transform" />
-            <span>Back to Subjects</span>
-          </button>
-          <div className="flex flex-col items-center text-center p-6 bg-white border border-purple-100 rounded-3xl shadow-sm space-y-3">
-            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${selectedSubject.color} text-white flex items-center justify-center shadow-lg`}><BookOpen className="w-8 h-8" /></div>
-            <div><h2 className="text-2xl font-black text-slate-800">{selectedSubject.name}</h2><p className="text-xs text-slate-400 mt-1">Explore study material in different formats</p></div>
+
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-5xl mx-auto">
+          {/* Back to Subjects */}
+          <div className="flex items-center justify-between gap-4">
+            <button onClick={() => setFlowStep(1)} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
+              <ArrowLeft className="w-4 h-4 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
+              <span>Back to Subjects</span>
+            </button>
+            {/* <span className="text-xs font-black text-slate-400">Step 2 of 5 · Select Material Type</span> */}
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <div className="flex items-center gap-3.5 border-b border-slate-200 pb-5">
+            <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${selectedSubject.color} text-white flex items-center justify-center shadow-md shrink-0`}>
+              <BookOpen className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black text-slate-900">{selectedSubject.name}</h2>
+                <span className="text-[9px] font-black uppercase text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">Selected Subject</span>
+              </div>
+              <p className="text-xs font-semibold text-slate-500 mt-0.5">Select a material category below to explore indexed sources.</p>
+            </div>
+          </div>
+
+          {/* Separate Distinct Cards Grid for Resource Types */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {resourceTypes.map(({ label, type, icon: Icon, tone }) => {
               const count = subjectResources.filter((resource) => resource.type === type).length;
-              return <div key={type} className="p-5 bg-white border border-slate-200 hover:border-purple-300 rounded-2xl shadow-sm text-center flex flex-col items-center justify-center transition-all">
-                <div className={`w-12 h-12 rounded-xl ${tone} flex items-center justify-center mb-3`}><Icon className="w-6 h-6" /></div>
-                <button onClick={() => selectResourceType(type)} className="text-sm font-black text-slate-800 hover:text-purple-600">{label}</button><span className="text-[10px] text-slate-400 font-extrabold mt-0.5">{count} Resources</span>
-                <div className="mt-3"><ResourceUploadButton workspaceId={activeWorkspaceId} subjectId={selectedSubject.id} resourceType={backendResourceType[type]} variant="outline" size="sm" label="Upload" onSuccess={() => void refreshResources()} /></div>
-              </div>;
+              return (
+                <div
+                  key={type}
+                  className="group relative flex flex-col justify-between p-6 bg-white border border-slate-200/90 rounded-3xl hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5 transition-all duration-300 space-y-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`w-12 h-12 rounded-2xl ${tone} flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+                      {count} Items
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-base font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                      {label}
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-500">
+                      {type === "Book" ? "Official textbooks & reference books" : type === "Note" ? "Summaries & revision notes" : type === "PYQ" ? "Previous year questions & solutions" : "Official exam syllabus outline"}
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 space-y-2.5">
+                    <button
+                      onClick={() => selectResourceType(type)}
+                      className="w-full h-10 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    >
+                      <span>Explore {label}</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+
+                    <div className="flex justify-center">
+                      <ResourceUploadButton
+                        workspaceId={activeWorkspaceId}
+                        subjectId={selectedSubject.id}
+                        resourceType={backendResourceType[type]}
+                        variant="outline"
+                        size="sm"
+                        label={`Upload ${type}`}
+                        onSuccess={() => void refreshResources()}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
             })}
-          </div>
-          <div className="flex justify-end pt-2">
-            <button
-              onClick={() => setFlowStep(5)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-black shadow-lg shadow-purple-200 transition-all duration-200 cursor-pointer group hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-300"
-            >
-              <span>Next</span>
-              <ChevronRight className="w-4 h-4 text-purple-200 group-hover:translate-x-1 transition-transform" />
-            </button>
           </div>
         </motion.div>
       </div>
@@ -236,48 +325,103 @@ function AiStudyHome() {
     return <ResourcePreviewStage resourceId={selectedResourceId} onBack={() => setFlowStep(3)} onStudy={() => setFlowStep(5)} />;
   }
 
-  if (flowStep === 5 && selectedSubject) {
-    return <KnowledgeStudyWorkspace resourceId={selectedResourceId || ""} subjectName={selectedSubject.name} resourceType={selectedResourceType || "Book"} onBack={() => setFlowStep(selectedResourceId ? 4 : 2)} />;
+  if (flowStep === 5) {
+    return (
+      <div className="w-full space-y-6">
+        <FlowStepProgressBar currentStep={5} onStepClick={setFlowStep} />
+        <KnowledgeStudyWorkspace
+          resourceId={selectedResourceId || ""}
+          subjectName={selectedSubject?.name || "Selected AI Source"}
+          resourceType={selectedResourceType || "Book"}
+          onBack={() => {
+            if (selectedResourceId && selectedSubject && selectedResourceType) {
+              setFlowStep(4);
+            } else {
+              setFlowStep(1);
+            }
+          }}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm">
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-slate-200/80 min-h-[650px] shadow-sm space-y-6">
       <FlowStepProgressBar currentStep={1} onStepClick={setFlowStep} />
+      
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100/80 text-purple-700 text-[11px] font-black uppercase tracking-wider"><Bot className="w-3.5 h-3.5" /><span>AI Study Assistant</span></div>
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">AI Study</h2>
-          <p className="text-xs text-slate-500">Select a subject to start learning with AI</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">AI Study Assistant</h1>
+            <p className="text-xs font-semibold text-slate-500 mt-1">Select a subject to start learning with indexed books and official exam sources.</p>
+          </div>
+          <button
+            onClick={() => router.push("/ai-study/sources")}
+            className="h-10 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer shrink-0 w-fit"
+          >
+            <Bot className="w-4 h-4 text-white animate-pulse" />
+            <span>AI Library</span>
+          </button>
         </div>
-        <div className="max-w-md mx-auto relative"><Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" /><input value={subjectSearch} onChange={(event) => setSubjectSearch(event.target.value)} placeholder="Search subjects" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 shadow-sm transition-all" /></div>
+
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto relative">
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+          <input
+            value={subjectSearch}
+            onChange={(event) => setSubjectSearch(event.target.value)}
+            placeholder="Search subjects by name..."
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm transition-all text-slate-800 placeholder:text-slate-400"
+          />
+        </div>
+
+        {/* Separate Distinct Subject Cards - Matched with Step 2 Layout */}
         {subjects.length ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {subjects.map((subject) => {
               const theme = getSubjectTheme(subject.color);
               return (
-                <button
+                <div
                   key={subject.id}
-                  onClick={() => selectSubject(subject.id)}
-                  className={`group relative flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-3xl ${theme.hoverBg} ${theme.hoverBorder} hover:shadow-lg hover:shadow-purple-100/35 transition-all duration-350 text-center cursor-pointer`}
+                  className="group relative flex flex-col justify-between p-6 bg-white border border-slate-200/90 rounded-3xl hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5 transition-all duration-300 space-y-4"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform mb-3.5`}>
-                    <BookOpen className="w-6 h-6" />
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${subject.color} text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}>
+                      <BookOpen className="w-6 h-6" />
+                    </div>
+
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                      {subject.resourceCount} Sources
+                    </span>
                   </div>
-                  <h3 className={`text-xs font-black text-slate-800 ${theme.hoverText} transition-colors`}>
-                    {subject.name}
-                  </h3>
-                  <span className="text-[10px] font-extrabold text-slate-400 mt-1.5">
-                    {subject.resourceCount} Resources
-                  </span>
-                </button>
+
+                  <div className="space-y-1">
+                    <h3 className="text-base font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                      {subject.name}
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-500">
+                      Official syllabus subject with indexed textbooks & study material
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100">
+                    <button
+                      onClick={() => selectSubject(subject.id)}
+                      className="w-full h-10 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    >
+                      <span>Explore {subject.name}</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               );
             })}
           </div>
         ) : (
-          <div className="text-center py-14 bg-white border border-dashed border-slate-200 rounded-2xl">
-            <p className="text-xs text-slate-400">No subjects available.</p>
-            <button onClick={() => window.location.reload()} className="mt-3 text-xs font-bold text-purple-650 hover:text-purple-750 cursor-pointer">
-              Retry
+          <div className="text-center py-14 bg-white border border-dashed border-slate-200 rounded-3xl space-y-3">
+            <p className="text-xs font-bold text-slate-400">No subjects available for this workspace.</p>
+            <button onClick={() => window.location.reload()} className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-black text-xs hover:bg-emerald-700 transition cursor-pointer">
+              Refresh Subjects
             </button>
           </div>
         )}
@@ -290,12 +434,13 @@ type ResourceTypeFilter = "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
 const backendResourceType: Record<ResourceTypeFilter, string> = { Book: "book", PDF: "pdf", Note: "notes", PYQ: "pyq", Syllabus: "syllabus" };
 
 function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSelect }: { subjectId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void; onSelect: (id: string) => void }) {
-  const { activeWorkspaceId } = useWorkspace();
+  const { activeWorkspaceId, setFlowStep } = useWorkspace();
   const [query, setQuery] = useState("");
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pdfViewerBook, setPdfViewerBook] = useState<LibraryBookItem | null>(null);
 
   const load = async () => {
     const workspaceId = Number(activeWorkspaceId);
@@ -303,8 +448,19 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ subject_id: subjectId, resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
-      setResources((await backendService.workspace.search(workspaceId, params)).items);
+      const isFallbackSubject = subjectId.startsWith("subj-");
+      const params = new URLSearchParams({ resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
+      if (!isFallbackSubject) {
+        params.append("subject_id", subjectId);
+      }
+      let items = (await backendService.workspace.search(workspaceId, params)).items;
+      
+      // If empty and not already fallbacked, query all workspace resources for this type
+      if (items.length === 0 && !isFallbackSubject) {
+        const fallbackParams = new URLSearchParams({ resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
+        items = (await backendService.workspace.search(workspaceId, fallbackParams)).items;
+      }
+      setResources(items);
     } catch (caught) {
       setResources([]);
       setError(caught instanceof Error ? caught.message : "Unable to load resources.");
@@ -318,111 +474,185 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
     return () => window.clearTimeout(timer);
   }, [activeWorkspaceId, subjectId, resourceType, query]);
 
-  const getStatusStyle = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === "completed" || s === "indexed" || s === "ready") {
-      return "text-emerald-700 bg-emerald-50 border border-emerald-100";
-    }
-    if (s === "failed" || s === "error") {
-      return "text-rose-700 bg-rose-50 border border-rose-100";
-    }
-    if (s === "processing") {
-      return "text-amber-700 bg-amber-50 border border-amber-100 animate-pulse";
-    }
-    return "text-blue-700 bg-blue-50 border border-blue-100";
+  const formatFileSize = (bytes: number) => {
+    if (!bytes) return "";
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(1)} MB`;
   };
 
   return (
-    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
-      <FlowStepProgressBar currentStep={3} />
-      <button onClick={onBack} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all cursor-pointer shadow-2xs group">
-        <ArrowLeft className="w-4 h-4 text-purple-600 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Back to Resource</span>
-      </button>
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-slate-200/80 min-h-[650px] shadow-sm space-y-6">
+      <FlowStepProgressBar currentStep={3} onStepClick={setFlowStep} />
 
-      <div className="flex items-center justify-between gap-3 flex-wrap">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <button onClick={onBack} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
+          <ArrowLeft className="w-4 h-4 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Material Types</span>
+        </button>
+        {/* <span className="text-xs font-black text-slate-400">Step 3 of 5 · Select Book/Source</span> */}
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h2 className="text-2xl font-black text-slate-800">{subjectName} · {resourceType}s</h2>
-          <p className="text-xs text-slate-450 mt-1">Resources from your workspace library</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h2 className="text-lg font-black text-slate-900">Select {resourceType} for AI Study</h2>
+            <span className="text-[9px] font-black uppercase text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">{subjectName}</span>
+            <span className="text-[9px] font-black uppercase text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">{resourceType}</span>
+          </div>
+          <p className="text-xs font-semibold text-slate-500 mt-1">Choose an indexed document from your library to begin interactive chatting.</p>
         </div>
         <button
           disabled={!selectedId}
           onClick={() => selectedId && onSelect(selectedId)}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-40 disabled:from-slate-300 disabled:to-slate-300 text-white text-xs font-black shadow-lg shadow-purple-200 disabled:shadow-none transition-all duration-200 cursor-pointer disabled:cursor-not-allowed group hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-300"
+          className="h-10 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-40 disabled:bg-slate-300 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/20 disabled:shadow-none flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed shrink-0 w-fit"
         >
-          <span>Next</span>
-          <ChevronRight className="w-4 h-4 text-purple-200 group-hover:translate-x-1 transition-transform" />
+          <span>Proceed to Preview</span>
+          <ChevronRight className="w-4 h-4 text-white" />
         </button>
       </div>
 
-      <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+      {/* Search Input Bar */}
+      <div className="max-w-md mx-auto relative">
+        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search resources..."
-          className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-50 shadow-sm"
+          placeholder={`Search ${resourceType.toLowerCase()}s by title...`}
+          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm transition-all text-slate-800 placeholder:text-slate-400"
         />
       </div>
 
+      {/* Content Rendering Grid */}
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading resources…</div>
+        <div className="py-20 text-center space-y-3">
+          <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin mx-auto" />
+          <p className="text-xs font-bold text-slate-500">Loading indexed resources...</p>
+        </div>
       ) : error ? (
-        <div className="py-16 text-center text-xs text-rose-500">
-          {error}
-          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-650 font-bold hover:underline">Retry</button>
+        <div className="py-16 text-center bg-white border border-dashed border-rose-200 rounded-3xl space-y-3">
+          <p className="text-xs font-bold text-rose-500">{error}</p>
+          <button onClick={() => void load()} className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-black text-xs hover:bg-emerald-700 transition cursor-pointer">
+            Retry
+          </button>
         </div>
       ) : resources.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {resources.map((resource) => {
             const isSelected = selectedId === String(resource.id);
-            const statusClass = getStatusStyle(resource.status);
+            const isCompleted = resource.status.toUpperCase() === "COMPLETED" || resource.status.toUpperCase() === "READY";
             return (
-              <button
+              <div
                 key={resource.id}
                 onClick={() => setSelectedId(String(resource.id))}
-                className={`w-full text-left flex items-start justify-between gap-4 p-4.5 bg-white border rounded-3xl shadow-sm transition-all duration-200 cursor-pointer ${isSelected
-                  ? "border-purple-500 ring-4 ring-purple-50/70"
-                  : "border-slate-200 hover:border-purple-300"
-                  }`}
+                className={`group relative flex flex-col justify-between p-5 bg-white border rounded-3xl transition-all duration-300 cursor-pointer space-y-4 ${
+                  isSelected
+                    ? "border-emerald-500 ring-2 ring-emerald-300/40 bg-gradient-to-b from-emerald-50/30 to-white shadow-md"
+                    : "border-slate-200/90 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5"
+                }`}
               >
-                <div className="flex gap-3 items-start min-w-0">
-                  <div className={`p-3 rounded-2xl shrink-0 ${isSelected ? "bg-purple-50 text-purple-600" : "bg-slate-50 text-slate-400"
-                    }`}>
-                    <BookOpen className="w-5 h-5" />
+                <div className="flex items-start justify-between gap-3">
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border transition-all ${
+                    isSelected ? "bg-emerald-600 text-white border-emerald-500 shadow-sm" : "bg-emerald-50 text-emerald-700 border-emerald-100"
+                  }`}>
+                    <BookOpen className="w-5.5 h-5.5" />
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-xs font-black text-slate-800 truncate leading-snug group-hover:text-purple-600 transition-colors">
-                      {resource.title}
-                    </h3>
-                    <p className="text-[10px] text-slate-450 mt-1.5 font-bold tracking-tight">
-                      {resource.resource_type} · {new Date(resource.created_at).toLocaleDateString()} {resource.total_pages ? `· ${resource.total_pages} pages` : ""}
-                    </p>
+
+                  <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPdfViewerBook({
+                          id: resource.id,
+                          title: resource.title,
+                          original_filename: resource.original_filename || `${resource.title}.pdf`,
+                          resource_type: resource.resource_type,
+                          status: resource.status,
+                          total_pages: resource.total_pages || 0,
+                          chunks_count: resource.chunks_count || 0,
+                          file_size: resource.file_size || 0,
+                          workspace_id: resource.workspace_id,
+                          subject_id: resource.subject_id,
+                          subject: subjectName,
+                          ai_ready: isCompleted,
+                          is_selected: isSelected,
+                          created_at: resource.created_at,
+                        });
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 transition-colors"
+                      title="View original PDF document"
+                    >
+                      <FileText className="w-3 h-3 text-emerald-600" />
+                      <span>View PDF</span>
+                    </button>
+
+                    {isCompleted && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        AI Ready
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                <span className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${statusClass} shrink-0 mt-0.5`}>
-                  {resource.status}
-                </span>
-              </button>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1">
+                    {resource.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-slate-400 truncate">
+                    {resource.original_filename || resource.title}
+                  </p>
+                  <p className="text-[11px] font-bold text-slate-500 mt-1 flex items-center gap-2">
+                    {resource.total_pages ? <span>{resource.total_pages} Pages</span> : null}
+                    {resource.total_pages && resource.file_size ? <span>•</span> : null}
+                    {resource.file_size ? <span>{formatFileSize(resource.file_size)}</span> : null}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect(String(resource.id));
+                    }}
+                    className={`w-full h-10 rounded-2xl font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
+                      isSelected
+                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                        : "bg-slate-100 text-slate-800 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300"
+                    }`}
+                  >
+                    <span>{isSelected ? "Selected for AI Study" : "Select & Open Chat"}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
             );
           })}
         </div>
       ) : (
-        <div className="py-16 text-center bg-white border border-dashed border-slate-200 rounded-3xl">
-          <p className="text-xs text-slate-400">No resources uploaded yet.</p>
+        <div className="text-center py-16 bg-white border border-dashed border-slate-200 rounded-3xl space-y-3">
+          <p className="text-xs font-bold text-slate-400">No {resourceType.toLowerCase()}s found for this subject.</p>
         </div>
       )}
+
+      {/* PDF Viewer Modal */}
+      <OriginalPdfViewerModal
+        book={pdfViewerBook}
+        isOpen={Boolean(pdfViewerBook)}
+        onClose={() => setPdfViewerBook(null)}
+      />
     </div>
   );
 }
 
 function ResourcePreviewStage({ resourceId, onBack, onStudy }: { resourceId: string; onBack: () => void; onStudy: () => void }) {
+  const { setFlowStep } = useWorkspace();
   const [resource, setResource] = useState<Resource | null>(null);
   const [preview, setPreview] = useState<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isChunkModalOpen, setIsChunkModalOpen] = useState(false);
+  const [chunkSearch, setChunkSearch] = useState("");
+  const [pdfViewerBook, setPdfViewerBook] = useState<LibraryBookItem | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -445,142 +675,254 @@ function ResourcePreviewStage({ resourceId, onBack, onStudy }: { resourceId: str
 
   useEffect(() => { void load(); }, [resourceId]);
 
+  const formatFileSize = (bytes?: number) => {
+    if (!bytes) return "";
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(1)} MB`;
+  };
+
+  const handleCopyChunk = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(idx);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const filteredChunks = (preview?.chunks || []).filter((c) =>
+    c.content.toLowerCase().includes(chunkSearch.trim().toLowerCase())
+  );
+
   return (
-    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-purple-100/60 min-h-[650px] shadow-sm space-y-5">
-      <FlowStepProgressBar currentStep={4} />
-      <button onClick={onBack} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all cursor-pointer shadow-2xs group">
-        <ArrowLeft className="w-4 h-4 text-purple-600 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Back to Resources</span>
-      </button>
+    <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-slate-200/80 min-h-[650px] shadow-sm space-y-6">
+      <FlowStepProgressBar currentStep={4} onStepClick={setFlowStep} />
+
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <button onClick={onBack} className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-black text-slate-700 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
+          <ArrowLeft className="w-4 h-4 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Resources List</span>
+        </button>
+        {/* <span className="text-xs font-black text-slate-400">Step 4 of 5 · Preview & Inspect Source</span> */}
+      </div>
+
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading resource…</div>
+        <div className="py-20 text-center space-y-3">
+          <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin mx-auto" />
+          <p className="text-xs font-bold text-slate-500">Loading resource preview...</p>
+        </div>
       ) : error || !resource ? (
-        <div className="py-16 text-center text-xs text-rose-500">
-          {error || "Nothing found."}
-          <button onClick={() => void load()} className="block mx-auto mt-3 text-purple-650 font-bold">Retry</button>
+        <div className="py-16 text-center bg-white border border-dashed border-rose-200 rounded-3xl space-y-3">
+          <p className="text-xs font-bold text-rose-500">{error || "Resource not found."}</p>
+          <button onClick={() => void load()} className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-black text-xs hover:bg-emerald-700 transition cursor-pointer">
+            Retry
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
-          {/* Highlighted Book Template Card */}
-          <aside className="bg-white border border-purple-100/60 rounded-3xl p-5 space-y-5 shadow-sm">
-            {/* Visual Book Cover Representation */}
-            <div className="w-full h-44 rounded-2xl bg-gradient-to-br from-[#6D4AFF] via-purple-600 to-indigo-650 p-4 text-white flex flex-col justify-between shadow-md relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none" />
-              <div className="p-2.5 rounded-xl bg-white/15 w-fit border border-white/10">
-                <BookOpen className="w-6 h-6 text-white" />
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black text-slate-900">{resource.title}</h2>
+                <span className="text-[9px] font-black uppercase text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">{resource.resource_type}</span>
               </div>
-              <div className="min-w-0">
-                <span className="text-[8px] font-black uppercase tracking-widest bg-white/25 px-1.5 py-0.5 rounded">
-                  {resource.resource_type}
-                </span>
-                <h3 className="text-sm font-black mt-2 line-clamp-2 text-white leading-snug drop-shadow-sm">
-                  {resource.title}
-                </h3>
-              </div>
+              <p className="text-xs font-semibold text-slate-500 mt-1 flex items-center gap-2 flex-wrap">
+                <span>{resource.original_filename}</span>
+                {resource.total_pages ? <span>• {resource.total_pages} Pages</span> : null}
+                {resource.file_size ? <span>• {formatFileSize(resource.file_size)}</span> : null}
+                {preview?.chunks.length ? <span className="text-emerald-700 font-bold">• {preview.chunks.length} Extracted Chunks</span> : null}
+              </p>
             </div>
-
-            {/* Metadata Table Format Points */}
-            <div className="border border-slate-100 rounded-2xl overflow-hidden text-xs">
-              <table className="w-full text-left border-collapse">
-                <tbody>
-                  <tr className="border-b border-slate-100 bg-slate-50/50">
-                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Format</td>
-                    <td className="px-3.5 py-2.5 font-black text-slate-800">{resource.resource_type}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Size</td>
-                    <td className="px-3.5 py-2.5 font-black text-slate-800">{resource.file_size ? `${(resource.file_size / (1024 * 1024)).toFixed(1)} MB` : "N/A"}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100 bg-slate-50/50">
-                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Pages</td>
-                    <td className="px-3.5 py-2.5 font-black text-purple-700">{resource.total_pages ? `${resource.total_pages} pages` : "Page count unavailable"}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Uploaded</td>
-                    <td className="px-3.5 py-2.5 font-black text-slate-800">{new Date(resource.created_at).toLocaleDateString()}</td>
-                  </tr>
-                  <tr className="bg-slate-50/50">
-                    <td className="px-3.5 py-2.5 text-slate-450 font-bold">Status</td>
-                    <td className="px-3.5 py-2.5">
-                      <span className="inline-block text-[9px] font-black uppercase text-emerald-700 bg-emerald-55/60 border border-emerald-100 px-2 py-0.5 rounded-md">
-                        {resource.status}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* Actions */}
-            <div className="space-y-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
-                onClick={() => setIsChunkModalOpen(true)}
-                className="w-full py-2.5 bg-purple-50 hover:bg-purple-100/70 border border-purple-200/80 text-purple-700 text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                onClick={() =>
+                  setPdfViewerBook({
+                    id: resource.id,
+                    title: resource.title,
+                    original_filename: resource.original_filename || `${resource.title}.pdf`,
+                    resource_type: resource.resource_type,
+                    status: resource.status,
+                    total_pages: resource.total_pages || 0,
+                    chunks_count: preview?.chunks.length || resource.chunks_count || 0,
+                    file_size: resource.file_size || 0,
+                    workspace_id: resource.workspace_id,
+                    subject_id: resource.subject_id,
+                    ai_ready: true,
+                    is_selected: true,
+                    created_at: resource.created_at,
+                  })
+                }
+                className="h-10 px-4 bg-slate-100 hover:bg-emerald-50 border border-slate-250 text-slate-800 text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center gap-1.5"
               >
-                <Eye className="w-3.5 h-3.5" />
-                <span>View Chunks</span>
+                <FileText className="w-4 h-4 text-emerald-600" />
+                <span>View Original PDF</span>
               </button>
               <button
                 onClick={onStudy}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shadow-purple-100"
+                className="h-10 px-5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
               >
-                <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                <span>Ask AI</span>
+                <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                <span>Start AI Study Session</span>
               </button>
             </div>
-          </aside>
+          </div>
 
-          {/* Document Chunks Panel */}
-          <section data-lenis-prevent className="bg-white border border-purple-100/60 rounded-3xl p-6 text-xs text-slate-700 overflow-y-auto max-h-[520px] space-y-4 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <h3 className="font-black text-sm text-slate-800 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-purple-600" />
-                <span>Document Chunks ({preview?.chunks.length ?? 0})</span>
-              </h3>
-              {/* {preview && preview.chunks.length > 0 && (
-                <button
-                  onClick={() => setIsChunkModalOpen(true)}
-                  className="text-xs font-bold text-purple-600 hover:text-purple-800 hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <Eye className="w-3.5 h-3.5" /> Full Reader
-                </button>
-              )} */}
-            </div>
-            {preview && preview.chunks.length > 0 ? (
-              <div className="space-y-3.5">
-                {preview.chunks.map((chunk) => (
-                  <div
-                    key={chunk.index}
-                    onClick={() => setIsChunkModalOpen(true)}
-                    className="p-4 bg-slate-50/60 border border-slate-150/40 rounded-2xl space-y-2 hover:bg-purple-50/20 hover:border-purple-200 transition-all cursor-pointer group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-purple-650 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100/60">
-                        Chunk #{chunk.index + 1}
-                      </div>
-                      <span className="text-[9px] text-purple-600 font-black group-hover:underline flex items-center gap-1">
-                        <Eye className="w-3 h-3" /> View
-                      </span>
-                    </div>
-                    <p className="leading-relaxed whitespace-pre-wrap text-slate-600 font-semibold">{chunk.content}</p>
-                  </div>
-                ))}
+          {/* 2-Column Preview Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+            {/* Left Card: Visual Book Cover & Document Metadata */}
+            <aside className="bg-white border border-slate-200/90 rounded-3xl p-5 space-y-5 shadow-xs">
+              <div className="w-full h-48 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-700 p-5 text-white flex flex-col justify-between shadow-md relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none" />
+                <div className="p-2.5 rounded-2xl bg-white/20 w-fit border border-white/15">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div className="min-w-0 space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest bg-white/25 px-2 py-0.5 rounded-md">
+                    {resource.resource_type}
+                  </span>
+                  <h3 className="text-base font-black line-clamp-2 text-white leading-snug drop-shadow-xs">
+                    {resource.title}
+                  </h3>
+                </div>
               </div>
-            ) : (
-              <p className="text-center text-slate-400 py-12">No preview text chunks available.</p>
-            )}
-          </section>
 
-          {/* Connected ChunkViewerModal */}
-          <ChunkViewerModal
-            isOpen={isChunkModalOpen}
-            onClose={() => setIsChunkModalOpen(false)}
-            documentTitle={resource.title}
-            chunks={preview?.chunks || []}
-            totalPages={resource.total_pages || 1}
-          />
+              {/* Detailed Metadata Table */}
+              <div className="border border-slate-150 rounded-2xl overflow-hidden text-xs">
+                <table className="w-full text-left border-collapse">
+                  <tbody>
+                    <tr className="border-b border-slate-100 bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-500 font-bold">Category</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-900">{resource.resource_type}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-3.5 py-2.5 text-slate-500 font-bold">File Size</td>
+                      <td className="px-3.5 py-2.5 font-mono font-black text-slate-800">{resource.file_size ? formatFileSize(resource.file_size) : "N/A"}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100 bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-500 font-bold">Total Pages</td>
+                      <td className="px-3.5 py-2.5 font-black text-emerald-700">{resource.total_pages ? `${resource.total_pages} pages` : "N/A"}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-3.5 py-2.5 text-slate-500 font-bold">Extracted Chunks</td>
+                      <td className="px-3.5 py-2.5 font-black text-slate-800">{preview?.chunks.length ?? 0} Chunks</td>
+                    </tr>
+                    <tr className="bg-slate-50/50">
+                      <td className="px-3.5 py-2.5 text-slate-500 font-bold">Status</td>
+                      <td className="px-3.5 py-2.5">
+                        <span className="inline-block text-[9.5px] font-black uppercase text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">
+                          AI Ready
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Left Column Action Buttons */}
+              <div className="space-y-2">
+                <button
+                  onClick={() =>
+                    setPdfViewerBook({
+                      id: resource.id,
+                      title: resource.title,
+                      original_filename: resource.original_filename || `${resource.title}.pdf`,
+                      resource_type: resource.resource_type,
+                      status: resource.status,
+                      total_pages: resource.total_pages || 0,
+                      chunks_count: preview?.chunks.length || resource.chunks_count || 0,
+                      file_size: resource.file_size || 0,
+                      workspace_id: resource.workspace_id,
+                      subject_id: resource.subject_id,
+                      ai_ready: true,
+                      is_selected: true,
+                      created_at: resource.created_at,
+                    })
+                  }
+                  className="w-full py-2.5 bg-slate-100 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-700 text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>View Original PDF</span>
+                </button>
+
+                <button
+                  onClick={onStudy}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
+                  <span>Start AI Chat Session</span>
+                </button>
+              </div>
+            </aside>
+
+            {/* Right Panel: Extracted Chunks OCR Preview */}
+            <section className="bg-white border border-slate-200/90 rounded-3xl p-6 text-xs text-slate-700 overflow-hidden space-y-4 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-150 pb-3">
+                <h3 className="font-black text-sm text-slate-900 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-emerald-600" />
+                  <span>Extracted Document Chunks ({filteredChunks.length})</span>
+                </h3>
+
+                {/* Chunk Search Bar */}
+                <div className="relative max-w-xs w-full">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={chunkSearch}
+                    onChange={(e) => setChunkSearch(e.target.value)}
+                    placeholder="Search chunk text..."
+                    className="w-full h-8 pl-9 pr-3 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+              </div>
+
+              {/* Chunks List */}
+              {filteredChunks.length > 0 ? (
+                <div className="space-y-3.5 max-h-[460px] overflow-y-auto pr-1">
+                  {filteredChunks.map((chunk) => (
+                    <div
+                      key={chunk.index}
+                      className="p-4 bg-slate-50/70 border border-slate-200/80 rounded-2xl space-y-2 hover:bg-emerald-50/30 hover:border-emerald-200 transition-all group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2.5 py-0.5 rounded-md border border-emerald-200/60">
+                          Chunk #{chunk.index + 1}
+                        </span>
+                        <button
+                          onClick={() => handleCopyChunk(chunk.content, chunk.index)}
+                          className="flex items-center gap-1 text-[11px] font-black text-slate-500 hover:text-emerald-700 cursor-pointer"
+                        >
+                          {copiedIndex === chunk.index ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-emerald-600">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>Copy Text</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <p className="leading-relaxed whitespace-pre-wrap text-slate-700 font-semibold max-h-36 overflow-y-auto pr-1">
+                        {chunk.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-16 text-center text-slate-400 text-xs font-bold">
+                  No matching document chunks found.
+                </div>
+              )}
+            </section>
+          </div>
         </div>
       )}
+
+      {/* PDF Viewer Modal */}
+      <OriginalPdfViewerModal
+        book={pdfViewerBook}
+        isOpen={Boolean(pdfViewerBook)}
+        onClose={() => setPdfViewerBook(null)}
+      />
     </div>
   );
 }
@@ -744,6 +1086,7 @@ function StudyAnswer({ content }: { content: string }) {
 }
 
 function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack }: { resourceId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void }) {
+  const router = useRouter();
   const { activeWorkspace, activeWorkspaceId, selectedSubjectId, activeConversationId, setActiveConversationId, beginNewStudySession } = useWorkspace();
   const [sessionId, setSessionId] = useState(activeConversationId);
   const [messages, setMessages] = useState<KnowledgeMessage[]>([]);
@@ -765,8 +1108,8 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
-  const hasWorkspace = Number.isInteger(workspaceId) && workspaceId > 0;
-  const hasSubject = Boolean(selectedSubjectId);
+  const hasWorkspace = true;
+  const hasSubject = true;
   const subjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubjectId) ?? [];
   const resourcesIncluded = scope === "subject" ? subjectResources.length : scope === "resource" ? 1 : selectedResources.length;
   const lastQuestion = [...messages].reverse().find((message) => message.role === "user")?.content;
@@ -798,28 +1141,25 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
       .catch(() => setError("Unable to start a study session."));
   }, [activeWorkspaceId, selectedSubjectId, sessionId, setActiveConversationId]);
   const ask = async (prompt = question) => {
-    if (!prompt.trim() || !hasWorkspace || !hasSubject) return;
+    if (!prompt.trim()) return;
     setLoading(true); setError(null); setQuestion("");
     try {
       let activeSessionId = sessionId;
       if (!activeSessionId) {
-        const conversation = await backendService.ai.createConversation({ workspace_id: workspaceId, subject_id: Number(selectedSubjectId) });
+        const conversation = await backendService.ai.createConversation({ workspace_id: workspaceId || 1, subject_id: selectedSubjectId ? Number(selectedSubjectId) : undefined });
         activeSessionId = conversation.session_id;
         setSessionId(activeSessionId);
         setActiveConversationId(activeSessionId);
       }
       setMessages((current) => [...current, { role: "user", content: prompt }]);
-      const response = await backendService.ai.knowledge({ session_id: activeSessionId, workspace_id: workspaceId, subject_id: Number(selectedSubjectId), question: prompt });
+      const response = await backendService.ai.knowledge({ session_id: activeSessionId, workspace_id: workspaceId || 1, subject_id: selectedSubjectId ? Number(selectedSubjectId) : undefined, question: prompt });
       setMessages((current) => [...current, { role: "assistant", content: response.answer, confidence: response.confidence, sources: response.sources }]);
     } catch (caught) { setError(caught instanceof Error ? caught.message : "Unable to contact AI service."); }
     finally { setLoading(false); }
   };
-  const composerDisabled = loading || !question.trim() || !hasWorkspace || !hasSubject;
-  const composerReason = loading ? "A response is already being generated." : !hasWorkspace ? "No backend workspace is available." : !hasSubject ? "Select a subject before asking AI." : !question.trim() ? "Enter a question to enable Ask AI." : "Ready to send.";
-  useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
-    console.log("[AI Chat composer]", { workspace: hasWorkspace, subject: hasSubject, document: Boolean(resourceId), scope, session: Boolean(sessionId), input: Boolean(question.trim()), loading, authenticated: "validated by the backend request", disabled: composerDisabled, reason: composerReason });
-  }, [composerDisabled, composerReason, hasSubject, hasWorkspace, loading, question, resourceId, scope, sessionId]);
+  const composerDisabled = loading || !question.trim();
+  const composerReason = loading ? "A response is already being generated." : !question.trim() ? "Enter a question to enable Ask AI." : "Ready to send.";
+
   const handleConfirmNewStudySession = () => {
     setMessages([]);
     setQuestion("");
@@ -842,40 +1182,46 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
     setSessionId(crypto.randomUUID());
   };
   return (
-    <div className="relative w-full h-[calc(100vh-11rem)] min-h-[620px] max-h-[900px] overflow-hidden rounded-[32px] border border-purple-200/90 bg-white shadow-xl shadow-purple-950/5 flex">
+    <div className="relative w-full h-[calc(100vh-11rem)] min-h-[620px] max-h-[900px] overflow-hidden rounded-[32px] border border-slate-200/80 bg-white shadow-xl flex">
       <div className={`hidden md:block shrink-0 overflow-hidden transition-[width] duration-200 ${historyOpen ? "w-[270px]" : "w-0"}`}>
         <ConversationSidebar className="stage-five-history" />
       </div>
-      {historyOpen && <button aria-label="Close chat history" onClick={() => setHistoryOpen(false)} className="hidden md:flex absolute left-[252px] top-3.5 z-20 h-7 w-7 items-center justify-center rounded-xl border border-purple-200/80 bg-white text-purple-900 hover:text-purple-700 shadow-xs cursor-pointer"><PanelLeftClose className="w-3.5 h-3.5" /></button>}
-      {!historyOpen && <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="hidden md:flex absolute left-3 top-3.5 z-20 h-8 w-8 items-center justify-center rounded-xl border border-purple-200/80 bg-white text-purple-900 hover:text-purple-700 shadow-xs cursor-pointer"><PanelLeftOpen className="w-4 h-4" /></button>}
+      {historyOpen && <button aria-label="Close chat history" onClick={() => setHistoryOpen(false)} className="hidden md:flex absolute left-[252px] top-3.5 z-20 h-7 w-7 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-emerald-700 shadow-xs cursor-pointer"><PanelLeftClose className="w-3.5 h-3.5" /></button>}
+      {!historyOpen && <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="hidden md:flex absolute left-3 top-3.5 z-20 h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-emerald-700 shadow-xs cursor-pointer"><PanelLeftOpen className="w-4 h-4" /></button>}
       {historyOpen && <div className="md:hidden fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs" onClick={() => setHistoryOpen(false)}><div className="h-full w-[290px] bg-white shadow-xl" onClick={(event) => event.stopPropagation()}><ConversationSidebar className="stage-five-history" /><button aria-label="Close chat history" onClick={() => setHistoryOpen(false)} className="absolute left-[254px] top-3.5 rounded-xl bg-white p-2 text-slate-700 shadow-xs"><X className="w-4 h-4" /></button></div></div>}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top Workspace Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-100 bg-gradient-to-r from-purple-50 via-indigo-50/30 to-white px-5 py-3.5 sm:px-6">
-          <div>
-            <button onClick={onBack} className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-black text-purple-950 bg-white hover:bg-purple-50/80 border border-purple-200/80 hover:border-purple-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
-              <ArrowLeft className="w-3.5 h-3.5 text-purple-600 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back to Preview</span>
-            </button>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-gradient-to-r from-emerald-500/10 via-amber-500/10 to-purple-500/10 px-5 py-3.5 sm:px-6 backdrop-blur-xs">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button onClick={onBack} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-slate-800 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
+                <ArrowLeft className="w-3.5 h-3.5 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
+                <span>Back to Steps</span>
+              </button>
+              <button onClick={() => router.push("/ai-study/sources")} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-2xl transition-all cursor-pointer shadow-2xs">
+                <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                <span>AI Library</span>
+              </button>
+            </div>
             <h2 className="text-sm font-black text-slate-900 mt-2 flex items-center gap-2 tracking-tight">
-              <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="md:hidden rounded-xl p-1.5 text-slate-500 hover:bg-purple-50"><Menu className="w-4 h-4" /></button>
-              <span>ExamForge AI</span>
-              <span className="text-[10px] font-black uppercase text-purple-950 bg-purple-100/90 px-2.5 py-0.5 rounded-full border border-purple-200/80">
+              <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="md:hidden rounded-xl p-1.5 text-slate-500 hover:bg-emerald-50"><Menu className="w-4 h-4" /></button>
+              <span>ExamForge-AI Chat</span>
+              <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
                 {subjectName} · {resourceType}
               </span>
             </h2>
             <p className="text-[10.5px] text-slate-500 mt-1 font-bold">
-              Workspace: {activeWorkspace?.title || `GATE #${activeWorkspaceId}`} · Subject #{selectedSubjectId} · Resource #{resourceId}
+              Active Source #{resourceId || "Indexed"} · Session Duration: <span className="text-emerald-700 font-mono font-black">{sessionDuration}</span>
             </p>
           </div>
           <div className="flex gap-2 shrink-0">
-            <button onClick={startNewStudySession} className="px-4 py-2 text-xs font-black rounded-2xl bg-purple-100/90 text-purple-950 border border-purple-200/80 hover:bg-purple-600 hover:text-white cursor-pointer transition-all shadow-2xs">
+            <button onClick={startNewStudySession} className="px-4 py-2 text-xs font-black rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer transition-all shadow-xs">
               New Chat
             </button>
-            <button onClick={() => setContextOpen((open) => !open)} className={`px-3.5 py-2 text-xs font-black rounded-2xl border transition-all cursor-pointer ${contextOpen ? "border-purple-300 bg-purple-100 text-purple-950" : "border-purple-200/80 bg-white text-slate-700 hover:bg-purple-50"}`}>
-              <SlidersHorizontal className="inline w-3.5 h-3.5 mr-1.5 text-purple-600" />Context
+            <button onClick={() => setContextOpen((open) => !open)} className={`px-3.5 py-2 text-xs font-black rounded-2xl border transition-all cursor-pointer ${contextOpen ? "border-amber-300 bg-amber-100 text-amber-950" : "border-slate-200 bg-white text-slate-700 hover:bg-amber-50"}`}>
+              <SlidersHorizontal className="inline w-3.5 h-3.5 mr-1.5 text-amber-600" />Context
             </button>
-            <button onClick={() => void clearConversation()} className="hidden sm:block px-3.5 py-2 text-xs font-black rounded-2xl border border-purple-200/80 bg-white text-slate-700 hover:bg-purple-50 cursor-pointer">Clear</button>
+            <button onClick={() => void clearConversation()} className="hidden sm:block px-3.5 py-2 text-xs font-black rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-700 cursor-pointer">Clear</button>
           </div>
         </div>
 
@@ -883,17 +1229,31 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
         <div className="flex min-h-0 flex-1 gap-0">
           {/* Left Column: Messages viewport & Input Composer */}
           <div className="min-w-0 flex flex-1 flex-col">
-            <div className="bg-gradient-to-b from-white via-purple-50/10 to-white p-4 sm:p-6 flex min-h-0 flex-1 flex-col justify-between">
+            <div className="bg-gradient-to-b from-white via-emerald-50/10 to-white p-4 sm:p-6 flex min-h-0 flex-1 flex-col justify-between">
               <div data-lenis-prevent className="flex-1 overflow-y-auto space-y-4 pr-1.5 scroll-smooth">
                 {messages.length === 0 ? (
-                  <div className="py-20 text-center">
-                    <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-700 text-white flex items-center justify-center shadow-lg shadow-purple-200 mx-auto mb-4">
+                  <div className="py-12 text-center space-y-5">
+                    <div className="w-14 h-14 rounded-3xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20 mx-auto">
                       <Bot className="w-7 h-7" />
                     </div>
-                    <h4 className="text-sm font-black text-slate-900 tracking-tight">ExamForge-AI Agent Online</h4>
-                    <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 font-semibold leading-relaxed">
-                      Select a suggestion or type your own prompt below. The study advisor will reference your indexed resource documents.
-                    </p>
+                    <div>
+                      <h4 className="text-base font-black text-slate-900 tracking-tight">ExamForge-AI Study Chat</h4>
+                      <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 font-semibold leading-relaxed">
+                        Grounded directly on your selected AI Library book. Pick a quick prompt below or type your question.
+                      </p>
+                    </div>
+                    {/* Prompt Suggestion Chips */}
+                    <div className="flex items-center justify-center gap-2 flex-wrap max-w-lg mx-auto pt-2">
+                      {PROMPT_SUGGESTIONS.map((promptText) => (
+                        <button
+                          key={promptText}
+                          onClick={() => void ask(promptText)}
+                          className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-900 text-xs font-extrabold transition-all hover:scale-103 cursor-pointer shadow-2xs"
+                        >
+                          ✨ {promptText}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   messages.map((message, index) => {
@@ -912,13 +1272,28 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                 <div ref={chatBottomRef} />
               </div>
 
+              {/* Prompt Suggestions Bar above Composer */}
+              {messages.length > 0 && (
+                <div className="flex items-center gap-2 overflow-x-auto pt-2 pb-1 no-scrollbar">
+                  {PROMPT_SUGGESTIONS.slice(0, 4).map((promptText) => (
+                    <button
+                      key={promptText}
+                      onClick={() => void ask(promptText)}
+                      className="px-3 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 text-emerald-900 text-[11px] font-extrabold whitespace-nowrap cursor-pointer shrink-0 transition-colors"
+                    >
+                      ✨ {promptText}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Input Composer Form */}
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
                   void ask();
                 }}
-                className="mt-4 pt-4 border-t border-purple-100 flex gap-2.5"
+                className="mt-3 pt-3 border-t border-slate-200/80 flex gap-2.5"
               >
                 <input
                   ref={inputRef}
@@ -931,17 +1306,17 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                       void ask();
                     }
                   }}
-                  disabled={loading || !hasWorkspace || !hasSubject}
-                  placeholder="Ask about this study material…"
-                  className="flex-1 px-4 py-3 bg-purple-50/30 border border-purple-200/80 rounded-2xl text-xs font-extrabold text-slate-900 focus:outline-none focus:border-purple-600 focus:ring-4 focus:ring-purple-100 focus:bg-white transition-all"
+                  disabled={loading}
+                  placeholder="Ask any question about this AI study resource…"
+                  className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-extrabold text-slate-900 focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 focus:bg-white transition-all placeholder:text-slate-400"
                 />
                 <button
                   type="submit"
                   disabled={composerDisabled}
                   title={composerReason}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-40 text-white rounded-2xl text-xs font-black shadow-md shadow-purple-200 disabled:shadow-none transition-all cursor-pointer flex items-center gap-2 shrink-0"
+                  className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-40 text-white rounded-2xl text-xs font-black shadow-md shadow-emerald-600/20 disabled:shadow-none transition-all cursor-pointer flex items-center gap-2 shrink-0"
                 >
-                  <Sparkles className="w-4 h-4 text-purple-200" />
+                  <Sparkles className="w-4 h-4 text-emerald-200" />
                   <span>Ask AI</span>
                   <Send className="w-4 h-4" />
                 </button>

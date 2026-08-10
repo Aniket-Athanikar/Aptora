@@ -32,6 +32,7 @@ class Retriever:
         limit: int | None = None,
         subject_id: int | None = None,
         resource_types: list[str] | None = None,
+        resource_ids: list[int] | None = None,
     ) -> list[dict[str, Any]]:
         """
         Retrieve relevant chunks for a user question.
@@ -51,9 +52,10 @@ class Retriever:
         top_k = limit or cls.DEFAULT_LIMIT
 
         logger.info(
-            "Retrieving chunks | workspace=%s | top_k=%s",
+            "Retrieving chunks | workspace=%s | top_k=%s | resource_ids=%s",
             workspace_id,
             top_k,
+            resource_ids,
         )
 
         chunks = SearchService.search(
@@ -62,6 +64,7 @@ class Retriever:
             limit=top_k,
             subject_id=subject_id,
             resource_types=resource_types,
+            resource_ids=resource_ids,
         )
 
         logger.info(

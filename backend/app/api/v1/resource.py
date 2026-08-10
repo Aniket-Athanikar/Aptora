@@ -2,6 +2,7 @@
 ExamForge AI - Resource API
 """
 
+import os
 from fastapi import (
     APIRouter,
     Depends,
@@ -11,6 +12,7 @@ from fastapi import (
     HTTPException,
     status,
 )
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.database import get_db
@@ -192,3 +194,18 @@ def get_document_preview(resource_id: int, db: Session = Depends(get_db), curren
         "title": resource.title,
         "chunks": [{"index": c.chunk_index, "content": c.content} for c in chunks]
     }
+
+
+@router.get("/{resource_id}/file")
+def get_document_file(resource_id: int, db: Session = Depends(get_db)):
+    resource = ResourceService.get_resource(db=db, resource_id=resource_id)
+    if not resource or not resource.storage_path or not os.path.exists(resource.storage_path):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Original document file not found.")
+    return FileResponse(
+        path=resource.storage_path,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": "inline",
+            "Access-Control-Allow-Origin": "*",
+        }
+    )

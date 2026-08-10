@@ -82,26 +82,64 @@ function DashboardContent() {
           ) : activeTab === "knowledge" ? (
             <KnowledgeEngine />
           ) : activeGoal ? (
-            <div className="space-y-3 sm:space-y-4.5">
-              {/* Header Title */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <h1 className="text-lg sm:text-2xl font-black text-gray-900 flex items-center gap-2 flex-wrap">
-                    Success Engine: <span className="gradient-text">{activeGoal.targetExam}</span> <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 animate-pulse" />
-                  </h1>
-                  <p className="text-[10px] sm:text-xs text-gray-500 font-semibold mt-0.5">Welcome back, {activeGoal.profile.fullName}! Monitor your calibration progress.</p>
-                </div>
+            <div className="space-y-5 sm:space-y-6">
+              {/* Top AI Source Library Style Header Banner */}
+              <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-r from-emerald-50/80 via-amber-50/60 to-purple-50/50 p-6 sm:p-7 shadow-xs">
+                {/* Decorative background glows */}
+                <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-emerald-300/20 blur-2xl" />
+                <div className="pointer-events-none absolute -bottom-10 left-1/3 h-32 w-32 rounded-full bg-amber-300/20 blur-2xl" />
 
-                <button
-                  onClick={() => {
-                    startWizard();
-                    setIsEditMode(true);
-                    setShowWizard(true);
-                  }}
-                  className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                >
-                  <Sparkles className="w-4 h-4" /> Recalibrate Success Goal
-                </button>
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
+                        AI Success Engine
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-200">
+                        {activeGoal.targetExam}
+                      </span>
+                    </div>
+
+                    <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                      Welcome back, <span className="text-emerald-700">{activeGoal.profile.fullName}</span>!
+                    </h1>
+                    <p className="text-xs sm:text-sm font-bold text-slate-500 max-w-xl">
+                      Monitor your exam preparation progress, daily focus timeline, and study goals in real time.
+                    </p>
+                  </div>
+
+                  {/* Header Actions */}
+                  <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+                    <button
+                      onClick={() => router.push("/ai-study/sources")}
+                      className="h-11 px-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-700 font-black text-xs transition-all shadow-2xs flex items-center gap-2 cursor-pointer"
+                    >
+                      <Sparkles className="w-4 h-4 text-emerald-600" />
+                      <span>AI Library</span>
+                    </button>
+
+                    <button
+                      onClick={() => router.push("/dashboard/ai")}
+                      className="h-11 px-4.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2 cursor-pointer"
+                    >
+                      <Sparkles className="w-4 h-4 text-white" />
+                      <span>Open AI Study</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        startWizard();
+                        setIsEditMode(true);
+                        setShowWizard(true);
+                      }}
+                      className="h-11 px-4 rounded-2xl bg-slate-900 hover:bg-black text-white font-black text-xs transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+                    >
+                      <Compass className="w-4 h-4 text-amber-400" />
+                      <span>Recalibrate</span>
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Restructured Grid Widgets layout */}

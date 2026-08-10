@@ -14,18 +14,18 @@ import {
 } from "lucide-react";
 
 export const NAV_ITEMS = [
-  { key: "home", label: "Home", icon: Home, gradient: "from-slate-600 to-slate-800", textClass: "text-slate-700", bgLight: "bg-slate-200/50 text-slate-900 border-slate-200/50", glow: "rgba(148, 163, 184, 0.45)" },
-  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, gradient: "from-[#6D4AFF] to-indigo-600", textClass: "text-[#6D4AFF]", bgLight: "bg-indigo-100/50 text-indigo-950 border-indigo-200/30", glow: "rgba(109, 74, 255, 0.45)" },
-  { key: "ai", label: "AI Study", icon: Sparkles, gradient: "from-purple-500 to-pink-500", textClass: "text-purple-600", bgLight: "bg-purple-100/50 text-purple-955 border-purple-200/30", glow: "rgba(168, 85, 247, 0.45)" },
-  // { key: "knowledge", label: "AI Library", icon: BookOpen, gradient: "from-amber-500 to-orange-500", textClass: "text-amber-600", bgLight: "bg-amber-100/50 text-amber-955 border-amber-200/30", glow: "rgba(245, 158, 11, 0.45)" },
-  { key: "goal-plan", label: "Goal", icon: Compass, gradient: "from-violet-500 to-fuchsia-600", textClass: "text-violet-600", bgLight: "bg-violet-100/50 text-violet-955 border-violet-200/30", glow: "rgba(139, 92, 246, 0.45)" },
-  { key: "planner", label: "Planner", icon: ListTodo, gradient: "from-sky-500 to-blue-600", textClass: "text-sky-600", bgLight: "bg-sky-100/50 text-sky-955 border-sky-200/30", glow: "rgba(14, 165, 233, 0.45)" },
-  { key: "progress", label: "Progress", icon: Star, gradient: "from-yellow-400 to-amber-500", textClass: "text-amber-600", bgLight: "bg-amber-100/50 text-amber-955 border-amber-200/30", glow: "rgba(245, 158, 11, 0.45)" },
-  { key: "analytics", label: "Analytics", icon: TrendingUp, gradient: "from-emerald-400 to-teal-600", textClass: "text-emerald-600", bgLight: "bg-emerald-100/50 text-emerald-955 border-emerald-200/30", glow: "rgba(16, 185, 129, 0.45)" },
-  { key: "achievements", label: "Achievements", icon: Trophy, gradient: "from-fuchsia-500 to-rose-600", textClass: "text-fuchsia-600", bgLight: "bg-fuchsia-100/50 text-fuchsia-955 border-fuchsia-200/30", glow: "rgba(217, 70, 239, 0.45)" },
-  { key: "coach", label: "AI Mentor", icon: Bot, gradient: "from-indigo-500 to-blue-600", textClass: "text-indigo-600", bgLight: "bg-indigo-100/50 text-indigo-955 border-indigo-200/30", glow: "rgba(99, 102, 241, 0.45)" },
-  { key: "notifications", label: "Notifications", icon: Bell, gradient: "from-rose-500 to-red-600", textClass: "text-rose-600", bgLight: "bg-rose-100/50 text-rose-955 border-rose-200/30", glow: "rgba(244, 63, 94, 0.45)" },
-  { key: "calendar", label: "Target", icon: Calendar, gradient: "from-cyan-500 to-teal-500", textClass: "text-cyan-600", bgLight: "bg-cyan-100/50 text-cyan-955 border-cyan-200/30", glow: "rgba(6, 182, 212, 0.45)" },
+  { key: "home", label: "Home", icon: Home, gradient: "from-emerald-400 to-teal-500", textClass: "text-emerald-700", bgLight: "bg-emerald-100/70 text-emerald-950 border-emerald-300/40", glow: "rgba(16, 185, 129, 0.45)" },
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, gradient: "from-[#6D4AFF] to-indigo-600", textClass: "text-[#6D4AFF]", bgLight: "bg-indigo-100/70 text-indigo-950 border-indigo-300/40", glow: "rgba(109, 74, 255, 0.45)" },
+  { key: "ai", label: "AI Study", icon: Sparkles, gradient: "from-purple-500 to-pink-500", textClass: "text-purple-700", bgLight: "bg-purple-100/70 text-purple-950 border-purple-300/40", glow: "rgba(168, 85, 247, 0.45)" },
+  { key: "ai-sources", label: "AI Library", icon: BookOpen, gradient: "from-amber-400 to-yellow-500", textClass: "text-amber-700", bgLight: "bg-amber-100/80 text-amber-950 border-amber-300/50", glow: "rgba(245, 158, 11, 0.45)" },
+  { key: "goal-plan", label: "Goal", icon: Compass, gradient: "from-violet-500 to-fuchsia-600", textClass: "text-violet-700", bgLight: "bg-violet-100/70 text-violet-950 border-violet-300/40", glow: "rgba(139, 92, 246, 0.45)" },
+  { key: "planner", label: "Planner", icon: ListTodo, gradient: "from-sky-400 to-blue-500", textClass: "text-sky-700", bgLight: "bg-sky-100/70 text-sky-950 border-sky-300/40", glow: "rgba(14, 165, 233, 0.45)" },
+  { key: "progress", label: "Progress", icon: Star, gradient: "from-yellow-400 to-amber-500", textClass: "text-yellow-800", bgLight: "bg-yellow-100/80 text-yellow-950 border-yellow-300/50", glow: "rgba(234, 179, 8, 0.45)" },
+  { key: "analytics", label: "Analytics", icon: TrendingUp, gradient: "from-emerald-400 to-lime-500", textClass: "text-emerald-800", bgLight: "bg-emerald-100/70 text-emerald-950 border-emerald-300/50", glow: "rgba(34, 197, 94, 0.45)" },
+  { key: "achievements", label: "Achievements", icon: Trophy, gradient: "from-fuchsia-500 to-rose-500", textClass: "text-fuchsia-700", bgLight: "bg-fuchsia-100/70 text-fuchsia-955 border-fuchsia-300/40", glow: "rgba(217, 70, 239, 0.45)" },
+  // { key: "coach", label: "AI Mentor", icon: Bot, gradient: "from-indigo-500 to-cyan-500", textClass: "text-indigo-700", bgLight: "bg-indigo-100/70 text-indigo-955 border-indigo-300/40", glow: "rgba(99, 102, 241, 0.45)" },
+  { key: "notifications", label: "Notifications", icon: Bell, gradient: "from-rose-500 to-red-500", textClass: "text-rose-700", bgLight: "bg-rose-100/70 text-rose-955 border-rose-300/40", glow: "rgba(244, 63, 94, 0.45)" },
+  { key: "calendar", label: "Target", icon: Calendar, gradient: "from-lime-400 to-teal-500", textClass: "text-lime-800", bgLight: "bg-lime-100/70 text-lime-955 border-lime-300/50", glow: "rgba(132, 204, 22, 0.45)" },
 ];
 
 export const QUOTES = [

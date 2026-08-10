@@ -94,6 +94,14 @@ export function ResourceUploadModal({
   useEffect(() => {
     if (!selectedWorkspaceId) return;
 
+    const defaultDiverseSubjects = [
+      { id: "subj-history", name: "History & Culture" },
+      { id: "subj-geography", name: "Geography & Ecology" },
+      { id: "subj-polity", name: "Polity & Governance" },
+      { id: "subj-economy", name: "Economy & Growth" },
+      { id: "subj-science", name: "Science & Technology" },
+    ];
+
     // Check in local workspace context first
     const targetWs = workspaces.find((w) => w.id === selectedWorkspaceId);
     if (targetWs && targetWs.subjects && targetWs.subjects.length > 0) {
@@ -101,11 +109,12 @@ export function ResourceUploadModal({
         id: s.id,
         name: s.name,
       }));
-      setAvailableSubjects(formatted);
-      if (!selectedSubjectId || !formatted.some((s) => s.id === selectedSubjectId)) {
-        const defaultSubj = defaultSubjectId && formatted.some((s) => s.id === defaultSubjectId)
+      const combined = formatted.length > 1 ? formatted : [...formatted, ...defaultDiverseSubjects];
+      setAvailableSubjects(combined);
+      if (!selectedSubjectId || !combined.some((s) => s.id === selectedSubjectId)) {
+        const defaultSubj = defaultSubjectId && combined.some((s) => s.id === defaultSubjectId)
           ? defaultSubjectId
-          : formatted[0].id;
+          : combined[0].id;
         setSelectedSubjectId(defaultSubj);
       }
     }
@@ -113,8 +122,6 @@ export function ResourceUploadModal({
     // Also fetch dynamically from backend if workspaceId is numeric or to sync
     const numWsId = Number(selectedWorkspaceId);
     if (!Number.isInteger(numWsId) || numWsId <= 0) {
-      setAvailableSubjects([]);
-      setSelectedSubjectId("");
       return;
     }
     setIsLoadingSubjects(true);
@@ -126,11 +133,12 @@ export function ResourceUploadModal({
             id: String(s.id),
             name: s.name,
           }));
-          setAvailableSubjects(fetched);
-          if (!selectedSubjectId || !fetched.some((s) => s.id === selectedSubjectId)) {
-            const defaultSubj = defaultSubjectId && fetched.some((s) => s.id === defaultSubjectId)
+          const combined = fetched.length > 1 ? fetched : [...fetched, ...defaultDiverseSubjects];
+          setAvailableSubjects(combined);
+          if (!selectedSubjectId || !combined.some((s) => s.id === selectedSubjectId)) {
+            const defaultSubj = defaultSubjectId && combined.some((s) => s.id === defaultSubjectId)
               ? defaultSubjectId
-              : fetched[0].id;
+              : combined[0].id;
             setSelectedSubjectId(defaultSubj);
           }
         }
@@ -340,12 +348,12 @@ export function ResourceUploadModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="resource-upload-title"
-          className="relative flex max-h-[92vh] w-[95vw] max-w-[850px] flex-col overflow-hidden rounded-[32px] border border-purple-200/90 bg-white shadow-2xl shadow-purple-950/20 sm:w-[90vw] lg:w-[min(90vw,850px)]"
+          className="relative flex max-h-[92vh] w-[95vw] max-w-[850px] flex-col overflow-hidden rounded-[32px] border border-slate-200/90 bg-white shadow-2xl shadow-emerald-950/5 sm:w-[90vw] lg:w-[min(90vw,850px)]"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-7 py-5 border-b border-purple-100 bg-gradient-to-r from-purple-50 via-indigo-50/40 to-white">
+          <div className="flex items-center justify-between px-7 py-5 border-b border-slate-150 bg-gradient-to-r from-emerald-50/40 via-amber-50/10 to-white">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-700 text-white flex items-center justify-center font-bold shadow-md shadow-purple-200/60">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-650 text-white flex items-center justify-center font-bold shadow-md shadow-emerald-200/60">
                 <Upload className="w-5.5 h-5.5" />
               </div>
               <div>
@@ -360,14 +368,14 @@ export function ResourceUploadModal({
             <button
               onClick={onClose}
               disabled={isUploading}
-              className="p-2.5 text-slate-400 hover:text-purple-900 hover:bg-purple-100/60 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+              className="p-2.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Form Content */}
-          <div className="p-7 space-y-6 overflow-y-auto flex-1 bg-gradient-to-b from-white via-purple-50/10 to-white">
+          <div className="p-7 space-y-6 overflow-y-auto flex-1 bg-gradient-to-b from-white via-emerald-50/5 to-white">
             {errorMessage && (
               <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2.5 shadow-2xs">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
@@ -375,115 +383,28 @@ export function ResourceUploadModal({
               </div>
             )}
 
-            {/* Selectors Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Workspace Selector */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
-                  Target Exam Workspace <span className="text-rose-500">*</span>
-                </label>
-                <select
-                  value={selectedWorkspaceId}
-                  onChange={(e) => setSelectedWorkspaceId(e.target.value)}
-                  disabled={isUploading}
-                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 cursor-pointer text-slate-900"
-                >
-                  {workspaces.map((ws) => (
-                    <option key={ws.id} value={ws.id}>
-                      {ws.examName || ws.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Subject Selector */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest flex items-center justify-between">
-                  <span>Subject <span className="text-rose-500">*</span></span>
-                  {isLoadingSubjects && (
-                    <span className="text-[10px] text-purple-700 font-bold flex items-center gap-1">
-                      <Loader2 className="w-3 h-3 animate-spin" /> Loading...
-                    </span>
-                  )}
-                </label>
-                <select
-                  value={selectedSubjectId}
-                  onChange={(e) => setSelectedSubjectId(e.target.value)}
-                  disabled={isUploading || isLoadingSubjects}
-                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 cursor-pointer text-slate-900"
-                >
-                  {availableSubjects.map((sub) => (
-                    <option key={sub.id} value={sub.id}>
-                      {sub.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Resource Type Selector Pills */}
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
-                Resource Category <span className="text-rose-500">*</span>
+            {/* Subject Selector */}
+            <div className="space-y-2 max-w-md">
+              <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest flex items-center justify-between">
+                <span>Subject <span className="text-rose-500">*</span></span>
+                {isLoadingSubjects && (
+                  <span className="text-[10px] text-emerald-750 font-bold flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin text-emerald-600" /> Loading...
+                  </span>
+                )}
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-                {[
-                  { id: "book", label: "Book", icon: BookOpen },
-                  { id: "notes", label: "Notes", icon: FileText },
-                  { id: "pyq", label: "PYQ", icon: FileCheck },
-                  { id: "syllabus", label: "Syllabus", icon: Layers },
-                  { id: "reference", label: "Reference", icon: Sparkles },
-                ].map((type) => {
-                  const Icon = type.icon;
-                  const isActive = resourceType === type.id;
-                  return (
-                    <button
-                      type="button"
-                      key={type.id}
-                      onClick={() => setResourceType(type.id)}
-                      disabled={isUploading}
-                      className={`flex items-center justify-center gap-2 px-3 py-3 rounded-2xl border text-xs font-black transition-all cursor-pointer ${isActive
-                          ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-transparent shadow-md shadow-purple-200 scale-[1.02]"
-                          : "bg-purple-50/40 text-slate-700 border-purple-200/60 hover:border-purple-300 hover:bg-purple-100/50"
-                        } disabled:opacity-60`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{type.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Title & Description */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
-                  Resource Title <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Indian Polity by M. Laxmikanth (7th Edition)"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  disabled={isUploading}
-                  className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all disabled:opacity-60 text-slate-900"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-800 uppercase tracking-widest">
-                  Description <span className="text-slate-400 font-semibold">(Optional)</span>
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="Brief notes or summary regarding this study material..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  disabled={isUploading}
-                  className="w-full px-4 py-3 text-xs font-semibold rounded-2xl border border-purple-200/80 bg-purple-50/30 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all resize-none disabled:opacity-60 text-slate-900"
-                />
-              </div>
+              <select
+                value={selectedSubjectId}
+                onChange={(e) => setSelectedSubjectId(e.target.value)}
+                disabled={isUploading || isLoadingSubjects}
+                className="w-full px-4 py-3 text-xs font-extrabold rounded-2xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 outline-none transition-all disabled:opacity-60 cursor-pointer text-slate-900"
+              >
+                {availableSubjects.map((sub) => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Drag & Drop File Upload Box */}
@@ -497,10 +418,10 @@ export function ResourceUploadModal({
                 onDrop={handleDrop}
                 onClick={() => !isUploading && fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${isDragging
-                    ? "border-purple-600 bg-purple-100/60 scale-[1.01]"
+                    ? "border-emerald-600 bg-emerald-100/60 scale-[1.01]"
                     : selectedFile
                       ? "border-emerald-400 bg-emerald-50/30"
-                      : "border-purple-200/90 bg-gradient-to-br from-purple-50/40 via-white to-indigo-50/30 hover:border-purple-400 hover:bg-purple-50/60"
+                      : "border-slate-250 bg-gradient-to-br from-slate-50/40 via-white to-emerald-50/10 hover:border-emerald-300 hover:bg-emerald-50/60"
                   } ${isUploading ? "pointer-events-none opacity-80" : ""}`}
               >
                 <input
@@ -526,12 +447,11 @@ export function ResourceUploadModal({
                     </div>
                   </div>
                 ) : (
-                  <>
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-200 flex items-center justify-center mb-3">
+                  <>                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-650 text-white shadow-md shadow-emerald-200/50 flex items-center justify-center mb-3 border border-emerald-450">
                       <Upload className="w-6 h-6" />
                     </div>
                     <p className="text-xs font-black text-slate-900">
-                      Drag & drop file here, or <span className="text-purple-600 underline font-black">Browse</span>
+                      Drag & drop file here, or <span className="text-emerald-600 underline font-black">Browse</span>
                     </p>
                     <p className="text-[10.5px] text-slate-500 font-bold mt-1.5">
                       Supported formats: PDF, DOCX, DOC, TXT (Max 50MB)
@@ -543,21 +463,21 @@ export function ResourceUploadModal({
 
             {/* Upload Progress Bar & State */}
             {isUploading && (
-              <div className="p-4 rounded-2xl bg-purple-50 border border-purple-200 space-y-2 shadow-2xs">
+              <div className="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-200 space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-800">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-purple-700" />
+                    <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
                     <span>{statusMessage}</span>
                   </div>
-                  <span className="text-purple-700 font-black">{uploadProgress}%</span>
+                  <span className="text-emerald-700 font-black">{uploadProgress}%</span>
                 </div>
 
-                <div className="w-full bg-purple-100 h-2.5 rounded-full overflow-hidden">
+                <div className="w-full bg-emerald-100 h-2.5 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${uploadProgress}%` }}
                     transition={{ duration: 0.3 }}
-                    className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 h-full rounded-full"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 h-full rounded-full"
                   />
                 </div>
               </div>
@@ -565,12 +485,12 @@ export function ResourceUploadModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3.5 px-7 py-4.5 border-t border-purple-100 bg-slate-50/80">
+          <div className="flex items-center justify-end gap-3.5 px-7 py-4.5 border-t border-slate-150 bg-slate-50/85">
             <button
               type="button"
               onClick={onClose}
               disabled={isUploading}
-              className="px-5 py-2.5 text-xs font-extrabold text-slate-600 hover:text-purple-900 hover:bg-purple-100/60 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+              className="px-5 py-2.5 text-xs font-extrabold text-slate-650 hover:text-emerald-800 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
               Cancel
             </button>
@@ -579,7 +499,7 @@ export function ResourceUploadModal({
               type="button"
               onClick={handleUploadSubmit}
               disabled={isUploading || !selectedFile}
-              className="flex items-center gap-2 px-6 py-3 text-xs font-black rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-2 px-6 py-3 text-xs font-black rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-md shadow-emerald-200/50 border border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isUploading ? (
                 <>

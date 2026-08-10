@@ -83,8 +83,9 @@ export function Sidebar({
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
 
-        {/* Ambient Top Glow */}
-        <div className="absolute top-0 left-10 right-10 h-20 bg-[#6D4AFF]/5 blur-[40px] pointer-events-none rounded-full" />
+        {/* Ambient Colorful Background Glows */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-amber-400/15 via-emerald-400/10 to-transparent blur-2xl pointer-events-none" />
+        <div className="absolute bottom-10 left-0 right-0 h-40 bg-gradient-to-t from-purple-400/10 via-amber-300/10 to-transparent blur-3xl pointer-events-none" />
 
         {/* Brand/Logo Area */}
         <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3.5"} mb-9 relative px-1`}>

@@ -34,6 +34,7 @@ from app.models.account import AccountDeletionRequestDb
 from app.models.onboarding_profile import UserOnboardingProfileDb
 from app.models.knowledge_conversation import KnowledgeConversationDb, KnowledgeMessageDb
 from app.models.notification import NotificationDb
+from app.models.ai_study_source import AiStudySourceDb
 
 
 __all__ = [
@@ -59,4 +60,6 @@ __all__ = [
     "KnowledgeConversationDb",
     "KnowledgeMessageDb",
     "NotificationDb",
+    "AiStudySourceDb",
 ]
+

@@ -79,6 +79,19 @@ def ensure_schema_synced(engine: Engine) -> None:
             read BOOLEAN NOT NULL DEFAULT FALSE,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS ai_study_sources (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            workspace_id INTEGER NOT NULL REFERENCES goal_workspaces(id) ON DELETE CASCADE,
+            resource_id INTEGER NOT NULL REFERENCES resources(id) ON DELETE CASCADE,
+            is_active BOOLEAN NOT NULL DEFAULT TRUE,
+            selected_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT uq_user_resource_source UNIQUE (user_id, resource_id)
+        );
         """
     ]
 

@@ -160,7 +160,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
                     
                     {/* Tooltip */}
                     <div className="absolute bottom-full mb-2 bg-slate-950 text-white text-[9px] rounded-xl p-2.5 opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 shadow-xl border border-slate-800/80 whitespace-nowrap">
-                      <div className="font-extrabold text-indigo-400">{formattedDate}</div>
+                      <div className="font-extrabold text-emerald-400">{formattedDate}</div>
                       <div className="mt-0.5 font-bold">Hours: {item.hours}h</div>
                       <div>Tasks Completed: {item.tasksCompleted}</div>
                       <div className="capitalize text-[8px] text-slate-400 mt-1">Click to edit</div>
@@ -185,7 +185,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
             >
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-[#6D4AFF]" />
+                  <Calendar className="w-4 h-4 text-emerald-600" />
                   <h4 className="text-sm font-black text-slate-900">Log Daily Study Session</h4>
                 </div>
                 <button
@@ -197,7 +197,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
               </div>
 
               <div>
-                <p className="text-[10px] font-black text-indigo-650 uppercase tracking-widest">Selected Date</p>
+                <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Selected Date</p>
                 <p className="text-xs font-extrabold text-slate-800">
                   {new Date(editingDay.date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
                 </p>
@@ -219,7 +219,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
                       else if (h > 0) setEditStatus("partial");
                       else setEditStatus("missed");
                     }}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#6D4AFF] focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-emerald-600 focus:bg-white"
                   />
                 </div>
 
@@ -230,7 +230,7 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
                     min="0"
                     value={editTasks}
                     onChange={(e) => setEditTasks(parseInt(e.target.value, 10) || 0)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#6D4AFF] focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-emerald-600 focus:bg-white"
                   />
                 </div>
 
@@ -262,13 +262,13 @@ export function Heatmap({ activityHistory }: HeatmapProps) {
               <div className="flex gap-2.5 pt-3 border-t border-slate-100">
                 <button
                   onClick={() => setEditingDay(null)}
-                  className="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 cursor-pointer"
+                  className="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-650 rounded-xl text-xs font-bold border border-slate-200 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={saveActivityUpdate}
-                  className="flex-1 py-2.5 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer border border-emerald-500 shadow-sm shadow-emerald-200/50"
                 >
                   Save Changes
                 </button>

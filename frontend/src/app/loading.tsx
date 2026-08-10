@@ -31,7 +31,7 @@ export default function GlobalLoading() {
         {/* Brand Text */}
         <div className="flex flex-col items-center text-center space-y-1">
           <span className="text-sm font-black tracking-wider text-slate-900 uppercase">
-            ExamForge<span className="text-[#6D4AFF]"> AI</span>
+            ExamForge-<span className="text-[#6D4AFF]">AI</span>
           </span>
           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest animate-pulse">
             Syncing Study Cockpit...

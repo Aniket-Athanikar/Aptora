@@ -151,6 +151,15 @@ async def knowledge_chat(request: KnowledgeChatRequest, db: Session = Depends(ge
         conversation = db.query(KnowledgeConversationDb).filter(KnowledgeConversationDb.id == request.session_id).first()
         if conversation and conversation.user_id != current_user.id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found.")
+        
+        from app.models.ai_study_source import AiStudySourceDb
+        active_sources = db.query(AiStudySourceDb.resource_id).filter(
+            AiStudySourceDb.user_id == current_user.id,
+            AiStudySourceDb.workspace_id == request.workspace_id,
+            AiStudySourceDb.is_active == True,
+        ).all()
+        resource_ids = [s.resource_id for s in active_sources] if active_sources else None
+
         result = KnowledgeChatService.ask(
             session_id=request.session_id,
             workspace_id=request.workspace_id,
@@ -158,6 +167,7 @@ async def knowledge_chat(request: KnowledgeChatRequest, db: Session = Depends(ge
             limit=request.limit or 8,
             history=[{"role": message.role, "content": message.content} for message in conversation.messages] if conversation else None,
             subject_id=request.subject_id or (conversation.subject_id if conversation else None),
+            resource_ids=resource_ids,
         )
         if conversation:
             _persist_turn(db, conversation, request.question, result)
@@ -187,17 +197,26 @@ async def knowledge_chat(request: KnowledgeChatRequest, db: Session = Depends(ge
 
 
 @router.post("/chat/stream")
-async def stream_knowledge_chat(request: KnowledgeChatRequest):
+async def stream_knowledge_chat(request: KnowledgeChatRequest, db: Session = Depends(get_db), current_user: UserDb = Depends(get_current_user)):
     """
     Stream multi-turn AI study response token by token with session memory persistence.
     """
     try:
+        from app.models.ai_study_source import AiStudySourceDb
+        active_sources = db.query(AiStudySourceDb.resource_id).filter(
+            AiStudySourceDb.user_id == current_user.id,
+            AiStudySourceDb.workspace_id == request.workspace_id,
+            AiStudySourceDb.is_active == True,
+        ).all()
+        resource_ids = [s.resource_id for s in active_sources] if active_sources else None
+
         return StreamingResponse(
             KnowledgeChatService.stream(
                 session_id=request.session_id,
                 workspace_id=request.workspace_id,
                 question=request.question,
                 limit=request.limit or 8,
+                resource_ids=resource_ids,
             ),
             media_type="text/plain",
         )

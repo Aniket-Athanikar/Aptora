@@ -47,18 +47,18 @@ export function DailyPlanner({ tasks, onStatusChange, onReschedule }: DailyPlann
   };
 
   return (
-    <div className="glass border border-white/20 rounded-3xl p-4 sm:p-6">
-      <div className="flex items-center justify-between mb-6 border-b border-gray-50 pb-4">
+    <div className="glass border border-slate-150 rounded-3xl p-4 sm:p-6 bg-white shadow-sm">
+      <div className="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
         <div className="flex items-center gap-2">
-          <ListTodo className="w-5 h-5 text-indigo-600 animate-pulse" />
+          <ListTodo className="w-5 h-5 text-emerald-600 animate-pulse" />
           <div>
-            <h3 className="text-xs font-black text-gray-800 uppercase tracking-wider">Today&apos;s Focus Activities</h3>
-            <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Tasks automatically aligned to syllabus weaknesses.</p>
+            <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Today&apos;s Focus Activities</h3>
+            <p className="text-[10px] text-slate-450 font-semibold mt-0.5">Tasks automatically aligned to syllabus weaknesses.</p>
           </div>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="p-2 hover:bg-gray-50 border border-gray-150 rounded-xl text-gray-500 hover:text-indigo-600 transition-colors flex items-center gap-1 text-[10px] font-black uppercase tracking-wider cursor-pointer"
+          className="p-2 hover:bg-emerald-50/50 border border-slate-200 rounded-xl text-slate-500 hover:text-emerald-700 transition-colors flex items-center gap-1 text-[10px] font-black uppercase tracking-wider cursor-pointer"
           title="Create Custom Task"
         >
           <Plus className="w-4 h-4" /> Add Task

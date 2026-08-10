@@ -62,6 +62,7 @@ class KnowledgeChatService:
         limit: int = DEFAULT_RETRIEVAL_LIMIT,
         history: list[dict[str, str]] | None = None,
         subject_id: int | None = None,
+        resource_ids: list[int] | None = None,
     ) -> dict[str, Any]:
         """
         Generate a complete multi-turn response via ReasoningPipeline.
@@ -71,9 +72,10 @@ class KnowledgeChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "[KnowledgeChatService] ask | session=%s | workspace=%d",
+            "[KnowledgeChatService] ask | session=%s | workspace=%d | resource_ids=%s",
             session_id,
             workspace_id,
+            resource_ids,
         )
 
         # 1. Load conversation history
@@ -90,6 +92,7 @@ class KnowledgeChatService:
             history=history,
             subject_id=subject_id,
             limit=limit,
+            resource_ids=resource_ids,
         )
 
         answer = pipeline_result["answer"]
@@ -124,6 +127,7 @@ class KnowledgeChatService:
         question: str,
         limit: int = DEFAULT_RETRIEVAL_LIMIT,
         subject_id: int | None = None,
+        resource_ids: list[int] | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream a multi-turn response token by token via ReasoningPipeline.
@@ -133,9 +137,10 @@ class KnowledgeChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "[KnowledgeChatService] stream | session=%s | workspace=%d",
+            "[KnowledgeChatService] stream | session=%s | workspace=%d | resource_ids=%s",
             session_id,
             workspace_id,
+            resource_ids,
         )
 
         # 1. Load history
@@ -153,6 +158,7 @@ class KnowledgeChatService:
             history=history,
             limit=limit,
             subject_id=subject_id,
+            resource_ids=resource_ids,
         ):
             accumulated.append(token)
             yield token

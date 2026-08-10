@@ -6,7 +6,7 @@ from fastapi import APIRouter
 
 from app.api.v1 import ( auth, profile, billing, newsletter, admin, contact, account, workspace, onboarding_profile, 
                         timeline, study_slot, lifestyle, learning_mode, gap_analysis, resource, chat, summary, flashcard, 
-                        question, prediction, knowledge, mcq, study_advisor, concept, notification)
+                        question, prediction, knowledge, mcq, study_advisor, concept, notification, ai_study_source)
 api_router = APIRouter()
 
 # V1 API routes
@@ -35,3 +35,4 @@ api_router.include_router(mcq.router)
 api_router.include_router(study_advisor.router)
 api_router.include_router(concept.router)
 api_router.include_router(notification.router)
+api_router.include_router(ai_study_source.router)

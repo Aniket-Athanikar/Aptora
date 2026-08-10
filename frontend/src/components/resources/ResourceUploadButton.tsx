@@ -34,14 +34,13 @@ export function ResourceUploadButton({
       case "secondary":
         return "bg-slate-900 text-white hover:bg-slate-800 border border-slate-800 shadow-2xs font-extrabold";
       case "outline":
-        return "bg-white text-purple-950 hover:bg-purple-50/80 border border-purple-200/90 hover:border-purple-400 font-extrabold shadow-2xs";
+        return "bg-white text-slate-700 hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 font-extrabold shadow-2xs";
       case "ghost":
-        return "bg-transparent text-purple-900 hover:bg-purple-100/60 font-bold";
+        return "bg-transparent text-emerald-805 hover:bg-emerald-50/60 font-bold";
       case "gradient":
-        return "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md shadow-purple-200 font-black";
       case "primary":
       default:
-        return "bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-200 font-black";
+        return "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 font-black border border-emerald-500";
     }
   };
 

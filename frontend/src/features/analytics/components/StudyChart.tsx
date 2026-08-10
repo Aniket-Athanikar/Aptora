@@ -98,12 +98,12 @@ export function StudyChart() {
             {/* Definitions for Gradients */}
             <defs>
               <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#4F46E5" />
-                <stop offset="100%" stopColor="#818CF8" />
+                <stop offset="0%" stopColor="#059669" />
+                <stop offset="100%" stopColor="#34d399" />
               </linearGradient>
               <linearGradient id="hoverGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#818CF8" />
-                <stop offset="100%" stopColor="#C7D2FE" />
+                <stop offset="0%" stopColor="#34d399" />
+                <stop offset="100%" stopColor="#a7f3d0" />
               </linearGradient>
             </defs>
           </svg>
@@ -117,7 +117,7 @@ export function StudyChart() {
                 top: "20px"
               }}
             >
-              <p className="text-indigo-400 font-extrabold uppercase text-[8px] tracking-wider">{data[hoveredIdx].day}</p>
+              <p className="text-emerald-400 font-extrabold uppercase text-[8px] tracking-wider">{data[hoveredIdx].day}</p>
               <p className="text-xs font-black">{data[hoveredIdx].hours} Hours</p>
               <p className="text-slate-400 font-semibold mt-0.5">Target: 6.0h</p>
             </div>

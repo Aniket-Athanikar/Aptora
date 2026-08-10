@@ -16,12 +16,11 @@ function WorkspaceInner() {
 
       {/* Workspace Navigation Bar */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-purple-200/80 select-none shadow-sm">
-          {(["flow", "tree", "uploads"] as const).map((tab) => {
+        <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 select-none shadow-sm">
+          {(["flow", "tree"] as const).map((tab) => {
             const tabLabels = {
-              flow: { label: "AI Tutor Chat", icon: MessageSquare },
-              tree: { label: "AI Tree", icon: FolderTree },
-              uploads: { label: "Resources", icon: Layers }
+              flow: { label: "AI Assistant", icon: MessageSquare },
+              tree: { label: "AI Tree", icon: FolderTree }
             };
             const TabIcon = tabLabels[tab].icon;
             const isActive = activeMainTab === tab;
@@ -31,8 +30,8 @@ function WorkspaceInner() {
                 key={tab}
                 onClick={() => setActiveMainTab(tab)}
                 className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all cursor-pointer ${isActive
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-200 border border-purple-400"
-                  : "text-slate-600 hover:text-purple-700 hover:bg-purple-50/60"
+                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-200 border border-emerald-500"
+                  : "text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/60"
                   }`}
               >
                 <TabIcon className="w-4 h-4" />
@@ -42,9 +41,9 @@ function WorkspaceInner() {
           })}
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 text-xs font-black text-purple-800 bg-purple-100/80 px-3 py-1.5 rounded-2xl border border-purple-200 shadow-2xs">
-          <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-          <span>ExamForge AI Active</span>
+        <div className="hidden sm:flex items-center gap-2 text-xs font-black text-emerald-800 bg-emerald-100/80 px-3 py-1.5 rounded-2xl border border-emerald-200 shadow-2xs">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <span>ExamForge-AI Active</span>
         </div>
       </div>
 
@@ -61,9 +60,9 @@ function WorkspaceInner() {
             {activeMainTab === "flow" && <AIChatStepFlow />}
 
             {activeMainTab === "tree" && (
-              <div className="bg-white border border-purple-200/80 rounded-3xl p-6 shadow-sm space-y-5">
-                <div className="border-b border-purple-100 pb-3.5 flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-purple-100 text-purple-700">
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-5">
+                <div className="border-b border-slate-100 pb-3.5 flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
                     <FolderTree className="w-5 h-5" />
                   </div>
                   <div>
@@ -72,12 +71,6 @@ function WorkspaceInner() {
                   </div>
                 </div>
                 <ExamTreeInspector />
-              </div>
-            )}
-
-            {activeMainTab === "uploads" && (
-              <div className="max-w-6xl mx-auto space-y-6">
-                <ResourceManagement />
               </div>
             )}
           </motion.div>

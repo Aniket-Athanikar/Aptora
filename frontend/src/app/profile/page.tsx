@@ -59,7 +59,7 @@ function ProfileInner() {
       <DashboardLayout activeTab="profile">
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
             <p className="text-sm font-black text-slate-500">Loading Profile System...</p>
           </div>
         </div>
@@ -113,11 +113,11 @@ function ProfileInner() {
       <div className="max-w-5xl mx-auto space-y-8 px-2 py-4">
         {/* Banner + Hero Card */}
         <div className="relative overflow-hidden rounded-3xl border border-white bg-white/70 backdrop-blur-md shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Avatar Area */}
           <div className="relative group shrink-0">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 blur-sm opacity-40 group-hover:opacity-75 transition duration-300" />
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 blur-sm opacity-40 group-hover:opacity-75 transition duration-300" />
             <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-100">
               {profile?.avatar_url ? (
                 <img
@@ -126,7 +126,7 @@ function ProfileInner() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-black text-3xl uppercase">
+                <div className="w-full h-full bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center font-black text-3xl uppercase">
                   {profile?.name ? profile.name.charAt(0) : "?"}
                 </div>
               )}
@@ -138,7 +138,7 @@ function ProfileInner() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 title="Upload Photo"
-                className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer border border-white"
+                className="w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer border border-white"
               >
                 <Camera className="w-4 h-4" />
               </button>
@@ -173,7 +173,7 @@ function ProfileInner() {
                 {profile?.email}
               </span>
               {profile?.target_exam && (
-                <span className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full">
+                <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-full border border-emerald-100">
                   <Compass className="w-3.5 h-3.5" />
                   Target: {profile.target_exam}
                 </span>
@@ -190,7 +190,7 @@ function ProfileInner() {
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-2xl shadow-md transition-all hover:scale-105 cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl shadow-md transition-all hover:scale-105 cursor-pointer border border-emerald-500"
               >
                 <Edit3 className="w-4 h-4" />
                 Edit Profile
@@ -200,7 +200,7 @@ function ProfileInner() {
                 <button
                   type="submit"
                   form="profile-form"
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl shadow-md transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl shadow-md transition-all cursor-pointer border border-emerald-500"
                 >
                   <Save className="w-4 h-4" />
                   Save
@@ -237,12 +237,12 @@ function ProfileInner() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/5 border border-indigo-500/20 rounded-2xl p-4 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-indigo-500 text-white">
+          <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-emerald-600 text-white">
               <Star className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-wider">Total XP</p>
+              <p className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">Total XP</p>
               <h4 className="text-lg font-black text-slate-800">{profile?.xp || 0}</h4>
             </div>
           </div>
@@ -273,7 +273,7 @@ function ProfileInner() {
           {/* Personal Information */}
           <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
             <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-              <User className="w-5 h-5 text-indigo-600" />
+              <User className="w-5 h-5 text-emerald-600" />
               <h3 className="text-base font-black text-slate-800">Personal Information</h3>
             </div>
 
@@ -286,7 +286,7 @@ function ProfileInner() {
                   value={formData.name || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-emerald-600"
                 />
               </div>
 

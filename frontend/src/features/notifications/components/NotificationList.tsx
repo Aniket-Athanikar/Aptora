@@ -24,7 +24,7 @@ export function NotificationList({
   const getIcon = (type: string) => {
     switch (type) {
       case "study":
-        return { icon: Bell, color: "text-indigo-600 bg-indigo-50 border-indigo-100" };
+        return { icon: Bell, color: "text-emerald-600 bg-emerald-50 border-emerald-100" };
       case "warning":
         return { icon: AlertTriangle, color: "text-amber-600 bg-amber-50 border-amber-100" };
       case "motivation":
@@ -43,9 +43,9 @@ export function NotificationList({
   };
 
   return (
-    <div className="bg-white border border-gray-150 rounded-3xl p-5 space-y-4">
+    <div className="bg-white border border-slate-150 rounded-3xl p-5 space-y-4">
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-2 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-2 border-b border-slate-100">
         <div className="flex gap-2.5">
           <button
             onClick={() => setActiveFilter("all")}
@@ -71,7 +71,7 @@ export function NotificationList({
 
         <button
           onClick={onMarkAllAsRead}
-          className="text-xs text-indigo-650 hover:underline font-bold flex items-center gap-1"
+          className="text-xs text-emerald-700 hover:underline font-bold flex items-center gap-1 cursor-pointer"
         >
           <Check className="w-3.5 h-3.5" /> Mark all as read
         </button>
@@ -82,8 +82,8 @@ export function NotificationList({
         {displayNotifications.length === 0 ? (
           <div className="text-center py-10 space-y-2">
             <Bell className="w-10 h-10 text-slate-200 mx-auto" />
-            <h4 className="text-xs font-black text-gray-800">Inbox is empty</h4>
-            <p className="text-[10px] text-gray-400">You are fully up-to-date with your notifications.</p>
+            <h4 className="text-xs font-black text-slate-800">Inbox is empty</h4>
+            <p className="text-[10px] text-slate-400">You are fully up-to-date with your notifications.</p>
           </div>
         ) : (
           displayNotifications.map((notif) => {
@@ -93,19 +93,19 @@ export function NotificationList({
             return (
               <div
                 key={notif.id}
-                className={`p-4 rounded-2xl border border-gray-100 flex gap-3.5 justify-between items-start hover:shadow-xs transition-shadow ${
+                className={`p-4 rounded-2xl border border-slate-100 flex gap-3.5 justify-between items-start hover:shadow-xs transition-all ${
                   getPriorityBorder(notif.priority)
                 } ${notif.read ? "bg-white opacity-70" : "bg-slate-50/40"}`}
               >
-                <div className="flex gap-3">
+                <div className="flex gap-3 min-w-0 flex-1">
                   <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${iconData.color}`}>
                     <Icon className="w-4.5 h-4.5" />
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-gray-800 leading-normal">
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <p className="text-xs font-bold text-slate-850 leading-normal break-words">
                       {notif.message}
                     </p>
-                    <p className="text-[9px] text-gray-400 font-extrabold uppercase">
+                    <p className="text-[9px] text-slate-400 font-extrabold uppercase">
                       {new Date(notif.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} • {notif.type}
                     </p>
                   </div>
@@ -115,7 +115,7 @@ export function NotificationList({
                   {!notif.read && (
                     <button
                       onClick={() => onMarkAsRead(notif.id)}
-                      className="p-1.5 hover:bg-indigo-50 hover:text-indigo-650 text-gray-400 rounded-lg"
+                      className="p-1.5 hover:bg-emerald-50 hover:text-emerald-700 text-slate-400 rounded-lg cursor-pointer"
                       title="Mark as Read"
                     >
                       <Check className="w-4 h-4" />
@@ -123,7 +123,7 @@ export function NotificationList({
                   )}
                   <button
                     onClick={() => onClearNotification(notif.id)}
-                    className="p-1.5 hover:bg-rose-50 hover:text-rose-600 text-gray-400 rounded-lg"
+                    className="p-1.5 hover:bg-rose-50 hover:text-rose-600 text-slate-400 rounded-lg cursor-pointer"
                     title="Delete Notification"
                   >
                     <Trash2 className="w-4 h-4" />

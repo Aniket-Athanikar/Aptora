@@ -111,29 +111,29 @@ export function ResourceManagement() {
   return (
     <div className="space-y-6">
       {/* Top Search & Filter Bar */}
-      <div className="bg-white border border-purple-100 rounded-3xl p-5.5 shadow-xs space-y-4">
+      <div className="bg-white border border-slate-200 rounded-3xl p-5.5 shadow-xs space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-purple-400 absolute left-4 top-3.5" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
             <input
               type="text"
               placeholder="Search resources by title, keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 text-xs font-bold rounded-2xl bg-purple-50/30 border border-purple-200/80 focus:bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-slate-900"
+              className="w-full pl-11 pr-4 py-2.5 text-xs font-bold rounded-2xl bg-slate-50/50 border border-slate-200 focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-slate-900"
             />
           </div>
 
           {/* Action Upload Button */}
-          <ResourceUploadButton variant="gradient" size="md" />
+          <ResourceUploadButton variant="primary" size="md" />
         </div>
 
         {/* Filters Controls Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-purple-100">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-slate-150">
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex items-center gap-1.5 text-xs font-black text-purple-900 mr-1">
-              <Filter className="w-3.5 h-3.5 text-purple-600" />
+            <div className="flex items-center gap-1.5 text-xs font-black text-slate-900 mr-1">
+              <Filter className="w-3.5 h-3.5 text-emerald-600" />
               <span>Filters:</span>
             </div>
 
@@ -141,7 +141,7 @@ export function ResourceManagement() {
             <select
               value={selectedSubjectFilter}
               onChange={(e) => setSelectedSubjectFilter(e.target.value)}
-              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-purple-200/80 bg-purple-50/30 text-slate-900 focus:bg-white focus:border-purple-600 outline-none transition-all cursor-pointer"
+              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:border-emerald-600 outline-none transition-all cursor-pointer"
             >
               <option value="all">All Subjects ({allSubjects.length})</option>
               {allSubjects.map((sub) => (
@@ -155,7 +155,7 @@ export function ResourceManagement() {
             <select
               value={selectedTypeFilter}
               onChange={(e) => setSelectedTypeFilter(e.target.value)}
-              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-purple-200/80 bg-purple-50/30 text-slate-900 focus:bg-white focus:border-purple-600 outline-none transition-all cursor-pointer"
+              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:border-emerald-600 outline-none transition-all cursor-pointer"
             >
               <option value="all">All Resource Types</option>
               <option value="book">Books</option>
@@ -168,7 +168,7 @@ export function ResourceManagement() {
             <select
               value={selectedStatusFilter}
               onChange={(e) => setSelectedStatusFilter(e.target.value)}
-              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-purple-200/80 bg-purple-50/30 text-slate-900 focus:bg-white focus:border-purple-600 outline-none transition-all cursor-pointer"
+              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:border-emerald-600 outline-none transition-all cursor-pointer"
             >
               <option value="all">All Statuses</option>
               <option value="ready">Ready (Indexed)</option>
@@ -178,13 +178,13 @@ export function ResourceManagement() {
           </div>
 
           {/* View Switcher */}
-          <div className="flex items-center gap-1 bg-purple-50/70 p-1 rounded-xl border border-purple-100">
+          <div className="flex items-center gap-1 bg-slate-100/70 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                 viewMode === "grid"
-                  ? "bg-white text-purple-700 shadow-2xs font-bold"
-                  : "text-slate-500 hover:text-purple-900"
+                  ? "bg-white text-emerald-700 shadow-2xs font-bold"
+                  : "text-slate-500 hover:text-emerald-950"
               }`}
             >
               <Grid className="w-4 h-4" />
@@ -193,8 +193,8 @@ export function ResourceManagement() {
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                 viewMode === "list"
-                  ? "bg-white text-purple-700 shadow-2xs font-bold"
-                  : "text-slate-500 hover:text-purple-900"
+                  ? "bg-white text-emerald-700 shadow-2xs font-bold"
+                  : "text-slate-500 hover:text-emerald-950"
               }`}
             >
               <List className="w-4 h-4" />
@@ -205,8 +205,8 @@ export function ResourceManagement() {
 
       {/* Main Hierarchy List & Grid View */}
       {filteredResources.length === 0 ? (
-        <div className="bg-white border border-slate-200/80 rounded-3xl p-12 text-center space-y-4">
-          <div className="w-16 h-16 rounded-3xl bg-purple-50 border border-purple-100 flex items-center justify-center text-[#6D4AFF] mx-auto">
+        <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center space-y-4">
+          <div className="w-16 h-16 rounded-3xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mx-auto">
             <FolderTree className="w-8 h-8" />
           </div>
           <div>
@@ -218,7 +218,7 @@ export function ResourceManagement() {
             </p>
           </div>
           <div className="pt-2">
-            <ResourceUploadButton variant="gradient" size="md" />
+            <ResourceUploadButton variant="primary" size="md" />
           </div>
         </div>
       ) : (

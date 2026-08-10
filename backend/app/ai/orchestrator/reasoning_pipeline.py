@@ -107,6 +107,7 @@ class ReasoningPipeline:
         subject: str | None = None,
         subject_id: int | None = None,
         limit: int | None = None,
+        resource_ids: List[int] | None = None,
     ) -> Dict[str, Any]:
         """
         Execute the full reasoning pipeline for a student query.
@@ -115,7 +116,7 @@ class ReasoningPipeline:
         if not question:
             raise ValueError("Question cannot be empty.")
 
-        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d | subject_id=%s", workspace_id, subject_id)
+        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d | subject_id=%s | resource_ids=%s", workspace_id, subject_id, resource_ids)
 
         # Resolve subject_name from DB if subject_id is provided but subject text is None
         if subject_id and not subject:
@@ -157,6 +158,7 @@ class ReasoningPipeline:
                     limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
                     subject_id=subject_id,
                     resource_types=plan.target_resource_types,
+                    resource_ids=resource_ids,
                 )
                 raw_chunks.extend(chunks)
         except RetrievalUnavailable:
@@ -240,6 +242,7 @@ class ReasoningPipeline:
         subject: str | None = None,
         subject_id: int | None = None,
         limit: int | None = None,
+        resource_ids: List[int] | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream response through reasoning pipeline.
@@ -281,6 +284,7 @@ class ReasoningPipeline:
                     limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
                     subject_id=subject_id,
                     resource_types=plan.target_resource_types,
+                    resource_ids=resource_ids,
                 )
                 raw_chunks.extend(chunks)
         except RetrievalUnavailable:

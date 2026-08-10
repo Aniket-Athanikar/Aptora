@@ -108,15 +108,15 @@ export function ResourceCard({
   const getFileIcon = () => {
     switch (resourceType) {
       case "book":
-        return <BookOpen className="w-5 h-5 text-purple-700" />;
+        return <BookOpen className="w-5 h-5 text-emerald-700" />;
       case "notes":
-        return <FileText className="w-5 h-5 text-indigo-700" />;
+        return <FileText className="w-5 h-5 text-emerald-700" />;
       case "pyq":
-        return <FileCheck className="w-5 h-5 text-rose-700" />;
+        return <FileCheck className="w-5 h-5 text-emerald-750" />;
       case "syllabus":
-        return <Layers className="w-5 h-5 text-emerald-700" />;
+        return <Layers className="w-5 h-5 text-emerald-600" />;
       default:
-        return <Sparkles className="w-5 h-5 text-amber-700" />;
+        return <Sparkles className="w-5 h-5 text-emerald-650" />;
     }
   };
 
@@ -206,7 +206,7 @@ export function ResourceCard({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -3 }}
-      className={`relative group bg-white border border-purple-100 hover:border-purple-300 rounded-3xl p-5 shadow-xs hover:shadow-xl hover:shadow-purple-950/5 transition-all flex flex-col justify-between ${
+      className={`relative group bg-white border border-slate-150 hover:border-emerald-300 rounded-3xl p-5 shadow-xs hover:shadow-xl hover:shadow-emerald-950/5 transition-all flex flex-col justify-between ${
         isDeleting ? "opacity-40 pointer-events-none" : ""
       }`}
     >
@@ -214,11 +214,11 @@ export function ResourceCard({
         {/* Top Header Row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-50/80 border border-purple-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
               {getFileIcon()}
             </div>
             <div>
-              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100/80 text-purple-950 border border-purple-200/80 mb-1">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200 mb-1">
                 {resourceType}
               </span>
               <span className="block text-[11px] font-extrabold text-slate-500">
@@ -241,7 +241,7 @@ export function ResourceCard({
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-1.5 text-slate-400 hover:text-purple-900 hover:bg-purple-50 rounded-xl transition-all cursor-pointer"
+                className="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer"
               >
                 <MoreVertical className="w-4 h-4" />
               </button>
@@ -253,13 +253,13 @@ export function ResourceCard({
                     initial={{ opacity: 0, scale: 0.9, y: 5 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 5 }}
-                    className="absolute right-0 top-8 z-30 w-44 bg-white border border-purple-200 rounded-2xl shadow-xl py-1.5 text-xs font-bold text-slate-800"
+                    className="absolute right-0 top-8 z-30 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl py-1.5 text-xs font-bold text-slate-800"
                   >
                     <button
                       onClick={handleStudy}
-                      className="w-full px-3.5 py-2 text-left hover:bg-purple-50 hover:text-purple-900 flex items-center gap-2 transition-colors font-extrabold"
+                      className="w-full px-3.5 py-2 text-left hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 transition-colors font-extrabold"
                     >
-                      <Bot className="w-3.5 h-3.5 text-purple-600" />
+                      <Bot className="w-3.5 h-3.5 text-emerald-600" />
                       <span>Study with AI</span>
                     </button>
 
@@ -268,7 +268,7 @@ export function ResourceCard({
                         setIsMenuOpen(false);
                         if (onOpen) onOpen(resource);
                       }}
-                      className="w-full px-3.5 py-2 text-left hover:bg-purple-50 flex items-center gap-2 transition-colors"
+                      className="w-full px-3.5 py-2 text-left hover:bg-slate-50 flex items-center gap-2 transition-colors"
                     >
                       <Eye className="w-3.5 h-3.5 text-slate-500" />
                       <span>Open Material</span>
@@ -279,7 +279,7 @@ export function ResourceCard({
                         setIsMenuOpen(false);
                         setIsRenaming(true);
                       }}
-                      className="w-full px-3.5 py-2 text-left hover:bg-purple-50 flex items-center gap-2 transition-colors"
+                      className="w-full px-3.5 py-2 text-left hover:bg-slate-50 flex items-center gap-2 transition-colors"
                     >
                       <Edit2 className="w-3.5 h-3.5 text-slate-500" />
                       <span>Rename</span>
@@ -288,13 +288,13 @@ export function ResourceCard({
                     <button
                       onClick={handleReprocess}
                       disabled={isReprocessing}
-                      className="w-full px-3.5 py-2 text-left hover:bg-purple-50 flex items-center gap-2 transition-colors"
+                      className="w-full px-3.5 py-2 text-left hover:bg-slate-50 flex items-center gap-2 transition-colors"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 text-slate-500 ${isReprocessing ? "animate-spin" : ""}`} />
                       <span>Reprocess AI</span>
                     </button>
 
-                    <div className="my-1 border-t border-purple-100" />
+                    <div className="my-1 border-t border-slate-100" />
 
                     <button
                       onClick={handleDelete}
@@ -317,13 +317,13 @@ export function ResourceCard({
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs font-bold border border-purple-500 rounded-xl outline-none focus:ring-2 focus:ring-purple-100"
+              className="w-full px-3 py-1.5 text-xs font-bold border border-emerald-500 rounded-xl outline-none focus:ring-2 focus:ring-emerald-100"
               autoFocus
             />
             <div className="flex items-center gap-2">
               <button
                 onClick={handleRenameSubmit}
-                className="px-3 py-1 text-[10.5px] font-black bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="px-3 py-1 text-[10.5px] font-black bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
               >
                 Save
               </button>
@@ -338,7 +338,7 @@ export function ResourceCard({
         ) : (
           <h4
             onClick={() => onOpen && onOpen(resource)}
-            className="text-sm font-black text-slate-950 leading-snug hover:text-purple-700 transition-colors cursor-pointer line-clamp-2 mb-3 tracking-tight"
+            className="text-sm font-black text-slate-950 leading-snug hover:text-emerald-700 transition-colors cursor-pointer line-clamp-2 mb-3 tracking-tight"
           >
             {resource.title}
           </h4>
@@ -346,7 +346,7 @@ export function ResourceCard({
       </div>
 
       {/* Footer Info Row */}
-      <div className="pt-3 border-t border-purple-100 flex items-center justify-between text-[11px] font-bold text-slate-500">
+      <div className="pt-3 border-t border-slate-150 flex items-center justify-between text-[11px] font-bold text-slate-500">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <HardDrive className="w-3.5 h-3.5 text-slate-400" />
@@ -364,7 +364,7 @@ export function ResourceCard({
         <button
           type="button"
           onClick={handleStudy}
-          className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-purple-100/90 text-purple-950 font-black hover:bg-purple-600 hover:text-white border border-purple-200 transition-all shadow-2xs cursor-pointer"
+          className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 font-black hover:bg-emerald-600 hover:text-white border border-emerald-250 transition-all shadow-2xs cursor-pointer"
         >
           <Bot className="w-3.5 h-3.5" />
           <span>Study</span>

@@ -60,9 +60,9 @@ export function AchievementCard({ achievement, onShowUnlockModal }: AchievementC
               <span>Goal Progress</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-gray-200/60 h-1 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-200/60 h-1 rounded-full overflow-hidden">
               <div
-                className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                className="bg-emerald-605 h-full rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>

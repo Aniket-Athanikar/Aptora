@@ -14,12 +14,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
 
     const variants = {
-      default: "bg-neutral-900 text-neutral-50 shadow hover:bg-neutral-800 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-200",
-      destructive: "bg-red-500 text-neutral-50 shadow-sm hover:bg-red-600 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/80",
-      outline: "border border-neutral-200 bg-transparent shadow-sm hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
-      secondary: "bg-neutral-100 text-neutral-900 shadow-sm hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80",
-      ghost: "hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
-      link: "text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50"
+      default: "bg-gradient-to-r from-emerald-500 via-amber-500 to-purple-600 hover:from-emerald-600 hover:to-purple-700 text-white font-extrabold shadow-md shadow-amber-500/10 active:scale-98",
+      destructive: "bg-gradient-to-r from-rose-500 to-red-600 text-white font-extrabold shadow-sm hover:from-rose-600 hover:to-red-700",
+      outline: "border border-amber-300/80 bg-white/90 text-amber-900 font-extrabold shadow-xs hover:bg-amber-50 hover:border-amber-400",
+      secondary: "bg-amber-100/80 text-amber-950 font-extrabold border border-amber-200/80 hover:bg-amber-200/80",
+      ghost: "hover:bg-emerald-50 hover:text-emerald-900 font-bold",
+      link: "text-[#6D4AFF] underline-offset-4 hover:underline font-extrabold"
     };
 
     const sizes = {

@@ -59,6 +59,10 @@ export const backendService = {
     get: (id: number) => apiClient.get<Resource>(`/documents/${id}`),
     status: (id: number) => apiClient.get<{ resource_id: number; status: string }>(`/documents/${id}/status`),
     preview: (id: number) => apiClient.get<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> }>(`/documents/${id}/preview`),
+    getPdfUrl: (id: number) => {
+      const apiRoot = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/v1\/?$/, "");
+      return `${apiRoot}/documents/${id}/file`;
+    },
     remove: (id: number) => apiClient.delete(`/documents/${id}`),
   },
   ai: {
@@ -78,6 +82,24 @@ export const backendService = {
     mcq: (workspace_id: number, topic?: string, count = 5, difficulty = "medium") => apiClient.post("/mcq/generate", { workspace_id, topic, count, difficulty }),
     predictions: (workspace_id: number, prediction_count = 10) => apiClient.post("/predictions", { workspace_id, prediction_count }),
     conceptMap: (workspace_id: number, concept: string) => apiClient.post("/concept/map", { workspace_id, concept }),
+  },
+  sources: {
+    getBooks: (params?: { workspace_id?: number; subject_id?: number; search?: string; resource_type?: string; status?: string; selected?: boolean; page?: number; limit?: number }) => {
+      const q = new URLSearchParams();
+      if (params?.workspace_id) q.set("workspace_id", String(params.workspace_id));
+      if (params?.subject_id) q.set("subject_id", String(params.subject_id));
+      if (params?.search) q.set("search", params.search);
+      if (params?.resource_type) q.set("resource_type", params.resource_type);
+      if (params?.status) q.set("status", params.status);
+      if (params?.selected) q.set("selected", "true");
+      if (params?.page) q.set("page", String(params.page));
+      if (params?.limit) q.set("limit", String(params.limit));
+      return apiClient.get<LibraryBooksResponse>(`/library/books?${q.toString()}`);
+    },
+    getBook: (id: number) => apiClient.get<LibraryBookItem>(`/library/books/${id}`),
+    getSelectedSources: (workspaceId?: number) => apiClient.get<AiStudySourceItem[]>(`/ai-study/sources${workspaceId ? `?workspace_id=${workspaceId}` : ""}`),
+    selectSource: (resourceId: number) => apiClient.post<AiStudySourceItem>("/ai-study/sources", { resource_id: resourceId }),
+    removeSource: (resourceId: number) => apiClient.delete<{ success: boolean; message: string }>(`/ai-study/sources/${resourceId}`),
   },
 };
 
@@ -99,3 +121,7 @@ export type KnowledgeRequest = { session_id: string; workspace_id: number; subje
 export type KnowledgeResponse = { success: boolean; session_id: string; answer: string; confidence: "high" | "medium" | "low" | "none"; sources: Array<{ resource_id?: number; document_title: string; subject: string; score: number }>; history_length: number };
 export type KnowledgeConversation = { session_id: string; workspace_id: number; subject_id?: number | null; title: string; created_at: string; updated_at: string; last_message_at?: string | null; pinned: boolean; last_message?: string | null };
 export type KnowledgeConversationDetail = KnowledgeConversation & { messages: Array<{ role: "user" | "assistant"; content: string; sources?: Array<{ resource_id?: number; document_title: string; subject: string; chapter?: string; page_number?: number; score: number }> | null; confidence?: string | null; created_at: string }> };
+export type LibraryBookItem = { id: number; title: string; description?: string; original_filename: string; resource_type: string; status: string; total_pages?: number; chunks_count: number; file_size: number; workspace_id: number; subject_id: number; subject?: string; exam?: string; ai_ready: boolean; is_selected: boolean; created_at: string };
+export type LibraryBooksResponse = { total: number; page: number; limit: number; items: LibraryBookItem[] };
+export type AiStudySourceItem = { id: number; user_id: number; workspace_id: number; resource_id: number; is_active: boolean; selected_at: string; resource?: LibraryBookItem };
+

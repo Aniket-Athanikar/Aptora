@@ -36,13 +36,14 @@ class SearchService:
     def search(
         cls, workspace_id: int, question: str, limit: int = DEFAULT_LIMIT,
         subject_id: int | None = None, resource_types: list[str] | None = None,
+        resource_ids: list[int] | None = None,
     ) -> list[dict[str, Any]]:
         if not question or not question.strip():
             return []
-        query_filter = cls._build_filter(workspace_id, subject_id, resource_types)
+        query_filter = cls._build_filter(workspace_id, subject_id, resource_types, resource_ids)
         logger.info(
-            "[SearchService] query=%r workspace_id=%s subject_id=%s resource_types=%s filter=%s",
-            question[:200], workspace_id, subject_id, resource_types, query_filter,
+            "[SearchService] query=%r workspace_id=%s subject_id=%s resource_types=%s resource_ids=%s filter=%s",
+            question[:200], workspace_id, subject_id, resource_types, resource_ids, query_filter,
         )
         try:
             embedding = EmbeddingService.embed(question, is_query=True)
@@ -56,16 +57,16 @@ class SearchService:
                     "[SearchService] 0 results with strict resource_types=%s. Retrying without resource_types filter...",
                     resource_types,
                 )
-                relaxed_filter = cls._build_filter(workspace_id, subject_id, resource_types=None)
+                relaxed_filter = cls._build_filter(workspace_id, subject_id, resource_types=None, resource_ids=resource_ids)
                 results = QdrantService.search(embedding=embedding, limit=candidate_limit, query_filter=relaxed_filter)
 
-            # Second fallback: if subject_id filter also caused 0 results, retry with workspace_id only
+            # Second fallback: if subject_id filter also caused 0 results, retry with workspace_id + resource_ids
             if not results and subject_id is not None:
                 logger.warning(
                     "[SearchService] 0 results with subject_id=%s. Retrying with workspace_id=%s only...",
                     subject_id, workspace_id,
                 )
-                workspace_filter = cls._build_filter(workspace_id, subject_id=None, resource_types=None)
+                workspace_filter = cls._build_filter(workspace_id, subject_id=None, resource_types=None, resource_ids=resource_ids)
                 results = QdrantService.search(embedding=embedding, limit=candidate_limit, query_filter=workspace_filter)
 
             if not results:
@@ -132,12 +133,14 @@ class SearchService:
         return cls.search(workspace_id, question, limit)
 
     @staticmethod
-    def _build_filter(workspace_id: int, subject_id: int | None, resource_types: list[str] | None) -> Filter:
+    def _build_filter(workspace_id: int, subject_id: int | None, resource_types: list[str] | None, resource_ids: list[int] | None = None) -> Filter:
         must = [FieldCondition(key="workspace_id", match=MatchValue(value=workspace_id))]
         if subject_id is not None:
             must.append(FieldCondition(key="subject_id", match=MatchValue(value=subject_id)))
         if resource_types:
             must.append(FieldCondition(key="resource_type", match=MatchAny(any=resource_types)))
+        if resource_ids:
+            must.append(FieldCondition(key="resource_id", match=MatchAny(any=resource_ids)))
         return Filter(must=must)
 
     @staticmethod
