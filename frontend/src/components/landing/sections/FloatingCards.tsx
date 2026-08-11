@@ -52,7 +52,7 @@ export default function FloatingCards() {
   return (
     <div className="absolute inset-0 pointer-events-none z-30 perspective-[1200px]">
 
-      {/* Card 1: AI Coach */}
+      {/* Card 1: AI Partner */}
       <motion.div
         initial={{ opacity: 0, x: -40, scale: 0.8 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -65,27 +65,27 @@ export default function FloatingCards() {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
           <InteractiveFloatCard>
-            <GlassCard className="relative flex items-center gap-4 p-4 pr-6 bg-white/85 border border-slate-100 rounded-2xl shadow-[0_20px_40px_-15px_rgba(109,74,255,0.18)] hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.35)] transition-shadow duration-500 overflow-hidden">
+            <GlassCard className="relative flex items-center gap-4 p-4 pr-6 bg-white/85 border border-slate-100 rounded-2xl shadow-[0_20px_40px_-15px_rgba(16,185,129,0.18)] hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.35)] transition-shadow duration-500 overflow-hidden">
               {/* Animated Background Glow */}
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+ 
               {/* Icon with Z-Depth and Pulse */}
               <div
                 style={{ transform: "translateZ(30px)" }}
-                className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-[#6D4AFF]/10 to-purple-650/5 flex items-center justify-center text-[#6D4AFF] border border-purple-500/20 group-hover:scale-110 transition-transform duration-500 shadow-sm"
+                className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 flex items-center justify-center text-emerald-600 border border-emerald-500/20 group-hover:scale-110 transition-transform duration-500 shadow-sm"
               >
                 <BrainCircuit className="w-5.5 h-5.5" />
                 <motion.div
                   animate={{ scale: [1, 1.4, 1], opacity: [0, 0.4, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-0 rounded-xl bg-purple-400/20"
+                  className="absolute inset-0 rounded-xl bg-emerald-400/20"
                 />
               </div>
-
+ 
               {/* Text with Z-Depth */}
               <div style={{ transform: "translateZ(20px)" }} className="flex flex-col gap-0.5">
                 <h4 className="font-extrabold text-xs text-slate-800 tracking-tight flex items-center gap-1.5">
-                  AI Coach Ready
+                  AI Partner Ready
                   <Sparkles className="w-3 h-3 text-amber-400" />
                 </h4>
                 <p className="text-[10px] text-slate-400 font-bold tracking-wide">Personalized study plan</p>

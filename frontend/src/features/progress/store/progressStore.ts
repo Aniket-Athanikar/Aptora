@@ -32,6 +32,9 @@ interface ProgressStore {
   recordStudySession: (subject: string, minutes: number) => void;
   incrementStreak: () => void;
   updateTaskCompletion: (subject: string, completed: boolean) => void;
+  addSubject: (subject: SubjectProgressData) => void;
+  updateSubject: (name: string, updated: Partial<SubjectProgressData>) => void;
+  deleteSubject: (name: string) => void;
   loadFromLocalStorage: () => void;
   updateDailyActivity: (date: string, hours: number, tasksCompleted: number, status: "completed" | "partial" | "missed") => void;
 }
@@ -296,5 +299,50 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     set(newState);
     localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
     localStorage.setItem("examforge_activity_history", JSON.stringify(activityHistory));
+  },
+
+  addSubject: (subject) => {
+    const subjectProgress = [...get().subjectProgress, subject];
+    const newState = {
+      subjectProgress,
+      lastUpdated: new Date().toISOString()
+    };
+    set(newState);
+    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+  },
+
+  updateSubject: (name, updated) => {
+    const subjectProgress = get().subjectProgress.map((sub) => {
+      if (sub.subject.toLowerCase() === name.toLowerCase()) {
+        const next = { ...sub, ...updated };
+        const percent = Math.min(100, Math.round((next.completedTasks / next.totalTasks) * 100));
+        let revisionStatus = next.revisionStatus;
+        if (next.confidence <= 2) revisionStatus = "Weak";
+        else if (next.confidence <= 3) revisionStatus = "Needs Review";
+        else revisionStatus = "Good";
+        return {
+          ...next,
+          completionPercentage: percent,
+          revisionStatus
+        };
+      }
+      return sub;
+    });
+    const newState = {
+      subjectProgress,
+      lastUpdated: new Date().toISOString()
+    };
+    set(newState);
+    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+  },
+
+  deleteSubject: (name) => {
+    const subjectProgress = get().subjectProgress.filter(sub => sub.subject.toLowerCase() !== name.toLowerCase());
+    const newState = {
+      subjectProgress,
+      lastUpdated: new Date().toISOString()
+    };
+    set(newState);
+    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
   }
 }));

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { GoalEngineProvider } from "@/contexts/goal-engine.context";
@@ -43,31 +43,40 @@ function NotificationsPageContent() {
 
   return (
     <DashboardLayout activeTab="notifications">
-      <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="space-y-7 max-w-5xl mx-auto">
 
-        {/* Header & Interlink Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-2 tracking-tight">
-              Notifications Center <Bell className="w-6 h-6 text-[#6D4AFF] animate-bounce" />
-            </h1>
-            <p className="text-xs text-slate-500 font-semibold mt-0.5">
-              Real-time study alerts, streak milestones, and syllabus schedule warnings.
-            </p>
+        {/* Header Banner - AI Library Style */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-purple-500/15 p-6 sm:p-8 text-slate-900 border border-amber-200/60 shadow-lg shadow-amber-500/5 backdrop-blur-sm">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/80 text-amber-900 border border-amber-300/60 text-[11px] font-black uppercase tracking-widest shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+                Live Alerts
+              </div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                Notifications Center <Bell className="w-8 h-8 text-emerald-600 animate-bounce" />
+              </h1>
+              <p className="text-sm sm:text-base text-slate-700 font-medium max-w-xl">
+                Real-time study alerts, streak milestones, and syllabus schedule warnings to keep you on track.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="self-start md:self-center h-12 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-98 cursor-pointer shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Custom Alert</span>
+            </button>
           </div>
-
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="bg-[#6D4AFF] hover:bg-[#5A36EE] text-white text-xs font-black px-4.5 py-2.5 rounded-2xl transition-all shadow-md shadow-indigo-100 flex items-center gap-1.5 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" /> Create Custom Alert
-          </button>
         </div>
 
         {/* Hero Metrics Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-gradient-to-br from-white via-indigo-50/50 to-purple-50/30 border border-indigo-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-[#6D4AFF]/10 border border-[#6D4AFF]/20 text-[#6D4AFF] flex items-center justify-center font-black">
+          <div className="bg-gradient-to-br from-white via-emerald-50/50 to-teal-50/30 border border-emerald-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5 relative overflow-hidden">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-600/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center font-black">
               <Bell className="w-5 h-5" />
             </div>
             <div>
@@ -76,7 +85,7 @@ function NotificationsPageContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-white via-amber-50/50 to-orange-50/30 border border-amber-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5">
+          <div className="bg-gradient-to-br from-white via-amber-50/50 to-orange-50/30 border border-amber-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5 relative overflow-hidden">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center font-black">
               <Sparkles className="w-5 h-5" />
             </div>
@@ -86,7 +95,7 @@ function NotificationsPageContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-white via-rose-50/50 to-pink-50/30 border border-rose-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5">
+          <div className="bg-gradient-to-br from-white via-rose-50/50 to-pink-50/30 border border-rose-100/90 rounded-3xl p-5 shadow-xs flex items-center gap-3.5 relative overflow-hidden">
             <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 flex items-center justify-center font-black">
               <AlertTriangle className="w-5 h-5" />
             </div>
@@ -119,10 +128,10 @@ function NotificationsPageContent() {
                 <textarea
                   value={msgText}
                   onChange={(e) => setMsgText(e.target.value)}
-                  placeholder="e.g. ðŸ“š Complete Economy mock test by 7 PM today."
+                  placeholder="e.g. 📚 Complete Economy mock test by 7 PM today."
                   rows={3}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#6D4AFF] focus:bg-white resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-emerald-500 focus:bg-white resize-none transition-all"
                 />
               </div>
 
@@ -132,7 +141,7 @@ function NotificationsPageContent() {
                   <select
                     value={msgType}
                     onChange={(e) => setMsgType(e.target.value as NotificationItem["type"])}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-[#6D4AFF] focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer"
                   >
                     <option value="study">Study</option>
                     <option value="warning">Warning</option>
@@ -146,7 +155,7 @@ function NotificationsPageContent() {
                   <select
                     value={msgPriority}
                     onChange={(e) => setMsgPriority(e.target.value as NotificationItem["priority"])}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-[#6D4AFF] focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -159,13 +168,13 @@ function NotificationsPageContent() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-600"
+                  className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-600 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2.5 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl text-xs font-black uppercase tracking-wider"
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer"
                 >
                   Save Alert
                 </button>

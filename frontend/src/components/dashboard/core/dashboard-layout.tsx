@@ -61,8 +61,8 @@ export function DashboardLayout({
       <div className="flex-1 flex flex-col relative z-10 min-w-0 bg-[var(--background)]/40">
         {/* Glow ambient meshes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-indigo-200/20 rounded-full filter blur-[100px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-pink-100/10 rounded-full filter blur-[120px]" />
+          <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-200/15 rounded-full filter blur-[100px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-amber-100/10 rounded-full filter blur-[120px]" />
         </div>
 
         <header className="h-14 sm:h-16 px-3 sm:px-5 lg:px-7 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-3xs relative z-30 select-none">

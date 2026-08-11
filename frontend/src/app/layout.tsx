@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#6D4AFF",
+  themeColor: "#0fb37cff",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "ExamForge-AI | Premium Cognitive Exam Prep",
+    title: "ExamForge-AI",
     description:
       "Convert your textbooks, notes & study materials into personalized mock tests and automated summary cards.",
     url: "https://examforge.ai",

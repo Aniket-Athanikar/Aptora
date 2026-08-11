@@ -51,11 +51,11 @@ export default function Navbar() {
   const displayName = profile?.name || user?.name || "";
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Features", href: "/features" },
-    { name: "Exams", href: "/exams" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Blog", href: "/blog" },
+    { name: "Home", href: "/", emoji: "🏠" },
+    { name: "Features", href: "/features", emoji: "✨" },
+    { name: "Exams", href: "/exams", emoji: "📝" },
+    { name: "Pricing", href: "/pricing", emoji: "💰" },
+    { name: "Blog", href: "/blog", emoji: "📰" },
   ];
 
   useEffect(() => {
@@ -100,13 +100,13 @@ export default function Navbar() {
           className="w-full h-[200%] origin-top"
           style={{
             transform: "rotateX(65deg)",
-            backgroundImage: "linear-gradient(rgba(109, 74, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 74, 255, 0.1) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(15, 165, 115, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px)",
             backgroundSize: "16px 16px"
           }}
         />
         <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--surface)] to-transparent" />
       </div>
-      <div className="absolute top-0 left-[35%] w-[30%] h-full bg-gradient-to-r from-[#6D4AFF]/5 to-[#A855F7]/5 blur-[50px] pointer-events-none z-0" />
+      <div className="absolute top-0 left-[35%] w-[30%] h-full bg-gradient-to-r from-emerald-500/5 to-amber-500/5 blur-[50px] pointer-events-none z-0" />
 
       <div className="w-full px-4 sm:px-8 md:px-12 flex items-center justify-between relative z-10">
 
@@ -132,13 +132,13 @@ export default function Navbar() {
               />
             </motion.div>
           </div>
-          <span className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1">
-            ExamForge-<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-600 bg-clip-text text-transparent">AI</span>
+          <span className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1 flex items-center gap-1">
+            ExamForge-<span className="bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 bg-clip-text text-transparent">AI</span>📚
           </span>
         </Link>
 
         {/* Center Nav Links */}
-        <nav className="hidden lg:flex items-center gap-8 mt-1">
+        <nav className="hidden lg:flex items-center gap-4 mt-1">
           {navLinks.map((link) => (
             <motion.div
               key={link.name}
@@ -150,22 +150,14 @@ export default function Navbar() {
                 href={link.href}
                 onClick={() => setActiveLink(link.href)}
                 className={cn(
-                  "relative text-sm font-black tracking-wider transition-colors py-2 block",
+                  "relative text-xs font-black tracking-wider transition-all px-3 py-1.5 rounded-xl border flex items-center gap-1.5",
                   activeLink === link.href
-                    ? "text-[#6D4AFF]"
-                    : "text-neutral-600 hover:text-neutral-900"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
+                    : "bg-white/40 border-slate-200/60 text-neutral-605 hover:text-neutral-900 hover:bg-white/80 hover:border-slate-300"
                 )}
               >
-                {link.name}
-                {activeLink === link.href && (
-                  <motion.div
-                    layoutId="active-nav-stick"
-                    className="absolute -bottom-1 left-0 right-0 h-[3px] bg-[#6D4AFF] rounded-full shadow-[0_2px_10px_1px_rgba(109,74,255,0.5)]"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
+                <span>{link.emoji}</span>
+                <span>{link.name}</span>
               </Link>
             </motion.div>
           ))}
@@ -174,7 +166,7 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="hidden lg:flex items-center gap-4 mt-1">
           {mounted && isAuthenticated && user ? (
-            /* â”€â”€ Logged-in User Menu â”€â”€ */
+            /* ── Logged-in User Menu ── */
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -188,7 +180,7 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
                       {displayName ? displayName.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}
@@ -251,13 +243,17 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="text-xs font-black text-slate-700 hover:text-[#6D4AFF] px-4 py-2.5 rounded-xl border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all cursor-pointer shadow-3xs flex items-center gap-1.5"
+                className="text-xs font-black text-slate-705 hover:text-emerald-700 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all cursor-pointer shadow-3xs flex items-center gap-1.5"
               >
-                <LogIn className="w-3.5 h-3.5 text-[#6D4AFF]" />
+                <LogIn className="w-3.5 h-3.5 text-emerald-600" />
                 Login
               </Link>
               <Link href="/login">
-                <GlowButton variant="gradient" className="text-xs px-6 py-2.5 font-black shadow-md" magnetic={false}>
+                <GlowButton
+                  variant="gradient"
+                  className="text-xs px-6 py-2.5 font-black shadow-md from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                  magnetic={false}
+                >
                   Get Started
                 </GlowButton>
               </Link>
@@ -267,7 +263,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-neutral-750 hover:text-[#6D4AFF] transition-colors mt-1"
+          className="lg:hidden p-2 text-neutral-750 hover:text-emerald-600 transition-colors mt-1"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
@@ -277,7 +273,7 @@ export default function Navbar() {
       {/* Mobile Drawer - Premium White Glassmorphic Panel */}
       {mobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200/80 p-6 shadow-xl flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-300">
-          <nav className="flex flex-col gap-1.5">
+          <nav className="flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -287,20 +283,14 @@ export default function Navbar() {
                   setMobileMenuOpen(false);
                 }}
                 className={cn(
-                  "relative text-base font-bold transition-all px-4 py-3 rounded-xl",
+                  "relative text-base font-black transition-all px-4 py-3 rounded-xl border flex items-center gap-2.5",
                   activeLink === link.href
-                    ? "bg-[#6D4AFF]/5 text-[#6D4AFF]"
-                    : "text-neutral-600 hover:bg-slate-50 hover:text-neutral-900"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
+                    : "bg-white border-slate-200/80 text-neutral-600 hover:bg-slate-50 hover:text-neutral-900"
                 )}
               >
-                {link.name}
-                {activeLink === link.href && (
-                  <motion.div
-                    layoutId="mobile-active-nav-stick"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-1/2 bg-[#6D4AFF] rounded-r-full shadow-[2px_0_10px_1px_rgba(109,74,255,0.5)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
+                <span className="text-lg">{link.emoji}</span>
+                <span>{link.name}</span>
               </Link>
             ))}
           </nav>
@@ -318,7 +308,7 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
                       {displayName ? displayName.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}
@@ -331,21 +321,21 @@ export default function Navbar() {
               <Link
                 href="/profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 font-bold text-slate-705 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all block"
+                className="w-full text-center py-3.5 font-bold text-slate-705 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
               >
-                View Profile
+                👤 View Profile
               </Link>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="w-full text-center py-3.5 font-bold text-red-600 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer"
+                className="w-full text-center py-3.5 font-bold text-red-600 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                Logout
+                🚪 Logout
               </button>
               <button
                 onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
-                className="w-full text-center py-3.5 font-bold text-red-500 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer text-sm"
+                className="w-full text-center py-3.5 font-bold text-red-500 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer text-sm flex items-center justify-center gap-2"
               >
-                Delete Account
+                ⚠️ Delete Account
               </button>
             </div>
           ) : (
@@ -353,15 +343,15 @@ export default function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3 font-black text-slate-800 border border-slate-250 bg-white rounded-xl hover:bg-indigo-50/60 hover:text-[#6D4AFF] hover:border-indigo-200 transition-all flex items-center justify-center gap-2 shadow-xs"
+                className="w-full text-center py-3 font-black text-slate-800 border border-slate-250 bg-white rounded-xl hover:bg-emerald-50/60 hover:text-emerald-700 hover:border-emerald-200 transition-all flex items-center justify-center gap-2 shadow-xs"
               >
-                <LogIn className="w-4 h-4 text-[#6D4AFF]" />
+                <LogIn className="w-4 h-4 text-emerald-600" />
                 Login
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3 font-black bg-gradient-to-r from-[#6D4AFF] to-purple-650 text-white rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all block"
+                className="w-full text-center py-3 font-black bg-gradient-to-r from-emerald-600 to-teal-650 text-white rounded-xl shadow-md transition-all block"
               >
                 Get Started
               </Link>
@@ -371,7 +361,7 @@ export default function Navbar() {
       )}
 
       {/* Glowing Bottom Border of the capsule */}
-      <div className="absolute bottom-0 left-0 w-full h-[4.5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent bg-[length:200%_auto] animate-glow-flow shadow-[0_0_20px_4px_rgba(109,74,255,0.9)] z-50 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-[4.5px] bg-gradient-to-r from-transparent via-emerald-500 via-amber-400 via-teal-500 to-transparent bg-[length:200%_auto] shadow-[0_0_20px_4px_rgba(16,185,129,0.7)] z-50 pointer-events-none" />
 
       {/* Delete Account Modal */}
       <DeleteAccountModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} />

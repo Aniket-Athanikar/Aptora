@@ -49,39 +49,49 @@ function AnalyticsContent() {
 
   return (
     <DashboardLayout activeTab="analytics">
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-2 tracking-tight">
-              Performance Analytics <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
-            </h1>
-            <p className="text-xs text-slate-500 font-semibold mt-0.5">
-              AI-calibrated analysis of study trends, subject velocity, and goal trajectory.
-            </p>
+      <div className="space-y-7 max-w-6xl mx-auto">
+
+        {/* Header Banner - AI Library Style */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-purple-500/15 p-6 sm:p-8 text-slate-900 border border-amber-200/60 shadow-lg shadow-amber-500/5 backdrop-blur-sm">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/80 text-amber-900 border border-amber-300/60 text-[11px] font-black uppercase tracking-widest shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+                Performance Engine
+              </div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                Performance Analytics
+              </h1>
+              <p className="text-sm sm:text-base text-slate-700 font-medium max-w-xl">
+                AI-calibrated analysis of study trends, subject velocity, and goal trajectory.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* AI Progress Coach Card - Crisp Light Gradient */}
-        <div className="bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 border border-indigo-100/90 rounded-3xl p-6 relative overflow-hidden shadow-sm">
+        <div className="bg-gradient-to-br from-white via-emerald-50/60 to-amber-50/40 border border-emerald-100/90 rounded-3xl p-6 relative overflow-hidden shadow-sm">
           <div className="absolute right-4 bottom-0 opacity-5 transform translate-y-4 pointer-events-none">
-            <Bot className="w-48 h-48 text-indigo-900" />
+            <Bot className="w-48 h-48 text-emerald-900" />
           </div>
 
           <div className="flex items-start gap-4 relative z-10">
-            <div className="bg-gradient-to-br from-[#6D4AFF] to-indigo-600 text-white p-3 rounded-2xl shadow-md shadow-indigo-200">
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white p-3 rounded-2xl shadow-md shadow-emerald-600/10">
               <Bot className="w-6 h-6" />
             </div>
             <div className="space-y-2 flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-[#6D4AFF] uppercase tracking-widest bg-[#6D4AFF]/10 border border-[#6D4AFF]/20 px-2.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest bg-emerald-100 border border-emerald-300/60 px-2.5 py-0.5 rounded-full">
                   AI Progress Insights
                 </span>
               </div>
-              <p className="text-sm font-black text-slate-800 leading-relaxed italic">
+              <p className="text-sm font-black text-slate-850 leading-relaxed italic">
                 {coachMessage.message}
               </p>
-              <div className="flex flex-wrap gap-4 pt-1 text-[10px] font-extrabold text-[#6D4AFF] uppercase tracking-wider">
-                <span className="flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> Mornings are optimal</span>
+              <div className="flex flex-wrap gap-4 pt-1 text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider">
+                <span className="flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5 text-emerald-650" /> Mornings are optimal</span>
                 <span className="flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5 text-amber-500" /> Syllabus priority detected</span>
               </div>
             </div>

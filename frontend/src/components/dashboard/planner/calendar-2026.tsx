@@ -195,7 +195,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
         <div className="flex justify-between items-center pb-3 border-b border-slate-100 flex-wrap gap-3">
           <div>
             <h3 className="font-black text-slate-900 text-sm flex items-center gap-1.5">
-              <CalendarIcon className="w-4.5 h-4.5 text-[#6D4AFF]" /> Success Calendar 2026
+              <CalendarIcon className="w-4.5 h-4.5 text-emerald-600" /> Success Calendar 2026
             </h3>
             <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Interactive daily study block scheduler. Click cells to log or edit sessions.</p>
           </div>
@@ -243,7 +243,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                     : isExam
                     ? "bg-rose-500 border-rose-500 text-white font-extrabold cursor-pointer hover:scale-105"
                     : isToday
-                    ? "border-[#6D4AFF] text-[#6D4AFF] bg-indigo-50 font-black cursor-pointer hover:scale-105 shadow-3xs"
+                    ? "border-emerald-600 text-emerald-600 bg-emerald-50 font-black cursor-pointer hover:scale-105 shadow-3xs"
                     : isStudied
                     ? "bg-emerald-50 border-emerald-100 text-emerald-700 font-extrabold cursor-pointer hover:bg-emerald-100/50 hover:scale-105"
                     : "border-slate-100 text-slate-600 hover:bg-slate-50 cursor-pointer hover:scale-105"
@@ -281,9 +281,9 @@ export function Calendar2026({ goal }: Calendar2026Props) {
       <div className="space-y-6">
         
         {/* Cockpit Calibration Card - Crisp Light Gradient */}
-        <div className="bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-indigo-100/90 space-y-4">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-[#6D4AFF]/10 rounded-full blur-2xl pointer-events-none" />
-          <h3 className="text-xs font-black text-[#6D4AFF] uppercase tracking-widest border-b border-indigo-100/60 pb-2 flex items-center gap-1.5">
+        <div className="bg-gradient-to-br from-white via-emerald-50/60 to-amber-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-emerald-100/90 space-y-4">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-600/10 rounded-full blur-2xl pointer-events-none" />
+          <h3 className="text-xs font-black text-emerald-700 uppercase tracking-widest border-b border-emerald-100/60 pb-2 flex items-center gap-1.5">
             <Compass className="w-4 h-4" /> Cockpit Calibration
           </h3>
 
@@ -298,7 +298,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
             </div>
             <div>
               <span className="text-[9px] text-slate-400 block font-black uppercase tracking-wider">Daily Hours Target</span>
-              <p className="font-black text-[#6D4AFF] mt-0.5">{goal.timeline.dailyStudyHours} Hours Study Slot</p>
+              <p className="font-black text-emerald-700 mt-0.5">{goal.timeline.dailyStudyHours} Hours Study Slot</p>
             </div>
           </div>
         </div>
@@ -348,7 +348,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
               {/* Modal Header */}
               <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4 text-[#6D4AFF]" />
+                  <CalendarIcon className="w-4 h-4 text-emerald-600" />
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">
                     Log for {currentMonth} {selectedDate}
                   </h4>
@@ -374,7 +374,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                   <div className="space-y-1">
                     <div className="flex justify-between pl-1">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Study Duration</label>
-                      <span className="text-[10px] font-black text-[#6D4AFF]">{editHours} Hours</span>
+                      <span className="text-[10px] font-black text-emerald-700">{editHours} Hours</span>
                     </div>
                     <input
                       type="range"
@@ -382,7 +382,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                       max="16"
                       value={editHours}
                       onChange={(e) => setEditHours(Number(e.target.value))}
-                      className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#6D4AFF]"
+                      className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                     />
                   </div>
 
@@ -395,7 +395,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                         setEditSubject(e.target.value);
                         setValidationError(null);
                       }}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#6D4AFF] focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer"
                     >
                       {goal.weaknesses.map((w) => (
                         <option key={w.subject} value={w.subject}>{w.subject}</option>
@@ -413,14 +413,14 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                       onChange={(e) => setEditNotes(e.target.value)}
                       placeholder="e.g., Solved formulas, compiled chapter notes..."
                       rows={3}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#6D4AFF] focus:bg-white resize-none"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-emerald-500 focus:bg-white resize-none transition-all"
                     />
                   </div>
 
                   <div className="flex gap-2.5 pt-2">
                     <button
                       onClick={handleSaveSession}
-                      className="flex-1 py-2.5 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer shadow"
+                      className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer shadow-md shadow-emerald-600/10"
                     >
                       Save Log
                     </button>
@@ -436,18 +436,18 @@ export function Calendar2026({ goal }: Calendar2026Props) {
                 <div className="space-y-4">
                   {/* Read Only Session Overview */}
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 bg-indigo-50/40 border border-indigo-100/50 p-3.5 rounded-2xl">
-                      <Clock className="w-4 h-4 text-[#6D4AFF] shrink-0" />
+                    <div className="flex items-center gap-3 bg-emerald-50/40 border border-emerald-100/50 p-3.5 rounded-2xl">
+                      <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
                       <div>
-                        <span className="text-[9px] text-indigo-400 font-black uppercase tracking-widest block">Duration Logged</span>
+                        <span className="text-[9px] text-emerald-500 font-black uppercase tracking-widest block">Duration Logged</span>
                         <span className="text-xs font-black text-slate-800">{sessionDetails[selectedDate]?.hours} Hours Study Block</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 bg-emerald-50/40 border border-emerald-100/50 p-3.5 rounded-2xl">
-                      <BookOpen className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <div className="flex items-center gap-3 bg-teal-50/40 border border-teal-100/50 p-3.5 rounded-2xl">
+                      <BookOpen className="w-4 h-4 text-teal-600 shrink-0" />
                       <div>
-                        <span className="text-[9px] text-emerald-400 font-black uppercase tracking-widest block">Subject Module</span>
+                        <span className="text-[9px] text-teal-500 font-black uppercase tracking-widest block">Subject Module</span>
                         <span className="text-xs font-black text-slate-800">{sessionDetails[selectedDate]?.subject}</span>
                       </div>
                     </div>

@@ -68,8 +68,8 @@ export default function Footer() {
 
   return (
     <footer className="text-neutral-700 py-16 border-t border-white/20 relative z-10 overflow-hidden glass rounded-none backdrop-blur-3xl">
-      {/* Brand Ambient background glows - Matching Navbar Purple Accent */}
-      <div className="absolute top-0 left-[25%] w-[50%] h-[120px] bg-gradient-to-b from-[#6D4AFF]/5 via-[#A855F7]/5 to-transparent blur-[80px] rounded-full pointer-events-none z-0" />
+      {/* Brand Ambient background glows - Matching Navbar Emerald Accent */}
+      <div className="absolute top-0 left-[25%] w-[50%] h-[120px] bg-gradient-to-b from-amber-500/5 via-emerald-500/5 to-transparent blur-[80px] rounded-full pointer-events-none z-0" />
 
       {/* 3D perspective wireframe pattern simulating Three.js grid floor */}
       <div
@@ -80,7 +80,7 @@ export default function Footer() {
           className="w-full h-[250%] origin-bottom"
           style={{
             transform: "rotateX(-55deg)",
-            backgroundImage: "linear-gradient(rgba(109, 74, 255, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 74, 255, 0.12) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px)",
             backgroundSize: "24px 24px"
           }}
         />
@@ -88,7 +88,7 @@ export default function Footer() {
       </div>
 
       {/* Glowing Top Border Line - Matching Navbar brand colors */}
-      <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-transparent via-[#6D4AFF] via-[#A855F7] via-[#4F46E5] to-transparent shadow-[0_0_25px_6px_rgba(109,74,255,0.7)] z-50 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-transparent via-emerald-500 via-amber-400 via-teal-500 to-transparent shadow-[0_0_25px_6px_rgba(16,185,129,0.5)] z-50 pointer-events-none" />
 
       <div className="w-full px-4 sm:px-8 md:px-12 relative z-10">
 
@@ -116,7 +116,7 @@ export default function Footer() {
                 </motion.div>
               </div>
               <span className="font-black tracking-tight text-neutral-900 text-2xl md:text-3xl mt-1">
-                ExamForge-<span className="text-[#6D4AFF]">AI</span>
+                ExamForge-<span className="text-emerald-700">AI</span>
               </span>
             </Link>
 
@@ -133,7 +133,7 @@ export default function Footer() {
                   whileHover={{ scale: 1.15, y: -4 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  className="w-10 h-10 rounded-xl bg-neutral-50 border border-neutral-200 hover:bg-gradient-to-r hover:from-[#6D4AFF] hover:to-[#8B5CF6] hover:border-transparent hover:text-white flex items-center justify-center text-neutral-500 transition-all duration-300 hover:shadow-md cursor-pointer"
+                  className="w-10 h-10 rounded-xl bg-neutral-50 border border-neutral-200 hover:bg-gradient-to-r hover:from-emerald-600 hover:to-teal-500 hover:border-transparent hover:text-white flex items-center justify-center text-neutral-500 transition-all duration-300 hover:shadow-md cursor-pointer"
                 >
                   <soc.icon className="w-4 h-4" />
                 </motion.a>
@@ -145,11 +145,11 @@ export default function Footer() {
           <div className="flex flex-col gap-5">
             <h4 className="text-neutral-900 text-sm font-black tracking-widest uppercase">Product</h4>
             <nav className="flex flex-col gap-3 text-sm font-bold text-neutral-500">
-              <Link href="/features" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Features</Link>
-              <Link href="/how-it-works" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">How It Works</Link>
-              <Link href="/pricing" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Pricing</Link>
-              <Link href="/exams" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Exams</Link>
-              <Link href="/blog" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Blog</Link>
+              <Link href="/features" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Features</Link>
+              <Link href="/how-it-works" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">How It Works</Link>
+              <Link href="/pricing" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Pricing</Link>
+              <Link href="/exams" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Exams</Link>
+              <Link href="/blog" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Blog</Link>
             </nav>
           </div>
 
@@ -157,11 +157,11 @@ export default function Footer() {
           <div className="flex flex-col gap-5">
             <h4 className="text-neutral-900 text-sm font-black tracking-widest uppercase">Company</h4>
             <nav className="flex flex-col gap-3 text-sm font-bold text-neutral-500">
-              <Link href="/about" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">About Us</Link>
-              <Link href="/contact" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Contact Us</Link>
-              <Link href="/careers" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Careers</Link>
-              <Link href="/privacy-policy" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Privacy Policy</Link>
-              <Link href="/terms-of-service" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Terms of Service</Link>
+              <Link href="/about" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">About Us</Link>
+              <Link href="/contact" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Contact Us</Link>
+              <Link href="/careers" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Careers</Link>
+              <Link href="/privacy-policy" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Privacy Policy</Link>
+              <Link href="/terms-of-service" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Terms of Service</Link>
             </nav>
           </div>
 
@@ -169,11 +169,11 @@ export default function Footer() {
           <div className="flex flex-col gap-5">
             <h4 className="text-neutral-900 text-sm font-black tracking-widest uppercase">Support</h4>
             <nav className="flex flex-col gap-3 text-sm font-bold text-neutral-500">
-              <Link href="/help" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Help Center</Link>
-              <Link href="/faqs" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">FAQs</Link>
-              <Link href="/feedback" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Feedback</Link>
-              <Link href="/report-bug" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Report a Bug</Link>
-              <Link href="/success-stories" className="hover:text-[#6D4AFF] transition-all duration-300 hover:translate-x-1.5 inline-block">Success Stories</Link>
+              <Link href="/help" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Help Center</Link>
+              <Link href="/faqs" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">FAQs</Link>
+              <Link href="/feedback" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Feedback</Link>
+              <Link href="/report-bug" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Report a Bug</Link>
+              <Link href="/success-stories" className="hover:text-emerald-700 transition-all duration-300 hover:translate-x-1.5 inline-block">Success Stories</Link>
             </nav>
           </div>
 
@@ -190,12 +190,12 @@ export default function Footer() {
                 value={email || ""}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="agentforge29@gmail.com"
-                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:bg-white transition-all pr-12 font-bold"
+                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:bg-white transition-all pr-12 font-bold"
               />
               <button
                 type="submit"
                 disabled={isSubscribing}
-                className="absolute right-1.5 w-9 h-9 rounded-lg bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white flex items-center justify-center hover:from-[#6D4AFF] hover:to-[#8B5CF6] hover:scale-105 hover:shadow-md transition-all cursor-pointer disabled:opacity-50"
+                className="absolute right-1.5 w-9 h-9 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 text-white flex items-center justify-center hover:from-emerald-700 hover:to-teal-600 hover:scale-105 hover:shadow-md transition-all cursor-pointer disabled:opacity-50"
               >
                 {isSubscribing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -212,9 +212,9 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between pt-8 text-neutral-500 text-[11px] font-bold uppercase tracking-wider">
           <p>© {year || 2026} Exam Forge AI. All rights reserved.</p>
           <div className="flex gap-4 mt-4 sm:mt-0">
-            <Link href="/security" className="hover:text-[#6D4AFF] transition-colors">Security</Link>
+            <Link href="/security" className="hover:text-emerald-700 transition-colors">Security</Link>
             <span>•</span>
-            <Link href="/sitemap" className="hover:text-[#6D4AFF] transition-colors">Sitemap</Link>
+            <Link href="/sitemap" className="hover:text-emerald-700 transition-colors">Sitemap</Link>
           </div>
         </div>
 

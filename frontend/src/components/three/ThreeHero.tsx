@@ -32,9 +32,9 @@ function useGlowTexture() {
     if (!ctx) return null;
 
     const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
-    grad.addColorStop(0.25, "rgba(139, 92, 246, 0.85)"); // violet-500
-    grad.addColorStop(0.55, "rgba(99, 102, 241, 0.3)");   // indigo-500
+    grad.addColorStop(0.0, "rgba(61, 4, 4, 1)");
+    grad.addColorStop(0.25, "rgba(16, 185, 129, 0.85)"); // emerald-500
+    grad.addColorStop(0.55, "rgba(245, 158, 11, 0.3)");   // amber-500
     grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
     ctx.fillStyle = grad;
@@ -87,7 +87,7 @@ const WaveShader = {
     void main() {
       vec4 texColor = texture2D(uTexture, gl_PointCoord);
       if (texColor.a < 0.1) discard;
-      vec3 color = mix(vec3(0.54, 0.36, 1.0), vec3(0.38, 0.4, 0.94), (vY + 1.0) * 0.5);
+      vec3 color = mix(vec3(0.06, 0.73, 0.51), vec3(0.96, 0.62, 0.04), (vY + 1.0) * 0.5);
       gl_FragColor = vec4(color, texColor.a * 0.9);
     }
   `
@@ -141,7 +141,7 @@ function GlowingWavingGrid() {
   // Update uniforms and rotation (zero positions calculation on CPU)
   useFrame((state) => {
     const time = performance.now() * 0.001;
-    
+
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = time;
       materialRef.current.uniforms.uMouse.value.set(mouse.x, mouse.y);
@@ -177,43 +177,43 @@ function GlowingWavingGrid() {
 function FloatingGlassmorphicShapes() {
   return (
     <>
-      {/* Central Ring / Torus */}
+      {/* Exam Study Book shape */}
       <Float speed={2.0} rotationIntensity={1.8} floatIntensity={1.5}>
-        <mesh position={[2.8, 1.2, -1]}>
-          <torusGeometry args={[0.7, 0.22, 16, 100]} />
+        <mesh position={[2.8, 1.2, -1]} rotation={[0.4, 0.5, 0.2]}>
+          <boxGeometry args={[1.0, 1.3, 0.2]} />
           <meshStandardMaterial
             roughness={0.2}
             metalness={0.1}
-            color="#A855F7"
-            emissive="#6D4AFF"
+            color="#F59E0B"
+            emissive="#D97706"
             emissiveIntensity={0.5}
           />
         </mesh>
       </Float>
 
-      {/* Modern Octahedron */}
+      {/* Diploma Scroll shape */}
       <Float speed={2.5} rotationIntensity={2.5} floatIntensity={2.0}>
-        <mesh position={[-3.2, -0.8, 1]}>
-          <octahedronGeometry args={[0.7, 0]} />
+        <mesh position={[-3.2, -0.8, 1]} rotation={[0.4, 0.2, 0.8]}>
+          <cylinderGeometry args={[0.08, 0.08, 1.2, 16]} />
           <meshStandardMaterial
             roughness={0.1}
             metalness={0.2}
-            color="#06B6D4"
-            emissive="#3B82F6"
+            color="#10B981"
+            emissive="#059669"
             emissiveIntensity={0.6}
           />
         </mesh>
       </Float>
 
-      {/* Floating sphere */}
+      {/* Success Star shape */}
       <Float speed={1.8} rotationIntensity={1.2} floatIntensity={1.2}>
         <mesh position={[-1.2, 2.0, -2]}>
-          <sphereGeometry args={[0.45, 32, 32]} />
+          <dodecahedronGeometry args={[0.45]} />
           <meshStandardMaterial
             roughness={0.25}
             metalness={0.1}
-            color="#EC4899"
-            emissive="#A855F7"
+            color="#F59E0B"
+            emissive="#D97706"
             emissiveIntensity={0.4}
           />
         </mesh>

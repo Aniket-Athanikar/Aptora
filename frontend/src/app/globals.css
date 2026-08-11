@@ -338,6 +338,17 @@
     display: inline-block;
   }
 
+  .gradient-text-animated-emerald {
+    background: linear-gradient(135deg, #059669 0%, #0d9488 35%, #10b981 70%, #059669 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: shine 4s linear infinite;
+    display: inline-block;
+  }
+
   .gradient-text-azure {
     background: var(--gradient-azure);
     -webkit-background-clip: text;

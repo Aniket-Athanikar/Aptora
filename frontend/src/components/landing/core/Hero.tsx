@@ -51,9 +51,9 @@ export default function Hero() {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.1] sm:leading-[1.05]"
           >
-            <span className="text-slate-900">Your Personal </span>
-            <br className="hidden sm:inline" />
-            <span className="gradient-text-animated filter drop-shadow-xs">AI Exam Coach</span>
+            <span className="text-slate-900">Master Any Exam With Your</span>
+            <br />
+            <span className="gradient-text-animated-emerald filter drop-shadow-xs">Personalized AI Study Partner</span>
           </motion.h1>
 
           {/* Description */}
@@ -63,12 +63,12 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base lg:text-lg text-slate-600 font-medium leading-relaxed max-w-lg"
           >
-            Select <span className="inline-block px-2 py-0.5 rounded-lg bg-indigo-50/80 text-[#6D4AFF] border border-indigo-200/60 font-black shadow-2xs">Books</span> +{" "}
-            <span className="inline-block px-2 py-0.5 rounded-lg bg-purple-50/80 text-purple-600 border border-purple-200/60 font-black shadow-2xs">Previous Year Papers</span> →{" "}
+            Select <span className="inline-block px-2 py-0.5 rounded-lg bg-emerald-50/80 text-emerald-700 border border-emerald-200/60 font-black shadow-2xs">Books</span> +{" "}
+            <span className="inline-block px-2 py-0.5 rounded-lg bg-amber-50/80 text-amber-700 border border-amber-200/60 font-black shadow-2xs">Previous Year Papers</span> →{" "}
             <span className="font-extrabold text-slate-900">AI Creates</span>{" "}
-            <span className="inline-block px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 text-indigo-700 border border-indigo-200/80 font-black shadow-2xs">Personalized Material</span>,{" "}
+            <span className="inline-block px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-emerald-50 via-amber-50 to-teal-55 text-emerald-800 border border-emerald-200/80 font-black shadow-2xs">Personalized Material</span>,{" "}
             Daily Training, Mock Tests, Weakness Analysis, and Predicts{" "}
-            <span className="inline-block px-2 py-0.5 rounded-lg bg-pink-50/80 text-pink-600 border border-pink-200/60 font-black shadow-2xs">Important Topics</span>!
+            <span className="inline-block px-2 py-0.5 rounded-lg bg-teal-50/80 text-teal-700 border border-teal-200/60 font-black shadow-2xs">Important Topics</span>!
           </motion.p>
 
           {/* Checkmarks Grid for Mobile Optimization */}
@@ -94,13 +94,17 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center"
           >
             <Link href="/login" className="w-full sm:w-auto">
-              <GlowButton variant="gradient" className="w-full sm:w-auto justify-center px-8 py-3.5 text-sm" magnetic={false}>
+              <GlowButton
+                variant="gradient"
+                className="w-full sm:w-auto justify-center px-8 py-3.5 text-sm from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                magnetic={false}
+              >
                 Start Free Now
               </GlowButton>
             </Link>
-            <Link href="/how-it-works" className="inline-flex items-center justify-center gap-2 text-neutral-600 hover:text-[#6D4AFF] font-bold text-sm px-5 py-3 sm:py-3.5 transition-colors">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center">
-                <Play className="w-3.5 h-3.5 text-[#6D4AFF] fill-[#6D4AFF]" />
+            <Link href="/how-it-works" className="inline-flex items-center justify-center gap-2 text-neutral-600 hover:text-emerald-700 font-bold text-sm px-5 py-3 sm:py-3.5 transition-colors">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50/50 border border-emerald-100/10 flex items-center justify-center">
+                <Play className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
               </div>
               Watch Demo
             </Link>
@@ -152,15 +156,15 @@ export default function Hero() {
             className="relative w-full max-w-[340px] sm:max-w-[460px] mx-auto z-20"
           >
             {/* Pulsing light rings */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#6D4AFF]/20 via-[#A855F7]/25 to-[#4F46E5]/20 rounded-full blur-3xl opacity-80 animate-pulse pointer-events-none" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-amber-500/25 to-teal-500/20 rounded-full blur-3xl opacity-80 animate-pulse pointer-events-none" />
 
             <GlassCard className="relative p-4 sm:p-6 bg-[var(--surface)]/70 border border-white/20 rounded-[24px] sm:rounded-[32px] shadow-2xl flex flex-col gap-4 sm:gap-6 items-center text-center overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-[#8B5CF6]/5 rounded-full blur-xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-emerald-600/10 to-teal-500/5 rounded-full blur-xl pointer-events-none" />
 
               <div className="relative w-48 h-48 sm:w-72 sm:h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500 flex items-center justify-center">
                 <img
                   src="/ai-avatar.png"
-                  alt="AI Exam Coach Avatar"
+                  alt="AI Study Partner Avatar"
                   loading="eager"
                   decoding="async"
                   className="w-full h-full object-cover"
@@ -168,8 +172,8 @@ export default function Hero() {
               </div>
 
               <div className="flex flex-col gap-1 sm:gap-1.5 z-10">
-                <span className="text-[9px] sm:text-[10px] font-bold text-[#6D4AFF] tracking-widest uppercase">System Online</span>
-                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 leading-tight">Meet Your AI Coach</h3>
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 tracking-widest uppercase bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-250">System Online</span>
+                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 leading-tight">Meet Your AI Study Partner</h3>
                 <p className="text-[11px] sm:text-xs text-neutral-500 font-semibold px-2 sm:px-4">
                   &ldquo;Ready to analyze your syllabus, generate mock tests, and double your preparation speed.&rdquo;
                 </p>
@@ -180,9 +184,9 @@ export default function Hero() {
                   <span className="text-[8px] sm:text-[9px] font-bold text-neutral-400 uppercase tracking-wider">AI Accuracy</span>
                   <span className="text-xs sm:text-sm font-black text-emerald-600">99.8% Certified</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 border border-purple-100 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#6D4AFF] animate-ping" />
-                  <span className="text-[9px] sm:text-[10px] font-bold text-[#6D4AFF] uppercase">Active</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
+                  <span className="text-[9px] sm:text-[10px] font-bold text-emerald-750 uppercase">Active</span>
                 </div>
               </div>
             </GlassCard>
@@ -199,7 +203,7 @@ export default function Hero() {
             const el = document.getElementById("how-it-works");
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }}
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:border-[#6D4AFF]/30 hover:text-[#6D4AFF] text-neutral-500 transition-all"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:border-emerald-500/30 hover:text-emerald-650 text-slate-500 transition-all"
         >
           <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
         </motion.div>

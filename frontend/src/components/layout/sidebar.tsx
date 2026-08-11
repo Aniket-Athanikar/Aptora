@@ -77,7 +77,7 @@ export function Sidebar({
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3.5 top-9 w-8 h-8 rounded-full bg-white border border-slate-200
-                     flex items-center justify-center text-slate-500 hover:text-[#6D4AFF]
+                     flex items-center justify-center text-slate-500 hover:text-emerald-600
                      shadow-md hover:scale-115 transition-all duration-300 z-50 cursor-pointer"
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -90,7 +90,7 @@ export function Sidebar({
         {/* Brand/Logo Area */}
         <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3.5"} mb-9 relative px-1`}>
           <div className="relative group shrink-0">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#6D4AFF] to-purple-500 blur-md opacity-40 group-hover:opacity-85 transition-all duration-500 animate-pulse-subtle" />
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 blur-md opacity-40 group-hover:opacity-85 transition-all duration-500 animate-pulse-subtle" />
             <div className="relative w-11 h-11 rounded-2xl bg-white border border-slate-150 flex items-center justify-center shadow-md transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
               <img
                 src="/favicon.ico"
@@ -109,10 +109,10 @@ export function Sidebar({
             >
               <h1 className="font-black text-lg tracking-tight text-slate-900 flex items-center gap-0.5">
                 <span>Exam</span>
-                <span className="bg-gradient-to-r from-[#6D4AFF] via-purple-500 to-indigo-650 bg-clip-text text-transparent">Forge-AI</span>
+                <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 bg-clip-text text-transparent">Forge-AI</span>
               </h1>
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#6D4AFF]">
-                STUDY ENGINE
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-700">
+                STUDY KATTA
               </p>
             </motion.div>
           )}
@@ -207,22 +207,22 @@ export function Sidebar({
                         transition-all duration-300 cursor-pointer overflow-hidden border
                         ${isCollapsed ? "justify-center h-12.5" : "gap-4 h-12 px-4.5"}
                         ${pathname?.startsWith("/profile")
-                ? "text-[#6D4AFF] bg-indigo-50/60 border-slate-100 shadow-md"
+                ? "text-emerald-700 bg-emerald-50 border-slate-100 shadow-md"
                 : "text-slate-500 hover:text-slate-900 border-transparent hover:bg-slate-50/80 hover:border-slate-150"
               }`}
             style={{
-              boxShadow: pathname?.startsWith("/profile") ? "0 8px 24px -6px rgba(109, 74, 255, 0.45)" : undefined
+              boxShadow: pathname?.startsWith("/profile") ? "0 8px 24px -6px rgba(16, 185, 129, 0.45)" : undefined
             }}
           >
             {pathname?.startsWith("/profile") && (
               <motion.span
                 layoutId="activeBorder"
-                className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-gradient-to-b from-[#6D4AFF] to-purple-500"
+                className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-gradient-to-b from-emerald-500 to-teal-500"
                 transition={{ type: "spring", stiffness: 350, damping: 28 }}
               />
             )}
             <div className={`p-2 rounded-xl transition-all duration-300 border ${pathname?.startsWith("/profile") || hoveredItem === "profile" ? "bg-white border-slate-100 shadow-sm scale-105" : "bg-transparent border-transparent group-hover:bg-white group-hover:border-slate-200/50 group-hover:shadow-sm"}`}>
-              <User className={`w-[17px] h-[17px] shrink-0 ${pathname?.startsWith("/profile") ? "text-[#6D4AFF]" : "text-slate-400 group-hover:text-slate-700"}`} />
+              <User className={`w-[17px] h-[17px] shrink-0 ${pathname?.startsWith("/profile") ? "text-emerald-750" : "text-slate-400 group-hover:text-slate-700"}`} />
             </div>
             {!isCollapsed && <span className="tracking-wide">Profile</span>}
           </Link>

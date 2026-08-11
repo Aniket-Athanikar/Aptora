@@ -205,39 +205,48 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
   const getSlotIcon = (slot: string) => {
     if (slot.includes("Morning")) return <Sun className="w-4 h-4 text-amber-500" />;
     if (slot.includes("Afternoon")) return <Sunrise className="w-4 h-4 text-orange-500" />;
-    return <Moon className="w-4 h-4 text-[#6D4AFF]" />;
+    return <Moon className="w-4 h-4 text-emerald-600" />;
   };
 
   const getDeviceIcon = (device: string) => {
     if (device.includes("Phone")) return <Smartphone className="w-4 h-4 text-emerald-500" />;
-    if (device.includes("Laptop")) return <Laptop className="w-4 h-4 text-[#6D4AFF]" />;
+    if (device.includes("Laptop")) return <Laptop className="w-4 h-4 text-emerald-600" />;
     if (device.includes("Desktop")) return <Monitor className="w-4 h-4 text-blue-500" />;
     return <BookOpenCheck className="w-4 h-4 text-amber-500" />;
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12 text-slate-800 relative z-10">
+    <div className="space-y-7 max-w-5xl mx-auto pb-12 text-slate-800 relative z-10">
       
-      {/* Welcome Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-2 tracking-tight">
-            Success Goal <span className="text-[#6D4AFF]">Calibration Panel</span>
-          </h1>
-          <p className="text-xs text-slate-500 font-semibold mt-0.5">
-            {activeGoal
-              ? "View, select, and recalibrate your active exam preparation goals."
-              : "Establish your custom success model by tailoring your schedule, targets, and study metrics."}
-          </p>
-        </div>
+      {/* Header Banner - AI Library Style */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-purple-500/15 p-6 sm:p-8 text-slate-900 border border-amber-200/60 shadow-lg shadow-amber-500/5 backdrop-blur-sm">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/80 text-amber-900 border border-amber-300/60 text-[11px] font-black uppercase tracking-widest shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+              AI Goal Calibrator
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+              Success Goal <span className="text-emerald-700">Calibration Panel</span>
+            </h1>
+            <p className="text-sm sm:text-base text-slate-700 font-medium max-w-xl">
+              {activeGoal
+                ? "View, select, and recalibrate your active exam preparation goals. Tailor your schedule, targets, and study metrics."
+                : "Establish your custom success model by tailoring your schedule, targets, and study metrics."}
+            </p>
+          </div>
 
-        <button
-          type="button"
-          onClick={onLaunchWizard || startWizard}
-          className="bg-white border border-indigo-200/80 hover:bg-indigo-50/50 text-[#6D4AFF] text-xs font-black px-4.5 py-2.5 rounded-2xl flex items-center gap-1.5 transition-all shadow-3xs cursor-pointer"
-        >
-          <Sparkles className="w-4 h-4 text-amber-500" /> Launch Guided Wizard
-        </button>
+          <button
+            type="button"
+            onClick={onLaunchWizard || startWizard}
+            className="self-start md:self-center h-12 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2.5 shadow-lg shadow-emerald-600/25 active:scale-98 cursor-pointer shrink-0"
+          >
+            <span>Launch Guided Wizard</span>
+            <Compass className="w-4 h-4 text-amber-400" />
+          </button>
+        </div>
       </div>
 
       {/* Main Form Split */}
@@ -249,7 +258,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
           {/* Card 1: Exam & Basics */}
           <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
             <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <Compass className="w-4.5 h-4.5 text-[#6D4AFF]" /> Target Exam & Basics
+              <Compass className="w-4.5 h-4.5 text-emerald-600" /> Target Exam & Basics
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -258,13 +267,13 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                 <button
                   type="button"
                   onClick={() => setExamDropdownOpen(!examDropdownOpen)}
-                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     {(() => {
                       const iconName = EXAMS_LIST.find((e) => e.name === targetExam)?.icon || "Target";
                       const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || Target;
-                      return <Icon className="w-4 h-4 text-[#6D4AFF]" />;
+                      return <Icon className="w-4 h-4 text-emerald-600" />;
                     })()}
                     <span>{targetExam}</span>
                   </span>
@@ -283,7 +292,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                             setExamDropdownOpen(false);
                           }}
                           className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${
-                            targetExam === exam.name ? "bg-indigo-50 text-indigo-700 font-extrabold" : "text-slate-650"
+                            targetExam === exam.name ? "bg-emerald-50 text-emerald-800 font-extrabold" : "text-slate-600"
                           }`}
                         >
                           {(() => {
@@ -308,7 +317,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold"
                 />
               </div>
 
@@ -321,7 +330,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={age}
                   onChange={(e) => setAge(Number(e.target.value))}
                   required
-                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold"
                 />
               </div>
 
@@ -332,23 +341,23 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   value={examDate}
                   onChange={(e) => setExamDate(e.target.value)}
                   required
-                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold"
+                  className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold"
                 />
               </div>
             </div>
           </div>
 
-          {/* Card 2: Timeline & Schedule */}
+          {/* Card 2: Daily Timeline & Study Slots */}
           <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
             <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <Clock className="w-4.5 h-4.5 text-[#6D4AFF]" /> Daily Timeline & Study Slots
+              <Clock className="w-4.5 h-4.5 text-emerald-600" /> Daily Timeline & Study Slots
             </h2>
 
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Daily Study Commitment</label>
-                  <span className="text-xs font-black text-[#6D4AFF]">{dailyHours} Hours / day</span>
+                  <span className="text-xs font-black text-emerald-700">{dailyHours} Hours / day</span>
                 </div>
                 <input
                   type="range"
@@ -356,7 +365,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   max={15}
                   value={dailyHours}
                   onChange={(e) => setDailyHours(Number(e.target.value))}
-                  className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#6D4AFF]"
+                  className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                 />
                 <p className="text-[10px] text-slate-400 mt-1 font-semibold pl-1">Recommended: 6-10 hours for competitive exams like UPSC.</p>
               </div>
@@ -367,7 +376,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <button
                     type="button"
                     onClick={() => setSlotDropdownOpen(!slotDropdownOpen)}
-                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
                     <span className="flex items-center gap-2">
                       {getSlotIcon(preferredSlot)}
@@ -388,7 +397,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                               setSlotDropdownOpen(false);
                             }}
                             className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-slate-50 transition-colors text-xs font-bold cursor-pointer ${
-                              preferredSlot === slot ? "bg-indigo-50 text-indigo-700 font-extrabold" : "text-slate-600"
+                              preferredSlot === slot ? "bg-emerald-50 text-emerald-800 font-extrabold" : "text-slate-600"
                             }`}
                           >
                             {getSlotIcon(slot)}
@@ -405,7 +414,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                   <button
                     type="button"
                     onClick={() => setDeviceDropdownOpen(!deviceDropdownOpen)}
-                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-[#6D4AFF] focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
+                    className="w-full bg-slate-50/80 border border-slate-200/80 text-slate-800 text-xs rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:bg-white transition-all font-semibold flex items-center justify-between cursor-pointer"
                   >
                     <span className="flex items-center gap-2">
                       {getDeviceIcon(primaryDevice)}
@@ -426,7 +435,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                               setDeviceDropdownOpen(false);
                             }}
                             className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-slate-50 transition-colors text-xs font-bold cursor-pointer ${
-                              primaryDevice === device ? "bg-indigo-50 text-indigo-700 font-extrabold" : "text-slate-600"
+                              primaryDevice === device ? "bg-emerald-50 text-emerald-800 font-extrabold" : "text-slate-600"
                             }`}
                           >
                             {getDeviceIcon(device)}
@@ -441,10 +450,10 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
             </div>
           </div>
 
-          {/* Card 3: Subjects Gap Audit */}
+          {/* Card 3: Syllabus Subject Confidence */}
           <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
             <h2 className="text-sm font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <Brain className="w-4.5 h-4.5 text-[#6D4AFF]" /> Syllabus Subject Confidence
+              <Brain className="w-4.5 h-4.5 text-emerald-600" /> Syllabus Subject Confidence
             </h2>
             <p className="text-[10px] text-slate-400 font-semibold pl-1">Rate your confidence (1 = Weak, 5 = Mastered). Priorities are adjusted dynamically.</p>
 
@@ -472,8 +481,8 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                         onClick={() => handleConfidenceChange(index, star)}
                         className={`w-7 h-7 rounded-lg text-xs font-black transition-all cursor-pointer ${
                           item.confidence >= star
-                            ? "bg-[#6D4AFF] text-white shadow-xs"
-                            : "bg-white border border-slate-200 text-slate-400 hover:text-slate-700"
+                            ? "bg-emerald-600 text-white shadow-xs"
+                            : "bg-white border border-slate-200 text-slate-400 hover:text-slate-700 hover:border-emerald-350"
                         }`}
                       >
                         {star}
@@ -489,7 +498,7 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="flex-1 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white font-black text-xs py-3.5 px-6 rounded-2xl transition-all shadow-md cursor-pointer text-center"
+              className="flex-1 bg-emerald-600 hover:bg-emerald-755 text-white font-black text-xs py-3.5 px-6 rounded-2xl transition-all shadow-md shadow-emerald-600/10 cursor-pointer text-center uppercase tracking-wider"
             >
               Save Calibration
             </button>
@@ -501,9 +510,9 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
         <div className="space-y-6">
 
           {/* Projections Card - Crisp Light Gradient */}
-          <div className="bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-indigo-100/90 space-y-5">
-            <div className="absolute top-0 right-0 w-28 h-28 bg-[#6D4AFF]/10 rounded-full blur-2xl pointer-events-none" />
-            <h3 className="text-xs font-black text-[#6D4AFF] uppercase tracking-widest pb-2 border-b border-indigo-100/60">
+          <div className="bg-gradient-to-br from-white via-emerald-50/60 to-amber-50/40 text-slate-900 rounded-3xl p-6 shadow-xs relative overflow-hidden border border-emerald-100/90 space-y-5">
+            <div className="absolute top-0 right-0 w-28 h-28 bg-emerald-600/10 rounded-full blur-2xl pointer-events-none" />
+            <h3 className="text-xs font-black text-emerald-700 uppercase tracking-widest pb-2 border-b border-emerald-100/60">
               Goal Engine Projections
             </h3>
 
@@ -512,11 +521,11 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                 <span className="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider block">SUCCESS PREDICTION</span>
                 <div className="flex items-baseline gap-1 mt-1">
                   <span className="text-3xl font-black text-slate-900">{calculateSuccessPrediction()}%</span>
-                  <span className="text-xs text-[#6D4AFF] font-bold">Accuracy</span>
+                  <span className="text-xs text-emerald-600 font-bold">Accuracy</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 rounded-full mt-2 overflow-hidden border border-slate-200/50">
                   <div
-                    className="h-full bg-gradient-to-r from-[#6D4AFF] via-purple-500 to-pink-500 transition-all duration-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-emerald-500 via-teal-500 to-amber-500 transition-all duration-500 rounded-full"
                     style={{ width: `${calculateSuccessPrediction()}%` }}
                   />
                 </div>
@@ -558,13 +567,13 @@ export function GoalPlanPanel({ onLaunchWizard }: GoalPlanPanelProps) {
                     onClick={() => handleToggleMode(mode)}
                     className={`w-full flex items-center justify-between p-3.5 rounded-2xl border text-xs font-bold text-left transition-all cursor-pointer ${
                       isActive
-                        ? "bg-indigo-50/60 border-[#6D4AFF] text-indigo-700 font-extrabold shadow-3xs"
-                        : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
+                        ? "bg-emerald-50/60 border-emerald-500 text-emerald-800 font-extrabold shadow-3xs"
+                        : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50 hover:border-emerald-350"
                     }`}
                   >
                     <span>{mode}</span>
                     <span className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
-                      isActive ? "bg-[#6D4AFF] border-[#6D4AFF] text-white" : "border-slate-300"
+                      isActive ? "bg-emerald-600 border-emerald-600 text-white" : "border-slate-300"
                     }`}>
                       {isActive && <CheckCircle2 className="w-2.5 h-2.5" />}
                     </span>
