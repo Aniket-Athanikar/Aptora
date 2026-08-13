@@ -17,6 +17,8 @@ type ProfileDto = {
   stream: string;
   city: string;
   occupation: string;
+  gender: string | null;
+  phone: string | null;
   syllabus_percent: number;
   current_confidence: number;
 };
@@ -99,6 +101,8 @@ function toGoal(
       stream: profile.stream,
       city: profile.city,
       occupation: profile.occupation,
+      gender: profile.gender || "",
+      phone: profile.phone || "",
       syllabusPercent: profile.syllabus_percent,
       currentConfidence: profile.current_confidence,
     },
@@ -240,6 +244,8 @@ export const goalService = {
       stream: goal.profile.stream,
       city: goal.profile.city,
       occupation: goal.profile.occupation,
+      gender: goal.profile.gender || "",
+      phone: goal.profile.phone || "",
       syllabus_percent: goal.profile.syllabusPercent,
       current_confidence: goal.profile.currentConfidence,
     };

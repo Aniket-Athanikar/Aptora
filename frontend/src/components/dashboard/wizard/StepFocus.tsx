@@ -49,8 +49,8 @@ export function StepFocus({
                 updateWizardDraft({ preferences: nextPrefs });
               }}
               className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2.5 transition-all cursor-pointer hover:scale-[1.02] ${selected
-                  ? "border-sky-500 bg-sky-50/40 shadow-sm"
-                  : "border-slate-200 hover:border-sky-300 hover:bg-slate-50/50"
+                ? "border-sky-500 bg-sky-50/40 shadow-sm"
+                : "border-slate-200 hover:border-sky-300 hover:bg-slate-50/50"
                 }`}
               style={{
                 boxShadow: selected ? `0 6px 16px ${pref.color}` : undefined

@@ -50,7 +50,7 @@ export default function InvoicePrintPage() {
         </Link>
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 text-xs font-black uppercase bg-[#6D4AFF] text-white px-4 py-2 rounded-xl hover:bg-[#8B5CF6] transition-colors cursor-pointer shadow-sm"
+          className="inline-flex items-center gap-2 text-xs font-black uppercase bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors cursor-pointer shadow-sm border-none"
         >
           <Printer className="w-4 h-4" /> Trigger Print / Save PDF
         </button>
@@ -63,7 +63,7 @@ export default function InvoicePrintPage() {
         <div className="flex flex-col md:flex-row items-start justify-between border-b-2 border-neutral-100 pb-8 gap-4">
           <div>
             <h1 className="text-2xl font-black text-neutral-900 tracking-tight">
-              Exam<span className="text-[#6D4AFF]">Forge-AI</span>
+              Exam<span className="text-emerald-600">Forge-AI</span>
             </h1>
             <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider mt-1">Smart learning ecosystems</p>
           </div>
@@ -118,8 +118,8 @@ export default function InvoicePrintPage() {
               </td>
             </tr>
             <tr>
-              <td className="py-5 text-sm font-black text-[#6D4AFF]">Total Amount Paid</td>
-              <td className="py-5 text-right font-black text-xl text-[#6D4AFF]">
+              <td className="py-5 text-sm font-black text-emerald-600">Total Amount Paid</td>
+              <td className="py-5 text-right font-black text-xl text-emerald-600">
                 ₹{totalVal}
               </td>
             </tr>
@@ -129,7 +129,7 @@ export default function InvoicePrintPage() {
         {/* Footer */}
         <div className="border-t border-neutral-100 pt-8 text-center text-[10px] font-bold text-neutral-400 uppercase tracking-wider space-y-4">
           <p>This is a computer-generated invoice receipt and requires no physical signature.</p>
-          <div className="flex items-center justify-center gap-1.5 text-[#6D4AFF]">
+          <div className="flex items-center justify-center gap-1.5 text-emerald-650">
             <ShieldCheck className="w-4 h-4 text-emerald-500" /> PCI-DSS Certified transaction
           </div>
           <p className="text-[9px] text-neutral-300 font-semibold lowercase">support & help desk: agentforge29@gmail.com</p>

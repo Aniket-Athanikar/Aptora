@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -106,7 +106,7 @@ export default function SitemapPage() {
             placeholder="Search pages (e.g. Pricing, Security, Support)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/70 backdrop-blur-md border border-neutral-200 rounded-2xl pl-12 pr-4 py-4 text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all font-semibold shadow-sm"
+            className="w-full bg-white/70 backdrop-blur-md border border-neutral-200 rounded-2xl pl-12 pr-4 py-4 text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-semibold shadow-sm"
           />
         </div>
 
@@ -143,7 +143,7 @@ export default function SitemapPage() {
                       className="group flex items-start justify-between p-3.5 rounded-2xl hover:bg-neutral-50 border border-transparent hover:border-neutral-100 transition-all duration-300"
                     >
                       <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold text-neutral-800 group-hover:text-[#6D4AFF] transition-colors">
+                        <div className="flex items-center gap-1.5 font-bold text-neutral-800 group-hover:text-emerald-600 transition-colors">
                           <Link2 className="w-3.5 h-3.5 opacity-60" />
                           {link.name}
                         </div>
@@ -151,7 +151,7 @@ export default function SitemapPage() {
                           {link.desc}
                         </p>
                       </div>
-                      <div className="p-1.5 rounded-lg bg-neutral-100 text-neutral-500 opacity-0 group-hover:opacity-100 group-hover:text-[#6D4AFF] group-hover:bg-[#6D4AFF]/10 transition-all duration-300">
+                      <div className="p-1.5 rounded-lg bg-neutral-100 text-neutral-500 opacity-0 group-hover:opacity-100 group-hover:text-emerald-600 group-hover:bg-emerald-50 transition-all duration-300">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </Link>
@@ -168,7 +168,7 @@ export default function SitemapPage() {
             <p className="text-neutral-500 font-black text-lg">No sitemap routes matched your search.</p>
             <button
               onClick={() => setSearchQuery("")}
-              className="text-sm font-black text-[#6D4AFF] hover:underline"
+              className="text-sm font-black text-emerald-600 hover:underline"
             >
               Clear Search Query
             </button>

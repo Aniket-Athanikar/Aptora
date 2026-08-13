@@ -124,13 +124,13 @@ export default function PricingPage() {
 
           <button
             onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-[#6D4AFF]/40 focus:outline-none"
+            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-emerald-500/40 focus:outline-none"
           >
             {/* The Toggle Knob */}
             <motion.div
               layout
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="w-5 h-5 rounded-full bg-gradient-to-b from-[#8B5CF6] to-[#6D4AFF] shadow-md shadow-[#6D4AFF]/30"
+              className="w-5 h-5 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600 shadow-md shadow-emerald-600/30"
               style={{
                 marginLeft: billingCycle === "yearly" ? "26px" : "0px",
               }}
@@ -154,7 +154,7 @@ export default function PricingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative max-w-[1000px] mx-auto mt-6">
 
           {/* Premium Plan Glow blur accent in the center background */}
-          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-[#6D4AFF]/10 to-[#A855F7]/5 blur-[80px] pointer-events-none rounded-full" />
+          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-teal-500/5 blur-[80px] pointer-events-none rounded-full" />
 
           {plans.map((plan, idx) => (
             <motion.div
@@ -168,7 +168,7 @@ export default function PricingPage() {
 
                 <GlassCard
                   className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-white/70 backdrop-blur-2xl ${plan.popular
-                    ? "border-[#6D4AFF]/40 ring-4 ring-[#6D4AFF]/10 shadow-[0_25px_50px_-12px_rgba(109,74,255,0.2)] bg-gradient-to-b from-white to-[#6D4AFF]/[0.02] transform lg:-translate-y-3"
+                    ? "border-emerald-500/40 ring-4 ring-emerald-500/10 shadow-[0_25px_50px_-12px_rgba(16,185,129,0.2)] bg-gradient-to-b from-white to-emerald-500/[0.02] transform lg:-translate-y-3"
                     : "border-[#ECECEC] hover:shadow-lg hover:border-neutral-300 shadow-sm"
                     }`}
                 >
@@ -179,14 +179,14 @@ export default function PricingPage() {
                       style={{ transform: "translateZ(30px)" }}
                       className="absolute -top-3.5 left-0 right-0 flex justify-center pointer-events-none"
                     >
-                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] rounded-full shadow-md shadow-[#6D4AFF]/30 ring-2 ring-white">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-emerald-600 to-teal-500 rounded-full shadow-md shadow-emerald-600/30 ring-2 ring-white">
                         <Sparkles className="w-2.5 h-2.5" /> Popular
                       </span>
                     </div>
                   )}
 
                   <div style={{ transform: "translateZ(15px)" }}>
-                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-[#6D4AFF]" : "text-neutral-900"}`}>
+                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-emerald-600" : "text-neutral-900"}`}>
                       {plan.name}
                     </h3>
                     <p className="text-neutral-500 text-[11px] font-semibold mt-1">{plan.description}</p>
@@ -229,7 +229,7 @@ export default function PricingPage() {
                     <ul className="flex flex-col gap-3 mb-6">
                       {plan.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
-                          <div className={`mt-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? "bg-[#6D4AFF]/10 text-[#6D4AFF]" : "bg-emerald-50 text-emerald-500"}`}>
+                          <div className={`mt-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? "bg-emerald-50 text-emerald-600" : "bg-emerald-50 text-emerald-500"}`}>
                             <Check className="w-2 h-2" />
                           </div>
                           <span>{feature}</span>
@@ -248,7 +248,7 @@ export default function PricingPage() {
                     >
                       <GlowButton
                         variant={plan.popular ? "gradient" : "outline"}
-                        className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-[#6D4AFF]/20 hover:shadow-[#6D4AFF]/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
+                        className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
                         magnetic={false}
                       >
                         {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}

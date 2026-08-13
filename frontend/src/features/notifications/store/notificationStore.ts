@@ -20,6 +20,7 @@ interface NotificationStore {
   clearNotification: (id: string) => Promise<void>;
   clearAllNotifications: () => Promise<void>;
   loadNotifications: () => Promise<void>;
+  connectWebSocket: () => () => void;
 }
 
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
@@ -112,5 +113,82 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     } catch (err) {
       console.error("Failed to clear notifications on server", err);
     }
+  },
+
+  connectWebSocket: () => {
+    let apiHost = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    let cleanHost = apiHost.replace("http://", "").replace("https://", "");
+    let protocol = apiHost.startsWith("https") ? "wss://" : "ws://";
+    let socketUrl = `${protocol}${cleanHost}/ws/dashboard`;
+
+    let socket: WebSocket | null = null;
+    let reconnectTimeout: any = null;
+    let delayTimeout: any = null;
+    let active = true;
+
+    const connect = () => {
+      if (!active) return;
+      try {
+        socket = new WebSocket(socketUrl);
+
+        socket.onopen = () => {
+          if (!active) {
+            try {
+              socket?.close();
+            } catch (err) {}
+          }
+        };
+
+        socket.onmessage = (event) => {
+          if (!active) return;
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === "realtime_update" || data.type === "connection_status") {
+              get().loadNotifications();
+            }
+          } catch (err) {
+            console.error("Error parsing websocket notification event", err);
+          }
+        };
+
+        socket.onclose = () => {
+          if (active) {
+            reconnectTimeout = setTimeout(connect, 5000);
+          }
+        };
+
+        socket.onerror = () => {
+          if (active) {
+            socket?.close();
+          }
+        };
+      } catch (e) {
+        console.error("WebSocket init error inside notification store", e);
+      }
+    };
+
+    delayTimeout = setTimeout(connect, 60);
+
+    return () => {
+      active = false;
+      clearTimeout(delayTimeout);
+      clearTimeout(reconnectTimeout);
+      if (socket) {
+        socket.onclose = null;
+        socket.onerror = null;
+        socket.onmessage = null;
+        try {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.close();
+          } else if (socket.readyState === WebSocket.CONNECTING) {
+            socket.onopen = () => {
+              try {
+                socket?.close();
+              } catch (err) {}
+            };
+          }
+        } catch (err) {}
+      }
+    };
   },
 }));

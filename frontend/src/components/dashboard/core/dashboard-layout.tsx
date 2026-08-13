@@ -37,9 +37,15 @@ export function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  const connectWebSocket = useNotificationStore((s) => s.connectWebSocket);
+
   useEffect(() => {
     loadNotifications();
-  }, [loadNotifications]);
+    const disconnect = connectWebSocket();
+    return () => {
+      disconnect();
+    };
+  }, [loadNotifications, connectWebSocket]);
 
   const openProfileModal = () => {
     router.push("/profile");
@@ -94,7 +100,7 @@ export function DashboardLayout({
               </button>
 
               {notifOpen && (
-                <div className="absolute right-[-10px] sm:right-0 mt-2.5 w-[280px] xs:w-[320px] max-h-[420px] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-4.5 z-50 space-y-3">
+                <div className="fixed sm:absolute top-14 sm:top-auto right-4 left-4 sm:left-auto sm:right-0 mt-2.5 w-auto sm:w-[320px] max-h-[80vh] sm:max-h-[420px] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-4.5 z-50 space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                     <span className="text-xs font-black text-slate-800">
                       Notifications ({unreadCount})

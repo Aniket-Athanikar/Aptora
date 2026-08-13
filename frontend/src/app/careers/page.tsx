@@ -35,7 +35,7 @@ const benefits = [
     title: "Innovation & Growth",
     description:
       "Work on cutting-edge AI/ML technologies and shape the future of education technology.",
-    color: "#6D4AFF",
+    color: "#059669",
   },
   {
     icon: GraduationCap,
@@ -62,32 +62,32 @@ const benefits = [
 
 const openPositions = [
   {
-    role: "Frontend Developer",
+    role: "SME - Quantitative Aptitude & Reasoning",
     type: "Full-time",
-    location: "Bangalore, India",
+    location: "New Delhi, India",
     remote: true,
-    tags: ["React", "Next.js", "TypeScript"],
+    tags: ["Quant Formulas", "Reasoning Shortcuts", "Exam Design"],
   },
   {
-    role: "Backend Developer",
+    role: "General Studies & GK Content Analyst",
     type: "Full-time",
-    location: "Bangalore, India",
+    location: "New Delhi, India",
     remote: true,
-    tags: ["Node.js", "Python", "PostgreSQL"],
+    tags: ["Current Affairs", "Indian Polity & History", "Syllabus Indexing"],
   },
   {
-    role: "ML/AI Engineer",
-    type: "Full-time",
-    location: "Bangalore, India",
-    remote: false,
-    tags: ["PyTorch", "NLP", "LLMs"],
-  },
-  {
-    role: "UI/UX Designer",
+    role: "Competitive Exam Curator (UPSC/SSC/Banking)",
     type: "Contract",
     location: "Bangalore, India",
-    remote: false,
-    tags: ["Figma", "Design Systems", "Prototyping"],
+    remote: true,
+    tags: ["PYQ Database Analysis", "Syllabus Calibration", "Study Materials"],
+  },
+  {
+    role: "Student Academic Mentor & Study Coach",
+    type: "Full-time",
+    location: "Remote, India",
+    remote: true,
+    tags: ["Student Support", "Study Planning", "Feedback Loop Analysis"],
   },
 ];
 
@@ -124,7 +124,7 @@ export default function CareersPage() {
             </div>
 
             <div className="p-8 md:p-14 pt-4 md:pt-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/20">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-3xl md:text-4xl font-black text-neutral-900 mb-4">
@@ -147,7 +147,7 @@ export default function CareersPage() {
           viewport={{ once: true, amount: 0.2 }}
         >
           <div className="text-center mb-12">
-            <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+            <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
               Why Us
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
@@ -194,7 +194,7 @@ export default function CareersPage() {
           viewport={{ once: true, amount: 0.15 }}
         >
           <div className="text-center mb-12">
-            <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+            <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
               Opportunities
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-neutral-900">Open Positions</h2>
@@ -213,7 +213,7 @@ export default function CareersPage() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <Briefcase className="w-5 h-5 text-[#6D4AFF]" />
+                      <Briefcase className="w-5 h-5 text-emerald-600" />
                       <h3 className="text-xl font-black text-neutral-900">{position.role}</h3>
                       {position.remote && (
                         <span className="text-[10px] font-black uppercase tracking-wider bg-[#22C55E]/10 text-[#22C55E] px-2.5 py-1 rounded-full border border-[#22C55E]/20">
@@ -235,7 +235,7 @@ export default function CareersPage() {
                       {position.tags.map((tag, tagIdx) => (
                         <span
                           key={tagIdx}
-                          className="text-xs font-bold bg-[#6D4AFF]/5 text-[#6D4AFF] px-3 py-1 rounded-full border border-[#6D4AFF]/10"
+                          className="text-xs font-bold bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100"
                         >
                           {tag}
                         </span>
@@ -245,7 +245,7 @@ export default function CareersPage() {
 
                   <Link
                     href={`/careers/apply?role=${encodeURIComponent(position.role)}`}
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-6 py-3 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all self-start md:self-center cursor-pointer"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-6 py-3 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all self-start md:self-center cursor-pointer border-none"
                   >
                     Apply Now
                     <ArrowRight className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function CareersPage() {
 
           {/* View All CTA */}
           <motion.div variants={itemVariants} className="text-center mt-12">
-            <button className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl border border-[#ECECEC] text-neutral-900 font-bold px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl hover:border-[#6D4AFF]/30 hover:-translate-y-0.5 transition-all duration-300">
+            <button className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl border border-[#ECECEC] text-neutral-900 font-bold px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300">
               View All Openings
               <ArrowRight className="w-4 h-4" />
             </button>

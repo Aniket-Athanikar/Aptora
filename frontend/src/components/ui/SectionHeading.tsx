@@ -27,14 +27,14 @@ export default function SectionHeading({
       )}
     >
       {badge && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wider text-[#6D4AFF] uppercase bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full mb-4">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wider text-emerald-600 uppercase bg-emerald-50 border border-emerald-100 rounded-full mb-4">
           {badge}
         </span>
       )}
       <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#111827] leading-tight">
         {title}{" "}
         {gradientTitle && (
-          <span className="bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] bg-clip-text text-transparent block sm:inline">
+          <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent block sm:inline">
             {gradientTitle}
           </span>
         )}

@@ -33,7 +33,7 @@ EMAIL_COMMON_STYLES = """
     }
     .header-logo {
       font-size: 22px;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: -0.5px;
       color: #0F172A;
       margin-bottom: 24px;
@@ -42,16 +42,16 @@ EMAIL_COMMON_STYLES = """
       gap: 8px;
     }
     .brand-accent {
-      color: #6D4AFF;
+      color: #059669;
     }
     .badge-pill {
       display: inline-block;
-      background: rgba(109, 74, 255, 0.08);
-      border: 1px solid rgba(109, 74, 255, 0.2);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
       border-radius: 9999px;
       padding: 4px 14px;
       font-size: 11px;
-      color: #6D4AFF;
+      color: #059669;
       font-weight: 800;
       letter-spacing: 0.8px;
       text-transform: uppercase;
@@ -85,7 +85,7 @@ EMAIL_COMMON_STYLES = """
 
 def generate_otp_email_html(name: str, otp: str) -> str:
     otp_boxes = "".join([
-      f'<div style="display: inline-block; width: 42px; height: 50px; line-height: 50px; text-align: center; background: #F8FAFC; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 26px; font-weight: 900; color: #6D4AFF; margin: 0 4px; box-shadow: 0 2px 8px rgba(109,74,255,0.08);">{digit}</div>'
+      f'<div style="display: inline-block; width: 42px; height: 50px; line-height: 50px; text-align: center; background: #F0FDF4; border: 2px solid #059669; border-radius: 12px; font-size: 26px; font-weight: 900; color: #059669; margin: 0 4px; box-shadow: 0 2px 8px rgba(5,150,105,0.08);">{digit}</div>'
       for digit in otp
     ])
 
@@ -93,13 +93,13 @@ def generate_otp_email_html(name: str, otp: str) -> str:
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Welcome to ExamForge AI</title>
+  <title>Welcome to ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container">
     <div class="header-logo">
-      ⚡ Exam<span class="brand-accent">Forge</span> AI
+      📚 ExamForge-<span class="brand-accent">AI</span>
     </div>
 
     <div class="badge-pill">🎉 Verification Required</div>
@@ -119,7 +119,7 @@ def generate_otp_email_html(name: str, otp: str) -> str:
     </p>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Smart educational ecosystems powered by Artificial Intelligence.
+      &copy; 2026 ExamForge-AI. Smart educational ecosystems powered by Artificial Intelligence.
     </div>
   </div>
 </body>
@@ -127,7 +127,7 @@ def generate_otp_email_html(name: str, otp: str) -> str:
 
 def generate_password_reset_email_html(name: str, otp: str) -> str:
     otp_boxes = "".join([
-      f'<div style="display: inline-block; width: 42px; height: 50px; line-height: 50px; text-align: center; background: #F8FAFC; border: 2px solid #8B5CF6; border-radius: 12px; font-size: 26px; font-weight: 900; color: #8B5CF6; margin: 0 4px; box-shadow: 0 2px 8px rgba(139,92,246,0.08);">{digit}</div>'
+      f'<div style="display: inline-block; width: 42px; height: 50px; line-height: 50px; text-align: center; background: #F0FDFA; border: 2px solid #0D9488; border-radius: 12px; font-size: 26px; font-weight: 900; color: #0D9488; margin: 0 4px; box-shadow: 0 2px 8px rgba(13,148,136,0.08);">{digit}</div>'
       for digit in otp
     ])
 
@@ -135,21 +135,21 @@ def generate_password_reset_email_html(name: str, otp: str) -> str:
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Password Reset Request - ExamForge AI</title>
+  <title>Password Reset Request - ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container">
     <div class="header-logo">
-      ⚡ Exam<span class="brand-accent">Forge</span> AI
+      📚 ExamForge-<span class="brand-accent">AI</span>
     </div>
 
-    <div class="badge-pill" style="background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.2); color: #8B5CF6;">🔒 Password Security</div>
+    <div class="badge-pill" style="background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.2); color: #0D9488;">🔒 Password Security</div>
 
     <h1>Reset Your Password</h1>
 
     <p class="body-text">
-      Hi {name}, we received a request to reset your ExamForge AI password. Enter this secure OTP code to update your credentials:
+      Hi {name}, we received a request to reset your ExamForge-AI password. Enter this secure OTP code to update your credentials:
     </p>
 
     <div style="text-align: center; margin: 28px 0;">
@@ -161,7 +161,7 @@ def generate_password_reset_email_html(name: str, otp: str) -> str:
     </p>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Security Notification.
+      &copy; 2026 ExamForge-AI. Security Notification.
     </div>
   </div>
 </body>
@@ -177,13 +177,13 @@ def generate_account_deletion_email_html(name: str, otp: str) -> str:
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Account Deletion - ExamForge AI</title>
+  <title>Account Deletion - ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container" style="border-color: #FECACA;">
     <div class="header-logo">
-      ⚡ Exam<span style="color: #EF4444;">Forge</span> AI
+      📚 ExamForge-<span style="color: #EF4444;">AI</span>
     </div>
 
     <div class="badge-pill" style="background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2); color: #EF4444;">⚠️ Security Action</div>
@@ -191,7 +191,7 @@ def generate_account_deletion_email_html(name: str, otp: str) -> str:
     <h1 style="color: #991B1B;">Account Deletion Request</h1>
 
     <p class="body-text">
-      Hi {name}, we received a request to permanently delete your ExamForge AI account and erase all associated syllabus data, study progress, and mock test scores.
+      Hi {name}, we received a request to permanently delete your ExamForge-AI account and erase all associated syllabus data, study progress, and mock test scores.
     </p>
 
     <div style="text-align: center; margin: 24px 0;">
@@ -203,7 +203,7 @@ def generate_account_deletion_email_html(name: str, otp: str) -> str:
     </div>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Security System.
+      &copy; 2026 ExamForge-AI. Security System.
     </div>
   </div>
 </body>
@@ -214,13 +214,13 @@ def generate_daily_briefing_email_html(name: str, target_exam: str, target_date:
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Daily AI Study Briefing - ExamForge AI</title>
+  <title>Daily AI Study Briefing - ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container">
     <div class="header-logo">
-      ⚡ Exam<span class="brand-accent">Forge</span> AI
+      📚 ExamForge-<span class="brand-accent">AI</span>
     </div>
 
     <div class="badge-pill">☀️ Daily AI Briefing</div>
@@ -232,19 +232,19 @@ def generate_daily_briefing_email_html(name: str, target_exam: str, target_date:
     </p>
 
     <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; margin-bottom: 24px;">
-      <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #6D4AFF; letter-spacing: 0.8px; margin-bottom: 8px;">🔥 Today's Priority Focus</div>
+      <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #059669; letter-spacing: 0.8px; margin-bottom: 8px;">🔥 Today's Priority Focus</div>
       <div style="font-size: 16px; font-weight: 900; color: #0F172A; margin-bottom: 4px;">{focus_subject}</div>
       <div style="font-size: 13px; font-weight: 600; color: #64748B;">{pending_tasks} focus modules scheduled for today</div>
     </div>
 
     <div style="text-align: center;">
-      <a href="http://localhost:3000/dashboard?tab=planner" style="display: inline-block; background: #6D4AFF; color: #FFFFFF; font-weight: 800; font-size: 13px; text-decoration: none; padding: 12px 28px; border-radius: 14px; box-shadow: 0 4px 12px rgba(109,74,255,0.25);">
+      <a href="http://localhost:3000/dashboard?tab=planner" style="display: inline-block; background: #059669; color: #FFFFFF; font-weight: 800; font-size: 13px; text-decoration: none; padding: 12px 28px; border-radius: 14px; box-shadow: 0 4px 12px rgba(5,150,105,0.25);">
         Open Daily Planner &rarr;
       </a>
     </div>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Smart educational ecosystems.
+      &copy; 2026 ExamForge-AI. Smart educational ecosystems.
     </div>
   </div>
 </body>
@@ -255,16 +255,16 @@ def generate_weekly_digest_email_html(name: str, target_exam: str, streak: int, 
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Weekly Progress Digest - ExamForge AI</title>
+  <title>Weekly Progress Digest - ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container">
     <div class="header-logo">
-      ⚡ Exam<span class="brand-accent">Forge</span> AI
+      📚 ExamForge-<span class="brand-accent">AI</span>
     </div>
 
-    <div class="badge-pill" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: #10B981;">📈 Weekly Digest</div>
+    <div class="badge-pill" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: #059669;">📈 Weekly Digest</div>
 
     <h1>Weekly Performance Report</h1>
 
@@ -274,11 +274,11 @@ def generate_weekly_digest_email_html(name: str, target_exam: str, streak: int, 
 
     <div style="display: table; width: 100%; margin-bottom: 24px;">
       <div style="display: table-cell; width: 33%; text-align: center; padding: 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px;">
-        <div style="font-size: 20px; font-weight: 900; color: #6D4AFF;">{streak} Days</div>
+        <div style="font-size: 20px; font-weight: 900; color: #059669;">{streak} Days</div>
         <div style="font-size: 10px; font-weight: 800; color: #64748B; text-transform: uppercase;">Study Streak</div>
       </div>
       <div style="display: table-cell; width: 33%; text-align: center; padding: 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px;">
-        <div style="font-size: 20px; font-weight: 900; color: #10B981;">{syllabus_pct}%</div>
+        <div style="font-size: 20px; font-weight: 900; color: #0D9488;">{syllabus_pct}%</div>
         <div style="font-size: 10px; font-weight: 800; color: #64748B; text-transform: uppercase;">Syllabus Done</div>
       </div>
       <div style="display: table-cell; width: 33%; text-align: center; padding: 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px;">
@@ -294,7 +294,7 @@ def generate_weekly_digest_email_html(name: str, target_exam: str, streak: int, 
     </div>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Progress Digest.
+      &copy; 2026 ExamForge-AI. Progress Digest.
     </div>
   </div>
 </body>
@@ -305,13 +305,13 @@ def generate_milestone_unlocked_email_html(name: str, badge_title: str, xp_earne
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Milestone Unlocked! - ExamForge AI</title>
+  <title>Milestone Unlocked! - ExamForge-AI</title>
   <style>{EMAIL_COMMON_STYLES}</style>
 </head>
 <body>
   <div class="email-container">
     <div class="header-logo">
-      ⚡ Exam<span class="brand-accent">Forge</span> AI
+      📚 ExamForge-<span class="brand-accent">AI</span>
     </div>
 
     <div class="badge-pill" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: #D97706;">🏆 Badge Unlocked</div>
@@ -319,7 +319,7 @@ def generate_milestone_unlocked_email_html(name: str, badge_title: str, xp_earne
     <h1>Congratulations, {name}! 🎖️</h1>
 
     <p class="body-text">
-      You've unlocked a new syllabus milestone on ExamForge AI:
+      You've unlocked a new syllabus milestone on ExamForge-AI:
     </p>
 
     <div style="text-align: center; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 20px; padding: 24px; margin-bottom: 24px;">
@@ -329,13 +329,13 @@ def generate_milestone_unlocked_email_html(name: str, badge_title: str, xp_earne
     </div>
 
     <div style="text-align: center;">
-      <a href="http://localhost:3000/dashboard/achievements" style="display: inline-block; background: #6D4AFF; color: #FFFFFF; font-weight: 800; font-size: 13px; text-decoration: none; padding: 12px 28px; border-radius: 14px;">
+      <a href="http://localhost:3000/dashboard/achievements" style="display: inline-block; background: #059669; color: #FFFFFF; font-weight: 800; font-size: 13px; text-decoration: none; padding: 12px 28px; border-radius: 14px;">
         View Trophy Cabinet &rarr;
       </a>
     </div>
 
     <div class="footer">
-      &copy; 2026 ExamForge AI. Achievement Notification.
+      &copy; 2026 ExamForge-AI. Achievement Notification.
     </div>
   </div>
 </body>

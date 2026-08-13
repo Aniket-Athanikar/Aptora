@@ -177,7 +177,7 @@ const modulesData: Record<string, {
         icon: BookOpen,
         badge: "Revision Assets",
         category: "AI Study & Generation",
-        color: "from-[#6D4AFF] to-purple-600",
+        color: "from-emerald-600 to-teal-655",
         description: "Generates long notes, summaries, mind maps, formula sheets, and spaced repetition flashcards.",
         longDescription: "Transforms pages of reading material into revision assets. The generator creates structured study summaries, formula sheets, mindmap text definitions, and spaced-repetition flashcards mapped to your target topics.",
         specs: [
@@ -203,7 +203,7 @@ const modulesData: Record<string, {
         icon: Brain,
         badge: "Evaluation",
         category: "AI Study & Generation",
-        color: "from-[#6D4AFF] to-purple-600",
+        color: "from-emerald-600 to-teal-655",
         description: "Creates MCQs, fill-in-the-blanks, true/false, assertion-reason, and case studies with step-by-step logic.",
         longDescription: "Create custom quizzes from your uploaded study materials. The generator outputs multiple question styles including multiple-choice, fill-in-the-blanks, true/false, assertion-reason, and subjective case studies, each accompanied by step-by-step reasoning, difficulty ratings, and memory tricks.",
         specs: [
@@ -229,7 +229,7 @@ const modulesData: Record<string, {
         icon: MessageCircle,
         badge: "Chat Assistant",
         category: "AI Study & Generation",
-        color: "from-[#6D4AFF] to-purple-600",
+        color: "from-emerald-600 to-teal-655",
         description: "Interactive chat grounded strictly in your uploaded library. Ask questions and get citations linking back to original sources.",
         longDescription: "An AI tutor that knows only what is in your uploaded books and lecture notes. Ask questions, clarify tough concepts, and get instant explanations with page-level citations mapping directly back to your uploaded sources.",
         specs: [
@@ -255,7 +255,7 @@ const modulesData: Record<string, {
         icon: Zap,
         badge: "Prediction",
         category: "AI Study & Generation",
-        color: "from-[#6D4AFF] to-purple-600",
+        color: "from-emerald-600 to-teal-655",
         description: "Matches books and PYQs to forecast upcoming high-probability exam topics.",
         longDescription: "Analyze past exam papers to highlight high-yield study topics. The engine matches your textbooks against previous year papers (PYQs), calculating topic frequency trends to predict high-probability questions for the upcoming exam cycle.",
         specs: [
@@ -402,7 +402,7 @@ export default function FeatureSlugPage() {
                 {/* Back button */}
                 <button
                     onClick={() => router.push("/features")}
-                    className="flex items-center gap-2 text-xs font-black text-neutral-500 hover:text-[#6D4AFF] mb-8 cursor-pointer transition-colors"
+                    className="flex items-center gap-2 text-xs font-black text-neutral-500 hover:text-emerald-600 mb-8 cursor-pointer transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     BACK TO ALL FEATURES
@@ -419,14 +419,14 @@ export default function FeatureSlugPage() {
                                 <span className="text-xs font-black text-neutral-400 uppercase tracking-widest">
                                     {moduleInfo.num}
                                 </span>
-                                <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-[#6D4AFF]/10">
+                                <span className="inline-block bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-emerald-100">
                                     {moduleInfo.badge}
                                 </span>
                             </div>
 
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 rounded-2xl bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center shrink-0">
-                                    <Icon className="w-6 h-6 text-[#6D4AFF]" />
+                                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                                    <Icon className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <h2 className="text-xl md:text-2xl font-black text-neutral-900 leading-tight">
                                     {moduleInfo.title}
@@ -450,15 +450,15 @@ export default function FeatureSlugPage() {
                         {/* Step-by-Step Workflow */}
                         <div className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm">
                             <h3 className="text-sm font-black text-neutral-900 uppercase tracking-wider mb-6 flex items-center gap-2">
-                                <Terminal className="w-4 h-4 text-[#6D4AFF]" />
-                                How It Works Step-by-Step
+                                <Terminal className="w-4 h-4 text-emerald-600" />
+                                how it works step-by-step
                             </h3>
                             <div className="space-y-6 relative pl-4 border-l border-neutral-100">
                                 {moduleInfo.workflow.map((step, idx) => (
                                     <div key={idx} className="relative">
                                         {/* Timeline Dot */}
-                                        <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-[#6D4AFF]" />
-                                        <h4 className="text-xs font-black text-[#6D4AFF] mb-1 uppercase tracking-wider">
+                                        <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-emerald-500" />
+                                        <h4 className="text-xs font-black text-emerald-650 mb-1 uppercase tracking-wider">
                                             Step 0{idx + 1}
                                         </h4>
                                         <p className="text-xs text-neutral-600 font-bold leading-relaxed">
@@ -475,7 +475,7 @@ export default function FeatureSlugPage() {
                         {/* Tech Specs */}
                         <GlassCard className="p-6 border-[#ECECEC] bg-white/70">
                             <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Cpu className="w-4 h-4 text-[#6D4AFF]" />
+                                <Cpu className="w-4 h-4 text-emerald-600" />
                                 Technical Specifications
                             </h3>
                             <ul className="space-y-4">
@@ -512,15 +512,15 @@ export default function FeatureSlugPage() {
                         </GlassCard>
 
                         {/* Next Action */}
-                        <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] rounded-[24px] p-6 text-white shadow-lg shadow-purple-500/15">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-purple-200 mb-2">
+                        <div className="bg-gradient-to-br from-emerald-600 to-teal-650 rounded-[24px] p-6 text-white shadow-lg shadow-emerald-500/15">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-emerald-100 mb-2">
                                 Platform Action
                             </h4>
-                            <p className="text-[11px] font-bold leading-relaxed text-purple-100 mb-5">
+                            <p className="text-[11px] font-bold leading-relaxed text-emerald-50 mb-5">
                                 Try this module on your own books and prep files.
                             </p>
                             <Link href="/login">
-                                <GlowButton variant="outline" className="w-full bg-white text-[#6D4AFF] border-transparent hover:bg-neutral-50 hover:scale-[1.02] text-[10px] font-black py-3 rounded-xl transition-all">
+                                <GlowButton variant="outline" className="w-full bg-white text-emerald-600 border-transparent hover:bg-neutral-50 hover:scale-[1.02] text-[10px] font-black py-3 rounded-xl transition-all">
                                     Get Started
                                 </GlowButton>
                             </Link>

@@ -41,6 +41,10 @@ class UserOnboardingProfileDb(Base):
 
     occupation = Column(String(100))
 
+    gender = Column(String(50), default="")
+
+    phone = Column(String(50), default="")
+
     syllabus_percent = Column(Integer, default=0)
 
     current_confidence = Column(Integer, default=0)

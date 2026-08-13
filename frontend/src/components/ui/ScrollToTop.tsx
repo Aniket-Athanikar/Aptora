@@ -42,7 +42,7 @@ export default function ScrollToTop() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-[9999] w-12 h-12 rounded-full flex items-center justify-center bg-white/95 border border-slate-150 shadow-[0_8px_30px_rgba(109,74,255,0.22)] hover:border-[#6D4AFF]/50 text-slate-650 hover:text-[#6D4AFF] transition-all cursor-pointer group"
+          className="fixed bottom-8 right-8 z-[9999] w-12 h-12 rounded-full flex items-center justify-center bg-white/95 border border-slate-150 shadow-[0_8px_30px_rgba(16,185,129,0.22)] hover:border-emerald-500/50 text-slate-600 hover:text-emerald-600 transition-all cursor-pointer group"
           aria-label="Scroll to top"
         >
           {/* Centered Circular progress path */}
@@ -58,7 +58,7 @@ export default function ScrollToTop() {
               cx="24"
               cy="24"
               r={radius}
-              className="stroke-[#6D4AFF] fill-none transition-all duration-75"
+              className="stroke-emerald-600 fill-none transition-all duration-75"
               strokeWidth="2.5"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -67,7 +67,7 @@ export default function ScrollToTop() {
           </svg>
 
           {/* Central Arrow Icon */}
-          <ArrowUp className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5 text-[#6D4AFF]" />
+          <ArrowUp className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5 text-emerald-600" />
         </motion.button>
       )}
     </AnimatePresence>

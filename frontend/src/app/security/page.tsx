@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import { Shield, Lock, Eye, Server, RefreshCw, Key, ArrowRight, UserCheck } from "lucide-react";
@@ -79,27 +79,27 @@ export default function SecurityPage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 text-xs font-black text-neutral-900 bg-neutral-100 px-4 py-2.5 rounded-xl border border-neutral-200 uppercase tracking-wider">
-                <Shield className="w-4 h-4 text-[#6D4AFF]" /> AES-256 Protected
+                <Shield className="w-4 h-4 text-emerald-600" /> AES-256 Protected
               </div>
               <div className="flex items-center gap-2 text-xs font-black text-neutral-900 bg-neutral-100 px-4 py-2.5 rounded-xl border border-neutral-200 uppercase tracking-wider">
-                <Lock className="w-4 h-4 text-[#6D4AFF]" /> TLS 1.3 Certified
+                <Lock className="w-4 h-4 text-emerald-600" /> TLS 1.3 Certified
               </div>
             </div>
           </motion.div>
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-5 bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white p-8 rounded-[24px] shadow-xl relative overflow-hidden group"
+            className="lg:col-span-5 bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 rounded-[24px] shadow-xl relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
             <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500" />
             <Shield className="w-12 h-12 text-white/90 mb-6" />
             <h3 className="text-xl font-black mb-2">Found a Security Issue?</h3>
-            <p className="text-purple-100 text-sm font-semibold mb-6">
-              We reward researchers and developers who help keep ExamForge AI safe. Submit reports directly to our team.
+            <p className="text-emerald-50 text-sm font-semibold mb-6">
+              We reward researchers and developers who help keep ExamForge-AI safe. Submit reports directly to our team.
             </p>
             <Link
               href="/report-bug"
-              className="inline-flex items-center gap-2 text-sm font-black text-[#6D4AFF] bg-white px-5 py-3 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-5 py-3 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
             >
               Report Vulnerability <ArrowRight className="w-4 h-4" />
             </Link>
@@ -126,9 +126,9 @@ export default function SecurityPage() {
               <motion.div
                 key={idx}
                 variants={itemVariants}
-                className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-sm hover:shadow-lg hover:border-[#6D4AFF]/20 transition-all duration-300 flex flex-col items-start gap-5 group"
+                className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-sm hover:shadow-lg hover:border-emerald-500/20 transition-all duration-300 flex flex-col items-start gap-5 group"
               >
-                <div className="w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-[#6D4AFF] group-hover:bg-[#6D4AFF] group-hover:text-white transition-all duration-300 shadow-sm">
+                <div className="w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                   <pillar.icon className="w-6 h-6" />
                 </div>
                 <div className="space-y-2">

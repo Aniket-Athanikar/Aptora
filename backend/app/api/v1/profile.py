@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 import os
 import uuid
 import io
@@ -103,6 +103,10 @@ def sync_profile_to_onboarding(profile: UserProfileDb, user: UserDb, db: Session
         onboarding.occupation = update_data["occupation"]
     if "name" in update_data:
         onboarding.full_name = update_data["name"]
+    if "gender" in update_data:
+        onboarding.gender = update_data["gender"]
+    if "phone" in update_data:
+        onboarding.phone = update_data["phone"]
     if "location" in update_data and update_data["location"]:
         parts = update_data["location"].split(",")
         city = parts[0].strip() if parts else update_data["location"]

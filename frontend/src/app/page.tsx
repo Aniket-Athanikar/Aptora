@@ -20,7 +20,7 @@ import {
 export default function Home() {
   return (
     <SmoothScroll>
-      <main className="relative min-h-screen bg-[var(--background)] text-slate-900 overflow-hidden font-sans selection:bg-indigo-500/15 selection:text-indigo-700">
+      <main className="relative min-h-screen bg-[var(--background)] text-slate-900 overflow-hidden font-sans selection:bg-emerald-500/15 selection:text-emerald-700">
         <CursorFollower />
         <ScrollToTop />
 

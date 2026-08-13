@@ -83,7 +83,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} antialiased min-h-screen text-slate-800 bg-slate-50 selection:bg-indigo-500/15 selection:text-[#6D4AFF]`}
+        className={`${inter.variable} antialiased min-h-screen text-slate-800 bg-slate-50 selection:bg-emerald-500/15 selection:text-emerald-600`}
         suppressHydrationWarning
       >
         <AuthProvider>

@@ -1,17 +1,19 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { motion, useSpring, useTransform, useMotionValue } from "framer-motion";
 
 export default function MagneticButton({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   // Spring physics for natural elastic movement
   const springConfig = { damping: 15, stiffness: 180, mass: 0.15 };
   
-  const mX = useSpring(position.x, springConfig);
-  const mY = useSpring(position.y, springConfig);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const mX = useSpring(mouseX, springConfig);
+  const mY = useSpring(mouseY, springConfig);
 
   // Transform coordinates to 3D perspective rotation angles
   const rotateX = useTransform(mY, [-30, 30], [8, -8]);
@@ -27,11 +29,13 @@ export default function MagneticButton({ children }: { children: React.ReactNode
     const y = clientY - (top + height / 2);
     
     // Magnetic pull: move 38% towards cursor coordinates
-    setPosition({ x: x * 0.38, y: y * 0.38 });
+    mouseX.set(x * 0.38);
+    mouseY.set(y * 0.38);
   };
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
+    mouseX.set(0);
+    mouseY.set(0);
   };
 
   return (

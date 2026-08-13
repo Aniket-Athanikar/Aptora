@@ -69,6 +69,8 @@ def get_current_user(
             email = payload.get("email")
             if email:
                 user = db.query(UserDb).filter(UserDb.email == email).first()
+        elif "@" in token:
+            user = db.query(UserDb).filter(UserDb.email == token).first()
 
     if user is None:
         raise HTTPException(

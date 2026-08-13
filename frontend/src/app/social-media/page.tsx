@@ -110,7 +110,7 @@ export default function SocialMediaPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-14"
         >
-          <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10">
+          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100">
             🌐 Connect With Us
           </span>
         </motion.div>

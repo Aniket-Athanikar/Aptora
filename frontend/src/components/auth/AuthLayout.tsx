@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import dynamic from "next/dynamic";
@@ -29,9 +29,9 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       {/* Premium Clean Background Pattern & Glowing Ambient Mesh */}
       <div className="absolute inset-0 bg-dot z-0 opacity-80" />
       <div className="absolute inset-0 bg-noise z-0 pointer-events-none" />
-      <div className="absolute top-[10%] left-[20%] w-[450px] h-[450px] bg-[#6D4AFF]/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-[10%] right-[20%] w-[450px] h-[450px] bg-[#EC4899]/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
-      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#6D4AFF]/5 via-[#A855F7]/5 to-transparent rounded-full filter blur-[140px] pointer-events-none" />
+      <div className="absolute top-[10%] left-[20%] w-[450px] h-[450px] bg-emerald-500/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute bottom-[10%] right-[20%] w-[450px] h-[450px] bg-teal-550/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-emerald-500/5 via-teal-500/5 to-transparent rounded-full filter blur-[140px] pointer-events-none" />
 
       {/* Single Auth Template Card Container */}
       <div className="relative z-10 w-full max-w-[460px]">

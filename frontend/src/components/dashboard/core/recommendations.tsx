@@ -54,17 +54,17 @@ export function Recommendations() {
   };
 
   return (
-    <div className="p-4 sm:p-6 glass border border-white/20 rounded-3xl space-y-4 sm:space-y-6 relative overflow-hidden">
+    <div className="p-5 sm:p-6 bg-white/70 backdrop-blur-xl border border-white/45 rounded-3xl space-y-5 relative overflow-hidden shadow-xl">
       {/* Background glow highlights */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full blur-2xl pointer-events-none -z-10" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-soft)] rounded-full blur-3xl pointer-events-none -z-10 opacity-60" />
 
-      <div className="flex justify-between items-center border-b border-amber-100/40 pb-3">
+      <div className="flex justify-between items-center border-b border-slate-100 pb-3.5">
         <div className="space-y-0.5">
           <h3 className="font-black text-slate-800 text-sm flex items-center gap-1.5 uppercase tracking-wider">
             <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" /> AI Recommendation Advisor
           </h3>
-          <p className="text-[11px] text-slate-500 font-bold uppercase tracking-wide">
-            Personalized telemetry feedback based on active study metrics.
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+            Personalized feedback based on active study telemetry.
           </p>
         </div>
       </div>
@@ -75,10 +75,10 @@ export function Recommendations() {
             key={rec.id}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-4 rounded-2xl bg-white/70 border border-slate-150/80 hover:border-amber-200 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs"
+            className="p-4 rounded-2xl bg-white/80 border border-slate-100/90 hover:border-[var(--primary)]/30 hover:bg-white/95 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm hover:shadow-md"
           >
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-50/70 border border-amber-150/30 flex items-center justify-center text-amber-600 mt-0.5 shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 mt-0.5 shrink-0">
                 {rec.ruleName.includes("burnout") ? (
                   <AlertTriangle className="w-4.5 h-4.5" />
                 ) : (
@@ -86,7 +86,7 @@ export function Recommendations() {
                 )}
               </div>
               <div>
-                <h5 className="font-extrabold text-slate-850 text-xs tracking-tight">{rec.title}</h5>
+                <h5 className="font-extrabold text-slate-800 text-xs tracking-tight">{rec.title}</h5>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed font-semibold">{rec.description}</p>
               </div>
             </div>
@@ -94,7 +94,7 @@ export function Recommendations() {
             {rec.actionText && (
               <button
                 onClick={() => handleResolve(rec.ruleName)}
-                className="self-end md:self-center bg-indigo-50/80 hover:bg-indigo-50 text-indigo-650 text-[10px] font-black uppercase tracking-wider px-3.5 py-2.5 rounded-xl border border-indigo-100 transition-colors flex items-center gap-1 shrink-0 cursor-pointer shadow-xs"
+                className="self-end md:self-center bg-[var(--primary-soft)] hover:bg-[var(--primary)] hover:text-white text-[var(--primary)] text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl border border-[var(--primary)]/20 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-sm hover:scale-[1.02]"
               >
                 <Check className="w-3.5 h-3.5" /> {rec.actionText}
               </button>

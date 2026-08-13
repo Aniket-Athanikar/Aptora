@@ -18,7 +18,7 @@ export function BrandHeader() {
           priority
         />
         <span className="font-black text-xl tracking-tight text-slate-900">
-          ExamForge-<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-600 bg-clip-text text-transparent">AI</span>
+          ExamForge-<span className="bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 bg-clip-text text-transparent">AI</span>
         </span>
       </div>
       <Link

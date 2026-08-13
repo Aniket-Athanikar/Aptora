@@ -82,7 +82,7 @@ export default function FAQsPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-14"
         >
-          <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
             Got Questions?
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
@@ -108,8 +108,8 @@ export default function FAQsPage() {
                 variants={itemVariants}
                 className={`bg-white/70 backdrop-blur-xl border rounded-[20px] shadow-md transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "border-[#6D4AFF]/30 shadow-lg shadow-purple-500/5"
-                    : "border-[#ECECEC] hover:border-[#6D4AFF]/20 hover:shadow-lg"
+                    ? "border-emerald-500/30 shadow-lg shadow-emerald-500/5"
+                    : "border-[#ECECEC] hover:border-emerald-500/20 hover:shadow-lg"
                 }`}
               >
                 {/* Question Button */}
@@ -121,15 +121,15 @@ export default function FAQsPage() {
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
                         isOpen
-                          ? "bg-[#6D4AFF] text-white"
-                          : "bg-[#6D4AFF]/5 text-[#6D4AFF] border border-[#6D4AFF]/10"
+                          ? "bg-emerald-600 text-white"
+                          : "bg-emerald-50 text-emerald-600 border border-emerald-100"
                       }`}
                     >
                       <MessageCircleQuestion className="w-5 h-5" />
                     </div>
                     <h3
                       className={`text-base font-bold transition-colors duration-300 ${
-                        isOpen ? "text-[#6D4AFF]" : "text-neutral-900 group-hover:text-[#6D4AFF]"
+                        isOpen ? "text-emerald-600" : "text-neutral-900 group-hover:text-emerald-600"
                       }`}
                     >
                       {faq.question}
@@ -141,7 +141,7 @@ export default function FAQsPage() {
                     transition={{ duration: 0.3, ease: "easeInOut" as const }}
                     className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
                       isOpen
-                        ? "bg-[#6D4AFF] text-white"
+                        ? "bg-emerald-600 text-white"
                         : "bg-neutral-100 text-neutral-400"
                     }`}
                   >
@@ -180,7 +180,7 @@ export default function FAQsPage() {
           className="text-center mt-16"
         >
           <div className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-10 shadow-lg max-w-2xl mx-auto">
-            <HelpCircle className="w-12 h-12 text-[#6D4AFF] mx-auto mb-4" />
+            <HelpCircle className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-neutral-900 mb-2">
               Still have questions?
             </h3>
@@ -189,7 +189,7 @@ export default function FAQsPage() {
             </p>
             <a
               href="/help"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all border-none"
             >
               Visit Help Center
             </a>

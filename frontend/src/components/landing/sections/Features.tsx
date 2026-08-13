@@ -71,8 +71,8 @@ export default function Features() {
       title: "Secure Authentication",
       description: "Dual OTP validation with CSRF verification and silent auto-pull interception.",
       icon: Key,
-      glow: "hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.25)] hover:border-[#6D4AFF]/40",
-      iconColor: "text-[#6D4AFF] bg-[#6D4AFF]/5 border-[#6D4AFF]/20 group-hover:bg-[#6D4AFF]/10",
+      glow: "hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.25)] hover:border-emerald-500/40",
+      iconColor: "text-emerald-600 bg-emerald-50 border-emerald-100 group-hover:bg-emerald-100/50",
     },
     {
       title: "Exam Selection & Mapping",
@@ -164,12 +164,12 @@ export default function Features() {
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-[100px]"
+          className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-[100px]"
         />
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-gradient-to-tr from-[#A855F7]/5 to-transparent rounded-full blur-[100px]"
+          className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-gradient-to-tr from-teal-500/5 to-transparent rounded-full blur-[100px]"
         />
       </div>
 

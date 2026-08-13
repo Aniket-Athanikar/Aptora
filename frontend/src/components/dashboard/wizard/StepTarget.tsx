@@ -42,11 +42,10 @@ export function StepTarget({
               placeholder="e.g. GRE, TOEFL, IELTS..."
               value={customExam}
               onChange={(e) => setCustomExam(e.target.value)}
-              className={`w-full border rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold transition-all ${
-                errors.targetExam
-                  ? "border-red-400 focus:ring-2 focus:ring-red-400/10"
-                  : `border-slate-200 ${stepStyles.focusBorder}`
-              }`}
+              className={`w-full border rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold transition-all ${errors.targetExam
+                ? "border-red-400 focus:ring-2 focus:ring-red-400/10"
+                : `border-slate-200 ${stepStyles.focusBorder}`
+                }`}
             />
           </div>
           <div className="flex-1 flex flex-col gap-1.5 w-full">
@@ -56,11 +55,10 @@ export function StepTarget({
               placeholder="e.g. Higher Studies, Lang Proficiency..."
               value={customCategory}
               onChange={(e) => setCustomCategory(e.target.value)}
-              className={`w-full border rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold transition-all ${
-                errors.targetExam
-                  ? "border-red-400 focus:ring-2 focus:ring-red-400/10"
-                  : `border-slate-200 ${stepStyles.focusBorder}`
-              }`}
+              className={`w-full border rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:bg-white font-semibold transition-all ${errors.targetExam
+                ? "border-red-400 focus:ring-2 focus:ring-red-400/10"
+                : `border-slate-200 ${stepStyles.focusBorder}`
+                }`}
             />
           </div>
           <button
@@ -91,7 +89,7 @@ export function StepTarget({
               </h4>
             </div>
           </div>
-          
+
           <button
             type="button"
             onClick={onClearExam}
@@ -112,8 +110,8 @@ export function StepTarget({
               key={item.name}
               onClick={() => onSelectExam(item.name, item.category)}
               className={`p-5 rounded-2xl border text-left flex flex-col justify-between h-36 transition-all relative overflow-hidden group cursor-pointer ${selected
-                  ? stepStyles.activeSelectionCard
-                  : "border-slate-200/60 bg-white/40 hover:bg-slate-50/50 hover:scale-[1.01]"
+                ? stepStyles.activeSelectionCard
+                : "border-slate-200/60 bg-white/40 hover:bg-slate-50/50 hover:scale-[1.01]"
                 }`}
               style={{
                 boxShadow: selected ? `0 6px 20px ${item.glow}` : undefined

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { AlertTriangle, RefreshCw, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { AlertTriangle, RefreshCw, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
 export default function Error({
@@ -16,7 +16,7 @@ export default function Error({
     <div className="min-h-screen flex items-center justify-center bg-slate-50/50 relative overflow-hidden px-6 py-12">
       {/* Ambient Radial Glows */}
       <div className="absolute top-[-25%] left-[-25%] w-[600px] h-[600px] bg-gradient-to-tr from-rose-500/5 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-25%] right-[-25%] w-[600px] h-[600px] bg-gradient-to-tr from-[#6D4AFF]/5 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[-25%] right-[-25%] w-[600px] h-[600px] bg-gradient-to-tr from-emerald-500/5 to-transparent blur-[140px] pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -53,7 +53,7 @@ export default function Error({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full pt-2">
             <button
               onClick={reset}
-              className="w-full sm:w-auto px-5 py-3 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white text-xs font-black uppercase tracking-wider rounded-2xl transition-all shadow-md shadow-indigo-100 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-2xl transition-all shadow-md shadow-emerald-100 flex items-center justify-center gap-2 cursor-pointer border-none"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Try Again
             </button>
@@ -61,7 +61,7 @@ export default function Error({
               href="/dashboard"
               className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-black uppercase tracking-wider rounded-2xl transition-all flex items-center justify-center gap-2"
             >
-              <LayoutDashboard className="w-3.5 h-3.5 text-[#6D4AFF]" /> Dashboard
+              <LayoutDashboard className="w-3.5 h-3.5 text-emerald-600" /> Dashboard
             </Link>
           </div>
         </div>

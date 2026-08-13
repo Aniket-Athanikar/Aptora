@@ -146,6 +146,10 @@ export default function LoginPage() {
               });
 
               if (backendRes.ok) {
+                const result = await backendRes.json();
+                if (typeof window !== "undefined" && result.access_token) {
+                  localStorage.setItem("access_token", result.access_token);
+                }
                 setAuthSuccess("✓ Authenticated with Google!");
                 login({
                   name: googleUser.name || googleUser.given_name || "Google User",
@@ -357,7 +361,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Email address"
                 autoComplete="username"
-                className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF]"
+                className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
               />
               {loginErrors.email && (
                 <p className="text-[10px] text-red-500 font-bold mt-1">
@@ -369,7 +373,7 @@ export default function LoginPage() {
             <div className="flex justify-end -mt-1">
               <Link
                 href="/forgot-password"
-                className="text-[11px] font-bold text-[#6D4AFF] hover:underline cursor-pointer transition-all"
+                className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer transition-all"
               >
                 Forgot Password?
               </Link>
@@ -378,7 +382,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/20 text-white font-bold py-3.5 h-12 rounded-2xl shadow-md transition-all"
+              className="w-full bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 hover:shadow-lg hover:shadow-emerald-500/20 text-white font-bold py-3.5 h-12 rounded-2xl shadow-md transition-all cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
@@ -421,7 +425,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="text-[#6D4AFF] font-bold hover:underline cursor-pointer"
+              className="text-emerald-600 font-bold hover:underline cursor-pointer"
             >
               Create Account
             </Link>
@@ -452,9 +456,9 @@ export default function LoginPage() {
             </div>
           ) : (
             <>
-              <div className="relative w-24 h-24 bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 rounded-full flex items-center justify-center">
-                <KeyRound className="w-10 h-10 text-[#6D4AFF]" />
-                <div className="absolute -bottom-0.5 -right-0.5 bg-[#6D4AFF] text-white rounded-full p-1.5 shadow-md">
+              <div className="relative w-24 h-24 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center">
+                <KeyRound className="w-10 h-10 text-emerald-600" />
+                <div className="absolute -bottom-0.5 -right-0.5 bg-emerald-600 text-white rounded-full p-1.5 shadow-md">
                   <Mail className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -471,7 +475,7 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <div className="text-sm font-black text-[#6D4AFF] bg-[#6D4AFF]/5 px-5 py-2 rounded-full border border-[#6D4AFF]/10">
+              <div className="text-sm font-black text-emerald-700 bg-emerald-50 px-5 py-2 rounded-full border border-emerald-100">
                 {otpTimer > 0 ? formatTimer(otpTimer) : "Code expired"}
               </div>
 
@@ -493,7 +497,7 @@ export default function LoginPage() {
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                     autoComplete="one-time-code"
-                    className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 focus:outline-none transition-all"
+                    className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all"
                   />
                 ))}
               </div>
@@ -501,7 +505,7 @@ export default function LoginPage() {
               <Button
                 onClick={onVerifyOtp}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold py-3.5 h-12 rounded-2xl shadow-md hover:shadow-lg hover:shadow-purple-500/20 transition-all"
+                className="w-full bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 text-white font-bold py-3.5 h-12 rounded-2xl shadow-md hover:shadow-lg hover:shadow-emerald-500/20 transition-all cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -519,7 +523,7 @@ export default function LoginPage() {
                     setOtpTimer(90);
                     setAuthError(null);
                   }}
-                  className="text-[#6D4AFF] font-bold hover:underline cursor-pointer"
+                  className="text-emerald-600 font-bold hover:underline cursor-pointer"
                 >
                   Resend OTP
                 </button>

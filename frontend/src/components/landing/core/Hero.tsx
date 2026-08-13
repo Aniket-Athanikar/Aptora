@@ -31,7 +31,7 @@ export default function Hero() {
       {/* Dynamic Animated particle & neural background */}
       <HeroBackground />
 
-      <div className="layout-container max-w-[1320px] px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center relative z-10 w-full mx-auto">
+      <div className="layout-container max-w-[1320px] px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-start relative z-10 w-full mx-auto">
         {/* Left: Text & Pitch */}
         <div className="lg:col-span-6 flex flex-col gap-4 sm:gap-6 text-left">
           {/* Badge */}
@@ -148,7 +148,7 @@ export default function Hero() {
         </div>
 
         {/* Right: Floating AI Avatar Coach Card with Glow and 3D Parallax */}
-        <div className="lg:col-span-6 relative flex items-center justify-center mt-4 lg:mt-0">
+        <div className="lg:col-span-6 relative flex items-center justify-center mt-4 lg:mt-0 lg:pt-14">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -158,10 +158,8 @@ export default function Hero() {
             {/* Pulsing light rings */}
             <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-amber-500/25 to-teal-500/20 rounded-full blur-3xl opacity-80 animate-pulse pointer-events-none" />
 
-            <GlassCard className="relative p-4 sm:p-6 bg-[var(--surface)]/70 border border-white/20 rounded-[24px] sm:rounded-[32px] shadow-2xl flex flex-col gap-4 sm:gap-6 items-center text-center overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-emerald-600/10 to-teal-500/5 rounded-full blur-xl pointer-events-none" />
-
-              <div className="relative w-48 h-48 sm:w-72 sm:h-72 rounded-full overflow-hidden border-4 border-white shadow-xl glow-avatar transform hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+            <div className="relative flex flex-col gap-6 items-center w-full">
+              <div className="relative w-full aspect-square rounded-[32px] overflow-hidden border-2 border-white/50 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 bg-white/20 backdrop-blur-md">
                 <img
                   src="/ai-avatar.png"
                   alt="AI Study Partner Avatar"
@@ -169,27 +167,19 @@ export default function Hero() {
                   decoding="async"
                   className="w-full h-full object-cover"
                 />
-              </div>
-
-              <div className="flex flex-col gap-1 sm:gap-1.5 z-10">
-                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 tracking-widest uppercase bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-250">System Online</span>
-                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 leading-tight">Meet Your AI Study Partner</h3>
-                <p className="text-[11px] sm:text-xs text-neutral-500 font-semibold px-2 sm:px-4">
-                  &ldquo;Ready to analyze your syllabus, generate mock tests, and double your preparation speed.&rdquo;
-                </p>
-              </div>
-
-              <div className="w-full flex items-center justify-between border-t border-[#ECECEC] pt-3 sm:pt-4 mt-1 sm:mt-2">
-                <div className="flex flex-col items-start">
-                  <span className="text-[8px] sm:text-[9px] font-bold text-neutral-400 uppercase tracking-wider">AI Accuracy</span>
-                  <span className="text-xs sm:text-sm font-black text-emerald-600">99.8% Certified</span>
-                </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
+                
+                {/* Floating overlay status badge */}
+                <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 bg-white/95 backdrop-blur-md border border-neutral-100 rounded-full shadow-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
-                  <span className="text-[9px] sm:text-[10px] font-bold text-emerald-750 uppercase">Active</span>
+                  <span className="text-[10px] font-black text-emerald-800 uppercase tracking-wider">Active Online</span>
+                </div>
+
+                <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-neutral-900/80 backdrop-blur-md border border-white/10 text-white px-3 py-1.5 rounded-xl shadow-sm text-[10px] font-bold">
+                  <span>Accuracy:</span>
+                  <span className="text-emerald-400">99.8%</span>
                 </div>
               </div>
-            </GlassCard>
+            </div>
           </motion.div>
           <FloatingCards />
         </div>

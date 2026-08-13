@@ -68,28 +68,35 @@ export default function CursorFollower() {
     <>
       {/* Outer Glow Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-[#6D4AFF]/40 pointer-events-none z-[9999] hidden lg:block"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border pointer-events-none z-[9999] hidden lg:block"
         style={{
           x: ringX,
           y: ringY,
           translateX: "-50%",
           translateY: "-50%",
-          backgroundColor: isHovered ? "rgba(109, 74, 255, 0.08)" : "rgba(109, 74, 255, 0.02)",
+          backgroundColor: isHovered 
+            ? "color-mix(in srgb, var(--primary) 8%, transparent)" 
+            : "color-mix(in srgb, var(--primary) 2%, transparent)",
           scale: isHovered ? 1.55 : 1,
-          borderColor: isHovered ? "#6D4AFF" : "rgba(109, 74, 255, 0.4)",
-          boxShadow: isHovered ? "0 0 15px rgba(109, 74, 255, 0.35)" : "none",
+          borderColor: isHovered 
+            ? "var(--primary)" 
+            : "color-mix(in srgb, var(--primary) 40%, transparent)",
+          boxShadow: isHovered 
+            ? "0 0 15px color-mix(in srgb, var(--primary) 35%, transparent)" 
+            : "none",
         }}
         transition={{ type: "tween", ease: "backOut", duration: 0.2 }}
       />
       {/* Inner Core Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#6D4AFF] pointer-events-none z-[9999] hidden lg:block"
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full pointer-events-none z-[9999] hidden lg:block"
         style={{
           x: dotX,
           y: dotY,
           translateX: "-50%",
           translateY: "-50%",
           scale: isHovered ? 0.6 : 1,
+          backgroundColor: "var(--primary)",
         }}
       />
     </>

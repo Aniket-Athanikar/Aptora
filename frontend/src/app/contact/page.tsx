@@ -155,7 +155,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-black text-neutral-900 mb-1">{card.title}</h3>
-                    <p className="text-sm font-semibold text-neutral-500 group-hover:text-[#6D4AFF] transition-colors">
+                    <p className="text-sm font-semibold text-neutral-500 group-hover:text-emerald-600 transition-colors">
                       {card.detail}
                     </p>
                   </div>
@@ -184,7 +184,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                     required
                   />
                 </div>
@@ -196,7 +196,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="john@example.com"
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                     required
                   />
                 </div>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="How can we help?"
-                  className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all"
+                  className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                   required
                 />
               </div>
@@ -223,7 +223,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   placeholder="Write your message here..."
                   rows={5}
-                  className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all resize-none"
+                  className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
                   required
                 />
               </div>
@@ -231,7 +231,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all disabled:opacity-50 border-none cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -258,7 +258,7 @@ export default function ContactPage() {
           className="text-center"
         >
           <motion.div variants={itemVariants}>
-            <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+            <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
               Stay Connected
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-neutral-900 mb-3">Connect With Us</h2>
@@ -275,9 +275,9 @@ export default function ContactPage() {
                   key={idx}
                   href={mounted && social.href.startsWith("https://wa.me/") ? getWhatsAppLink(social.href.split("/").pop() || "") : social.href}
                   aria-label={social.label}
-                  className="w-14 h-14 rounded-2xl bg-white/70 backdrop-blur-xl border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-[#6D4AFF]/30 transition-all duration-300 group"
+                  className="w-14 h-14 rounded-2xl bg-white/70 backdrop-blur-xl border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-emerald-500/30 transition-all duration-300 group"
                 >
-                  <Icon className="w-5 h-5 text-neutral-500 group-hover:text-[#6D4AFF] transition-colors" />
+                  <Icon className="w-5 h-5 text-neutral-500 group-hover:text-emerald-600 transition-colors" />
                 </a>
               );
             })}
@@ -292,18 +292,21 @@ export default function ContactPage() {
           transition={{ duration: 0.5 }}
           className="text-center pt-8"
         >
-          <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white p-8 md:p-12 rounded-[24px] shadow-xl relative overflow-hidden group max-w-[900px] mx-auto">
-            <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-            <h3 className="text-2xl md:text-3xl font-black mb-3">Want to shape the future of learning?</h3>
-            <p className="text-purple-100 text-sm font-semibold mb-6 max-w-lg mx-auto">
-              We are looking for exceptional developers, ML engineers, and designers to help build the next gen of AI exam tools.
+          <div className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white p-8 md:p-12 rounded-[24px] shadow-xl relative overflow-hidden group max-w-[900px] mx-auto">
+            <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none" />
+            <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500" />
+            <h3 className="text-2xl md:text-3xl font-black mb-3">
+              Prefer direct business channel?
+            </h3>
+            <p className="text-emerald-100 text-sm font-semibold mb-6 max-w-md mx-auto">
+              Send us inquiries regarding institutional licenses, partnerships, or API setups.
             </p>
-            <Link
-              href="/careers"
-              className="inline-flex items-center gap-2 text-sm font-black text-[#6D4AFF] bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+            <a
+              href="mailto:business@examforge.ai"
+              className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
             >
-              View Open Positions <ArrowRight className="w-4 h-4" />
-            </Link>
+              Contact Business Team <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </motion.section>
       </div>

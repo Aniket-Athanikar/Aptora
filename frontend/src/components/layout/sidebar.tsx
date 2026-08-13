@@ -320,7 +320,7 @@ export function Sidebar({
         </div>
       </aside>
 
-      {/* Mobile Drawer (Collapsible) */}
+      {/* Mobile Drawer (Collapsible) - Recompiled and Validated */}
       <AnimatePresence>
         {mobileOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
@@ -352,7 +352,7 @@ export function Sidebar({
                     />
                   </div>
                   <h1 className="font-black text-lg tracking-tight text-slate-900">
-                    Exam<span className="bg-gradient-to-r from-[#6D4AFF] to-purple-500 bg-clip-text text-transparent">Forge-AI</span>
+                    Exam<span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 bg-clip-text text-transparent">Forge-AI</span>
                   </h1>
                 </div>
                 <button
@@ -411,7 +411,7 @@ export function Sidebar({
                       className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
                     />
                   ) : (
-                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#6D4AFF] to-purple-500 text-white flex items-center justify-center font-black text-sm uppercase border border-slate-200 shadow-sm">
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-sm uppercase border border-slate-200 shadow-sm">
                       {profile?.name ? profile.name.charAt(0).toUpperCase() : "?"}
                     </div>
                   )}

@@ -37,7 +37,7 @@ function JobApplyForm() {
       <div className="mb-6">
         <Link
           href="/careers"
-          className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-[#6D4AFF] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-emerald-600 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Careers
         </Link>
@@ -74,7 +74,7 @@ function JobApplyForm() {
             className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-12 shadow-lg space-y-6"
           >
             <div>
-              <span className="text-xs font-black uppercase tracking-wider text-[#6D4AFF] bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 px-3 py-1 rounded-full">
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full">
                 Application Form
               </span>
               <h2 className="text-2xl font-black text-neutral-900 mt-3">Apply for {roleName}</h2>
@@ -98,7 +98,7 @@ function JobApplyForm() {
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-[#6D4AFF] font-semibold text-sm transition-all"
+                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-emerald-500 font-semibold text-sm transition-all"
                 />
               </div>
             </div>
@@ -116,7 +116,7 @@ function JobApplyForm() {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-[#6D4AFF] font-semibold text-sm transition-all"
+                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-emerald-500 font-semibold text-sm transition-all"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ function JobApplyForm() {
                   required
                   value={formData.targetExam}
                   onChange={(e) => setFormData({ ...formData, targetExam: e.target.value })}
-                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3.5 text-neutral-800 focus:outline-none focus:border-[#6D4AFF] font-semibold text-sm transition-all appearance-none cursor-pointer"
+                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3.5 text-neutral-800 focus:outline-none focus:border-emerald-500 font-semibold text-sm transition-all appearance-none cursor-pointer"
                 >
                   <option value="" disabled>Select Target Government Exam Focus...</option>
                   <option value="ssc">Staff Selection Commission (SSC CGL / CHSL)</option>
@@ -162,9 +162,9 @@ function JobApplyForm() {
                   }}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                 />
-                <div className="w-full bg-neutral-50/50 border-2 border-dashed border-neutral-200 group-hover:border-[#6D4AFF] rounded-xl py-6 flex flex-col items-center justify-center gap-2 transition-all">
-                  <Upload className="w-8 h-8 text-neutral-400 group-hover:text-[#6D4AFF] transition-colors" />
-                  <span className="text-xs font-black text-neutral-600 group-hover:text-[#6D4AFF] transition-colors">
+                <div className="w-full bg-neutral-50/50 border-2 border-dashed border-neutral-200 group-hover:border-emerald-500 rounded-xl py-6 flex flex-col items-center justify-center gap-2 transition-all">
+                  <Upload className="w-8 h-8 text-neutral-400 group-hover:text-emerald-600 transition-colors" />
+                  <span className="text-xs font-black text-neutral-600 group-hover:text-emerald-600 transition-colors">
                     {resumeName || "Upload PDF or DOCX file"}
                   </span>
                 </div>
@@ -183,7 +183,7 @@ function JobApplyForm() {
                   placeholder="https://github.com/johndoe"
                   value={formData.portfolio}
                   onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
-                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-[#6D4AFF] font-semibold text-sm transition-all"
+                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-emerald-500 font-semibold text-sm transition-all"
                 />
               </div>
             </div>
@@ -200,14 +200,14 @@ function JobApplyForm() {
                   rows={4}
                   value={formData.coverLetter}
                   onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })}
-                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-[#6D4AFF] font-semibold text-sm transition-all"
+                  className="w-full bg-white border border-neutral-200 rounded-xl pl-12 pr-4 py-3 text-neutral-800 focus:outline-none focus:border-emerald-500 font-semibold text-sm transition-all"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-black text-sm uppercase tracking-wider py-4 rounded-xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black text-sm uppercase tracking-wider py-4 rounded-xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all cursor-pointer border-none"
             >
               Submit Application <Send className="w-4.5 h-4.5" />
             </button>
@@ -232,7 +232,7 @@ function JobApplyForm() {
             <hr className="border-neutral-100" />
             <Link
               href="/careers"
-              className="inline-flex items-center gap-2 text-sm font-black text-white bg-[#6D4AFF] px-6 py-3 rounded-xl hover:bg-[#8B5CF6] hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 text-sm font-black text-white bg-emerald-600 px-6 py-3 rounded-xl hover:bg-emerald-700 hover:shadow-lg transition-all border-none"
             >
               Return to Careers
             </Link>

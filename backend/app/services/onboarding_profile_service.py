@@ -32,6 +32,8 @@ class OnboardingProfileService(BaseService):
             stream=profile.stream,
             city=profile.city,
             occupation=profile.occupation,
+            gender=profile.gender,
+            phone=profile.phone,
             syllabus_percent=profile.syllabus_percent,
             current_confidence=profile.current_confidence,
         )
@@ -61,6 +63,8 @@ class OnboardingProfileService(BaseService):
             stream=profile.stream,
             city=profile.city,
             occupation=profile.occupation,
+            gender=profile.gender,
+            phone=profile.phone,
             syllabus_percent=profile.syllabus_percent,
             current_confidence=profile.current_confidence,
         )

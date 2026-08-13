@@ -162,7 +162,7 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4"
+              className="inline-block bg-emerald-50 text-emerald-600 text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4"
             >
               The AI Learning Engine Pipeline
             </motion.span>
@@ -259,7 +259,7 @@ export default function HowItWorksPage() {
               {/* Progress Flow Timeline */}
               <div className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm">
                 <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                  <Terminal className="w-4 h-4 text-[#6D4AFF]" />
+                  <Terminal className="w-4 h-4 text-emerald-600" />
                   System Sequence Timeline
                 </h3>
                 <div className="space-y-6 relative pl-4 border-l border-neutral-100">
@@ -278,7 +278,7 @@ export default function HowItWorksPage() {
 
                       <div className="flex items-center justify-between">
                         <h4 className={`text-xs font-black uppercase tracking-wider ${
-                          st.id === activeStage ? "text-[#6D4AFF]" : "text-neutral-500"
+                          st.id === activeStage ? "text-emerald-600" : "text-neutral-500"
                         }`}>
                           {st.num} • {st.title}
                         </h4>
@@ -306,7 +306,7 @@ export default function HowItWorksPage() {
                 >
                   <GlassCard className="p-6 border-[#ECECEC] bg-white/70">
                     <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-[#6D4AFF]" />
+                      <Layers className="w-4 h-4 text-emerald-600" />
                       Core Capabilities
                     </h3>
                     <ul className="space-y-3.5">
@@ -324,20 +324,20 @@ export default function HowItWorksPage() {
               </AnimatePresence>
 
               {/* Ready CTA Card */}
-              <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] rounded-[24px] p-6 text-white shadow-lg shadow-purple-500/15 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-purple-200 mb-2">
+              <div className="bg-gradient-to-br from-emerald-600 to-teal-650 rounded-[24px] p-6 text-white shadow-lg shadow-emerald-500/15 text-center md:text-left">
+                <h4 className="text-xs font-black uppercase tracking-widest text-emerald-100 mb-2">
                   Accelerate Preparation
                 </h4>
-                <p className="text-[11px] font-bold leading-relaxed text-purple-100 mb-5">
+                <p className="text-[11px] font-bold leading-relaxed text-emerald-50 mb-5">
                   Begin your multi-stage study loop with our grounded AI preparation pipeline today.
                 </p>
                 <div className="flex flex-col gap-2">
                   <Link href="/login">
-                    <GlowButton variant="outline" className="w-full bg-white text-[#6D4AFF] border-transparent hover:bg-neutral-50 text-[10px] font-black py-3 rounded-xl transition-all" magnetic={false}>
+                    <GlowButton variant="outline" className="w-full bg-white text-emerald-600 border-transparent hover:bg-neutral-50 text-[10px] font-black py-3 rounded-xl transition-all" magnetic={false}>
                       Register Free Account
                     </GlowButton>
                   </Link>
-                  <Link href="/features" className="text-[10px] font-black text-purple-200 hover:text-white transition-colors flex items-center justify-center gap-1 mt-2">
+                  <Link href="/features" className="text-[10px] font-black text-emerald-100 hover:text-white transition-colors flex items-center justify-center gap-1 mt-2">
                     Review Specifications
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>

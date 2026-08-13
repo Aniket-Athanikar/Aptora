@@ -18,6 +18,8 @@ class OnboardingProfileCreate(BaseModel):
     stream: str | None = None
     city: str | None = None
     occupation: str | None = None
+    gender: str | None = None
+    phone: str | None = None
     syllabus_percent: int | None = None
     current_confidence: int | None = None
 
@@ -34,6 +36,8 @@ class OnboardingProfileUpdate(BaseModel):
     stream: str | None = None
     city: str | None = None
     occupation: str | None = None
+    gender: str | None = None
+    phone: str | None = None
     syllabus_percent: int | None = None
     current_confidence: int | None = None
 
@@ -55,6 +59,8 @@ class OnboardingProfileResponse(BaseModel):
     stream: str | None = None
     city: str | None = None
     occupation: str | None = None
+    gender: str | None = None
+    phone: str | None = None
 
     syllabus_percent: int | None = None
     current_confidence: int | None = None

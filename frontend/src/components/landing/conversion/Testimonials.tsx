@@ -88,7 +88,7 @@ export default function Testimonials() {
         <motion.div
           animate={{ rotate: 360, scale: [1, 1.05, 1] }}
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          className="absolute w-[800px] h-[800px] rounded-full border border-dashed border-[#6D4AFF]/15"
+          className="absolute w-[800px] h-[800px] rounded-full border border-dashed border-emerald-500/15"
         />
       </div>
 
@@ -121,10 +121,10 @@ export default function Testimonials() {
             <div key={idx} className="w-[320px] sm:w-[380px] flex-shrink-0">
               <TiltCard className="h-full">
                 <GlassCard
-                  className="relative flex flex-col justify-between p-8 bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[32px] min-h-[240px] shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(109,74,255,0.15)] hover:border-[#6D4AFF]/30 transition-all duration-500 overflow-hidden"
+                  className="relative flex flex-col justify-between p-8 bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[32px] min-h-[240px] shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.15)] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden"
                 >
                   {/* Decorative Background Quote Icon */}
-                  <Quote className="absolute top-6 right-6 w-16 h-16 text-[#6D4AFF]/5 -z-10 transform -scale-x-100" />
+                  <Quote className="absolute top-6 right-6 w-16 h-16 text-emerald-500/5 -z-10 transform -scale-x-100" />
 
                   <div style={{ transform: "translateZ(30px)" }}>
                     {/* Stars */}
@@ -144,11 +144,11 @@ export default function Testimonials() {
                     style={{ transform: "translateZ(50px)" }}
                     className="flex items-center gap-4 mt-8 pt-5 border-t border-[#ECECEC]/60"
                   >
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white font-black flex items-center justify-center text-lg shadow-lg shadow-[#6D4AFF]/20">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white font-black flex items-center justify-center text-lg shadow-lg shadow-emerald-500/20">
                       {item.avatar}
                     </div>
                     <div>
-                      <h4 className="font-extrabold text-neutral-900 text-sm leading-tight group-hover:text-[#6D4AFF] transition-colors duration-300">
+                      <h4 className="font-extrabold text-neutral-900 text-sm leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                         {item.name}
                       </h4>
                       <span className="text-[10px] text-neutral-500 font-bold mt-1 block uppercase tracking-wider">

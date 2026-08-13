@@ -16,6 +16,8 @@ def ensure_schema_synced(engine: Engine) -> None:
 
     statements = [
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;",
+        "ALTER TABLE user_onboarding_profiles ADD COLUMN IF NOT EXISTS gender VARCHAR(50) DEFAULT '';",
+        "ALTER TABLE user_onboarding_profiles ADD COLUMN IF NOT EXISTS phone VARCHAR(50) DEFAULT '';",
         "ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS phone VARCHAR(20) DEFAULT '';",
         "ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS dob VARCHAR(20) DEFAULT '';",
         "ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS gender VARCHAR(20) DEFAULT '';",

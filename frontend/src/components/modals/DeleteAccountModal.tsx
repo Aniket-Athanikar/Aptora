@@ -174,107 +174,100 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
   if (!isOpen || !mounted) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
       {/* Backdrop (Click to close) */}
       <div className="absolute inset-0" onClick={step !== 3 ? onClose : undefined} />
 
       {/* Modal Container - Centered & High-Visibility */}
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200">
+      <div className="relative w-full max-w-[440px] bg-white border border-slate-200/80 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-250 p-6 sm:p-8 space-y-6">
 
         {/* ──── STEP 1: Confirmation ──── */}
         {step === 1 && (
           <>
-            {/* High-Visibility Header Bar */}
-            <div className="bg-red-600 px-8 py-6 flex items-center justify-between">
+            {/* Header */}
+            <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-white/20">
-                  <AlertTriangle className="w-6 h-6 text-white" />
+                <div className="p-2 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 shrink-0">
+                  <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-white">Delete Account</h2>
-                  <p className="text-xs text-red-100 font-semibold">Permanent & Irreversible</p>
+                  <h2 className="text-lg font-black text-slate-900">Delete Account</h2>
+                  <p className="text-[11px] text-rose-600 font-extrabold tracking-wide uppercase">Permanent & Irreversible</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-white/20 text-white transition-all"
+                className="p-1.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-150 text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Content Area */}
-            <div className="p-8 space-y-6">
-              {/* Warning Card */}
-              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-5 space-y-3">
-                <p className="text-base font-bold text-red-900">What will be deleted:</p>
-                <ul className="space-y-2 text-base text-red-800 font-semibold">
-                  <li className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0" />
-                    Profile & personal data
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0" />
-                    Mock tests & analytics
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0" />
-                    Notes, PDFs & bookmarks
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0" />
-                    XP, coins & achievements
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0" />
-                    Order history & subscription
-                  </li>
-                </ul>
-              </div>
+            {/* Warning Details */}
+            <div className="bg-rose-50/50 border border-rose-100 rounded-2xl p-4.5 space-y-3">
+              <p className="text-xs font-black text-rose-900">Following data will be lost forever:</p>
+              <ul className="space-y-2 text-xs text-rose-800 font-semibold">
+                <li className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 bg-rose-500 rounded-full flex-shrink-0" />
+                  Profile and personal credentials
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 bg-rose-500 rounded-full flex-shrink-0" />
+                  AI Study guides, mock tests & analytics
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 bg-rose-500 rounded-full flex-shrink-0" />
+                  Notes, PDFs & bookmarks library
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 bg-rose-500 rounded-full flex-shrink-0" />
+                  Order history & subscriptions status
+                </li>
+              </ul>
+            </div>
 
-              {/* Reason Input */}
-              <div className="space-y-2">
-                <label className="text-base font-bold text-gray-900 block">
-                  Why are you leaving? (optional)
-                </label>
-                <textarea
-                  value={reason}
-                  onChange={e => setReason(e.target.value)}
-                  placeholder="Your feedback helps us improve..."
-                  className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-base resize-none h-24 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all placeholder:text-gray-500"
-                />
-              </div>
+            {/* Reason Input */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-700 block">
+                Why are you leaving? (optional)
+              </label>
+              <textarea
+                value={reason}
+                onChange={e => setReason(e.target.value)}
+                placeholder="Feedback helps us improve..."
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs resize-none h-20 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-200 transition-all placeholder:text-slate-400 font-medium"
+              />
+            </div>
 
-              {/* Error */}
-              {error && (
-                <div className="text-base text-red-700 font-bold bg-red-100 p-4 rounded-lg border-2 border-red-300">
-                  {error}
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={onClose}
-                  className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 border-2 border-gray-300 rounded-lg text-base font-bold text-gray-900 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleRequestDeletion}
-                  disabled={loading}
-                  className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg text-base font-bold transition-all flex items-center justify-center gap-2 border-0"
-                >
-                  {loading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <>
-                      Continue <ArrowRight className="w-5 h-5" />
-                    </>
-                  )}
-                </button>
+            {/* Error */}
+            {error && (
+              <div className="text-xs text-rose-700 font-bold bg-rose-50 p-3 rounded-xl border border-rose-200 text-center animate-shake">
+                {error}
               </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={onClose}
+                className="flex-1 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-black text-slate-700 transition-all cursor-pointer shadow-3xs"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRequestDeletion}
+                disabled={loading}
+                className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 disabled:bg-rose-400 text-white rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer border-none"
+              >
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    Continue <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
             </div>
           </>
         )}
@@ -282,143 +275,127 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
         {/* ──── STEP 2: OTP Verification ──── */}
         {step === 2 && (
           <>
-            {/* High-Visibility Header Bar */}
-            <div className="bg-purple-600 px-8 py-6 flex items-center justify-between">
+            {/* Header */}
+            <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-white/20">
-                  <ShieldAlert className="w-6 h-6 text-white" />
+                <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 shrink-0">
+                  <ShieldAlert className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-white">Verify Deletion</h2>
-                  <p className="text-xs text-purple-100 font-semibold">OTP Auto-Fetched</p>
+                  <h2 className="text-lg font-black text-slate-900">Verify Deletion</h2>
+                  <p className="text-[11px] text-emerald-600 font-extrabold tracking-wide uppercase">OTP Auto-Fetched</p>
                 </div>
               </div>
               <button
                 onClick={() => { setStep(1); setError(""); }}
-                className="p-2 rounded-lg hover:bg-white/20 text-white transition-all"
+                className="p-1.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-150 text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
                 aria-label="Go back"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Content Area */}
-            <div className="p-8 space-y-6">
-              {/* Email Info */}
-              <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-4">
-                <p className="text-sm text-gray-600 font-semibold">OTP sent to:</p>
-                <p className="text-base font-bold text-gray-900 break-all mt-1">{user?.email}</p>
-              </div>
+            {/* Email Info */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col gap-1">
+              <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Verification email sent</span>
+              <span className="text-xs font-black text-slate-800 break-all">{user?.email}</span>
+            </div>
 
-              {/* Auto-Fetch Status */}
-              <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3 text-center">
-                <p className="text-sm font-semibold text-green-800">
-                  ✓ OTP automatically fetched from your email
+            {/* Auto-Fetch Status */}
+            <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-black text-emerald-700 flex items-center justify-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" /> OTP automatically sync&apos;d from sandbox mailbox
+              </p>
+            </div>
+
+            {/* OTP Inputs */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-750 block">Enter 6-digit OTP:</label>
+              <div className="flex justify-center gap-2" onPaste={handleOtpPaste}>
+                {otp.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={el => { otpRefs.current[i] = el; }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={e => handleOtpChange(i, e.target.value)}
+                    onKeyDown={e => handleOtpKeyDown(i, e)}
+                    className={cn(
+                      "w-12 h-14 text-center text-xl font-black rounded-xl border-2 transition-all focus:outline-none focus:ring-0",
+                      digit
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                        : "border-slate-200 bg-slate-50/50 text-slate-800 focus:border-emerald-500"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Resend */}
+            <div className="text-center">
+              {countdown > 0 ? (
+                <p className="text-xs text-slate-400 font-bold">
+                  Resend OTP in <span className="text-slate-800 font-black">{countdown}s</span>
                 </p>
-              </div>
-
-              {/* OTP Inputs */}
-              <div className="space-y-3">
-                <label className="text-base font-bold text-gray-900 block">6-digit OTP:</label>
-                <div className="flex justify-center gap-3" onPaste={handleOtpPaste}>
-                  {otp.map((digit, i) => (
-                    <input
-                      key={i}
-                      ref={el => { otpRefs.current[i] = el; }}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={digit}
-                      onChange={e => handleOtpChange(i, e.target.value)}
-                      onKeyDown={e => handleOtpKeyDown(i, e)}
-                      className={cn(
-                        "w-14 h-16 text-center text-2xl font-black rounded-lg border-2 transition-all focus:outline-none",
-                        digit
-                          ? "border-purple-500 bg-purple-50 text-purple-700"
-                          : "border-gray-300 bg-white text-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
-                      )}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Resend */}
-              <div className="text-center">
-                {countdown > 0 ? (
-                  <p className="text-base text-gray-600 font-semibold">
-                    Resend OTP in <span className="font-bold text-gray-900">{countdown}s</span>
-                  </p>
-                ) : (
-                  <button
-                    onClick={handleResendOtp}
-                    className="text-base font-bold text-purple-600 hover:text-purple-700 cursor-pointer transition-colors bg-transparent border-0"
-                  >
-                    Resend OTP
-                  </button>
-                )}
-              </div>
-
-              {/* Error */}
-              {error && (
-                <div className="text-base text-red-700 font-bold bg-red-100 p-4 rounded-lg border-2 border-red-300 text-center">
-                  {error}
-                </div>
+              ) : (
+                <button
+                  onClick={handleResendOtp}
+                  className="text-xs font-black text-emerald-600 hover:text-emerald-700 cursor-pointer transition-colors bg-transparent border-none"
+                >
+                  Resend OTP
+                </button>
               )}
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => { setStep(1); setError(""); }}
-                  className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 border-2 border-gray-300 rounded-lg text-base font-bold text-gray-900 transition-all"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleVerifyDeletion}
-                  disabled={loading || otp.join("").length !== 6}
-                  className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-lg text-base font-bold transition-all flex items-center justify-center gap-2 border-0"
-                >
-                  {loading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    "Confirm Deletion"
-                  )}
-                </button>
+            {/* Error */}
+            {error && (
+              <div className="text-xs text-rose-700 font-bold bg-rose-50 p-3 rounded-xl border border-rose-200 text-center">
+                {error}
               </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => { setStep(1); setError(""); }}
+                className="flex-1 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-black text-slate-700 transition-all cursor-pointer shadow-3xs"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleVerifyDeletion}
+                disabled={loading || otp.join("").length !== 6}
+                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer border-none"
+              >
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Confirm Deletion"
+                )}
+              </button>
             </div>
           </>
         )}
 
         {/* ──── STEP 3: Success ──── */}
         {step === 3 && (
-          <>
-            {/* High-Visibility Header Bar */}
-            <div className="bg-green-600 px-8 py-6 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-white/20">
-                <CheckCircle2 className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-white">Account Deleted</h2>
-                <p className="text-xs text-green-100 font-semibold">Redirecting...</p>
-              </div>
+          <div className="text-center py-6 space-y-5">
+            <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-xs animate-bounce">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
-
-            {/* Content Area */}
-            <div className="p-8 text-center space-y-6">
-              {/* Message */}
-              <div className="space-y-3">
-                <p className="text-base text-gray-700 font-semibold leading-relaxed">
-                  Your account and all data have been permanently removed.
-                </p>
-              </div>
-
-              {/* Loading */}
-              <div className="flex items-center justify-center gap-2 text-base text-gray-600 font-bold">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Redirecting...
-              </div>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-slate-900">Account Deleted</h2>
+              <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+                Your account and profile details have been permanently cleared. Redirecting you to home...
+              </p>
             </div>
-          </>
+            <div className="flex items-center justify-center gap-2 text-xs text-slate-500 font-bold">
+              <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+              Redirecting...
+            </div>
+          </div>
         )}
       </div>
     </div>

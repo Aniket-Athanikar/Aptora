@@ -71,8 +71,8 @@ export default function Users() {
       title: "Professionals",
       description: "Upskill & Crack Competitive Exams",
       icon: Briefcase,
-      color: "bg-purple-500/5 text-purple-600 border-purple-500/20 group-hover:bg-purple-500/10",
-      glow: "hover:shadow-[0_15px_35px_-10px_rgba(168,85,247,0.2)] hover:border-purple-500/40",
+      color: "bg-teal-500/5 text-teal-650 border-teal-500/20 group-hover:bg-teal-500/10",
+      glow: "hover:shadow-[0_15px_35px_-10px_rgba(20,184,166,0.2)] hover:border-teal-500/40",
     },
     {
       title: "Institutes",
@@ -91,8 +91,8 @@ export default function Users() {
 
       {/* Subtle Ambient Background Mesh */}
       <div className="absolute inset-0 pointer-events-none opacity-40 select-none overflow-hidden">
-        <div className="absolute top-0 right-[20%] w-[500px] h-[500px] bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] left-[10%] w-[400px] h-[400px] bg-gradient-to-tr from-emerald-500/5 to-transparent rounded-full blur-[80px]" />
+        <div className="absolute top-0 right-[20%] w-[500px] h-[500px] bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] left-[10%] w-[400px] h-[400px] bg-gradient-to-tr from-teal-500/5 to-transparent rounded-full blur-[80px]" />
       </div>
 
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">

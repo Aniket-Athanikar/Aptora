@@ -77,7 +77,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10"
+            className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100"
           >
             Blog & Articles
           </motion.span>
@@ -86,7 +86,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="group text-sm font-bold text-[#6D4AFF] hover:text-[#8B5CF6] transition-colors flex items-center gap-1.5"
+            className="group text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1.5"
           >
             View All Posts
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -128,11 +128,11 @@ export default function BlogPage() {
               {/* Content */}
               <div className="p-8">
                 {/* Category */}
-                <span className="inline-block bg-[#6D4AFF]/10 text-[#6D4AFF] text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full mb-4">
+                <span className="inline-block bg-emerald-50 text-emerald-600 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full mb-4 border border-emerald-100/50">
                   {featuredPost.category}
                 </span>
 
-                <h2 className="text-2xl md:text-3xl font-black text-neutral-900 mb-3 leading-tight group-hover:text-[#6D4AFF] transition-colors duration-300">
+                <h2 className="text-2xl md:text-3xl font-black text-neutral-900 mb-3 leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                   {featuredPost.title}
                 </h2>
 
@@ -177,11 +177,11 @@ export default function BlogPage() {
 
                   {/* Content */}
                   <div className="p-5 flex flex-col justify-center flex-1">
-                    <span className="inline-block w-fit bg-[#6D4AFF]/10 text-[#6D4AFF] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">
+                    <span className="inline-block w-fit bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2 border border-emerald-100/50">
                       {post.category}
                     </span>
 
-                    <h3 className="text-sm font-bold text-neutral-900 leading-snug mb-2 group-hover:text-[#6D4AFF] transition-colors duration-300">
+                    <h3 className="text-sm font-bold text-neutral-900 leading-snug mb-2 group-hover:text-emerald-600 transition-colors duration-300">
                       {post.title}
                     </h3>
 
@@ -204,15 +204,15 @@ export default function BlogPage() {
           transition={{ duration: 0.5 }}
           className="text-center pt-12"
         >
-          <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white p-8 md:p-12 rounded-[24px] shadow-xl relative overflow-hidden group max-w-[900px] mx-auto">
+          <div className="bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 md:p-12 rounded-[24px] shadow-xl relative overflow-hidden group max-w-[900px] mx-auto">
             <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
             <h3 className="text-2xl md:text-3xl font-black mb-3">Learn Smarter. Achieve Faster.</h3>
-            <p className="text-purple-100 text-sm font-semibold mb-6 max-w-lg mx-auto">
+            <p className="text-emerald-50 text-sm font-semibold mb-6 max-w-lg mx-auto">
               Get full-length mock exams, customized schedules, and personalized notes powered by advanced AI.
             </p>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 text-sm font-black text-[#6D4AFF] bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all border-none"
             >
               Choose Your Study Plan <ArrowRight className="w-4 h-4" />
             </Link>

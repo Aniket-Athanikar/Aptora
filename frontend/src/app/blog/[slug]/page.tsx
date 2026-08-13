@@ -147,7 +147,7 @@ export default function BlogPostDetail() {
         <div>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-[#6D4AFF] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-emerald-600 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Articles
           </Link>
@@ -175,28 +175,28 @@ export default function BlogPostDetail() {
         <div className="flex flex-wrap items-center justify-between gap-4 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-5 shadow-sm">
           <div className="flex items-center gap-6 text-xs text-neutral-500 font-bold">
             <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#6D4AFF]" />
+              <Calendar className="w-4 h-4 text-emerald-600" />
               {post.date}
             </span>
             <span className="flex items-center gap-1.5">
-              <User className="w-4 h-4 text-[#6D4AFF]" />
+              <User className="w-4 h-4 text-emerald-600" />
               {post.author}
             </span>
             <span className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-[#6D4AFF]" />
+              <Clock className="w-4 h-4 text-emerald-600" />
               {post.readTime}
             </span>
           </div>
 
           {/* Social Stats Block */}
           <div className="flex items-center gap-3">
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-[#6D4AFF]/5 text-neutral-500 hover:text-[#6D4AFF] transition-all">
+            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
               <Heart className="w-4 h-4" />
             </button>
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-[#6D4AFF]/5 text-neutral-500 hover:text-[#6D4AFF] transition-all">
+            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
               <MessageSquare className="w-4 h-4" />
             </button>
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-[#6D4AFF]/5 text-neutral-500 hover:text-[#6D4AFF] transition-all">
+            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
               <Share2 className="w-4 h-4" />
             </button>
           </div>
@@ -214,7 +214,7 @@ export default function BlogPostDetail() {
               className="space-y-4"
             >
               <h2 className="text-xl md:text-2xl font-black text-neutral-900 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-[#6D4AFF]" />
+                <BookOpen className="w-5 h-5 text-emerald-600" />
                 {sec.heading}
               </h2>
               <p className="text-neutral-600 font-medium leading-relaxed text-base md:text-lg">
@@ -225,15 +225,15 @@ export default function BlogPostDetail() {
         </div>
 
         {/* Premium Upgrade Block */}
-        <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white p-8 md:p-12 rounded-[32px] shadow-xl relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 md:p-12 rounded-[32px] shadow-xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
           <h3 className="text-2xl md:text-3xl font-black mb-3">Prep Smarter with ExamForge AI</h3>
-          <p className="text-purple-100 text-sm font-semibold mb-6 max-w-lg">
+          <p className="text-emerald-50 text-sm font-semibold mb-6 max-w-lg">
             Don&apos;t just read about strategies. Build your customized notes, practice sectional sets, and analyze performance dashboards inside our premium academy.
           </p>
           <Link
             href="/pricing"
-            className="inline-flex items-center gap-2 text-sm font-black text-[#6D4AFF] bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all border-none"
           >
             Explore Pricing Plans
           </Link>

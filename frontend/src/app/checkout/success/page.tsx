@@ -122,7 +122,7 @@ export default function CheckoutSuccessPage() {
                   const randX = Math.random() * 200 - 100;
                   const randY = Math.random() * 150 + 50;
                   const delay = Math.random() * 0.8;
-                  const colors = ["bg-[#6D4AFF]", "bg-purple-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
+                  const colors = ["bg-emerald-600", "bg-teal-500", "bg-emerald-500", "bg-amber-500", "bg-teal-400"];
                   const randomColor = colors[Math.floor(Math.random() * colors.length)];
                   return (
                     <motion.div
@@ -177,7 +177,7 @@ export default function CheckoutSuccessPage() {
                     <span className="font-bold text-neutral-400 uppercase tracking-wider">Transaction ID</span>
                     <button
                       onClick={handleCopy}
-                      className="flex items-center gap-1.5 font-black text-neutral-800 hover:text-[#6D4AFF] transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 font-black text-neutral-800 hover:text-emerald-600 transition-colors cursor-pointer"
                     >
                       <span className="font-mono text-[10px]">{txnId}</span>
                       <Copy className="w-3.5 h-3.5" />
@@ -227,11 +227,11 @@ export default function CheckoutSuccessPage() {
           {/* Right Side: What's Unlocked Panel */}
           <div className="md:col-span-5 flex w-full">
             <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-lg w-full flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-xl pointer-events-none" />
 
               <div>
                 <h4 className="text-sm font-black text-neutral-950 uppercase tracking-wider mb-6 pb-3 border-b border-[#ECECEC] flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#6D4AFF]" /> Active Benefits
+                  <Zap className="w-4 h-4 text-emerald-600" /> Active Benefits
                 </h4>
 
                 <ul className="space-y-4">

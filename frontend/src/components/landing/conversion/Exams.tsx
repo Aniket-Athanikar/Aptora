@@ -25,9 +25,9 @@ const allExams = [
   {
     name: "UPSC",
     icon: Globe2,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "Syllabus RAG & PYQs Mapping",
@@ -41,9 +41,9 @@ const allExams = [
   {
     name: "SSC CGL",
     icon: Award,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "Speed & Accuracy Optimization",
@@ -57,9 +57,9 @@ const allExams = [
   {
     name: "Banking",
     icon: Building2,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "ug-general",
     toolkit: {
       focus: "Quantitative & Verbal Practice",
@@ -73,9 +73,9 @@ const allExams = [
   {
     name: "GATE",
     icon: Cpu,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "tech-business",
     toolkit: {
       focus: "Formula & Concept Chunking",
@@ -89,9 +89,9 @@ const allExams = [
   {
     name: "CAT",
     icon: Target,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "tech-business",
     toolkit: {
       focus: "Logical Reasoning & DILR",
@@ -105,9 +105,9 @@ const allExams = [
   {
     name: "Railway",
     icon: FileCheck,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "General Studies & Mock Sets",
@@ -121,9 +121,9 @@ const allExams = [
   {
     name: "State PSC",
     icon: Briefcase,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "Regional Syllabus & GK Mapping",
@@ -137,9 +137,9 @@ const allExams = [
   {
     name: "Police",
     icon: Fingerprint,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "General Knowledge & Aptitude",
@@ -153,9 +153,9 @@ const allExams = [
   {
     name: "Defence",
     icon: GraduationCap,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "civil-gov",
     toolkit: {
       focus: "CDS/NDA Syllabus Alignment",
@@ -169,9 +169,9 @@ const allExams = [
   {
     name: "CUET UG",
     icon: TrendingUp,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "ug-general",
     toolkit: {
       focus: "NCERT Chapter Highlights",
@@ -185,9 +185,9 @@ const allExams = [
   {
     name: "IELTS",
     icon: Languages,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "ug-general",
     toolkit: {
       focus: "Verbal & Comprehension Practice",
@@ -201,9 +201,9 @@ const allExams = [
   {
     name: "FRM",
     icon: ShieldCheck,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
     category: "tech-business",
     toolkit: {
       focus: "Risk Management Formula Sheets",
@@ -232,8 +232,8 @@ export default function Exams() {
     <section id="exams" className="py-20 bg-transparent relative overflow-hidden border-t border-[#ECECEC]">
 
       {/* Background decoration elements */}
-      <div className="absolute top-[200px] left-[5%] w-[350px] h-[350px] bg-[#6D4AFF]/5 rounded-full filter blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[200px] right-[5%] w-[350px] h-[350px] bg-[#A855F7]/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute top-[200px] left-[5%] w-[350px] h-[350px] bg-emerald-500/5 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[200px] right-[5%] w-[350px] h-[350px] bg-teal-500/5 rounded-full filter blur-[100px] pointer-events-none" />
 
       <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10">
 
@@ -282,7 +282,7 @@ export default function Exams() {
                 <GlassCard className="p-6 md:p-8 flex flex-col justify-between w-full rounded-3xl border-white/20 bg-[var(--surface)] shadow-md relative overflow-hidden">
 
                   {/* Glowing background decor */}
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#6D4AFF]/10 to-transparent blur-[30px] rounded-full pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-transparent blur-[30px] rounded-full pointer-events-none" />
 
                   <div>
                     {/* Header */}
@@ -302,7 +302,7 @@ export default function Exams() {
 
                     {/* Toolkit focus */}
                     <div className="mb-6">
-                      <span className="text-[9px] font-black text-[#6D4AFF] uppercase tracking-wider block mb-1">
+                      <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider block mb-1">
                         Optimization Focus
                       </span>
                       <p className="text-sm text-neutral-800 font-extrabold leading-snug">
@@ -360,11 +360,11 @@ export default function Exams() {
                       onClick={() => setSelectedExamName(exam.name)}
                       className={`p-4 rounded-2xl border text-center transition-all duration-300 flex flex-col items-center justify-center gap-2.5 cursor-pointer hover:-translate-y-1 hover:shadow-md ${
                         isSelected
-                          ? "bg-[var(--surface)] border-[#6D4AFF] shadow-[0_8px_20px_-8px_rgba(109,74,255,0.15)] ring-2 ring-[#6D4AFF]/10"
+                          ? "bg-[var(--surface)] border-emerald-600 shadow-[0_8px_20px_-8px_rgba(16,185,129,0.15)] ring-2 ring-emerald-500/10"
                           : "bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 text-neutral-700 hover:border-neutral-300"
                       }`}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isSelected ? "bg-[#6D4AFF]/10 border-[#6D4AFF]/20 text-[#6D4AFF]" : "bg-neutral-50 border-neutral-100 text-neutral-500"} border shadow-inner transition-colors duration-300`}>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isSelected ? "bg-emerald-50 border-emerald-100/50 text-emerald-600" : "bg-neutral-50 border-neutral-100 text-neutral-500"} border shadow-inner transition-colors duration-300`}>
                         <ExamIcon className="w-5 h-5" />
                       </div>
                       <span className="text-[10px] font-black text-neutral-800 tracking-wider uppercase">

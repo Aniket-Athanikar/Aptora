@@ -16,6 +16,9 @@ import {
   getStepStyles
 } from "./constants";
 
+import { playClickSound, playSuccessSound } from "./sound-effects";
+import confetti from "canvas-confetti";
+
 import { CustomSelect } from "./CustomSelect";
 import { StepTarget } from "./StepTarget";
 import { StepProfile } from "./StepProfile";
@@ -47,6 +50,7 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
     undoWizardDraft,
     redoWizardDraft,
     completeWizard,
+    addNotification,
   } = useGoalEngine();
 
   const { currentStep, draft, undoStack, redoStack } = wizardState;
@@ -72,6 +76,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
           stream: "Arts & Humanities",
           city: "Delhi",
           occupation: "Student",
+          gender: "",
+          phone: "",
           age: 21,
           syllabusPercent: 20,
           currentConfidence: 3,
@@ -257,6 +263,13 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   const handleNext = () => {
     if (validateStep()) {
       if (currentStep < 7) {
+        const stepHeader = STEP_HEADERS[currentStep - 1];
+        playClickSound();
+        addNotification(
+          `Step ${currentStep} Completed`,
+          `Successfully saved and updated your calibration for the ${stepHeader.label} section.`,
+          "success"
+        );
         nextStep();
       } else {
         triggerThinkingScreen();
@@ -268,9 +281,15 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
   const triggerThinkingScreen = () => {
     setIsThinking(true);
     let stepCount = 0;
+    
+    // Play initial sound
+    playClickSound();
+
     const interval = setInterval(() => {
       stepCount++;
       setThinkingStep(stepCount);
+      playClickSound();
+
       if (stepCount >= 7) {
         clearInterval(interval);
         setTimeout(() => {
@@ -288,6 +307,8 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
               stream: draft.profile?.stream || "Commerce",
               city: draft.profile?.city || "New Delhi",
               occupation: draft.profile?.occupation || "Aspirant",
+              gender: draft.profile?.gender || "",
+              phone: draft.profile?.phone || "",
               age: draft.profile?.age || 22,
               syllabusPercent: draft.profile?.syllabusPercent || 20,
               currentConfidence: draft.profile?.currentConfidence || 3,
@@ -317,6 +338,14 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
           setCelebrationGoal(finishedGoal);
           setIsThinking(false);
           setIsCelebrating(true);
+          
+          // Play success chime & trigger confetti celebration!
+          playSuccessSound();
+          confetti({
+            particleCount: 160,
+            spread: 85,
+            origin: { y: 0.6 }
+          });
         }, 1000);
       }
     }, 600);
@@ -816,7 +845,10 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         {/* Footer Navigation Buttons */}
         <div className="p-4 sm:p-6 border-t border-slate-200/50 flex items-center justify-between bg-slate-55/60 bg-slate-50">
           <button
-            onClick={prevStep}
+            onClick={() => {
+              playClickSound();
+              prevStep();
+            }}
             disabled={currentStep === 1}
             className="p-3 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center rounded-xl transition-all duration-300 hover:scale-[1.05] shadow-md border border-emerald-600 text-slate-950"
             title="Previous Step"

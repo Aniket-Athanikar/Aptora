@@ -25,6 +25,29 @@ router = APIRouter(
 )
 
 
+def sync_onboarding_to_main_profile(db: Session, user: UserDb, profile_data: UserOnboardingProfileDb):
+    from app.models.user_profile import UserProfileDb
+    
+    if profile_data.full_name:
+        user.name = profile_data.full_name
+        
+    main_profile = db.query(UserProfileDb).filter(UserProfileDb.user_id == user.id).first()
+    if not main_profile:
+        main_profile = UserProfileDb(user_id=user.id)
+        db.add(main_profile)
+        
+    main_profile.phone = profile_data.phone or ""
+    main_profile.gender = profile_data.gender or ""
+    main_profile.location = profile_data.city or ""
+    main_profile.education = profile_data.education or ""
+    main_profile.occupation = profile_data.occupation or ""
+    
+    if profile_data.workspace:
+        main_profile.target_exam = profile_data.workspace.target_exam or ""
+        
+    db.commit()
+
+
 def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
     workspace = WorkspaceService.get_workspace(db, user_id=user_id)
     if not workspace or isinstance(workspace, dict):
@@ -55,13 +78,18 @@ def create_profile(
 
     if existing:
         updated = OnboardingProfileService.update_profile(db, workspace.id, profile)
+        if updated:
+            sync_onboarding_to_main_profile(db, current_user, updated)
         return updated or existing
 
-    return OnboardingProfileService.create_profile(
+    created = OnboardingProfileService.create_profile(
         db,
         workspace.id,
         profile,
     )
+    if created:
+        sync_onboarding_to_main_profile(db, current_user, created)
+    return created
 
 
 # --------------------------------------------------------
@@ -88,6 +116,8 @@ def get_profile(
             stream="General",
             city="City",
             occupation="Student",
+            gender="",
+            phone="",
             syllabus_percent=0.0,
             current_confidence=50.0,
         )
@@ -127,14 +157,18 @@ def update_profile(
             stream=profile.stream or "General",
             city=profile.city or "City",
             occupation=profile.occupation or "Student",
+            gender=profile.gender or "",
+            phone=profile.phone or "",
             syllabus_percent=profile.syllabus_percent or 0.0,
             current_confidence=profile.current_confidence or 50.0,
         )
         db.add(profile_obj)
         db.commit()
         db.refresh(profile_obj)
+        sync_onboarding_to_main_profile(db, current_user, profile_obj)
         return profile_obj
 
+    sync_onboarding_to_main_profile(db, current_user, updated)
     return updated
 
 

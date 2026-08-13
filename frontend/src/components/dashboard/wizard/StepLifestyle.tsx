@@ -45,8 +45,8 @@ export function StepLifestyle({
                       });
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] ${active
-                        ? "bg-rose-600 text-white border-rose-600 shadow-md"
-                        : "bg-white text-slate-700 border-slate-200 hover:border-rose-300"
+                      ? "bg-rose-600 text-white border-rose-600 shadow-md"
+                      : "bg-white text-slate-700 border-slate-200 hover:border-rose-300"
                       }`}
                   >
                     {SlotIcon && <SlotIcon className="w-4 h-4" />}
@@ -112,8 +112,8 @@ export function StepLifestyle({
                       });
                     }}
                     className={`p-3.5 rounded-xl border text-left text-xs font-bold flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01] ${selected
-                        ? "bg-rose-50/50 border-rose-300 text-rose-700 shadow-sm"
-                        : "bg-white text-slate-700 border-slate-200 hover:border-rose-300"
+                      ? "bg-rose-50/50 border-rose-300 text-rose-700 shadow-sm"
+                      : "bg-white text-slate-700 border-slate-200 hover:border-rose-300"
                       }`}
                   >
                     <div className="flex items-center gap-2">

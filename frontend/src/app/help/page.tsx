@@ -21,7 +21,7 @@ const topics = [
     icon: Rocket,
     title: "Getting Started",
     description: "New to ExamForge? Start here",
-    color: "#6D4AFF",
+    color: "#059669",
   },
   {
     icon: UserCircle,
@@ -110,7 +110,7 @@ export default function HelpCenterPage() {
               placeholder="Search for articles, topics or questions"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-2xl pl-14 pr-6 py-4 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-2 focus:ring-[#6D4AFF]/20 transition-all shadow-lg"
+              className="w-full bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-2xl pl-14 pr-6 py-4 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-lg"
             />
           </div>
         </motion.div>
@@ -122,7 +122,7 @@ export default function HelpCenterPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
             Browse Topics
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
@@ -164,7 +164,7 @@ export default function HelpCenterPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-lg font-bold text-neutral-900 mb-1.5 group-hover:text-[#6D4AFF] transition-colors">
+                <h3 className="text-lg font-bold text-neutral-900 mb-1.5 group-hover:text-emerald-600 transition-colors">
                   {topic.title}
                 </h3>
 
@@ -174,7 +174,7 @@ export default function HelpCenterPage() {
                 </p>
 
                 {/* Arrow indicator */}
-                <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#6D4AFF] opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
+                <div className="mt-4 flex items-center gap-1 text-xs font-bold text-emerald-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
                   Learn more <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </div>

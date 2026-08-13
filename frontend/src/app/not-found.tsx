@@ -8,8 +8,8 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50/50 relative overflow-hidden px-6 py-12">
       {/* Background Glows */}
-      <div className="absolute top-[-25%] left-[-25%] w-[650px] h-[650px] bg-gradient-to-tr from-[#6D4AFF]/5 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-25%] right-[-25%] w-[650px] h-[650px] bg-gradient-to-tr from-purple-500/5 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute top-[-25%] left-[-25%] w-[650px] h-[650px] bg-gradient-to-tr from-emerald-500/5 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[-25%] right-[-25%] w-[650px] h-[650px] bg-gradient-to-tr from-teal-500/5 to-transparent blur-[140px] pointer-events-none" />
 
       {/* Floating 3D Bobbing Question Icons */}
       <motion.div
@@ -17,7 +17,7 @@ export default function NotFound() {
         transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut" }}
         className="absolute left-[12%] top-[20%] opacity-20 pointer-events-none hidden md:block"
       >
-        <FileQuestion className="w-16 h-16 text-[#6D4AFF]" />
+        <FileQuestion className="w-16 h-16 text-emerald-500" />
       </motion.div>
 
       <motion.div
@@ -25,7 +25,7 @@ export default function NotFound() {
         transition={{ repeat: Infinity, duration: 4.8, ease: "easeInOut", delay: 0.5 }}
         className="absolute right-[14%] bottom-[25%] opacity-20 pointer-events-none hidden md:block"
       >
-        <HelpCircle className="w-16 h-16 text-purple-500" />
+        <HelpCircle className="w-16 h-16 text-teal-500" />
       </motion.div>
 
       {/* Main Container Card */}
@@ -37,12 +37,12 @@ export default function NotFound() {
       >
         <div className="p-8 md:p-12 bg-white border border-slate-200/80 rounded-[40px] shadow-xl shadow-slate-200/50 text-center flex flex-col items-center gap-6">
           {/* Badge */}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-100 text-[#6D4AFF] text-[10px] font-black uppercase tracking-wider rounded-full">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-wider rounded-full">
             <Compass className="w-3.5 h-3.5" /> Syllabus Path Unknown
           </span>
 
           {/* Heading */}
-          <h1 className="text-7xl md:text-8xl font-black bg-gradient-to-r from-[#6D4AFF] via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-7xl md:text-8xl font-black bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 bg-clip-text text-transparent tracking-tight">
             404
           </h1>
 
@@ -59,7 +59,7 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center pt-2">
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto px-6 py-3.5 bg-[#6D4AFF] hover:bg-[#5A36EE] text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-md shadow-indigo-100 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-md shadow-emerald-100 transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
             >
               <ArrowLeft className="w-4 h-4" /> Go to Dashboard
             </Link>

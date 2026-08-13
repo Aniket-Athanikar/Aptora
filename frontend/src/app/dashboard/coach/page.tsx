@@ -68,7 +68,7 @@ function CoachDashboardContent() {
             {/* Premium Learning Personality Grid */}
             <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
               <div className="pb-3 border-b border-slate-100 flex items-center gap-2">
-                <Brain className="w-5 h-5 text-[#6D4AFF]" />
+                <Brain className="w-5 h-5 text-emerald-600" />
                 <div>
                   <h3 className="text-sm font-black text-slate-900">Learning Personality Calibration</h3>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Real-time study traits analyzed by the ExamForge Engine.</p>
@@ -107,7 +107,7 @@ function CoachDashboardContent() {
             <div id="suggestions-section" className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
               <div className="pb-3 border-b border-slate-100 flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-center gap-2">
-                  <Compass className="w-5 h-5 text-[#6D4AFF]" />
+                  <Compass className="w-5 h-5 text-emerald-600" />
                   <div>
                     <h3 className="text-sm font-black text-slate-900">Custom AI Recommendations</h3>
                     <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Dynamic strategy tips aligned to your weaknesses.</p>
@@ -115,7 +115,7 @@ function CoachDashboardContent() {
                 </div>
                 <Link
                   href="/dashboard/coach/chat"
-                  className="text-xs bg-[#6D4AFF] hover:bg-[#5A36EE] text-white font-black px-4.5 py-2.5 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-indigo-100 cursor-pointer"
+                  className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-black px-4.5 py-2.5 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-emerald-100/50 cursor-pointer border-none"
                 >
                   <MessageSquare className="w-4 h-4" /> Chat with Mentor
                 </Link>
@@ -129,7 +129,7 @@ function CoachDashboardContent() {
                   { rank: 4, title: "Sustained Stamina", text: "Increase Pomodoro focus timers from 25 minutes to 40 minutes to build exam stamina." }
                 ].map((sug) => (
                   <div key={sug.rank} className="flex gap-3.5 p-4 rounded-2xl border border-slate-200/50 bg-slate-50/40 relative">
-                    <span className="w-6.5 h-6.5 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-xs font-black text-[#6D4AFF] shrink-0 shadow-3xs">
+                    <span className="w-6.5 h-6.5 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xs font-black text-emerald-600 shrink-0 shadow-3xs">
                       {sug.rank}
                     </span>
                     <div className="space-y-1 mt-0.5">
@@ -152,7 +152,7 @@ function CoachDashboardContent() {
             {/* Custom Mentor memory registry */}
             <div className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm space-y-5">
               <div className="pb-3 border-b border-slate-100 flex items-center gap-2">
-                <Server className="w-5 h-5 text-[#6D4AFF]" />
+                <Server className="w-5 h-5 text-emerald-600" />
                 <div>
                   <h3 className="text-sm font-black text-slate-900">Mentor Cognitive Logs</h3>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Active recall logs registered about your behavior.</p>

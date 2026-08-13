@@ -118,9 +118,9 @@ const categories = [
         id: "learning",
         label: "AI Study & Generation",
         description: "Generate structured study notes and consult your grounded personal tutor.",
-        color: "from-[#6D4AFF] to-purple-600",
-        bgColor: "bg-purple-50/50",
-        accentColor: "#6D4AFF",
+        color: "from-emerald-600 to-teal-650",
+        bgColor: "bg-emerald-50/50",
+        accentColor: "#059669",
         modules: [
             {
                 id: "material",
@@ -280,7 +280,7 @@ export default function FeaturesPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4"
+                            className="inline-block bg-emerald-50 text-emerald-600 text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4"
                         >
                             Feature Guide & Specifications
                         </motion.span>
@@ -300,7 +300,7 @@ export default function FeaturesPage() {
                                 onClick={() => setActiveCategory(cat.id)}
                                 className={`px-5 py-3 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm ${
                                     activeCategory === cat.id
-                                        ? "bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white shadow-purple-500/20"
+                                        ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-emerald-500/20"
                                         : "bg-white border border-[#ECECEC] text-neutral-600 hover:bg-neutral-50"
                                 }`}
                             >
@@ -339,23 +339,23 @@ export default function FeaturesPage() {
                                                 return (
                                                     <Link href={`/features/${mod.slug}`} key={mod.id} className="block group">
                                                         <GlassCard
-                                                            className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-[#ECECEC] hover:border-[#6D4AFF]/50 transition-all duration-300 bg-white/70 group-hover:-translate-y-1 relative overflow-hidden"
+                                                            className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-[#ECECEC] hover:border-emerald-500/50 transition-all duration-300 bg-white/70 group-hover:-translate-y-1 relative overflow-hidden"
                                                         >
                                                             <div>
                                                                 <div className="flex items-center justify-between mb-4">
                                                                     <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">
                                                                         {mod.num}
                                                                     </span>
-                                                                    <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border border-[#6D4AFF]/10">
+                                                                    <span className="inline-block bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border border-emerald-100">
                                                                         {mod.badge}
                                                                     </span>
                                                                 </div>
 
                                                                 <div className="flex items-center gap-3 mb-3">
-                                                                    <div className="w-10 h-10 rounded-xl bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center group-hover:bg-[#6D4AFF]/10 transition-colors duration-300 shrink-0">
-                                                                        <Icon className="w-5 h-5 text-[#6D4AFF]" />
+                                                                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:bg-emerald-50/80 transition-colors duration-300 shrink-0">
+                                                                        <Icon className="w-5 h-5 text-emerald-600" />
                                                                     </div>
-                                                                    <h4 className="text-sm font-black text-neutral-900 group-hover:text-[#6D4AFF] transition-colors">
+                                                                    <h4 className="text-sm font-black text-neutral-900 group-hover:text-emerald-600 transition-colors">
                                                                         {mod.title}
                                                                     </h4>
                                                                 </div>
@@ -378,7 +378,7 @@ export default function FeaturesPage() {
                                                                     ))}
                                                                 </ul>
 
-                                                                <div className="flex items-center text-[10px] font-black text-[#6D4AFF] gap-1 group-hover:underline">
+                                                                <div className="flex items-center text-[10px] font-black text-emerald-600 gap-1 group-hover:underline">
                                                                     View Module Details
                                                                     <ChevronRight className="w-3 h-3" />
                                                                 </div>
@@ -402,7 +402,7 @@ export default function FeaturesPage() {
                         transition={{ duration: 0.5 }}
                         className="flex flex-col items-center justify-center text-center mt-16 bg-gradient-to-r from-neutral-50 to-neutral-100/50 border border-[#ECECEC] p-10 rounded-[32px] max-w-4xl mx-auto"
                     >
-                        <BookOpenCheck className="w-10 h-10 text-[#6D4AFF] mb-4" />
+                        <BookOpenCheck className="w-10 h-10 text-emerald-600 mb-4" />
                         <h3 className="text-lg font-black text-neutral-900 tracking-tight">
                             Ready to Transform Your Study Material?
                         </h3>
@@ -415,7 +415,7 @@ export default function FeaturesPage() {
                                     Get Started Now
                                 </GlowButton>
                             </Link>
-                            <Link href="/how-it-works" className="group text-xs font-black text-neutral-600 hover:text-[#6D4AFF] flex items-center gap-1 transition-colors">
+                            <Link href="/how-it-works" className="group text-xs font-black text-neutral-600 hover:text-emerald-600 flex items-center gap-1 transition-colors">
                                 See How It Works
                                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                             </Link>

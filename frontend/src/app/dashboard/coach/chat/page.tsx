@@ -31,10 +31,10 @@ function CoachChatContent() {
             href="/dashboard/coach"
             className="p-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 text-xs font-black shadow-3xs cursor-pointer"
           >
-            <ChevronLeft className="w-4 h-4 text-[#6D4AFF]" /> Back to Coach Dashboard
+            <ChevronLeft className="w-4 h-4 text-emerald-600" /> Back to Coach Dashboard
           </Link>
 
-          <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#6D4AFF] uppercase tracking-wider bg-[#6D4AFF]/10 border border-[#6D4AFF]/20 px-3 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-600 uppercase tracking-wider bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full">
             <Sparkles className="w-3 h-3" /> Live Context Synced
           </span>
         </div>

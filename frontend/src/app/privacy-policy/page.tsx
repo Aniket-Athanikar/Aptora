@@ -118,7 +118,7 @@ export default function PrivacyPolicyPage() {
           transition={{ duration: 0.5 }}
           className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg"
         >
-          <div className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-6">
+          <div className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-6">
             Last updated: 25 May 2024
           </div>
           <p className="text-neutral-600 font-medium leading-relaxed">
@@ -146,11 +146,11 @@ export default function PrivacyPolicyPage() {
                 className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="flex items-start gap-5 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-6 h-6 text-[#6D4AFF]" />
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-6 h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <span className="text-xs font-black text-[#6D4AFF] tracking-widest">
+                    <span className="text-xs font-black text-emerald-600 tracking-widest">
                       SECTION {section.number}
                     </span>
                     <h2 className="text-xl font-black text-neutral-900 mt-1">{section.title}</h2>

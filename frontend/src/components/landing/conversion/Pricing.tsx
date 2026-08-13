@@ -119,12 +119,12 @@ export default function Pricing() {
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-gradient-to-br from-[#6D4AFF]/5 to-transparent rounded-full blur-[100px]"
+          className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-[100px]"
         />
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-gradient-to-tl from-[#A855F7]/5 to-transparent rounded-full blur-[120px]"
+          className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-gradient-to-tl from-teal-500/5 to-transparent rounded-full blur-[120px]"
         />
       </div>
 
@@ -152,13 +152,13 @@ export default function Pricing() {
 
           <button
             onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-[#6D4AFF]/40 focus:outline-none"
+            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-emerald-500/40 focus:outline-none"
           >
             {/* The Toggle Knob */}
             <motion.div
               layout
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="w-5 h-5 rounded-full bg-gradient-to-b from-[#8B5CF6] to-[#6D4AFF] shadow-md shadow-[#6D4AFF]/30"
+              className="w-5 h-5 rounded-full bg-gradient-to-b from-emerald-500 to-teal-600 shadow-md shadow-emerald-500/30"
               style={{
                 marginLeft: billingCycle === "yearly" ? "26px" : "0px",
               }}
@@ -182,7 +182,7 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative max-w-[1000px] mx-auto mt-6">
 
           {/* Premium Plan Glow blur accent in the center background */}
-          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-[#6D4AFF]/10 to-[#A855F7]/5 blur-[80px] pointer-events-none rounded-full" />
+          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-teal-500/5 blur-[80px] pointer-events-none rounded-full" />
 
           {plans.map((plan, idx) => (
             <motion.div
@@ -197,7 +197,7 @@ export default function Pricing() {
 
                 <GlassCard
                   className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-[var(--surface)]/70 backdrop-blur-2xl ${plan.popular
-                    ? "border-[#6D4AFF]/40 ring-4 ring-[#6D4AFF]/10 shadow-[0_25px_50px_-12px_rgba(109,74,255,0.2)] bg-gradient-to-b from-[var(--surface)] to-[#6D4AFF]/[0.02] transform lg:-translate-y-3"
+                    ? "border-emerald-500/40 ring-4 ring-emerald-500/10 shadow-[0_25px_50px_-12px_rgba(16,185,129,0.2)] bg-gradient-to-b from-[var(--surface)] to-emerald-500/[0.02] transform lg:-translate-y-3"
                     : "border-white/20 hover:shadow-lg hover:border-neutral-300 shadow-sm"
                     }`}
                 >
@@ -208,14 +208,14 @@ export default function Pricing() {
                       style={{ transform: "translateZ(30px)" }}
                       className="absolute -top-3.5 left-0 right-0 flex justify-center pointer-events-none"
                     >
-                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] rounded-full shadow-md shadow-[#6D4AFF]/30 ring-2 ring-white">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-emerald-600 to-teal-500 shadow-md shadow-emerald-600/30 ring-2 ring-white">
                         <Sparkles className="w-2.5 h-2.5" /> Popular
                       </span>
                     </div>
                   )}
 
                   <div style={{ transform: "translateZ(15px)" }}>
-                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-[#6D4AFF]" : "text-neutral-900"}`}>
+                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-emerald-600" : "text-neutral-900"}`}>
                       {plan.name}
                     </h3>
                     <p className="text-neutral-500 text-[11px] font-semibold mt-1">{plan.description}</p>
@@ -260,7 +260,7 @@ export default function Pricing() {
                         const IconComponent = feature.icon;
                         return (
                           <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
-                            <IconComponent className={`w-3.5 h-3.5 ${plan.popular ? "text-[#6D4AFF]" : "text-neutral-400"} shrink-0 mt-0.5`} />
+                            <IconComponent className={`w-3.5 h-3.5 ${plan.popular ? "text-emerald-600" : "text-neutral-400"} shrink-0 mt-0.5`} />
                             <span>{feature.text}</span>
                           </li>
                         );
@@ -281,7 +281,7 @@ export default function Pricing() {
                         <Link href={targetHref}>
                           <GlowButton
                             variant={plan.popular ? "gradient" : "outline"}
-                            className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-[#6D4AFF]/20 hover:shadow-[#6D4AFF]/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
+                            className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02] border-none" : "hover:bg-neutral-50"}`}
                             magnetic={false}
                           >
                             {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}

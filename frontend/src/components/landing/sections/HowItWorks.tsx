@@ -68,7 +68,7 @@ export default function HowItWorks() {
       title: "Select Exam Materials",
       description: "Select your exam books, notes, PYQs in PDF or image format.",
       icon: UploadCloud,
-      color: "text-[#6D4AFF] bg-[#6D4AFF]/5 border-[#6D4AFF]/10 group-hover:bg-[#6D4AFF]/10",
+      color: "text-emerald-600 bg-emerald-50 border-emerald-100 group-hover:bg-emerald-100/50",
     },
     {
       step: "Step 2",
@@ -82,14 +82,14 @@ export default function HowItWorks() {
       title: "AI Creates Content",
       description: "AI generates notes, MCQs, flashcards, and important questions.",
       icon: BrainCircuit,
-      color: "text-[#A855F7] bg-[#A855F7]/5 border-[#A855F7]/10 group-hover:bg-[#A855F7]/10",
+      color: "text-teal-600 bg-teal-50 border-teal-100 group-hover:bg-teal-100/50",
     },
     {
       step: "Step 4",
       title: "You Get Exam Ready",
       description: "Daily practice, mock tests, analytics, and your personal AI tutor.",
       icon: Trophy,
-      color: "text-[#4F46E5] bg-[#4F46E5]/5 border-[#4F46E5]/10 group-hover:bg-[#4F46E5]/10",
+      color: "text-emerald-750 bg-emerald-50 border-emerald-200/50 group-hover:bg-emerald-100",
     },
   ];
 
@@ -100,12 +100,12 @@ export default function HowItWorks() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-40 -left-40 w-96 h-96 rounded-full border border-dashed border-[#6D4AFF]/20"
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full border border-dashed border-emerald-500/20"
         />
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full border border-dashed border-[#A855F7]/10"
+          className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full border border-dashed border-teal-500/10"
         />
       </div>
 
@@ -130,11 +130,11 @@ export default function HowItWorks() {
               className="relative flex"
             >
               <TiltCard className="flex">
-                <GlassCard className="flex flex-col items-center text-center p-8 bg-[var(--surface)]/60 backdrop-blur-md border-[#ECECEC]/80 rounded-[32px] relative w-full justify-between gap-6 shadow-sm hover:shadow-2xl hover:border-[#6D4AFF]/40 transition-shadow duration-500 bg-gradient-to-b from-[var(--surface)] to-[var(--background)]/50">
+                <GlassCard className="flex flex-col items-center text-center p-8 bg-[var(--surface)]/60 backdrop-blur-md border-[#ECECEC]/80 rounded-[32px] relative w-full justify-between gap-6 shadow-sm hover:shadow-2xl hover:border-emerald-500/40 transition-shadow duration-500 bg-gradient-to-b from-[var(--surface)] to-[var(--background)]/50">
 
                   {/* Connecting arrow for larger screens */}
                   {idx < 3 && (
-                    <div className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 z-20 text-[#6D4AFF]/40 group-hover:text-[#6D4AFF] transition-colors duration-300">
+                    <div className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 z-20 text-emerald-500/40 group-hover:text-emerald-600 transition-colors duration-300">
                       <motion.div
                         animate={{ x: [0, 6, 0] }}
                         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
@@ -145,7 +145,7 @@ export default function HowItWorks() {
                   )}
 
                   {/* Step Badge */}
-                  <span style={{ transform: "translateZ(30px)" }} className="inline-flex px-3 py-1 text-[10px] font-bold tracking-wider text-neutral-500 uppercase bg-neutral-100/80 border border-[#ECECEC] rounded-full shadow-inner transition-colors group-hover:bg-[var(--surface)] group-hover:text-[#6D4AFF]">
+                  <span style={{ transform: "translateZ(30px)" }} className="inline-flex px-3 py-1 text-[10px] font-bold tracking-wider text-neutral-500 uppercase bg-neutral-100/80 border border-[#ECECEC] rounded-full shadow-inner transition-colors group-hover:bg-[var(--surface)] group-hover:text-emerald-600">
                     {item.step}
                   </span>
 
@@ -159,7 +159,7 @@ export default function HowItWorks() {
 
                   {/* Text Container with Layered transform depth */}
                   <div style={{ transform: "translateZ(40px)" }} className="flex flex-col gap-2.5">
-                    <h3 className="font-black text-neutral-900 text-lg tracking-tight leading-tight group-hover:text-[#6D4AFF] transition-colors duration-300">
+                    <h3 className="font-black text-neutral-900 text-lg tracking-tight leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                       {item.title}
                     </h3>
                     <p className="text-neutral-500 text-xs font-semibold leading-relaxed px-1">

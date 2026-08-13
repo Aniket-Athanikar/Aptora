@@ -43,9 +43,9 @@ const examsList: Exam[] = [
     name: "UPSC",
     subtitle: "Civil Services, CAPF, CDS",
     icon: Globe2,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "Syllabus RAG & PYQs Mapping",
@@ -60,9 +60,9 @@ const examsList: Exam[] = [
     name: "SSC CGL",
     subtitle: "CGL, CHSL, Selection Posts",
     icon: Award,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "Speed & Accuracy Optimization",
@@ -77,9 +77,9 @@ const examsList: Exam[] = [
     name: "Banking",
     subtitle: "SBI PO, IBPS Clerk, RBI Grade B",
     icon: Building2,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "ug-general",
     toolkit: {
       focus: "Quantitative & Verbal Practice",
@@ -94,9 +94,9 @@ const examsList: Exam[] = [
     name: "GATE",
     subtitle: "Engineering Entrance & PSUs",
     icon: Cpu,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "tech-business",
     toolkit: {
       focus: "Formula & Concept Chunking",
@@ -111,9 +111,9 @@ const examsList: Exam[] = [
     name: "CAT",
     subtitle: "IIMs & Top Business Schools",
     icon: Target,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "tech-business",
     toolkit: {
       focus: "Logical Reasoning & DILR",
@@ -128,9 +128,9 @@ const examsList: Exam[] = [
     name: "Railway",
     subtitle: "NTPC, Group D, ALP",
     icon: FileCheck,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "General Studies & Mock Sets",
@@ -145,9 +145,9 @@ const examsList: Exam[] = [
     name: "State PSC",
     subtitle: "State Civil Services, MPSC, UPPSC",
     icon: Briefcase,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "Regional Syllabus & GK Mapping",
@@ -162,9 +162,9 @@ const examsList: Exam[] = [
     name: "Police",
     subtitle: "SI, Constable Exams",
     icon: Fingerprint,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "General Knowledge & Aptitude",
@@ -179,9 +179,9 @@ const examsList: Exam[] = [
     name: "Defence",
     subtitle: "NDA, CDS, AFCAT",
     icon: GraduationCap,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "civil-gov",
     toolkit: {
       focus: "CDS/NDA Syllabus Alignment",
@@ -196,9 +196,9 @@ const examsList: Exam[] = [
     name: "CUET UG",
     subtitle: "Central Universities Entrance Test",
     icon: TrendingUp,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "ug-general",
     toolkit: {
       focus: "NCERT Chapter Highlights",
@@ -213,9 +213,9 @@ const examsList: Exam[] = [
     name: "IELTS",
     subtitle: "English Proficiency Test",
     icon: Languages,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "ug-general",
     toolkit: {
       focus: "Verbal & Comprehension Practice",
@@ -230,9 +230,9 @@ const examsList: Exam[] = [
     name: "FRM",
     subtitle: "Financial Risk Manager",
     icon: ShieldCheck,
-    color: "text-[#6D4AFF]",
-    bgColor: "bg-[#6D4AFF]/5",
-    borderColor: "border-[#6D4AFF]/10",
+    color: "text-[#059669]",
+    bgColor: "bg-[#059669]/5",
+    borderColor: "border-[#059669]/10",
     category: "tech-business",
     toolkit: {
       focus: "Risk Management Formula Sheets",
@@ -309,7 +309,7 @@ export default function ExamsPage() {
                   className="block group"
                 >
                   <GlassCard
-                    className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-white/20 hover:border-[#6D4AFF]/50 transition-all duration-300 bg-[var(--surface)]/70 group-hover:-translate-y-1 relative overflow-hidden"
+                    className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-white/20 hover:border-emerald-500/50 transition-all duration-300 bg-[var(--surface)]/70 group-hover:-translate-y-1 relative overflow-hidden"
                   >
                     <div>
                       {/* Header */}
@@ -319,7 +319,7 @@ export default function ExamsPage() {
                             <ExamIcon className="w-5 h-5" />
                           </div>
                           <div>
-                            <h4 className="text-base font-black text-neutral-900 group-hover:text-[#6D4AFF] transition-colors">
+                            <h4 className="text-base font-black text-neutral-900 group-hover:text-emerald-600 transition-colors">
                               {exam.name}
                             </h4>
                             <p className="text-[10px] font-semibold text-neutral-400">
@@ -327,7 +327,7 @@ export default function ExamsPage() {
                             </p>
                           </div>
                         </div>
-                        <div className="w-7 h-7 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-400 group-hover:bg-[#6D4AFF]/10 group-hover:text-[#6D4AFF] transition-colors shrink-0">
+                        <div className="w-7 h-7 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors shrink-0">
                           <ArrowRight className="w-3.5 h-3.5" />
                         </div>
                       </div>

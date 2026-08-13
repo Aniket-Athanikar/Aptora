@@ -55,7 +55,7 @@ export default function FeedbackPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
             Share Your Thoughts
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
@@ -141,7 +141,7 @@ export default function FeedbackPage() {
                     value={liked}
                     onChange={(e) => setLiked(e.target.value)}
                     placeholder="Tell us what you enjoyed most..."
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                   />
                 </motion.div>
 
@@ -159,7 +159,7 @@ export default function FeedbackPage() {
                     onChange={(e) => setImprove(e.target.value)}
                     placeholder="Share your suggestions for improvement..."
                     rows={4}
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all resize-none"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
                   />
                 </motion.div>
 
@@ -177,7 +177,7 @@ export default function FeedbackPage() {
                     value={questions}
                     onChange={(e) => setQuestions(e.target.value)}
                     placeholder="Any questions for the team?"
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                   />
                 </motion.div>
 
@@ -185,7 +185,7 @@ export default function FeedbackPage() {
                 <motion.div variants={itemVariants}>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border-none"
                   >
                     <Send className="w-5 h-5" />
                     Submit Feedback
@@ -204,7 +204,7 @@ export default function FeedbackPage() {
           >
             <a
               href="/help"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-[#6D4AFF] transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-emerald-600 transition-colors"
             >
               <Mail className="w-4 h-4" />
               Get in Touch with our support team

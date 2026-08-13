@@ -90,7 +90,7 @@ export default function ReportBugPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-[#6D4AFF]/10 mb-4">
+          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
             Bug Report
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
@@ -146,7 +146,7 @@ export default function ReportBugPage() {
                     className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
                       errors.name
                         ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-[#6D4AFF] focus:ring-[#6D4AFF]"
+                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
                     }`}
                   />
                   {errors.name && (
@@ -173,7 +173,7 @@ export default function ReportBugPage() {
                     className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
                       errors.email
                         ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-[#6D4AFF] focus:ring-[#6D4AFF]"
+                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
                     }`}
                   />
                   {errors.email && (
@@ -200,7 +200,7 @@ export default function ReportBugPage() {
                     className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
                       errors.title
                         ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-[#6D4AFF] focus:ring-[#6D4AFF]"
+                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
                     }`}
                   />
                   {errors.title && (
@@ -225,7 +225,7 @@ export default function ReportBugPage() {
                     {...register("steps")}
                     placeholder="1. Go to...&#10;2. Click on...&#10;3. See the error..."
                     rows={5}
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#6D4AFF] focus:ring-1 focus:ring-[#6D4AFF] transition-all resize-none"
+                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
                   />
                 </motion.div>
 
@@ -241,10 +241,10 @@ export default function ReportBugPage() {
                     onDragLeave={handleDragLeave}
                     className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${
                       isDragging
-                        ? "border-[#6D4AFF] bg-[#6D4AFF]/5"
+                        ? "border-emerald-500 bg-emerald-500/5"
                         : fileName
                         ? "border-[#22C55E]/40 bg-[#22C55E]/5"
-                        : "border-neutral-200 bg-white/30 hover:border-[#6D4AFF]/40 hover:bg-[#6D4AFF]/5"
+                        : "border-neutral-200 bg-white/30 hover:border-emerald-500/40 hover:bg-emerald-500/5"
                     }`}
                   >
                     <input
@@ -273,13 +273,13 @@ export default function ReportBugPage() {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center gap-3">
-                        <div className="w-14 h-14 rounded-2xl bg-[#6D4AFF]/5 border border-[#6D4AFF]/10 flex items-center justify-center">
-                          <Upload className="w-7 h-7 text-[#6D4AFF]" />
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                          <Upload className="w-7 h-7 text-emerald-600" />
                         </div>
                         <div>
                           <p className="text-sm font-bold text-neutral-700">
                             Drag & drop or{" "}
-                            <span className="text-[#6D4AFF]">click to upload</span>
+                            <span className="text-emerald-600">click to upload</span>
                           </p>
                           <p className="text-xs text-neutral-400 font-medium mt-1">
                             PNG, JPG, GIF up to 10MB
@@ -294,7 +294,7 @@ export default function ReportBugPage() {
                 <motion.div variants={itemVariants}>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6] text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 border-none"
                   >
                     <Bug className="w-5 h-5" />
                     Submit Report

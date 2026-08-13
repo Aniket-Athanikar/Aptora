@@ -114,7 +114,7 @@ export default function SuccessStoriesPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-14"
         >
-          <span className="inline-flex items-center gap-2 bg-[#6D4AFF]/5 text-[#6D4AFF] text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full border border-[#6D4AFF]/10">
+          <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full border border-emerald-100">
             <Award className="w-4 h-4" />
             Student Testimonials
           </span>
@@ -129,13 +129,13 @@ export default function SuccessStoriesPage() {
         >
           <div className="relative bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[32px] p-10 md:p-14 shadow-xl overflow-hidden">
             {/* Decorative gradient blobs */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#6D4AFF]/5 to-transparent rounded-bl-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-[#8B5CF6]/5 to-transparent rounded-tr-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-bl-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-teal-500/5 to-transparent rounded-tr-full pointer-events-none" />
 
             <div className="relative z-10">
               {/* Big Quote Mark */}
               <div className="mb-6">
-                <Quote className="w-14 h-14 text-[#6D4AFF]/20 fill-[#6D4AFF]/10" />
+                <Quote className="w-14 h-14 text-emerald-500/20 fill-emerald-500/10" />
               </div>
 
               {/* Animated Testimonial Content */}
@@ -158,7 +158,7 @@ export default function SuccessStoriesPage() {
                     {/* Author */}
                     <div className="flex items-center gap-4">
                       {/* Avatar */}
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-purple-500/20">
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                         <span className="text-white font-black text-sm">
                           {current.initials}
                         </span>
@@ -207,7 +207,7 @@ export default function SuccessStoriesPage() {
                   onClick={() => goTo(idx)}
                   className={`rounded-full transition-all duration-300 ${
                     idx === activeIndex
-                      ? "w-8 h-3 bg-gradient-to-r from-[#6D4AFF] to-[#8B5CF6]"
+                      ? "w-8 h-3 bg-gradient-to-r from-emerald-600 to-teal-500"
                       : "w-3 h-3 bg-neutral-200 hover:bg-neutral-300"
                   }`}
                 />
@@ -237,7 +237,7 @@ export default function SuccessStoriesPage() {
               onClick={() => goTo(idx)}
               className={`group text-left p-5 rounded-[20px] border transition-all duration-300 ${
                 idx === activeIndex
-                  ? "bg-gradient-to-br from-[#6D4AFF]/5 to-[#8B5CF6]/5 border-[#6D4AFF]/30 shadow-lg shadow-purple-500/5"
+                  ? "bg-gradient-to-br from-emerald-500/5 to-teal-500/5 border-emerald-500/30 shadow-lg shadow-emerald-500/5"
                   : "bg-white/50 backdrop-blur-xl border-[#ECECEC] hover:border-neutral-300 hover:shadow-md"
               }`}
             >
@@ -245,7 +245,7 @@ export default function SuccessStoriesPage() {
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black ${
                     idx === activeIndex
-                      ? "bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white"
+                      ? "bg-gradient-to-br from-emerald-600 to-teal-500 text-white"
                       : "bg-neutral-100 text-neutral-500"
                   }`}
                 >

@@ -332,7 +332,7 @@ export default function ExamDetail() {
           </p>
           <Link
             href="/exams"
-            className="inline-flex items-center gap-2 text-sm font-black text-white bg-[#6D4AFF] px-6 py-3 rounded-xl hover:bg-[#8B5CF6] transition-all"
+            className="inline-flex items-center gap-2 text-sm font-black text-white bg-emerald-600 hover:bg-emerald-700 transition-all border-none"
           >
             <ArrowLeft className="w-4 h-4" /> Return to Exams List
           </Link>
@@ -356,7 +356,7 @@ export default function ExamDetail() {
         <div>
           <Link
             href="/exams"
-            className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-[#6D4AFF] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-400 hover:text-emerald-600 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to All Exams
           </Link>
@@ -373,25 +373,25 @@ export default function ExamDetail() {
           <div className="space-y-1">
             <span className="text-xs font-bold text-neutral-400 block uppercase">Available Content</span>
             <span className="text-lg font-black text-neutral-800 flex items-center gap-1.5">
-              <FileText className="w-5 h-5 text-[#6D4AFF]" /> {exam.papers}
+              <FileText className="w-5 h-5 text-emerald-600" /> {exam.papers}
             </span>
           </div>
           <div className="space-y-1">
             <span className="text-xs font-bold text-neutral-400 block uppercase">Curriculum Size</span>
             <span className="text-lg font-black text-neutral-800 flex items-center gap-1.5">
-              <BookOpen className="w-5 h-5 text-[#6D4AFF]" /> {exam.subjects}
+              <BookOpen className="w-5 h-5 text-emerald-600" /> {exam.subjects}
             </span>
           </div>
           <div className="space-y-1">
             <span className="text-xs font-bold text-neutral-400 block uppercase">Aspirant Base</span>
             <span className="text-lg font-black text-neutral-800 flex items-center gap-1.5">
-              <Users className="w-5 h-5 text-[#6D4AFF]" /> {exam.learners}
+              <Users className="w-5 h-5 text-emerald-600" /> {exam.learners}
             </span>
           </div>
           <div className="space-y-1">
             <span className="text-xs font-bold text-neutral-400 block uppercase">Test Duration</span>
             <span className="text-lg font-black text-neutral-800 flex items-center gap-1.5">
-              <Clock className="w-5 h-5 text-[#6D4AFF]" /> {exam.duration}
+              <Clock className="w-5 h-5 text-emerald-600" /> {exam.duration}
             </span>
           </div>
         </motion.div>
@@ -422,15 +422,15 @@ export default function ExamDetail() {
                   className="bg-[var(--surface)]/70 backdrop-blur-xl border border-white/20 rounded-[24px] p-6 md:p-8 shadow-sm"
                 >
                   <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2 mb-4">
-                    <Target className="w-5 h-5 text-[#6D4AFF]" /> {syl.name}
+                    <Target className="w-5 h-5 text-emerald-600" /> {syl.name}
                   </h3>
                   <div className="flex flex-wrap gap-2.5">
                     {syl.topics.map((topic, tIdx) => (
                       <span
                         key={tIdx}
-                        className="flex items-center gap-1.5 text-xs font-bold bg-[#6D4AFF]/5 text-[#6D4AFF] px-3.5 py-2 rounded-full border border-[#6D4AFF]/10"
+                        className="flex items-center gap-1.5 text-xs font-bold bg-emerald-50 text-emerald-600 px-3.5 py-2 rounded-full border border-emerald-100"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#6D4AFF]" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         {topic}
                       </span>
                     ))}
@@ -451,12 +451,12 @@ export default function ExamDetail() {
             {/* Highlights Card */}
             <div className="bg-[var(--surface)]/70 backdrop-blur-xl border border-white/20 rounded-[24px] p-8 shadow-md space-y-6">
               <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2">
-                <Award className="w-5 h-5 text-[#6D4AFF]" /> Exam Highlights
+                <Award className="w-5 h-5 text-emerald-600" /> Exam Highlights
               </h3>
               <ul className="space-y-3.5">
                 {exam.highlights.map((hl, hlIdx) => (
                   <li key={hlIdx} className="flex gap-2.5 text-sm font-semibold text-neutral-500 leading-relaxed">
-                    <Bookmark className="w-4 h-4 text-[#6D4AFF] mt-1 shrink-0" />
+                    <Bookmark className="w-4 h-4 text-emerald-600 mt-1 shrink-0" />
                     <span>{hl}</span>
                   </li>
                 ))}
@@ -464,19 +464,19 @@ export default function ExamDetail() {
             </div>
 
             {/* Preparation CTA Box */}
-            <div className="bg-gradient-to-br from-[#6D4AFF] to-[#8B5CF6] text-white p-8 rounded-[24px] shadow-xl relative overflow-hidden group">
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-655 text-white p-8 rounded-[24px] shadow-xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
               <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500" />
               <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full border border-white/10">
                 Aspirant Pack
               </span>
               <h3 className="text-2xl font-black mt-4 mb-2">Ready to Start Preparing?</h3>
-              <p className="text-purple-100 text-sm font-semibold mb-6">
+              <p className="text-emerald-50 text-sm font-semibold mb-6">
                 Get unlimited access to AI notes, dynamic flashcards, and personalized daily mock tests.
               </p>
               <Link
                 href="/login"
-                className="w-full inline-flex items-center justify-center gap-2 text-sm font-black text-[#6D4AFF] bg-white py-4 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+                className="w-full inline-flex items-center justify-center gap-2 text-sm font-black text-emerald-600 bg-white py-4 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all border-none"
               >
                 Launch Mock Exam <ArrowRight className="w-4 h-4" />
               </Link>

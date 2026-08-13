@@ -21,11 +21,11 @@ export default function Stats() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative bg-gradient-to-br from-[#6D4AFF] via-[#8B5CF6] to-[#4F46E5] rounded-[32px] p-8 md:p-12 text-white overflow-hidden shadow-2xl border border-white/10"
+          className="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-600 rounded-[32px] p-8 md:p-12 text-white overflow-hidden shadow-2xl border border-white/10"
         >
           {/* Animated Ambient Glowing Orbs */}
           <div className="absolute -top-[40%] -left-[20%] w-[60%] h-[80%] bg-white/10 rounded-full blur-[90px] animate-pulse pointer-events-none" />
-          <div className="absolute -bottom-[40%] -right-[20%] w-[60%] h-[80%] bg-[#A855F7]/25 rounded-full blur-[90px] animate-pulse pointer-events-none" />
+          <div className="absolute -bottom-[40%] -right-[20%] w-[60%] h-[80%] bg-teal-500/25 rounded-full blur-[90px] animate-pulse pointer-events-none" />
 
           {/* Interactive CSS Perspective Grid */}
           <div 
@@ -64,7 +64,7 @@ export default function Stats() {
                     <h3 className="text-2xl lg:text-3xl font-black text-white tracking-tight">
                       <AnimatedCounter end={item.value} suffix={item.suffix} />
                     </h3>
-                    <p className="text-[10px] sm:text-xs font-bold text-purple-200 uppercase tracking-widest">
+                    <p className="text-[10px] sm:text-xs font-bold text-emerald-100 uppercase tracking-widest">
                       {item.label}
                     </p>
                   </div>

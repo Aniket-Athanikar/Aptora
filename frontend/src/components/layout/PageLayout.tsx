@@ -30,7 +30,7 @@ export default function PageLayout({ children, title, description, breadcrumb }:
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-[10%] left-[5%] w-[600px] h-[600px] bg-indigo-400/5 rounded-full filter blur-[130px]" 
+          className="absolute top-[10%] left-[5%] w-[600px] h-[600px] bg-emerald-400/5 rounded-full filter blur-[130px]" 
         />
         <motion.div 
           animate={{
@@ -42,7 +42,7 @@ export default function PageLayout({ children, title, description, breadcrumb }:
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-[15%] right-[5%] w-[550px] h-[550px] bg-fuchsia-400/5 rounded-full filter blur-[130px]" 
+          className="absolute bottom-[15%] right-[5%] w-[550px] h-[550px] bg-teal-400/5 rounded-full filter blur-[130px]" 
         />
       </div>
 
@@ -60,17 +60,17 @@ export default function PageLayout({ children, title, description, breadcrumb }:
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface)]/60 border border-white/20 backdrop-blur-md text-[11px] font-bold text-slate-500 mb-8 shadow-xs"
             >
-              <Link href="/" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
+              <Link href="/" className="hover:text-emerald-600 transition-colors flex items-center gap-1">
                 <HomeIcon className="w-3.5 h-3.5" />
                 <span>Home</span>
               </Link>
               {breadcrumb.map((crumb, idx) => (
                 <span key={idx} className="flex items-center gap-2">
-                  <ChevronRight className="w-3 h-3 text-slate-400" />
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   {idx === breadcrumb.length - 1 ? (
                     <span className="text-slate-800 font-extrabold">{crumb.label}</span>
                   ) : (
-                    <Link href={crumb.href} className="hover:text-indigo-600 transition-colors">{crumb.label}</Link>
+                    <Link href={crumb.href} className="hover:text-emerald-600 transition-colors">{crumb.label}</Link>
                   )}
                 </span>
               ))}
@@ -104,7 +104,7 @@ export default function PageLayout({ children, title, description, breadcrumb }:
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            className="relative mt-8 h-1 w-36 bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500 rounded-full origin-left shadow-[0_1px_8px_rgba(99,102,241,0.4)]"
+            className="relative mt-8 h-1 w-36 bg-gradient-to-r from-emerald-500 via-amber-400 to-teal-500 rounded-full origin-left shadow-[0_1px_8px_rgba(16,185,129,0.4)]"
           />
         </div>
       </section>
