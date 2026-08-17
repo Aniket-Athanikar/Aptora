@@ -15,6 +15,7 @@ import {
   Check,
   Eye,
   Layers,
+  Trash2,
 } from "lucide-react";
 import { LibraryBookItem, backendService } from "@/services/backend.service";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,7 @@ interface OriginalPdfViewerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onToggleSelect?: (book: LibraryBookItem) => void;
+  onDelete?: (bookId: number) => void;
 }
 
 export function OriginalPdfViewerModal({
@@ -31,6 +33,7 @@ export function OriginalPdfViewerModal({
   isOpen,
   onClose,
   onToggleSelect,
+  onDelete,
 }: OriginalPdfViewerModalProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -237,6 +240,21 @@ export function OriginalPdfViewerModal({
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open in AI Study</span>
               </button>
+
+              {/* Permanent Delete Button */}
+              {onDelete && (
+                <button
+                  onClick={() => {
+                    onDelete(book.id);
+                    onClose();
+                  }}
+                  className="h-10 px-3.5 rounded-2xl bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200 hover:border-rose-600 font-black text-xs transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  title="Permanently Delete Document"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Delete</span>
+                </button>
+              )}
 
               {/* Close Modal */}
               <button

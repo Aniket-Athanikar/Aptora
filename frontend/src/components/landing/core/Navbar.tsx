@@ -133,9 +133,27 @@ export default function Navbar() {
               />
             </motion.div>
           </div>
-          <span className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1 flex items-center gap-1">
-            ExamForge-<span className="bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 bg-clip-text text-transparent">AI</span>📚
-          </span>
+          <motion.span
+            whileHover={{ rotateX: 12, rotateY: -12, scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 350, damping: 15 }}
+            className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1 flex items-center gap-1 select-none"
+            style={{
+              transformStyle: "preserve-3d",
+              textShadow: "0px 1px 0px #0c7a3dff, 0px 2px 0px #cbd5e1, 0px 3px 0px #94a3b8, 0px 4px 6px rgba(0,0,0,0.15)",
+            }}
+          >
+            ExamForge-
+            <span
+              className="bg-gradient-to-r from-emerald-600 via-teal-605 to-emerald-800 bg-clip-text text-transparent inline-block"
+              style={{
+                filter: "drop-shadow(0px 1px 0px rgba(4, 122, 83, 0.4)) drop-shadow(0px 3px 6px rgba(0,0,0,0.1))",
+                transform: "translateZ(15px)",
+              }}
+            >
+              AI
+            </span>
+            📚
+          </motion.span>
         </Link>
 
         {/* Center Nav Links */}

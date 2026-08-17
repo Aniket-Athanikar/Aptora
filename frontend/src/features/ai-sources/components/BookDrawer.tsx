@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Check, Sparkles, FileText, Calendar, Layers, ExternalLink, Loader2 } from "lucide-react";
+import { X, BookOpen, Check, Sparkles, FileText, Calendar, Layers, ExternalLink, Loader2, Trash2 } from "lucide-react";
 import { LibraryBookItem } from "@/services/backend.service";
 import { useRouter } from "next/navigation";
 
@@ -11,6 +11,7 @@ interface BookDrawerProps {
   onClose: () => void;
   onToggleSelect: (book: LibraryBookItem) => void;
   onViewPdf?: (book: LibraryBookItem) => void;
+  onDelete?: (bookId: number) => void;
   isPending?: boolean;
 }
 
@@ -19,6 +20,7 @@ export function BookDrawer({
   onClose,
   onToggleSelect,
   onViewPdf,
+  onDelete,
   isPending = false,
 }: BookDrawerProps) {
   const router = useRouter();
@@ -190,6 +192,16 @@ export function BookDrawer({
               >
                 <FileText className="w-4 h-4 text-emerald-600" />
                 <span>View Original PDF</span>
+              </button>
+            )}
+
+            {onDelete && (
+              <button
+                onClick={() => onDelete(book.id)}
+                className="w-full h-12 rounded-2xl bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200 hover:border-rose-600 font-black text-sm transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Delete Permanently</span>
               </button>
             )}
 

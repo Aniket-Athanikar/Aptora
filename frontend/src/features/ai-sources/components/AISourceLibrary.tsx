@@ -13,6 +13,7 @@ import {
   RefreshCw,
   SlidersHorizontal,
   Check,
+  Trash2,
 } from "lucide-react";
 import { backendService, LibraryBookItem, AiStudySourceItem } from "@/services/backend.service";
 import { BookCard } from "./BookCard";
@@ -119,6 +120,27 @@ export function AISourceLibrary() {
       alert(err?.message || "Couldn't update this source. Please try again.");
     } finally {
       setPendingResourceId(null);
+    }
+  };
+  
+  // Handle permanent deletion of source from DB
+  const handleDeleteBook = async (bookId: number) => {
+    if (!confirm("Are you sure you want to permanently delete this document? This will remove all its processed content and vectors from the system.")) {
+      return;
+    }
+    
+    try {
+      await backendService.documents.remove(bookId);
+      // Remove from books list
+      setBooks((prev) => prev.filter((b) => b.id !== bookId));
+      // Remove from active sources if it was selected
+      setSelectedSources((prev) => prev.filter((s) => s.resource_id !== bookId));
+      if (activeDrawerBook?.id === bookId) {
+        setActiveDrawerBook(null);
+      }
+    } catch (err: any) {
+      console.error("Failed to delete resource:", err);
+      alert(err?.message || "Failed to delete resource. Please try again.");
     }
   };
 
@@ -385,6 +407,7 @@ export function AISourceLibrary() {
               onToggleSelect={handleToggleSelect}
               onOpenDetails={setActiveDrawerBook}
               onViewPdf={setPdfViewerBook}
+              onDelete={handleDeleteBook}
               isPending={pendingResourceId === book.id}
             />
           ))}
@@ -397,6 +420,7 @@ export function AISourceLibrary() {
         onClose={() => setActiveDrawerBook(null)}
         onToggleSelect={handleToggleSelect}
         onViewPdf={setPdfViewerBook}
+        onDelete={handleDeleteBook}
         isPending={activeDrawerBook ? pendingResourceId === activeDrawerBook.id : false}
       />
 
@@ -406,6 +430,7 @@ export function AISourceLibrary() {
         isOpen={Boolean(pdfViewerBook)}
         onClose={() => setPdfViewerBook(null)}
         onToggleSelect={handleToggleSelect}
+        onDelete={handleDeleteBook}
       />
     </div>
   );

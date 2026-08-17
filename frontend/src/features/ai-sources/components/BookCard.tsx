@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Check, Loader2, Sparkles, AlertCircle, FileText, ExternalLink, X } from "lucide-react";
+import { BookOpen, Check, Loader2, Sparkles, AlertCircle, FileText, ExternalLink, X, Trash2 } from "lucide-react";
 import { LibraryBookItem } from "@/services/backend.service";
 
 interface BookCardProps {
@@ -10,6 +10,7 @@ interface BookCardProps {
   onToggleSelect: (book: LibraryBookItem) => void;
   onOpenDetails: (book: LibraryBookItem) => void;
   onViewPdf?: (book: LibraryBookItem) => void;
+  onDelete?: (bookId: number) => void;
   isPending?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function BookCard({
   onToggleSelect,
   onOpenDetails,
   onViewPdf,
+  onDelete,
   isPending = false,
 }: BookCardProps) {
   const router = useRouter();
@@ -54,6 +56,19 @@ export function BookCard({
           </div>
 
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(book.id);
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200 hover:border-rose-600 transition-colors"
+                title="Permanently Delete Document"
+              >
+                <Trash2 className="w-3 h-3" />
+                <span>Delete</span>
+              </button>
+            )}
             {onViewPdf && (
               <button
                 onClick={(e) => {

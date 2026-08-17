@@ -235,7 +235,17 @@ class ResourceService:
             )
 
         if os.path.exists(resource.storage_path):
-            os.remove(resource.storage_path)
+            try:
+                os.remove(resource.storage_path)
+            except Exception as e:
+                print(f"Failed to delete file: {e}")
+
+        # Clean vector database
+        try:
+            from app.ai.services.qdrant_service import QdrantService
+            QdrantService.delete_resource(resource_id=resource.id)
+        except Exception as e:
+            print(f"Failed to delete resource vectors from Qdrant: {e}")
 
         ResourceRepository.delete(
             db=db,
