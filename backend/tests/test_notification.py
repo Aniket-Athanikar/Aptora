@@ -23,15 +23,18 @@ def override_get_db():
     finally:
         db.close()
 
-app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
 
 @pytest.fixture(scope="module")
 def db_session():
+    app.dependency_overrides[get_db] = override_get_db
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     yield db
+    db.close()
+    app.dependency_overrides.clear()
+    Base.metadata.drop_all(bind=engine)
 
 
 import uuid

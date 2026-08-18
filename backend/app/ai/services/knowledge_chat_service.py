@@ -1,24 +1,13 @@
 """
 ExamForge AI — Knowledge Chat Service
 ========================================
-
-High-level orchestrator for the multi-turn Knowledge Chat pipeline.
-
-Pipeline
---------
-1. Load session conversation history (ConversationMemory)
-2. Retrieve relevant chunks from Qdrant (RAGService)
-3. Score retrieval confidence (ConfidenceScorer)
-4. Build context block (ContextBuilder)
-5. Build history-aware prompt and generate answer (KnowledgeChatAgent)
-6. Persist user question + AI answer to memory
-7. Return answer with sources and confidence metadata
-
-This service is stateful per ``session_id``.
+High-level orchestrator that manages conversational context (memory)
+and executes the ReasoningPipeline for multi-turn chat sessions.
 """
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any, Generator
 
@@ -29,29 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class KnowledgeChatService:
-    """
-    Orchestrates multi-turn Knowledge Chat powered by ReasoningPipeline.
-
-    Usage
-    -----
-    ::
-
-        result = KnowledgeChatService.ask(
-            session_id="abc-123",
-            workspace_id=5,
-            question="What is Newton's second law?",
-        )
-        # result["answer"] → str
-        # result["confidence"] → "high" | "medium" | "low"
-        # result["sources"] → list of source metadata dicts
-        # result["history_length"] → int
-    """
-
     DEFAULT_RETRIEVAL_LIMIT = 8
-
-    # -----------------------------------------------------------------------
-    # Non-streaming
-    # -----------------------------------------------------------------------
 
     @classmethod
     def ask(
@@ -63,6 +30,8 @@ class KnowledgeChatService:
         history: list[dict[str, str]] | None = None,
         subject_id: int | None = None,
         resource_ids: list[int] | None = None,
+        user_id: int | None = None,
+        request_id: str | None = None,
     ) -> dict[str, Any]:
         """
         Generate a complete multi-turn response via ReasoningPipeline.
@@ -72,10 +41,11 @@ class KnowledgeChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "[KnowledgeChatService] ask | session=%s | workspace=%d | resource_ids=%s",
+            "[KnowledgeChatService] ask | session=%s | workspace=%d | resource_ids=%s | request_id=%s",
             session_id,
             workspace_id,
             resource_ids,
+            request_id,
         )
 
         # 1. Load conversation history
@@ -93,6 +63,8 @@ class KnowledgeChatService:
             subject_id=subject_id,
             limit=limit,
             resource_ids=resource_ids,
+            user_id=user_id,
+            request_id=request_id,
         )
 
         answer = pipeline_result["answer"]
@@ -115,10 +87,6 @@ class KnowledgeChatService:
             "history_length": len(history) + 2,   # +2 for messages just added
         }
 
-    # -----------------------------------------------------------------------
-    # Streaming
-    # -----------------------------------------------------------------------
-
     @classmethod
     def stream(
         cls,
@@ -128,6 +96,9 @@ class KnowledgeChatService:
         limit: int = DEFAULT_RETRIEVAL_LIMIT,
         subject_id: int | None = None,
         resource_ids: list[int] | None = None,
+        stream_format: str = "plain",
+        user_id: int | None = None,
+        request_id: str | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream a multi-turn response token by token via ReasoningPipeline.
@@ -137,10 +108,11 @@ class KnowledgeChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "[KnowledgeChatService] stream | session=%s | workspace=%d | resource_ids=%s",
+            "[KnowledgeChatService] stream | session=%s | workspace=%d | resource_ids=%s | request_id=%s",
             session_id,
             workspace_id,
             resource_ids,
+            request_id,
         )
 
         # 1. Load history
@@ -159,12 +131,82 @@ class KnowledgeChatService:
             limit=limit,
             subject_id=subject_id,
             resource_ids=resource_ids,
+            stream_format=stream_format,
+            user_id=user_id,
+            request_id=request_id,
         ):
-            accumulated.append(token)
+            if stream_format == "sse":
+                if token.startswith("data: "):
+                    try:
+                        payload = json.loads(token.split("data: ", 1)[1].strip())
+                        if payload.get("event") == "TOKEN":
+                            accumulated.append(payload.get("text", ""))
+                    except Exception:
+                        pass
+            else:
+                accumulated.append(token)
             yield token
 
         # 4. Store assistant response after stream completes
         full_answer = "".join(accumulated)
         ConversationMemory.add_message(session_id, "assistant", full_answer)
+
+        # 5. Persist the turn to SQL database
+        if user_id:
+            try:
+                from app.db.session import SessionLocal
+                from app.models.knowledge_conversation import KnowledgeConversationDb, KnowledgeMessageDb
+                from app.core.request_context import ai_request_context
+                import datetime
+
+                db = SessionLocal()
+                try:
+                    conversation = db.query(KnowledgeConversationDb).filter(
+                        KnowledgeConversationDb.id == session_id,
+                        KnowledgeConversationDb.user_id == user_id,
+                    ).first()
+                    if conversation:
+                        # Set initial title if this is the first turn
+                        if not conversation.messages:
+                            from app.api.v1.knowledge import _title_from_question
+                            conversation.title = _title_from_question(question)
+                        
+                        # Prevent duplicate user messages
+                        user_msg_exists = db.query(KnowledgeMessageDb).filter(
+                            KnowledgeMessageDb.conversation_id == session_id,
+                            KnowledgeMessageDb.role == "user",
+                            KnowledgeMessageDb.content == question
+                        ).first()
+                        if not user_msg_exists:
+                            db.add(KnowledgeMessageDb(
+                                conversation_id=session_id,
+                                role="user",
+                                content=question
+                            ))
+
+                        # Retrieve actual sources and confidence from RequestContext
+                        ctx = ai_request_context.get()
+                        sources = ctx.get("sources") if ctx else None
+                        confidence = ctx.get("confidence") if ctx else None
+
+                        db.add(KnowledgeMessageDb(
+                            conversation_id=session_id,
+                            role="assistant",
+                            content=full_answer,
+                            sources=sources,
+                            confidence=str(confidence) if confidence is not None else None
+                        ))
+
+                        now = datetime.datetime.utcnow()
+                        conversation.last_message_at = now
+                        conversation.updated_at = now
+                        db.commit()
+                except Exception as db_err:
+                    db.rollback()
+                    logger.exception("[KnowledgeChatService] Database transaction failed during stream persistence: %s", db_err)
+                finally:
+                    db.close()
+            except Exception as import_err:
+                logger.exception("[KnowledgeChatService] Import or session creation failed during stream persistence: %s", import_err)
 
         logger.info("[KnowledgeChatService] Streaming completed and stored via ReasoningPipeline.")

@@ -125,6 +125,10 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4.1-mini"
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
 
+    AI_CHAT_CONTEXT_TOKENS: int = 1000
+    AI_CHAT_HISTORY_TOKENS: int = 200
+    AI_CHAT_OUTPUT_TOKENS: int = 900
+
     # Kept at 768 so existing Qdrant collection dimensions remain compatible.
     EMBEDDING_DIMENSION: int = 768
 

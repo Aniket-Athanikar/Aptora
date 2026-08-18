@@ -22,6 +22,11 @@ class ChatRequest(BaseModel):
         description="User question",
     )
 
+    stream_format: str = Field(
+        "plain",
+        description="Format of streaming: 'plain' or 'sse'"
+    )
+
 
 class ChatResponse(BaseModel):
     """

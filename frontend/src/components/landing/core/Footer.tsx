@@ -115,7 +115,7 @@ export default function Footer() {
                   />
                 </motion.div>
               </div>
-              <motion.span 
+              <motion.span
                 whileHover={{ rotateX: 12, rotateY: -12, scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 350, damping: 15 }}
                 className="font-black tracking-tight text-neutral-900 text-2xl md:text-3xl mt-1 flex items-center gap-1 select-none"
@@ -125,7 +125,7 @@ export default function Footer() {
                 }}
               >
                 ExamForge-
-                <span 
+                <span
                   className="bg-gradient-to-r from-emerald-600 via-teal-605 to-emerald-800 bg-clip-text text-transparent inline-block"
                   style={{
                     filter: "drop-shadow(0px 1px 0px rgba(4, 122, 83, 0.4)) drop-shadow(0px 3px 6px rgba(0,0,0,0.1))",
@@ -227,9 +227,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pt-8 text-neutral-500 text-[11px] font-bold uppercase tracking-wider">
-          <p>© {year || 2026} Exam Forge AI. All rights reserved.</p>
-          <div className="flex gap-4 mt-4 sm:mt-0">
+        <div className="flex flex-col sm:flex-row items-center justify-between pt-8 border-t border-neutral-200/30 text-neutral-500 text-[11px] font-bold uppercase tracking-wider">
+          <p>© {year || 2026} ExamForge-AI. All rights reserved.</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 mt-4 sm:mt-0 justify-center">
+            <Link href="/privacy-policy" className="hover:text-emerald-700 transition-colors">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/terms-of-service" className="hover:text-emerald-700 transition-colors">Terms of Service</Link>
+            <span>•</span>
             <Link href="/security" className="hover:text-emerald-700 transition-colors">Security</Link>
             <span>•</span>
             <Link href="/sitemap" className="hover:text-emerald-700 transition-colors">Sitemap</Link>

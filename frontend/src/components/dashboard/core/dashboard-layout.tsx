@@ -88,7 +88,11 @@ export function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-3.5">
-            <div className="relative">
+            <div 
+              className="relative"
+              onMouseEnter={() => typeof window !== "undefined" && window.innerWidth > 1024 && setNotifOpen(true)}
+              onMouseLeave={() => typeof window !== "undefined" && window.innerWidth > 1024 && setNotifOpen(false)}
+            >
               <button
                 onClick={() => setNotifOpen((v) => !v)}
                 className="relative p-2 rounded-xl text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition cursor-pointer"

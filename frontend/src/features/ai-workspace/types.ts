@@ -16,6 +16,11 @@ export interface ChatMessage {
     chapter: string;
     pages: string;
   };
+  requestId?: string;
+  latency?: number;
+  tokens?: { input: number; output: number; total: number };
+  configuredBudgets?: { context: number; history: number; output: number };
+  actualBudgets?: { context: number; history: number };
 }
 
 export interface BookMetadata {

@@ -189,6 +189,12 @@ def get_document_preview(resource_id: int, db: Session = Depends(get_db), curren
     if workspace is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found.")
     chunks = sorted(resource.chunks, key=lambda c: c.chunk_index)
+    if not chunks and resource.content and resource.content.raw_text:
+        return {
+            "resource_id": resource.id,
+            "title": resource.title,
+            "chunks": [{"index": 0, "content": resource.content.raw_text}]
+        }
     return {
         "resource_id": resource.id,
         "title": resource.title,
@@ -207,5 +213,102 @@ def get_document_file(resource_id: int, db: Session = Depends(get_db)):
         headers={
             "Content-Disposition": "inline",
             "Access-Control-Allow-Origin": "*",
+        }
+    )
+
+
+@router.get("/{resource_id}/download-pdf")
+def download_note_as_pdf(resource_id: int, db: Session = Depends(get_db), current_user: UserDb = Depends(get_current_user)):
+    """Generate a styled PDF from an AI study note's markdown content and return it as a direct download."""
+    import tempfile
+    import datetime
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+    from app.services.chat_export_service import MarkdownToReportLabConverter, ChatExportService, NumberedCanvas
+
+    resource = ResourceService.get_resource(db=db, resource_id=resource_id)
+    workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.id == resource.workspace_id, GoalWorkspaceDb.user_id == current_user.id).first()
+    if workspace is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found.")
+
+    # Get markdown content from resource_content or chunks
+    markdown_text = ""
+    if resource.content and resource.content.raw_text:
+        markdown_text = resource.content.raw_text
+    elif resource.chunks:
+        chunks = sorted(resource.chunks, key=lambda c: c.chunk_index)
+        markdown_text = "\n\n".join(c.content for c in chunks)
+
+    if not markdown_text:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No content available to export.")
+
+    # Generate PDF to a temp file
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    tmp.close()
+
+    doc = SimpleDocTemplate(
+        tmp.name,
+        pagesize=letter,
+        leftMargin=54, rightMargin=54,
+        topMargin=54, bottomMargin=54
+    )
+
+    styles = ChatExportService.get_style_sheet()
+    flowables = []
+
+    # Cover page
+    flowables.append(Spacer(1, 100))
+    flowables.append(Paragraph(
+        '<font size="12" color="#6366f1"><b>EXAMFORGE AI — STUDY NOTE</b></font>',
+        styles['body']
+    ))
+    divider = Table([['']], colWidths=[500], rowHeights=[3])
+    divider.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#6366f1')),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    flowables.append(divider)
+    flowables.append(Spacer(1, 15))
+
+    title_style = ParagraphStyle(
+        'CoverTitle', fontName='Helvetica-Bold', fontSize=28,
+        leading=34, textColor=colors.HexColor('#0f172a'),
+    )
+    flowables.append(Paragraph(resource.title, title_style))
+    flowables.append(Spacer(1, 40))
+
+    date_str = datetime.datetime.utcnow().strftime("%B %d, %Y")
+    meta = [
+        [Paragraph("<b>Document Type:</b>", styles['table_header']), Paragraph("AI Study Note", styles['table_cell'])],
+        [Paragraph("<b>Date Generated:</b>", styles['table_header']), Paragraph(date_str, styles['table_cell'])],
+        [Paragraph("<b>Exam Context:</b>", styles['table_header']), Paragraph(workspace.target_exam if workspace else "General", styles['table_cell'])],
+    ]
+    meta_table = Table(meta, colWidths=[120, 380])
+    meta_table.setStyle(TableStyle([
+        ('LINEBELOW', (0, 0), (-1, -1), 0.5, colors.HexColor('#f1f5f9')),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    flowables.append(meta_table)
+    flowables.append(PageBreak())
+
+    # Convert markdown body to PDF flowables
+    converter = MarkdownToReportLabConverter(styles)
+    body_flowables = converter.convert(markdown_text)
+    flowables.extend(body_flowables)
+
+    doc.build(flowables, canvasmaker=NumberedCanvas)
+
+    safe_title = resource.title.replace(" ", "_")[:50]
+    return FileResponse(
+        path=tmp.name,
+        media_type="application/pdf",
+        filename=f"ExamForge_Note_{safe_title}.pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="ExamForge_Note_{safe_title}.pdf"',
         }
     )

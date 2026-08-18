@@ -185,7 +185,12 @@ export function Header() {
         <div className="hidden lg:flex items-center gap-4 mt-1">
           {mounted && isAuthenticated && user ? (
             /* ── Logged-in User Menu ── */
-            <div className="relative" ref={userMenuRef}>
+            <div 
+              className="relative" 
+              ref={userMenuRef}
+              onMouseEnter={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(true)}
+              onMouseLeave={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(false)}
+            >
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200/80 bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
@@ -219,7 +224,7 @@ export function Header() {
                     initial={{ opacity: 0, y: 8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.08 }}
                     className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl overflow-hidden z-50 p-2 space-y-1"
                   >
                     <div className="p-3 border-b border-slate-100 mb-1.5">
@@ -231,25 +236,25 @@ export function Header() {
                       onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
                     >
-                      <User className="w-3.5 h-3.5 text-slate-400" /> My Profile
+                      <User className="w-3.5 h-3.5 text-slate-400" /> Account Settings
                     </button>
                     <button
                       onClick={() => { setUserMenuOpen(false); router.push("/dashboard"); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
                     >
-                      <Compass className="w-3.5 h-3.5 text-slate-400" /> My Dashboard
+                      <Compass className="w-3.5 h-3.5 text-slate-400" /> Study Dashboard
                     </button>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-red-650 hover:bg-red-50/50 transition-colors cursor-pointer text-left"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-red-400" /> Logout
+                      <LogOut className="w-3.5 h-3.5 text-red-400" /> Sign Out
                     </button>
                     <button
                       onClick={() => { setUserMenuOpen(false); setDeleteModalOpen(true); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-slate-100 mt-1 pt-2 text-left"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-slate-100 mt-1 pt-2 text-left"
                     >
-                      <Trash2 className="w-3 h-3 text-red-450" /> Delete Account
+                      <Trash2 className="w-3.5 h-3.5 text-red-450" /> Delete Account
                     </button>
                   </motion.div>
                 )}

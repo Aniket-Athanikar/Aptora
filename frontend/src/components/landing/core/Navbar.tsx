@@ -186,7 +186,12 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-4 mt-1">
           {mounted && isAuthenticated && user ? (
             /* ── Logged-in User Menu ── */
-            <div className="relative" ref={userMenuRef}>
+            <div 
+              className="relative" 
+              ref={userMenuRef}
+              onMouseEnter={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(true)}
+              onMouseLeave={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(false)}
+            >
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200/80 bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
@@ -220,7 +225,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: 8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.08 }}
                     className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl overflow-hidden z-50 p-2 space-y-1"
                   >
                     <div className="p-3 border-b border-slate-100 mb-1.5">
@@ -232,25 +237,25 @@ export default function Navbar() {
                       onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
                     >
-                      <User className="w-3.5 h-3.5 text-slate-400" /> My Profile
+                      <User className="w-3.5 h-3.5 text-slate-400" /> Account Settings
                     </button>
                     <button
                       onClick={() => { setUserMenuOpen(false); router.push("/dashboard"); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
                     >
-                      <Compass className="w-3.5 h-3.5 text-slate-400" /> My Dashboard
+                      <Compass className="w-3.5 h-3.5 text-slate-400" /> Study Dashboard
                     </button>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-red-650 hover:bg-red-50/50 transition-colors cursor-pointer text-left"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-red-400" /> Logout
+                      <LogOut className="w-3.5 h-3.5 text-red-400" /> Sign Out
                     </button>
                     <button
                       onClick={() => { setUserMenuOpen(false); setDeleteModalOpen(true); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-slate-100 mt-1 pt-2 text-left"
                     >
-                      <Trash2 className="w-3 h-3 text-red-450" /> Delete Account
+                      <Trash2 className="w-3.5 h-3.5 text-red-450" /> Delete Account
                     </button>
                   </motion.div>
                 )}
@@ -259,13 +264,13 @@ export default function Navbar() {
           ) : (
             /* ── Guest Actions ── */
             <>
-              <Link
+              {/* <Link
                 href="/login"
                 className="text-xs font-black text-slate-705 hover:text-emerald-700 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all cursor-pointer shadow-3xs flex items-center gap-1.5"
               >
                 <LogIn className="w-3.5 h-3.5 text-emerald-600" />
                 Login
-              </Link>
+              </Link> */}
               <Link href="/login">
                 <GlowButton
                   variant="gradient"
@@ -371,14 +376,14 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <Link
+              {/* <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-3 font-black text-slate-800 border border-slate-250 bg-white rounded-xl hover:bg-emerald-50/60 hover:text-emerald-700 hover:border-emerald-200 transition-all flex items-center justify-center gap-2 shadow-xs"
               >
                 <LogIn className="w-4 h-4 text-emerald-600" />
                 Login
-              </Link>
+              </Link> */}
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}

@@ -15,15 +15,15 @@ const HeroBackground = dynamic(() => import("./HeroBackground"), {
 
 export default function Hero() {
   const checkmarks = [
-    "Instead of students reading 15 books...",
-    "Student select exam books.",
-    "AI reads everything.",
-    "AI teaches.",
-    "AI creates notes.",
-    "AI creates MCQs.",
-    "AI predicts questions.",
-    "AI tracks progress.",
-    "AI becomes personal teacher.",
+    "Select your exam syllabus",
+    "Instant AI book analysis",
+    "Interactive AI tutoring",
+    "Smart summarized notes",
+    "AI-generated mock tests",
+    "Predictive question focus",
+    "Dynamic progress tracking",
+    "24/7 personalized support",
+    "Focused weakness analysis",
   ];
 
   return (
@@ -49,11 +49,26 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight text-slate-950 leading-[1.15] sm:leading-[1.1]"
+            className="text-4xl sm:text-5xl lg:text-[60px] font-black tracking-tight leading-[1.1] sm:leading-[1.05] w-full lg:w-[120%] lg:max-w-none z-10"
+            style={{ transformStyle: "preserve-3d" }}
           >
-            <span className="inline-block bg-gradient-to-r from-slate-950 to-slate-700 bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Master Any Exam with</span>
+            <span
+              className="inline-block text-slate-950 transform transition-transform duration-300 hover:scale-[1.01]"
+              style={{
+                textShadow: "0 1px 0 #0d62d1ff, 0 2px 0 #0850a8ff, 0 3px 0 #94a3b8, 0 4px 6px rgba(15, 23, 42, 0.12)"
+              }}
+            >
+              Master Any Exam with
+            </span>
             <br />
-            <span className="gradient-text-animated-emerald filter drop-shadow-[0_2px_10px_rgba(16,185,129,0.15)] pb-1">Personalized AI Study Partner</span>
+            <span
+              className="inline-block text-emerald-600 pb-2 transform transition-transform duration-300 hover:scale-[1.02]"
+              style={{
+                textShadow: "0 1px 0 #09ec77ff, 0 2px 0 #a7f3d0, 0 3px 0 #34d399, 0 4px 6px rgba(16, 185, 129, 0.15)"
+              }}
+            >
+              Personalized AI Study Partner
+            </span>
           </motion.h1>
 
           {/* Description */}
@@ -61,7 +76,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base lg:text-lg text-slate-600 font-medium leading-relaxed max-w-lg"
+            className="text-sm sm:text-base lg:text-lg text-slate-600 font-medium leading-relaxed max-w-xl"
           >
             Select <span className="inline-block px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 font-black shadow-2xs">Books</span> +{" "}
             <span className="inline-block px-2 py-0.5 rounded-lg bg-amber-50/80 text-amber-700 border border-amber-200/60 font-black shadow-2xs">Previous Year Papers</span> →{" "}
@@ -76,7 +91,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-1"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 my-1 max-w-2xl"
           >
             {checkmarks.map((text, idx) => (
               <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-neutral-700">
@@ -91,22 +106,22 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center"
+            className="flex flex-col sm:flex-row gap-3.5 sm:gap-5 items-stretch sm:items-center mt-2"
           >
-            <Link href="/login" className="w-full sm:w-auto">
+            <Link href="/login" className="w-full sm:w-auto transform hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200">
               <GlowButton
                 variant="gradient"
-                className="w-full sm:w-auto justify-center px-8 py-3.5 text-sm from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                className="w-full sm:w-auto justify-center px-8 py-3.5 text-sm font-bold from-emerald-600 to-teal-650 hover:from-emerald-500 hover:to-teal-550 shadow-emerald-500/20 hover:shadow-emerald-500/40"
                 magnetic={false}
               >
-                Start Free Now
+                Start Preparing Free
               </GlowButton>
             </Link>
-            <Link href="/how-it-works" className="inline-flex items-center justify-center gap-2 text-neutral-600 hover:text-emerald-700 font-bold text-sm px-5 py-3 sm:py-3.5 transition-colors">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50/50 border border-emerald-100/10 flex items-center justify-center">
-                <Play className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
+            <Link href="/how-it-works" className="inline-flex items-center justify-center gap-2.5 text-neutral-600 hover:text-emerald-700 font-bold text-sm px-5 py-3 sm:py-3.5 transition-all group">
+              <div className="w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-xs group-hover:bg-emerald-600 group-hover:border-emerald-600 transition-all duration-300">
+                <Play className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600 group-hover:text-white group-hover:fill-white transition-all duration-300 translate-x-[0.5px]" />
               </div>
-              Watch Demo
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">Watch Demo</span>
             </Link>
           </motion.div>
 

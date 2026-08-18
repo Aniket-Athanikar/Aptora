@@ -660,58 +660,171 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
   const streamResponse = async (textQuery: string, convId: string) => {
     setIsStreaming(true);
-    const stages: WorkspaceState["thinkingStage"][] = ["thinking", "reading", "analyzing", "notes", "knowledge"];
+    setThinkingStage("thinking");
 
-    for (const stage of stages) {
-      setThinkingStage(stage);
-      await new Promise((r) => setTimeout(r, 600));
-    }
-    setThinkingStage(null);
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      
+      const workspaceId = activeWorkspace?.id ? parseInt(activeWorkspace.id) : 0;
+      if (!workspaceId) throw new Error("No active workspace selected.");
 
-    const activeRes = activeWorkspace?.resources.find((r) => r.id === selectedResourceId);
-    const resourceTitle = activeRes ? activeRes.title : "Indian Polity by M. Laxmikanth";
+      const response = await fetch(`${apiBase}/api/v1/knowledge/chat/stream`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          session_id: convId,
+          workspace_id: workspaceId,
+          question: textQuery,
+          limit: 8,
+          stream_format: "sse",
+        }),
+      });
 
-    let fullResponse = `Here are the salient features and breakdown for your request:\n\n1. **Comprehensive Examination Overview**: Structured according to the syllabus requirements.\n2. **High-Yield Recall Points**: Focus on core constitutional/subject fundamentals.\n3. **Application & PYQs**: Practice recent questions to test conceptual clarity.\n\nWould you like me to construct flashcards or generate exam-style questions for this resource?`;
-
-    const queryLower = textQuery.toLowerCase();
-    if (queryLower.includes("salient features") || queryLower.includes("constitution") || queryLower.includes("article")) {
-      fullResponse = `Here are the salient features of the Indian Constitution:\n\n1. **Lengthiest written constitution in the world**.\n2. **Federal in structure but unitary in spirit**.\n3. **Parliamentary form of Government**.\n4. **Fundamental Rights and Directive Principles of State Policy**.\n5. **Independent Judiciary**.\n6. **Single Citizenship**.\n7. **Secular State**.\n8. **Universal Adult Franchise**.\n9. **Emergency Provisions**.`;
-    } else if (queryLower.includes("notes") || queryLower.includes("summarize")) {
-      fullResponse = `### Structured Notes: ${resourceTitle}\n\n* **Core Focus**: Fundamental Principles & Provisions\n* **Key Articles**: Articles 12–35 (Part III)\n* **Judicial Review**: Article 13 empowers courts to strike down unconstitutional laws.\n\n> Source referenced from **${resourceTitle}**, Chapter 1.`;
-    }
-
-    const newAiMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      sender: "ai",
-      text: "",
-      timestamp: new Date().toISOString(),
-      sourceInfo: {
-        bookTitle: resourceTitle,
-        chapter: "The Constitution",
-        pages: "1 - 15"
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP ${response.status}`);
       }
-    };
 
-    setConversations((prev) =>
-      prev.map((c) => (c.id === convId ? { ...c, messages: [...c.messages, newAiMessage] } : c))
-    );
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("Response body is not readable.");
 
-    let currentText = "";
-    const words = fullResponse.split(" ");
-    for (let i = 0; i < words.length; i++) {
-      currentText += (i === 0 ? "" : " ") + words[i];
+      const decoder = new TextDecoder();
+      let buffer = "";
+      
+      const newAiMessage: ChatMessage = {
+        id: `msg-${Date.now()}`,
+        sender: "ai",
+        text: "",
+        timestamp: new Date().toISOString(),
+      };
+
+      setConversations((prev) =>
+        prev.map((c) => (c.id === convId ? { ...c, messages: [...c.messages, newAiMessage] } : c))
+      );
+
+      let currentText = "";
+      let requestId = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          const cleanLine = line.trim();
+          if (!cleanLine.startsWith("data: ")) continue;
+
+          try {
+            const data = JSON.parse(cleanLine.split("data: ", 1)[1] || cleanLine.slice(5).trim());
+            const event = data.event;
+
+            if (event === "STARTED") {
+              requestId = data.request_id;
+              setThinkingStage("thinking");
+            } else if (event === "SEARCHING") {
+              setThinkingStage("reading");
+            } else if (event === "RETRIEVING") {
+              setThinkingStage("analyzing");
+            } else if (event === "CONTEXT_READY") {
+              setThinkingStage("notes");
+            } else if (event === "GENERATING") {
+              setThinkingStage(null);
+            } else if (event === "TOKEN") {
+              currentText += data.text;
+              setConversations((prev) =>
+                prev.map((c) => {
+                  if (c.id === convId) {
+                    const updated = c.messages.map((m) =>
+                      m.id === newAiMessage.id ? { ...m, text: currentText, requestId } : m
+                    );
+                    return { ...c, messages: updated };
+                  }
+                  return c;
+                })
+              );
+            } else if (event === "COMPLETED") {
+              if (requestId) {
+                setTimeout(async () => {
+                  try {
+                    const res = await fetch(`${apiBase}/api/v1/analytics/request/${requestId}`, {
+                      headers: token ? { "Authorization": `Bearer ${token}` } : {},
+                    });
+                    if (res.ok) {
+                      const analytics = await res.json();
+                      setConversations((prev) =>
+                        prev.map((c) => {
+                          if (c.id === convId) {
+                            const updated = c.messages.map((m) =>
+                              m.id === newAiMessage.id
+                                ? {
+                                    ...m,
+                                    latency: analytics.latency,
+                                    tokens: {
+                                      input: analytics.input_tokens,
+                                      output: analytics.output_tokens,
+                                      total: analytics.total_tokens,
+                                    },
+                                    configuredBudgets: {
+                                      context: analytics.configured_context_budget,
+                                      history: analytics.configured_history_budget,
+                                      output: analytics.configured_output_budget,
+                                    },
+                                    actualBudgets: {
+                                      context: analytics.actual_context_tokens,
+                                      history: analytics.actual_history_tokens,
+                                    },
+                                  }
+                                : m
+                            );
+                            return { ...c, messages: updated };
+                          }
+                          return c;
+                        })
+                      );
+                    }
+                  } catch (err) {
+                    console.error("Failed to fetch analytics", err);
+                  }
+                }, 1000);
+              }
+            } else if (event === "FAILED") {
+              throw new Error(data.error || "Generation failed.");
+            }
+          } catch (e) {
+            console.error("Error parsing SSE data", e);
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error("Failed streaming response", error);
+      
+      const errorMsg = error.message || "Failed to stream chat response from backend.";
       setConversations((prev) =>
         prev.map((c) => {
           if (c.id === convId) {
-            const updated = c.messages.map((m) => (m.id === newAiMessage.id ? { ...m, text: currentText } : m));
+            // Find the last assistant message and set its text to error message
+            const updated = c.messages.map((m) => {
+              if (m.sender === "ai" && !m.text) {
+                return { ...m, text: `Error: ${errorMsg}` };
+              }
+              return m;
+            });
             return { ...c, messages: updated };
           }
           return c;
         })
       );
-      await new Promise((r) => setTimeout(r, 25));
+    } finally {
+      setIsStreaming(false);
+      setThinkingStage(null);
     }
-    setIsStreaming(false);
   };
 
   const sendMessage = async (text: string, files?: Array<{ name: string; type: string; size: number }>) => {

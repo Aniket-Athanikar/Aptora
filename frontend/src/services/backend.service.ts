@@ -63,6 +63,10 @@ export const backendService = {
       const apiRoot = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/v1\/?$/, "");
       return `${apiRoot}/documents/${id}/file`;
     },
+    getNotePdfUrl: (id: number) => {
+      const apiRoot = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/v1\/?$/, "");
+      return `${apiRoot}/api/v1/documents/${id}/download-pdf`;
+    },
     remove: (id: number) => apiClient.delete(`/documents/${id}`),
   },
   ai: {
@@ -70,12 +74,34 @@ export const backendService = {
     knowledge: (payload: KnowledgeRequest) => apiClient.post<KnowledgeResponse>("/knowledge/chat", payload),
     history: (sessionId: string) => apiClient.get(`/knowledge/chat/${sessionId}/history`),
     clearHistory: (sessionId: string) => apiClient.delete(`/knowledge/chat/${sessionId}`),
-    conversations: () => apiClient.get<KnowledgeConversation[]>('/knowledge/conversations'),
+    conversations: (params?: { q?: string; limit?: number; offset?: number }) => {
+      const q = new URLSearchParams();
+      if (params?.q) q.set("q", params.q);
+      if (params?.limit) q.set("limit", String(params.limit));
+      if (params?.offset) q.set("offset", String(params.offset));
+      return apiClient.get<KnowledgeConversation[]>(`/knowledge/conversations?${q.toString()}`);
+    },
     conversation: (sessionId: string) => apiClient.get<KnowledgeConversationDetail>(`/knowledge/conversations/${sessionId}`),
     createConversation: (payload: { workspace_id: number; subject_id?: number }) => apiClient.post<KnowledgeConversation>('/knowledge/conversations', payload),
     renameConversation: (sessionId: string, title: string) => apiClient.patch<KnowledgeConversation>(`/knowledge/conversations/${sessionId}`, { title }),
     deleteConversation: (sessionId: string) => apiClient.delete<void>(`/knowledge/conversations/${sessionId}`),
     toggleConversationPin: (sessionId: string) => apiClient.post<KnowledgeConversation>(`/knowledge/conversations/${sessionId}/pin`),
+    exportConversation: (sessionId: string) => apiClient.post<ChatExport>(`/knowledge/conversations/${sessionId}/export`),
+    getExportStatus: (exportId: string) => apiClient.get<ChatExport>(`/knowledge/exports/${exportId}`),
+    getExportDownloadUrl: (exportId: string) => {
+      const apiRoot = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/v1\/?$/, "");
+      return `${apiRoot}/knowledge/exports/${exportId}/download`;
+    },
+    listExports: (params?: { q?: string; sort_by?: string; limit?: number; offset?: number }) => {
+      const q = new URLSearchParams();
+      if (params?.q) q.set("q", params.q);
+      if (params?.sort_by) q.set("sort_by", params.sort_by);
+      if (params?.limit) q.set("limit", String(params.limit));
+      if (params?.offset) q.set("offset", String(params.offset));
+      return apiClient.get<ChatExport[]>(`/knowledge/exports?${q.toString()}`);
+    },
+    deleteExport: (exportId: string) => apiClient.delete<void>(`/knowledge/exports/${exportId}`),
+    saveAsNote: (sessionId: string) => apiClient.post<{ success: boolean; resource_id: number; title: string; message: string }>(`/knowledge/conversations/${sessionId}/save-note`),
     summary: (workspace_id: number) => apiClient.post<{ success: boolean; summary: string }>("/summary", { workspace_id }),
     flashcards: (workspace_id: number, flashcard_count = 10) => apiClient.post("/flashcards", { workspace_id, flashcard_count }),
     questions: (workspace_id: number, question_type = "mcq", question_count = 10) => apiClient.post("/questions", { workspace_id, question_type, question_count }),
@@ -119,9 +145,11 @@ export type StudyPlan = { success: boolean; workspace_id: number; target_exam: s
 export type ChatResponse = { success: boolean; answer: string };
 export type KnowledgeRequest = { session_id: string; workspace_id: number; subject_id?: number; question: string; limit?: number };
 export type KnowledgeResponse = { success: boolean; session_id: string; answer: string; confidence: "high" | "medium" | "low" | "none"; sources: Array<{ resource_id?: number; document_title: string; subject: string; score: number }>; history_length: number };
-export type KnowledgeConversation = { session_id: string; workspace_id: number; subject_id?: number | null; title: string; created_at: string; updated_at: string; last_message_at?: string | null; pinned: boolean; last_message?: string | null };
+export type KnowledgeConversation = { session_id: string; workspace_id: number; subject_id?: number | null; title: string; created_at: string; updated_at: string; last_message_at?: string | null; pinned: boolean; last_message?: string | null; message_count?: number };
 export type KnowledgeConversationDetail = KnowledgeConversation & { messages: Array<{ role: "user" | "assistant"; content: string; sources?: Array<{ resource_id?: number; document_title: string; subject: string; chapter?: string; page_number?: number; score: number }> | null; confidence?: string | null; created_at: string }> };
 export type LibraryBookItem = { id: number; title: string; description?: string; original_filename: string; resource_type: string; status: string; total_pages?: number; chunks_count: number; file_size: number; workspace_id: number; subject_id: number; subject?: string; exam?: string; ai_ready: boolean; is_selected: boolean; created_at: string };
 export type LibraryBooksResponse = { total: number; page: number; limit: number; items: LibraryBookItem[] };
 export type AiStudySourceItem = { id: number; user_id: number; workspace_id: number; resource_id: number; is_active: boolean; selected_at: string; resource?: LibraryBookItem };
+export type ChatExport = { id: string; conversation_id: string; user_id: number; status: "pending" | "processing" | "completed" | "failed"; file_name?: string; file_size?: number; created_at: string; completed_at?: string; error_message?: string };
+
 

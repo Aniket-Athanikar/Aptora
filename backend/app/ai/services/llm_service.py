@@ -12,9 +12,11 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from typing import Any, Generator
 from openai import OpenAI
 from app.core.config import LLM_MODEL, settings
+from app.core.request_context import ai_request_context
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +131,11 @@ Required format:
             raise ValueError(
                 "Prompt cannot be empty."
             )
+        
+        ctx = ai_request_context.get()
+        max_output_tokens = ctx.get("configured_output_budget") or settings.AI_CHAT_OUTPUT_TOKENS
+        start_time = time.perf_counter()
+
         try:
             response = (
                 get_openai_client()
@@ -139,8 +146,12 @@ Required format:
                         system_prompt
                     ),
                     temperature=0.2,
+                    max_tokens=max_output_tokens,
                 )
             )
+
+            latency = time.perf_counter() - start_time
+            cls._record_usage(response, latency)
 
             content = (
                 response
@@ -158,7 +169,8 @@ Required format:
             return content
 
         except Exception as exc:
-
+            latency = time.perf_counter() - start_time
+            cls._record_usage_direct(0, 0, 0, latency, "failed", error_message=str(exc))
             logger.exception(
                 "[LLM Generate Failed] %s",
                 exc
@@ -182,8 +194,11 @@ Required format:
                 "Prompt cannot be empty."
             )
 
-        try:
+        ctx = ai_request_context.get()
+        max_output_tokens = ctx.get("configured_output_budget") or settings.AI_CHAT_OUTPUT_TOKENS
+        start_time = time.perf_counter()
 
+        try:
             response = (
                 get_openai_client()
                 .chat.completions.create(
@@ -195,9 +210,13 @@ Required format:
                     temperature=0.2,
                     response_format={
                         "type": "json_object"
-                    }
+                    },
+                    max_tokens=max_output_tokens,
                 )
             )
+
+            latency = time.perf_counter() - start_time
+            cls._record_usage(response, latency)
 
             content = (
                 response
@@ -221,17 +240,18 @@ Required format:
             return data
 
         except json.JSONDecodeError as exc:
-
+            latency = time.perf_counter() - start_time
+            cls._record_usage_direct(0, 0, 0, latency, "failed", error_message=f"JSON Decode Error: {exc}")
             logger.exception(
                 "[LLM JSON Parse Error]"
             )
-
             raise RuntimeError(
                 "Invalid JSON returned by LLM"
             ) from exc
 
         except Exception as exc:
-
+            latency = time.perf_counter() - start_time
+            cls._record_usage_direct(0, 0, 0, latency, "failed", error_message=str(exc))
             logger.exception(
                 "[LLM JSON Failed] %s",
                 exc
@@ -279,8 +299,11 @@ Answer using the provided textbook content only.
                 "Prompt cannot be empty."
             )
 
-        try:
+        ctx = ai_request_context.get()
+        max_output_tokens = ctx.get("configured_output_budget") or settings.AI_CHAT_OUTPUT_TOKENS
+        start_time = time.perf_counter()
 
+        try:
             stream = (
                 get_openai_client()
                 .chat.completions.create(
@@ -290,14 +313,24 @@ Answer using the provided textbook content only.
                         system_prompt
                     ),
                     temperature=0.2,
-                    stream=True
+                    stream=True,
+                    stream_options={"include_usage": True},
+                    max_tokens=max_output_tokens,
                 )
             )
 
             for chunk in stream:
+                if hasattr(chunk, "usage") and chunk.usage is not None:
+                    latency = time.perf_counter() - start_time
+                    cls._record_usage_direct(
+                        input_tokens=chunk.usage.prompt_tokens,
+                        output_tokens=chunk.usage.completion_tokens,
+                        total_tokens=chunk.usage.total_tokens,
+                        latency=latency,
+                        status="success"
+                    )
 
                 if chunk.choices:
-
                     token = (
                         chunk
                         .choices[0]
@@ -309,12 +342,80 @@ Answer using the provided textbook content only.
                         yield token
 
         except Exception as exc:
-
+            latency = time.perf_counter() - start_time
+            cls._record_usage_direct(0, 0, 0, latency, "failed", error_message=str(exc))
             logger.exception(
                 "[LLM Streaming Failed] %s",
                 exc
             )
-
             raise RuntimeError(
                 f"Streaming failed: {exc}"
             ) from exc
+
+    @classmethod
+    def _record_usage(cls, response, latency: float, status: str = "success", error_message: str | None = None):
+        ctx = ai_request_context.get()
+        if not ctx or not ctx.get("request_id"):
+            return
+
+        input_tokens = 0
+        output_tokens = 0
+        total_tokens = 0
+        if hasattr(response, "usage") and response.usage:
+            input_tokens = response.usage.prompt_tokens
+            output_tokens = response.usage.completion_tokens
+            total_tokens = response.usage.total_tokens
+
+        from app.ai.services.usage_tracker import UsageTracker
+        UsageTracker.track_usage(
+            request_id=ctx["request_id"],
+            user_id=ctx.get("user_id"),
+            feature=ctx.get("feature", "chat"),
+            provider="openai",
+            model=cls.MODEL_NAME,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            latency=latency,
+            status=status,
+            configured_context_budget=ctx.get("configured_context_budget"),
+            configured_history_budget=ctx.get("configured_history_budget"),
+            configured_output_budget=ctx.get("configured_output_budget"),
+            actual_context_tokens=ctx.get("actual_context_tokens"),
+            actual_history_tokens=ctx.get("actual_history_tokens"),
+            error_message=error_message
+        )
+
+    @classmethod
+    def _record_usage_direct(
+        cls,
+        input_tokens: int,
+        output_tokens: int,
+        total_tokens: int,
+        latency: float,
+        status: str,
+        error_message: str | None = None
+    ):
+        ctx = ai_request_context.get()
+        if not ctx or not ctx.get("request_id"):
+            return
+
+        from app.ai.services.usage_tracker import UsageTracker
+        UsageTracker.track_usage(
+            request_id=ctx["request_id"],
+            user_id=ctx.get("user_id"),
+            feature=ctx.get("feature", "chat"),
+            provider="openai",
+            model=cls.MODEL_NAME,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            latency=latency,
+            status=status,
+            configured_context_budget=ctx.get("configured_context_budget"),
+            configured_history_budget=ctx.get("configured_history_budget"),
+            configured_output_budget=ctx.get("configured_output_budget"),
+            actual_context_tokens=ctx.get("actual_context_tokens"),
+            actual_history_tokens=ctx.get("actual_history_tokens"),
+            error_message=error_message
+        )

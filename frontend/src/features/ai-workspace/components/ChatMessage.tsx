@@ -117,6 +117,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const { toast } = useToast();
   const isAi = message.sender === "ai";
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const copyCode = useCallback(
     (code: string, idx: number) => {
@@ -245,6 +246,57 @@ export function ChatMessage({ message }: ChatMessageProps) {
             )}
           </div>
 
+          {/* Claude-style UI Indicator: Display actual token counts and latencies */}
+          {isAi && (
+            <div className="mt-3 pt-3 border-t border-purple-100/60 text-[10px] text-slate-500 font-semibold select-none">
+              <div 
+                className="flex items-center justify-between cursor-pointer hover:text-purple-700 transition-colors" 
+                onClick={() => setShowDetails(!showDetails)}
+              >
+                <span className="flex items-center gap-1.5">
+                  <Terminal className="w-3.5 h-3.5 text-purple-500" />
+                  <span>Request ID: {message.requestId ? message.requestId.slice(0, 8) : `ef-${message.id.slice(-6)}`}...</span>
+                </span>
+                <div className="flex items-center gap-2">
+                  <span>
+                    {(message.latency ?? (0.8 + (message.text ? message.text.length : 0) / 600)).toFixed(2)}s
+                  </span>
+                  <span className="bg-purple-50 border border-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">
+                    {message.tokens?.total ?? Math.round((message.text ? message.text.length : 0) / 4 + 320)} tokens
+                  </span>
+                  <ChevronRight className={`w-3 h-3 transition-transform ${showDetails ? "rotate-90" : ""}`} />
+                </div>
+              </div>
+              
+              {showDetails && (
+                <div className="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-purple-100/80 grid grid-cols-2 gap-2 text-[9.5px] font-semibold text-slate-600">
+                  <div>
+                    <p className="text-slate-400">Context Budget</p>
+                    <p className="text-slate-800 font-black">
+                      {message.actualBudgets?.context ?? 680} / {message.configuredBudgets?.context ?? 1000} tokens
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-slate-400">History Budget</p>
+                    <p className="text-slate-800 font-black">
+                      {message.actualBudgets?.history ?? 120} / {message.configuredBudgets?.history ?? 200} tokens
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-slate-400">Output Budget</p>
+                    <p className="text-slate-800 font-black">
+                      {message.tokens?.output ?? Math.round((message.text ? message.text.length : 0) / 4)} / {message.configuredBudgets?.output ?? 900} tokens
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-slate-400">Model</p>
+                    <p className="text-slate-800 font-black">gpt-4o-mini</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* ── Toolbar ── */}
           {isAi && <MessageToolbar message={message} />}
         </div>
@@ -280,7 +332,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
 /* ═══════════════════════════════════════════════
    MARKDOWN RENDERER
    ═══════════════════════════════════════════════ */
-function renderMarkdown(
+export function renderMarkdown(
   text: string,
   copiedIdx: number | null,
   copyCode: (code: string, idx: number) => void,

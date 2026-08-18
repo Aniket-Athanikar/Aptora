@@ -27,6 +27,7 @@ class KnowledgeChatRequest(BaseModel):
     question: str = Field(..., min_length=1, description="Student question")
     limit: Optional[int] = Field(8, ge=1, le=20, description="Max chunks to retrieve")
     subject_id: Optional[int] = Field(None, gt=0, description="Optional subject scope for vector retrieval")
+    stream_format: Optional[str] = Field("plain", description="Format of streaming: 'plain' or 'sse'")
 
 
 class KnowledgeChatResponse(BaseModel):
@@ -76,7 +77,21 @@ class ConversationSummary(BaseModel):
     last_message_at: Optional[datetime]
     pinned: bool
     last_message: Optional[str] = None
+    message_count: Optional[int] = 0
 
 
 class ConversationDetail(ConversationSummary):
     messages: list[PersistentMessageItem] = Field(default_factory=list)
+
+
+class ChatExportResponse(BaseModel):
+    id: str
+    conversation_id: str
+    user_id: int
+    status: str
+    file_name: Optional[str] = None
+    file_size: Optional[int] = None
+    created_at: datetime
+    completed_at: Optional[datetime] = None
+    error_message: Optional[str] = None
+

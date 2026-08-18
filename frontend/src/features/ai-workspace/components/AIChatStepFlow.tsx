@@ -312,6 +312,22 @@ function AiStudyHome() {
               );
             })}
           </div>
+
+          {/* Bottom Action for Direct AI Chat with Subject */}
+          <div className="pt-6 border-t border-slate-200 flex justify-end">
+            <button
+              onClick={() => {
+                selectResourceType("Book"); // Default category
+                selectResource(""); // Clear specific resource to chat with entire subject/category
+                setFlowStep(5);
+              }}
+              className="h-11 px-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-emerald-600/20 w-full sm:w-auto"
+            >
+              <MessageSquare className="w-4 h-4 text-emerald-255 animate-pulse" />
+              <span>Start AI Subject Chat</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </motion.div>
       </div>
     );
@@ -348,7 +364,7 @@ function AiStudyHome() {
   return (
     <div className="w-full bg-slate-50/60 rounded-3xl p-4 sm:p-6 border border-slate-200/80 min-h-[650px] shadow-sm space-y-6">
       <FlowStepProgressBar currentStep={1} onStepClick={setFlowStep} />
-      
+
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
           <div>
@@ -434,7 +450,7 @@ type ResourceTypeFilter = "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
 const backendResourceType: Record<ResourceTypeFilter, string> = { Book: "book", PDF: "pdf", Note: "notes", PYQ: "pyq", Syllabus: "syllabus" };
 
 function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSelect }: { subjectId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void; onSelect: (id: string) => void }) {
-  const { activeWorkspaceId, setFlowStep } = useWorkspace();
+  const { activeWorkspaceId, setFlowStep, selectResource } = useWorkspace();
   const [query, setQuery] = useState("");
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -454,7 +470,7 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
         params.append("subject_id", subjectId);
       }
       let items = (await backendService.workspace.search(workspaceId, params)).items;
-      
+
       // If empty and not already fallbacked, query all workspace resources for this type
       if (items.length === 0 && !isFallbackSubject) {
         const fallbackParams = new URLSearchParams({ resource_type: backendResourceType[resourceType], keyword: query, limit: "100" });
@@ -544,16 +560,14 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
               <div
                 key={resource.id}
                 onClick={() => setSelectedId(String(resource.id))}
-                className={`group relative flex flex-col justify-between p-5 bg-white border rounded-3xl transition-all duration-300 cursor-pointer space-y-4 ${
-                  isSelected
-                    ? "border-emerald-500 ring-2 ring-emerald-300/40 bg-gradient-to-b from-emerald-50/30 to-white shadow-md"
-                    : "border-slate-200/90 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5"
-                }`}
+                className={`group relative flex flex-col justify-between p-5 bg-white border rounded-3xl transition-all duration-300 cursor-pointer space-y-4 ${isSelected
+                  ? "border-emerald-500 ring-2 ring-emerald-300/40 bg-gradient-to-b from-emerald-50/30 to-white shadow-md"
+                  : "border-slate-200/90 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5"
+                  }`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border transition-all ${
-                    isSelected ? "bg-emerald-600 text-white border-emerald-500 shadow-sm" : "bg-emerald-50 text-emerald-700 border-emerald-100"
-                  }`}>
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border transition-all ${isSelected ? "bg-emerald-600 text-white border-emerald-500 shadow-sm" : "bg-emerald-50 text-emerald-700 border-emerald-100"
+                    }`}>
                     <BookOpen className="w-5.5 h-5.5" />
                   </div>
 
@@ -614,14 +628,13 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
                       e.stopPropagation();
                       onSelect(String(resource.id));
                     }}
-                    className={`w-full h-10 rounded-2xl font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
-                      isSelected
-                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                        : "bg-slate-100 text-slate-800 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300"
-                    }`}
+                    className={`w-full h-10 rounded-2xl font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer border ${isSelected
+                      ? "bg-purple-50 text-purple-750 border-purple-200 hover:bg-purple-100/50"
+                      : "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200/90"
+                      }`}
                   >
-                    <span>{isSelected ? "Selected for AI Study" : "Select & Open Chat"}</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Preview Chunks</span>
                   </button>
                 </div>
               </div>

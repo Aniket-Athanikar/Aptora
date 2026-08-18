@@ -17,9 +17,11 @@ from __future__ import annotations
 import logging
 from typing import Any, List, Dict
 
+from app.core.config import settings
+from app.ai.services.token_budget_manager import TokenBudgetManager
+
 logger = logging.getLogger(__name__)
 
-_DEFAULT_MAX_CHARS: int = 4_000
 _DEFAULT_MAX_CHUNKS: int = 5
 
 
@@ -32,25 +34,16 @@ class ContextOptimizer:
     def optimize(
         cls,
         chunks: List[Dict[str, Any]],
-        max_chars: int = _DEFAULT_MAX_CHARS,
+        max_tokens: int | None = None,
     ) -> List[Dict[str, Any]]:
         """
-        Deduplicate, merge, rerank, and trim a list of retrieved chunks.
-
-        Parameters
-        ----------
-        chunks:
-            List of chunk dictionaries formatted by SearchService.
-        max_chars:
-            Maximum character length budget for the final context string.
-
-        Returns
-        -------
-        List[Dict[str, Any]]
-            Optimized, ranked list of unique chunks.
+        Deduplicate, merge, rerank, and trim a list of retrieved chunks based on token budget.
         """
         if not chunks:
             return []
+
+        if max_tokens is None:
+            max_tokens = settings.AI_CHAT_CONTEXT_TOKENS
 
         # Step 1: Remove exact and near-duplicates
         deduped = cls._remove_duplicates(chunks)
@@ -61,13 +54,14 @@ class ContextOptimizer:
         # Step 3: Merge contiguous or same-resource adjacent chunks if applicable
         merged = cls._merge_contiguous(deduped)
 
-        # Step 4: Trim to character budget
-        trimmed = cls._trim_to_budget(merged, max_chars)
+        # Step 4: Trim to token budget
+        trimmed = TokenBudgetManager.slice_context_to_budget(merged, max_tokens)
 
         logger.info(
-            "[ContextOptimizer] Optimized %d raw chunk(s) down to %d unique, high-relevance chunk(s).",
+            "[ContextOptimizer] Optimized %d raw chunk(s) down to %d unique, high-relevance chunk(s) within %d token budget.",
             len(chunks),
             len(trimmed),
+            max_tokens,
         )
 
         return trimmed
@@ -113,22 +107,3 @@ class ContextOptimizer:
         """
         # For now, return sorted unique chunks while preserving score ordering
         return chunks
-
-    @classmethod
-    def _trim_to_budget(cls, chunks: List[Dict[str, Any]], max_chars: int) -> List[Dict[str, Any]]:
-        """
-        Keep top chunks until cumulative character count reaches max_chars.
-        """
-        result = []
-        current_chars = 0
-
-        for chunk in chunks:
-            content_len = len(chunk.get("content", ""))
-            if current_chars + content_len > max_chars and len(result) >= 2:
-                # Stop if budget exceeded and we already have at least 2 good chunks
-                break
-
-            result.append(chunk)
-            current_chars += content_len
-
-        return result

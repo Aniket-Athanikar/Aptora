@@ -35,6 +35,9 @@ from app.models.onboarding_profile import UserOnboardingProfileDb
 from app.models.knowledge_conversation import KnowledgeConversationDb, KnowledgeMessageDb
 from app.models.notification import NotificationDb
 from app.models.ai_study_source import AiStudySourceDb
+from app.models.llm_usage import LlmUsageDb
+from app.models.audit_event import AuditEventDb
+from app.models.chat_export import ChatExportDb
 
 
 __all__ = [
@@ -61,5 +64,8 @@ __all__ = [
     "KnowledgeMessageDb",
     "NotificationDb",
     "AiStudySourceDb",
+    "LlmUsageDb",
+    "AuditEventDb",
+    "ChatExportDb",
 ]
 

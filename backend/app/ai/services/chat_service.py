@@ -32,6 +32,8 @@ class ChatService:
         cls,
         workspace_id: int,
         question: str,
+        user_id: int | None = None,
+        request_id: str | None = None,
     ) -> str:
         """
         Generate a response using the AI Reasoning Pipeline.
@@ -43,8 +45,9 @@ class ChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "Chat request | workspace=%s",
+            "Chat request | workspace=%s | request_id=%s",
             workspace_id,
+            request_id,
         )
 
         try:
@@ -52,6 +55,8 @@ class ChatService:
             pipeline_result = ReasoningPipeline.run(
                 workspace_id=workspace_id,
                 question=question,
+                user_id=user_id,
+                request_id=request_id,
             )
 
             answer = pipeline_result["answer"]
@@ -75,6 +80,9 @@ class ChatService:
         cls,
         workspace_id: int,
         question: str,
+        stream_format: str = "plain",
+        user_id: int | None = None,
+        request_id: str | None = None,
     ) -> Generator[str, None, None]:
         """
         Stream a response using the AI Reasoning Pipeline.
@@ -86,8 +94,9 @@ class ChatService:
             raise ValueError("Question cannot be empty.")
 
         logger.info(
-            "Streaming chat | workspace=%s",
+            "Streaming chat | workspace=%s | request_id=%s",
             workspace_id,
+            request_id,
         )
 
         try:
@@ -95,6 +104,9 @@ class ChatService:
             yield from ReasoningPipeline.run_stream(
                 workspace_id=workspace_id,
                 question=question,
+                stream_format=stream_format,
+                user_id=user_id,
+                request_id=request_id,
             )
 
             logger.info(

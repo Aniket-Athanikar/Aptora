@@ -124,74 +124,80 @@ export function Sidebar({
             const active = activeTab === key;
             const isHovered = hoveredItem === key;
             return (
-              <button
-                key={key}
-                onClick={() => navigate(router, key)}
-                onMouseEnter={() => setHoveredItem(key)}
-                onMouseLeave={() => setHoveredItem(null)}
-                title={isCollapsed ? label : undefined}
-                className={`group relative flex w-full items-center rounded-2xl text-[13px] font-black
-                            transition-all duration-300 cursor-pointer overflow-hidden border
-                            ${isCollapsed ? "justify-center h-12.5" : "gap-4 h-12 px-4.5"}
-                            ${active
-                    ? `${textClass} ${bgLight} border-slate-100 shadow-md`
-                    : "text-slate-500 hover:text-slate-900 border-transparent hover:bg-slate-50/80 hover:border-slate-150"
-                  }`}
-                style={{
-                  boxShadow: active ? `0 8px 24px -6px ${glow}` : undefined
-                }}
-              >
-                {/* Active back pill slider */}
-                {active && (
-                  <motion.div
-                    layoutId="activePill"
-                    className="absolute inset-0 bg-white/25 -z-10 rounded-2xl overflow-hidden"
-                    transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/45 to-transparent"
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "100%" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 2.2,
-                        ease: "linear",
-                      }}
-                    />
-                  </motion.div>
-                )}
-
-                {/* Left Active border indicator */}
-                {active && (
-                  <motion.span
-                    layoutId="activeBorder"
-                    className={`absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-gradient-to-b ${gradient}`}
-                    transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                  />
-                )}
-
-                {/* Icon wrapper */}
-                <div
-                  className={`relative p-2 rounded-xl transition-all duration-300 border
-                             ${active ? "bg-white border-slate-100 shadow-sm scale-105" : "bg-transparent border-transparent group-hover:bg-white group-hover:border-slate-200/50 group-hover:shadow-sm"}`}
+              <React.Fragment key={key}>
+                {/* {!isCollapsed && key === "ai-sources" && (
+                  <div className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-5 mb-1.5 pl-3">
+                    Library
+                  </div>
+                )} */}
+                <button
+                  onClick={() => navigate(router, key)}
+                  onMouseEnter={() => setHoveredItem(key)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  title={isCollapsed ? label : undefined}
+                  className={`group relative flex w-full items-center rounded-2xl text-[13px] font-black
+                              transition-all duration-300 cursor-pointer overflow-hidden border
+                              ${isCollapsed ? "justify-center h-12.5" : "gap-4 h-12 px-4.5"}
+                              ${active
+                      ? `${textClass} ${bgLight} border-slate-100 shadow-md`
+                      : "text-slate-500 hover:text-slate-900 border-transparent hover:bg-slate-50/80 hover:border-slate-150"
+                    }`}
+                  style={{
+                    boxShadow: active ? `0 8px 24px -6px ${glow}` : undefined
+                  }}
                 >
-                  <Icon
-                    className={`w-[17px] h-[17px] shrink-0 transition-transform duration-300 group-hover:scale-110 
-                                ${active ? textClass : "text-slate-400 group-hover:text-slate-755 group-hover:text-slate-700"}`}
-                  />
-                </div>
+                  {/* Active back pill slider */}
+                  {active && (
+                    <motion.div
+                      layoutId="activePill"
+                      className="absolute inset-0 bg-white/25 -z-10 rounded-2xl overflow-hidden"
+                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/45 to-transparent"
+                        initial={{ x: "-100%" }}
+                        animate={{ x: "100%" }}
+                        transition={{
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          duration: 2.2,
+                          ease: "linear",
+                        }}
+                      />
+                    </motion.div>
+                  )}
 
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="truncate tracking-wide"
+                  {/* Left Active border indicator */}
+                  {active && (
+                    <motion.span
+                      layoutId="activeBorder"
+                      className={`absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-gradient-to-b ${gradient}`}
+                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                    />
+                  )}
+
+                  {/* Icon wrapper */}
+                  <div
+                    className={`relative p-2 rounded-xl transition-all duration-300 border
+                             ${active ? "bg-white border-slate-100 shadow-sm scale-105" : "bg-transparent border-transparent group-hover:bg-white group-hover:border-slate-200/50 group-hover:shadow-sm"}`}
                   >
-                    {label}
-                  </motion.span>
-                )}
-              </button>
+                    <Icon
+                      className={`w-[17px] h-[17px] shrink-0 transition-transform duration-300 group-hover:scale-110 
+                                ${active ? textClass : "text-slate-400 group-hover:text-slate-755 group-hover:text-slate-700"}`}
+                    />
+                  </div>
+
+                  {!isCollapsed && (
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="truncate tracking-wide"
+                    >
+                      {label}
+                    </motion.span>
+                  )}
+                </button>
+              </React.Fragment>
             );
           })}
 

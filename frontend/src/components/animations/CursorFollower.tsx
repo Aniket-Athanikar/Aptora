@@ -75,14 +75,14 @@ export default function CursorFollower() {
           translateX: "-50%",
           translateY: "-50%",
           backgroundColor: isHovered 
-            ? "color-mix(in srgb, var(--primary) 8%, transparent)" 
-            : "color-mix(in srgb, var(--primary) 2%, transparent)",
+            ? "rgba(16, 185, 129, 0.08)" 
+            : "rgba(16, 185, 129, 0.02)",
           scale: isHovered ? 1.55 : 1,
           borderColor: isHovered 
-            ? "var(--primary)" 
-            : "color-mix(in srgb, var(--primary) 40%, transparent)",
+            ? "#10b981" 
+            : "rgba(16, 185, 129, 0.4)",
           boxShadow: isHovered 
-            ? "0 0 15px color-mix(in srgb, var(--primary) 35%, transparent)" 
+            ? "0 0 20px rgba(16, 185, 129, 0.4)" 
             : "none",
         }}
         transition={{ type: "tween", ease: "backOut", duration: 0.2 }}
@@ -96,7 +96,7 @@ export default function CursorFollower() {
           translateX: "-50%",
           translateY: "-50%",
           scale: isHovered ? 0.6 : 1,
-          backgroundColor: "var(--primary)",
+          backgroundColor: "#10b981",
         }}
       />
     </>

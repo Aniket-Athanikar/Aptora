@@ -6,8 +6,11 @@ import { ChatMessage } from "./ChatMessage";
 import { InputToolbar } from "./InputToolbar";
 import { PromptSuggestions } from "./PromptSuggestions";
 import { ThinkingAnimation } from "./ThinkingAnimation";
-import { Sparkles, Bot, Trash2, ArrowDown, ShieldCheck } from "lucide-react";
+import { Sparkles, Bot, Trash2, ArrowDown, ShieldCheck, Download, Loader2, MoreVertical, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { backendService } from "@/services/backend.service";
+import { useToast } from "@/lib/ToastContext";
+import { ExportModal } from "./ExportModal";
 
 export function ChatWindow() {
   const { activeConversation, isStreaming, thinkingStage, deleteConversation } = useWorkspace();
@@ -15,6 +18,26 @@ export function ChatWindow() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
+  const { toast } = useToast();
+
+  const handleSaveAsNote = async () => {
+    if (!activeConversation) return;
+    setSavingNote(true);
+    setIsMenuOpen(false);
+    toast("Extracting key concepts to create study notes...", "info");
+    try {
+      await backendService.ai.saveAsNote(activeConversation.id);
+      toast("Successfully converted conversation to a structured study note.", "success");
+    } catch (err: any) {
+      console.error(err);
+      toast(err?.message || "Failed to save conversation as note.", "error");
+    } finally {
+      setSavingNote(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,34 +97,80 @@ export function ChatWindow() {
           </div>
         </div>
 
-        {showDeleteConfirm ? (
-          <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl text-xs shrink-0 shadow-xs">
-            <span className="font-bold text-rose-800">Delete session?</span>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Dropdown Menu for Save note & Export PDF */}
+          <div className="relative">
             <button
-              onClick={() => {
-                deleteConversation(activeConversation.id);
-                setShowDeleteConfirm(false);
-              }}
-              className="font-black text-rose-700 hover:text-rose-900 px-1.5 py-0.5 bg-rose-100 rounded-md cursor-pointer"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-slate-400 hover:text-purple-600 rounded-xl hover:bg-purple-50 transition-all cursor-pointer border border-transparent hover:border-purple-200 flex items-center gap-1"
+              title="Conversation Actions"
             >
-              Yes
+              <MoreVertical className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => setShowDeleteConfirm(false)}
-              className="font-bold text-slate-600 hover:text-slate-800 px-1 py-0.5 cursor-pointer"
-            >
-              No
-            </button>
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-lg py-2 z-50 text-xs font-black text-slate-700"
+                >
+                  <button
+                    onClick={handleSaveAsNote}
+                    disabled={savingNote}
+                    className="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {savingNote ? (
+                      <Loader2 className="w-3.5 h-3.5 text-slate-405 animate-spin" />
+                    ) : (
+                      <FileText className="w-3.5 h-3.5 text-slate-400" />
+                    )}
+                    Save as AI Note
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsExportModalOpen(true);
+                    }}
+                    className="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-400" />
+                    Export PDF
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        ) : (
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-all cursor-pointer border border-transparent hover:border-rose-200"
-            title="Delete Session"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        )}
+
+          {showDeleteConfirm ? (
+            <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl text-xs shrink-0 shadow-xs">
+              <span className="font-bold text-rose-800">Delete session?</span>
+              <button
+                onClick={() => {
+                  deleteConversation(activeConversation.id);
+                  setShowDeleteConfirm(false);
+                }}
+                className="font-black text-rose-700 hover:text-rose-900 px-1.5 py-0.5 bg-rose-100 rounded-md cursor-pointer"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="font-bold text-slate-600 hover:text-slate-800 px-1 py-0.5 cursor-pointer"
+              >
+                No
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-all cursor-pointer border border-transparent hover:border-rose-200"
+              title="Delete Session"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Messages Scroll Area */}
@@ -161,6 +230,15 @@ export function ChatWindow() {
       <div className="border-t border-purple-100 p-3.5 sm:p-4 bg-white">
         <InputToolbar />
       </div>
+
+      {/* Export Conversation Modal */}
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        conversationId={activeConversation.id}
+        conversationTitle={activeConversation.title}
+        messageCount={activeConversation.messages.length}
+      />
     </div>
   );
 }

@@ -111,3 +111,5 @@ websockets==16.0
 wheel==0.45.1
 xxhash==3.8.1
 zstandard==0.25.0
+tiktoken==0.14.0
+reportlab==5.0.0

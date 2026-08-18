@@ -7,9 +7,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.main import app
+from app.main import app as fastapi_app
 from app.database import get_db
 from app.db.base import Base
+import app.models
 from app.models.user import UserDb
 from app.models.workspace import GoalWorkspaceDb
 from app.models.workspace_subject import WorkspaceSubjectDb
@@ -19,9 +20,15 @@ from app.core.dependencies import get_current_user
 from app.core.enums import ResourceType, ResourceStatus
 from app.ai.services.search_service import SearchService
 
+from sqlalchemy.pool import StaticPool
+
 # Setup test DB
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_ai_sources.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
@@ -51,15 +58,13 @@ def override_get_current_user():
     return user
 
 
-app.dependency_overrides[get_db] = override_get_db
-app.dependency_overrides[get_current_user] = override_get_current_user
-
-client = TestClient(app)
+client = TestClient(fastapi_app)
 
 
 @pytest.fixture(autouse=True)
 def setup_test_data():
-    Base.metadata.drop_all(bind=engine)
+    fastapi_app.dependency_overrides[get_db] = override_get_db
+    fastapi_app.dependency_overrides[get_current_user] = override_get_current_user
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
 
@@ -126,6 +131,11 @@ def setup_test_data():
     db.add_all([res1, res2])
     db.commit()
     db.close()
+
+    yield
+
+    fastapi_app.dependency_overrides.clear()
+    Base.metadata.drop_all(bind=engine)
 
 
 def test_browse_library_books():

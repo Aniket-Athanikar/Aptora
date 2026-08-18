@@ -1,27 +1,15 @@
-"""
-ExamForge AI — Reasoning Pipeline
-==================================
-
-Master orchestrator for ExamForge AI's professional knowledge engine.
-
-Pipeline Architecture:
-----------------------
-1. Intent Analysis     (IntentAnalyzer)
-2. Query Rewriting     (QueryRewriter)
-3. Retrieval Planning  (RetrievalPlanner)
-4. Multi-Query Search  (SearchService / Retriever)
-5. Context Optimizer   (ContextOptimizer)
-6. Knowledge Synthesis (KnowledgeSynthesizer)
-7. LLM Prompt Build    (PromptBuilder / Agents)
-8. LLM Execution       (LLMService)
-9. Response Format     (ResponseFormatter)
-10. Source Attribution (ConfidenceScorer)
-"""
-
 from __future__ import annotations
 
 import logging
+import uuid
+import time
+import json
 from typing import Any, Dict, List, Generator
+
+from app.core.config import settings
+from app.core.request_context import ai_request_context
+from app.ai.services.token_budget_manager import TokenBudgetManager
+from app.ai.services.audit_logger import AuditLogger
 
 from app.ai.orchestrator.intent_analyzer import IntentAnalyzer
 from app.ai.orchestrator.query_rewriter import QueryRewriter
@@ -83,9 +71,6 @@ class ReasoningPipeline:
         if not chunks:
             logger.info("[ReasoningPipeline] Context validation failed. No relevant chunks found for query.")
             return False
-        # SearchService preserves the raw Qdrant cosine score as
-        # ``vector_score`` after lightweight reranking.  Fall back to score
-        # for legacy callers that do not provide it.
         max_score = max(float(chunk.get("vector_score", chunk.get("score")) or 0.0) for chunk in chunks)
         strong_keyword_match = any(float(chunk.get("keyword_score") or 0.0) >= 0.5 for chunk in chunks)
         if max_score < cls.MIN_SIMILARITY_SCORE and not strong_keyword_match:
@@ -108,6 +93,9 @@ class ReasoningPipeline:
         subject_id: int | None = None,
         limit: int | None = None,
         resource_ids: List[int] | None = None,
+        user_id: int | None = None,
+        request_id: str | None = None,
+        feature: str = "chat",
     ) -> Dict[str, Any]:
         """
         Execute the full reasoning pipeline for a student query.
@@ -116,96 +104,118 @@ class ReasoningPipeline:
         if not question:
             raise ValueError("Question cannot be empty.")
 
-        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d | subject_id=%s | resource_ids=%s", workspace_id, subject_id, resource_ids)
+        request_id = request_id or str(uuid.uuid4())
+        logger.info("[ReasoningPipeline] Running pipeline | workspace=%d | request_id=%s", workspace_id, request_id)
 
-        # Resolve subject_name from DB if subject_id is provided but subject text is None
-        if subject_id and not subject:
+        # Log started audit event
+        AuditLogger.log_event(request_id, user_id, "AI_REQUEST_STARTED", feature=feature, model=LLMService.MODEL_NAME, status="started")
+
+        token = ai_request_context.set({
+            "request_id": request_id,
+            "user_id": user_id,
+            "feature": feature,
+            "configured_context_budget": settings.AI_CHAT_CONTEXT_TOKENS,
+            "configured_history_budget": settings.AI_CHAT_HISTORY_TOKENS,
+            "configured_output_budget": settings.AI_CHAT_OUTPUT_TOKENS,
+            "actual_context_tokens": 0,
+            "actual_history_tokens": 0,
+        })
+
+        try:
+            # Resolve subject_name from DB if subject_id is provided but subject text is None
+            if subject_id and not subject:
+                try:
+                    from app.database import SessionLocal
+                    from app.models.workspace_subject import WorkspaceSubjectDb
+                    s_db = SessionLocal()
+                    subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
+                    if subj_rec:
+                        subject = subj_rec.name
+                    s_db.close()
+                except Exception as s_err:
+                    logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
+
+            # Step 1: Intent Analysis
+            intent_res = IntentAnalyzer.analyze(question)
+            logger.info("[ReasoningPipeline] Step 1: Intent = %s (conf: %.2f)", intent_res.intent, intent_res.confidence)
+
+            # Step 2: Query rewriting
+            rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
+            logger.info("[ReasoningPipeline] Step 2: Multi-queries = %s", rewritten_queries)
+
+            # Step 3: Retrieval Planning
+            plan = RetrievalPlanner.plan(
+                intent=intent_res.intent,
+                confidence=intent_res.confidence,
+                preferred_resource_types=intent_res.required_resource_types,
+                preferred_chunk_limit=intent_res.preferred_chunk_limit,
+                subject=subject,
+            )
+
+            # Step 4: Multi-Query Retrieval
+            raw_chunks: List[Dict[str, Any]] = []
             try:
-                from app.database import SessionLocal
-                from app.models.workspace_subject import WorkspaceSubjectDb
-                s_db = SessionLocal()
-                subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
-                if subj_rec:
-                    subject = subj_rec.name
-                s_db.close()
-            except Exception as s_err:
-                logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
+                for q in rewritten_queries:
+                    chunks = Retriever.retrieve(
+                        workspace_id=workspace_id,
+                        question=q,
+                        limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
+                        subject_id=subject_id,
+                        resource_types=plan.target_resource_types,
+                        resource_ids=resource_ids,
+                    )
+                    raw_chunks.extend(chunks)
+            except RetrievalUnavailable:
+                logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
+                AuditLogger.log_event(request_id, user_id, "AI_REQUEST_FAILED", feature=feature, model=LLMService.MODEL_NAME, status="failed", metadata={"error": "Retrieval infrastructure unavailable"})
+                return cls._search_unavailable_result(intent_res.intent, rewritten_queries)
 
-        # Step 1: Intent Analysis
-        intent_res = IntentAnalyzer.analyze(question)
-        logger.info("[ReasoningPipeline] Step 1: Intent = %s (conf: %.2f)", intent_res.intent, intent_res.confidence)
+            # Step 5: Context Optimization (Deduplication, merging, token limits)
+            optimized_chunks = ContextOptimizer.optimize(raw_chunks)
 
-        # Step 2: Query rewriting. Subject scope is enforced by retrieval filters.
-        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
-        logger.info("[ReasoningPipeline] Step 2: Multi-queries = %s", rewritten_queries)
+            # Step 6: Confidence & Sources
+            confidence_result = ConfidenceScorer.score(optimized_chunks)
 
-        # Step 3: Retrieval Planning
-        plan = RetrievalPlanner.plan(
-            intent=intent_res.intent,
-            confidence=intent_res.confidence,
-            preferred_resource_types=intent_res.required_resource_types,
-            preferred_chunk_limit=intent_res.preferred_chunk_limit,
-            subject=subject,
-        )
+            # Step 7: Knowledge Synthesis
+            synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
+            
+            # Enforce token budget limits on history and context
+            sliced_history = TokenBudgetManager.slice_history_to_budget(history or [], settings.AI_CHAT_HISTORY_TOKENS)
+            actual_history_tokens = TokenBudgetManager.count_messages_tokens(sliced_history)
+            actual_context_tokens = TokenBudgetManager.count_tokens(synthesized_context)
 
-        # Step 4: Multi-Query Retrieval
-        raw_chunks: List[Dict[str, Any]] = []
-        try:
-            for q in rewritten_queries:
-                chunks = Retriever.retrieve(
-                    workspace_id=workspace_id,
-                    question=q,
-                    limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
-                    subject_id=subject_id,
-                    resource_types=plan.target_resource_types,
-                    resource_ids=resource_ids,
-                )
-                raw_chunks.extend(chunks)
-        except RetrievalUnavailable:
-            logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
-            return cls._search_unavailable_result(intent_res.intent, rewritten_queries)
+            ctx = ai_request_context.get()
+            ctx["actual_context_tokens"] = actual_context_tokens
+            ctx["actual_history_tokens"] = actual_history_tokens
 
-        logger.info("[ReasoningPipeline] Step 4: Multi-query retrieved %d raw chunks total.", len(raw_chunks))
+            if not cls._has_valid_context(optimized_chunks, synthesized_context):
+                logger.info("[ReasoningPipeline] Skipping LLM generation.")
+                AuditLogger.log_event(request_id, user_id, "AI_REQUEST_COMPLETED", feature=feature, model=LLMService.MODEL_NAME, status="completed", metadata={"context_found": False})
+                return cls._no_context_result(intent_res.intent, rewritten_queries)
 
-        # Step 5: Context Optimization (Deduplication, merging, token limits)
-        optimized_chunks = ContextOptimizer.optimize(raw_chunks)
-        logger.info("[ReasoningPipeline] Step 5: Optimized to %d chunks.", len(optimized_chunks))
+            # Step 8: LLM Generation
+            prompt = cls._build_reasoning_prompt(
+                question=question,
+                context=synthesized_context,
+                intent=intent_res.intent,
+                history=sliced_history,
+            )
 
-        # Task 8: Detailed Logging of Chunk Injection
-        chunk_summary = [
-            f"ID:{c.get('chunk_id','?')} (score:{c.get('score', 0.0):.4f}, res:{c.get('resource_id')})"
-            for c in optimized_chunks
-        ]
-        logger.info("[ReasoningPipeline Task 8 Audit] Retrieved Chunks (%d): %s", len(optimized_chunks), chunk_summary)
-
-        # Step 6: Confidence & Sources
-        confidence_result = ConfidenceScorer.score(optimized_chunks)
-        logger.info("[ReasoningPipeline] Step 6: Confidence = %s (avg: %.2f)", confidence_result.level, confidence_result.avg_score)
-
-        # Step 7: Knowledge Synthesis
-        synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
-        logger.info("[ReasoningPipeline] Final context documents=%s; context length=%d chars.", [c.get("document_title") for c in optimized_chunks], len(synthesized_context))
-
-        if not cls._has_valid_context(optimized_chunks, synthesized_context):
-            logger.info("[ReasoningPipeline] Skipping LLM generation.")
-            return cls._no_context_result(intent_res.intent, rewritten_queries)
-
-        # Step 8: LLM Generation
-        prompt = cls._build_reasoning_prompt(
-            question=question,
-            context=synthesized_context,
-            intent=intent_res.intent,
-            history=history,
-        )
-        logger.info("[ReasoningPipeline Task 8 Audit] Prompt Preview (first 300 chars):\n%s", prompt[:300])
-
-        try:
             raw_answer = LLMService.generate(prompt)
-        except Exception:
-            logger.exception("[ReasoningPipeline] LLM generation failed after context validation.")
+
+            # Step 9: Response Formatting & Source Attribution
+            formatted_answer = ResponseFormatter.format_response(
+                raw_answer=raw_answer,
+                intent=intent_res.intent,
+                confidence=confidence_result.level,
+                sources=confidence_result.sources,
+            )
+
+            AuditLogger.log_event(request_id, user_id, "AI_REQUEST_COMPLETED", feature=feature, model=LLMService.MODEL_NAME, status="completed", metadata={"context_found": True})
+
             return {
-                "answer": "AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry.",
-                "raw_answer": "",
+                "answer": formatted_answer,
+                "raw_answer": raw_answer,
                 "intent": intent_res.intent,
                 "confidence": confidence_result.level,
                 "sources": confidence_result.sources,
@@ -213,25 +223,11 @@ class ReasoningPipeline:
                 "queries_used": rewritten_queries,
             }
 
-        # Step 9: Response Formatting & Source Attribution
-        formatted_answer = ResponseFormatter.format_response(
-            raw_answer=raw_answer,
-            intent=intent_res.intent,
-            confidence=confidence_result.level,
-            sources=confidence_result.sources,
-        )
-
-        logger.info("[ReasoningPipeline] Pipeline execution complete.")
-
-        return {
-            "answer": formatted_answer,
-            "raw_answer": raw_answer,
-            "intent": intent_res.intent,
-            "confidence": confidence_result.level,
-            "sources": confidence_result.sources,
-            "context_found": True,
-            "queries_used": rewritten_queries,
-        }
+        except Exception as e:
+            AuditLogger.log_event(request_id, user_id, "AI_REQUEST_FAILED", feature=feature, model=LLMService.MODEL_NAME, status="failed", metadata={"error": str(e)})
+            raise
+        finally:
+            ai_request_context.reset(token)
 
     @classmethod
     def run_stream(
@@ -243,6 +239,10 @@ class ReasoningPipeline:
         subject_id: int | None = None,
         limit: int | None = None,
         resource_ids: List[int] | None = None,
+        stream_format: str = "plain",
+        user_id: int | None = None,
+        request_id: str | None = None,
+        feature: str = "chat",
     ) -> Generator[str, None, None]:
         """
         Stream response through reasoning pipeline.
@@ -251,71 +251,137 @@ class ReasoningPipeline:
         if not question:
             raise ValueError("Question cannot be empty.")
 
-        # Resolve subject_name from DB if subject_id is provided but subject text is None
-        if subject_id and not subject:
+        request_id = request_id or str(uuid.uuid4())
+        
+        # Log started audit event
+        AuditLogger.log_event(request_id, user_id, "AI_REQUEST_STARTED", feature=feature, model=LLMService.MODEL_NAME, status="started")
+
+        token = ai_request_context.set({
+            "request_id": request_id,
+            "user_id": user_id,
+            "feature": feature,
+            "configured_context_budget": settings.AI_CHAT_CONTEXT_TOKENS,
+            "configured_history_budget": settings.AI_CHAT_HISTORY_TOKENS,
+            "configured_output_budget": settings.AI_CHAT_OUTPUT_TOKENS,
+            "actual_context_tokens": 0,
+            "actual_history_tokens": 0,
+        })
+
+        try:
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'STARTED', 'request_id': request_id})}\n\n"
+
+            # Resolve subject_name from DB if subject_id is provided but subject text is None
+            if subject_id and not subject:
+                try:
+                    from app.database import SessionLocal
+                    from app.models.workspace_subject import WorkspaceSubjectDb
+                    s_db = SessionLocal()
+                    subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
+                    if subj_rec:
+                        subject = subj_rec.name
+                    s_db.close()
+                except Exception as s_err:
+                    logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
+
+            # Step 1: Intent Analysis
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'SEARCHING'})}\n\n"
+            intent_res = IntentAnalyzer.analyze(question)
+            
+            # Step 2: Query rewriting
+            rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
+            
+            # Step 3: Retrieval Planning
+            plan = RetrievalPlanner.plan(
+                intent=intent_res.intent,
+                confidence=intent_res.confidence,
+                preferred_resource_types=intent_res.required_resource_types,
+                preferred_chunk_limit=intent_res.preferred_chunk_limit,
+                subject=subject,
+            )
+
+            # Step 4: Multi-Query Retrieval
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'RETRIEVING'})}\n\n"
+            raw_chunks: List[Dict[str, Any]] = []
             try:
-                from app.database import SessionLocal
-                from app.models.workspace_subject import WorkspaceSubjectDb
-                s_db = SessionLocal()
-                subj_rec = s_db.query(WorkspaceSubjectDb).filter(WorkspaceSubjectDb.id == subject_id).first()
-                if subj_rec:
-                    subject = subj_rec.name
-                s_db.close()
-            except Exception as s_err:
-                logger.debug("[ReasoningPipeline] Subject name resolution failed: %s", s_err)
+                for q in rewritten_queries:
+                    chunks = Retriever.retrieve(
+                        workspace_id=workspace_id,
+                        question=q,
+                        limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
+                        subject_id=subject_id,
+                        resource_types=plan.target_resource_types,
+                        resource_ids=resource_ids,
+                    )
+                    raw_chunks.extend(chunks)
+            except RetrievalUnavailable:
+                logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
+                AuditLogger.log_event(request_id, user_id, "AI_REQUEST_FAILED", feature=feature, model=LLMService.MODEL_NAME, status="failed", metadata={"error": "Retrieval infrastructure unavailable"})
+                if stream_format == "sse":
+                    yield f"data: {json.dumps({'event': 'FAILED', 'error': 'Retrieval infrastructure unavailable'})}\n\n"
+                else:
+                    yield cls.SEARCH_UNAVAILABLE_ANSWER
+                return
 
-        # Execute steps 1 to 7
-        intent_res = IntentAnalyzer.analyze(question)
-        rewritten_queries = QueryRewriter.rewrite(question, intent=intent_res.intent, subject_name=subject)
-        plan = RetrievalPlanner.plan(
-            intent=intent_res.intent,
-            confidence=intent_res.confidence,
-            preferred_resource_types=intent_res.required_resource_types,
-            preferred_chunk_limit=intent_res.preferred_chunk_limit,
-            subject=subject,
-        )
+            # Step 5: Context Optimization
+            optimized_chunks = ContextOptimizer.optimize(raw_chunks)
+            confidence_result = ConfidenceScorer.score(optimized_chunks)
+            synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
 
-        raw_chunks: List[Dict[str, Any]] = []
-        try:
-            for q in rewritten_queries:
-                chunks = Retriever.retrieve(
-                    workspace_id=workspace_id,
-                    question=q,
-                    limit=min(plan.max_chunks_per_query, limit) if limit else plan.max_chunks_per_query,
-                    subject_id=subject_id,
-                    resource_types=plan.target_resource_types,
-                    resource_ids=resource_ids,
-                )
-                raw_chunks.extend(chunks)
-        except RetrievalUnavailable:
-            logger.exception("[ReasoningPipeline] Retrieval infrastructure is unavailable; skipping LLM generation.")
-            yield cls.SEARCH_UNAVAILABLE_ANSWER
-            return
+            # Slicing history and context
+            sliced_history = TokenBudgetManager.slice_history_to_budget(history or [], settings.AI_CHAT_HISTORY_TOKENS)
+            actual_history_tokens = TokenBudgetManager.count_messages_tokens(sliced_history)
+            actual_context_tokens = TokenBudgetManager.count_tokens(synthesized_context)
 
-        optimized_chunks = ContextOptimizer.optimize(raw_chunks)
-        confidence_result = ConfidenceScorer.score(optimized_chunks)
-        synthesized_context = KnowledgeSynthesizer.synthesize(optimized_chunks, intent=intent_res.intent)
+            ctx = ai_request_context.get()
+            ctx["actual_context_tokens"] = actual_context_tokens
+            ctx["actual_history_tokens"] = actual_history_tokens
+            if ctx is not None:
+                ctx["sources"] = confidence_result.sources
+                ctx["confidence"] = confidence_result.level
 
-        if not cls._has_valid_context(optimized_chunks, synthesized_context):
-            logger.info("[ReasoningPipeline] Skipping LLM generation.")
-            yield cls.NO_CONTEXT_ANSWER
-            return
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'CONTEXT_READY'})}\n\n"
 
-        prompt = cls._build_reasoning_prompt(
-            question=question,
-            context=synthesized_context,
-            intent=intent_res.intent,
-            history=history,
-        )
+            if not cls._has_valid_context(optimized_chunks, synthesized_context):
+                logger.info("[ReasoningPipeline] Skipping LLM generation.")
+                AuditLogger.log_event(request_id, user_id, "AI_REQUEST_COMPLETED", feature=feature, model=LLMService.MODEL_NAME, status="completed", metadata={"context_found": False})
+                if stream_format == "sse":
+                    yield f"data: {json.dumps({'event': 'COMPLETED'})}\n\n"
+                else:
+                    yield cls.NO_CONTEXT_ANSWER
+                return
 
-        # Stream tokens only after context validation.  Generator exceptions
-        # occur during iteration, so handle them here rather than leaking an
-        # Provider errors occur during generator iteration, so handle them here.
-        try:
-            yield from LLMService.stream(prompt)
-        except Exception:
-            logger.exception("[ReasoningPipeline] LLM streaming failed after context validation.")
-            yield "AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry."
+            prompt = cls._build_reasoning_prompt(
+                question=question,
+                context=synthesized_context,
+                intent=intent_res.intent,
+                history=sliced_history,
+            )
+
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'GENERATING'})}\n\n"
+
+            for token_chunk in LLMService.stream(prompt):
+                if stream_format == "sse":
+                    yield f"data: {json.dumps({'event': 'TOKEN', 'text': token_chunk})}\n\n"
+                else:
+                    yield token_chunk
+
+            AuditLogger.log_event(request_id, user_id, "AI_REQUEST_COMPLETED", feature=feature, model=LLMService.MODEL_NAME, status="completed", metadata={"context_found": True})
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'COMPLETED'})}\n\n"
+
+        except Exception as e:
+            AuditLogger.log_event(request_id, user_id, "AI_REQUEST_FAILED", feature=feature, model=LLMService.MODEL_NAME, status="failed", metadata={"error": str(e)})
+            if stream_format == "sse":
+                yield f"data: {json.dumps({'event': 'FAILED', 'error': str(e)})}\n\n"
+            else:
+                yield "AI generation service is temporarily unavailable. Please verify the OpenAI API configuration and retry."
+        finally:
+            ai_request_context.reset(token)
 
     @staticmethod
     def _build_reasoning_prompt(
@@ -329,7 +395,7 @@ class ReasoningPipeline:
         """
         history_text = ""
         if history:
-            turns = [f"{m['role'].capitalize()}: {m['content']}" for m in history[-6:]]
+            turns = [f"{m['role'].capitalize()}: {m['content']}" for m in history]
             history_text = "\n\nConversation History:\n" + "\n".join(turns)
 
         return f"""
