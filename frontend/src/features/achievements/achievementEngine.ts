@@ -68,7 +68,7 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
     const nextList = [...get().achievements, newMilestone];
     set({ achievements: nextList });
     if (typeof window !== "undefined") {
-      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+      localStorage.setItem("Aptora_achievements", JSON.stringify(nextList));
     }
   },
 
@@ -76,7 +76,7 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
     const nextList = get().achievements.filter((a) => a.id !== id);
     set({ achievements: nextList });
     if (typeof window !== "undefined") {
-      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+      localStorage.setItem("Aptora_achievements", JSON.stringify(nextList));
     }
   },
 
@@ -95,7 +95,7 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
     });
     set({ achievements: nextList });
     if (typeof window !== "undefined") {
-      localStorage.setItem("examforge_achievements", JSON.stringify(nextList));
+      localStorage.setItem("Aptora_achievements", JSON.stringify(nextList));
     }
   },
 
@@ -173,7 +173,7 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
     if (unlockedAny && newlyUnlocked) {
       set({ achievements: nextAchievements, recentlyUnlocked: newlyUnlocked });
       if (typeof window !== "undefined") {
-        localStorage.setItem("examforge_achievements", JSON.stringify(nextAchievements));
+        localStorage.setItem("Aptora_achievements", JSON.stringify(nextAchievements));
       }
     } else {
       set({ achievements: nextAchievements });
@@ -183,11 +183,11 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
   loadAchievements: () => {
     try {
       if (typeof window === "undefined") return;
-      const stored = localStorage.getItem("examforge_achievements");
+      const stored = localStorage.getItem("Aptora_achievements");
       if (stored) {
         set({ achievements: JSON.parse(stored) });
       } else {
-        localStorage.setItem("examforge_achievements", JSON.stringify(defaultAchievements));
+        localStorage.setItem("Aptora_achievements", JSON.stringify(defaultAchievements));
       }
     } catch (e) {
       console.error("Failed to load achievements", e);

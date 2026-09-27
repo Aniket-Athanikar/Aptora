@@ -1,5 +1,5 @@
 """
-ExamForge AI — Cross-Document Concept Linker Service
+Aptora — Cross-Document Concept Linker Service
 ======================================================
 
 Discovers and connects related concepts across multiple uploaded resources

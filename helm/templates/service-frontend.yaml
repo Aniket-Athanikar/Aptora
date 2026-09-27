@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "examforge.fullname" . }}-frontend
+  name: {{ include "Aptora.fullname" . }}-frontend
   labels:
-    app: {{ include "examforge.name" . }}-frontend
+    app: {{ include "Aptora.name" . }}-frontend
 spec:
   ports:
   - port: {{ .Values.service.frontendPort }}
@@ -11,4 +11,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: {{ include "examforge.name" . }}-frontend
+    app: {{ include "Aptora.name" . }}-frontend

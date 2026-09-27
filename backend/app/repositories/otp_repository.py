@@ -1,5 +1,5 @@
 """
-ExamForge AI — OTP Repository
+Aptora — OTP Repository
 Handles DB persistence for OTPs.
 Never commits transactions.
 """

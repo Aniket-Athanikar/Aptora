@@ -1,5 +1,5 @@
 """
-ExamForge AI - Onboarding Profile API
+Aptora - Onboarding Profile API
 """
 
 from fastapi import APIRouter, Depends, HTTPException

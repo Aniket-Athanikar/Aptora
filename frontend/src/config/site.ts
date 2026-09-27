@@ -1,17 +1,17 @@
 /**
- * ExamForge AI — Site Configuration
+ * Aptora — Site Configuration
  * Central metadata and SEO defaults.
  */
 export const siteConfig = {
-  name: "ExamForge AI",
+  name: "Aptora",
   description:
     "Upload books, notes & PYQs. Our AI will create personalized notes, generate questions, track your progress and make you exam-ready!",
-  url: "https://examforge.ai",
+  url: "https://aptora.ai",
   ogImage: "/favicon.png",
   links: {
     github: "https://github.com/Aniket-Athanikar/Exam_Forge",
   },
-  creator: "ExamForge AI Team",
+  creator: "Aptora Team",
   keywords: [
     "exam preparation",
     "AI study assistant",

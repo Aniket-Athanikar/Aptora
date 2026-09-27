@@ -1,5 +1,5 @@
 """
-ExamForge AI - User Profile Model
+Aptora - User Profile Model
 
 Stores the user's profile and account preferences.
 """

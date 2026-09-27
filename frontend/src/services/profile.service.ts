@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Profile Service
+ * Aptora — Profile Service
  * API calls for profile endpoints.
  */
 import { apiClient } from "./api-client";

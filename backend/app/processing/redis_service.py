@@ -1,5 +1,5 @@
 """
-ExamForge AI - Redis Queue Service
+Aptora - Redis Queue Service
 """
 
 import json

@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────
-# ExamForge AI — Makefile (Enterprise Edition)
+# Aptora — Makefile (Enterprise Edition)
 # ──────────────────────────────────────────────
 
 .PHONY: help dev dev-local prod monitoring docker-down docker-clean test lint lint-fix db-migrate db-upgrade db-downgrade k8s-deploy k8s-undeploy helm-deploy helm-undeploy clean
@@ -79,10 +79,10 @@ k8s-undeploy: ## Delete all applied raw Kubernetes manifests
 # ── Helm Management ─────────────────────────
 
 helm-deploy: ## Deploy / upgrade release using Helm
-	helm upgrade --install examforge ./helm -n examforge --create-namespace
+	helm upgrade --install Aptora ./helm -n Aptora --create-namespace
 
 helm-undeploy: ## Delete Helm release
-	helm uninstall examforge -n examforge
+	helm uninstall Aptora -n Aptora
 
 # ── Cleanup ──────────────────────────────────
 

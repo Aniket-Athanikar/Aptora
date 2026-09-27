@@ -1,5 +1,5 @@
 """
-ExamForge AI — Auth Schemas (Enterprise Architecture v2)
+Aptora — Auth Schemas (Enterprise Architecture v2)
 Request, response, and error models for authentication endpoints.
 """
 from typing import Any, List, Optional

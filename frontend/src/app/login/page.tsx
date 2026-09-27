@@ -124,7 +124,7 @@ export default function LoginPage() {
             setAuthSuccess("✓ Authenticated with Google!");
             login({
               name: "Google Developer",
-              email: "google.dev@examforge.ai",
+              email: "google.dev@Aptora.ai",
               avatar: "https://api.dicebear.com/7.x/identicon/svg?seed=Google",
             });
             setTimeout(() => {
@@ -138,7 +138,7 @@ export default function LoginPage() {
             });
             if (res.ok) {
               const googleUser = await res.json();
-              
+
               const backendRes = await fetch(`${API_URL}/api/auth/google`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -183,7 +183,7 @@ export default function LoginPage() {
           setAuthSuccess("✓ Authenticated with GitHub!");
           login({
             name: "GitHub Developer",
-            email: "github.dev@examforge.ai",
+            email: "github.dev@Aptora.ai",
             avatar: "https://api.dicebear.com/7.x/identicon/svg?seed=Github",
           });
           setTimeout(() => {
@@ -335,54 +335,54 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       {step === "login" ? (
-        <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6">
+        <div className="p-8 sm:p-9 bg-white border border-slate-200/90 rounded-3xl shadow-xl shadow-slate-200/40 flex flex-col gap-6">
           <BrandHeader />
 
-          <div className="flex flex-col items-center text-center gap-1">
-            <h2 className="text-2xl font-black text-neutral-900 leading-none">
-              Welcome Back!
+          <div className="flex flex-col items-center text-center gap-1.5 pt-1">
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+              Welcome Back
             </h2>
-            <p className="text-xs text-neutral-500 font-semibold">
-              Login to continue your learning journey
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Sign in to access your Aptora study workspace
             </p>
           </div>
 
           {authError && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold">
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-semibold">
               <Info className="w-4 h-4 shrink-0" /> {authError}
             </div>
           )}
 
           <form onSubmit={handleFormSubmit(onLoginSubmit)} className="flex flex-col gap-4">
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 {...registerLogin("email")}
                 type="email"
                 placeholder="Email address"
                 autoComplete="username"
-                className="pl-10 h-12 rounded-xl border-[#ECECEC] bg-white/50 text-sm font-medium focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                className="pl-10 h-12 rounded-xl border-slate-200 bg-slate-50/50 text-slate-900 text-sm font-medium focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
               />
               {loginErrors.email && (
-                <p className="text-[10px] text-red-500 font-bold mt-1">
+                <p className="text-[11px] text-red-500 font-semibold mt-1">
                   {loginErrors.email.message}
                 </p>
               )}
             </div>
 
-            <div className="flex justify-end -mt-1">
+            {/* <div className="flex justify-end -mt-1">
               <Link
                 href="/forgot-password"
-                className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer transition-all"
+                className="text-xs font-semibold text-[#084c38] hover:underline cursor-pointer transition-all"
               >
                 Forgot Password?
               </Link>
-            </div>
+            </div> */}
 
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 hover:shadow-lg hover:shadow-emerald-500/20 text-white font-bold py-3.5 h-12 rounded-2xl shadow-md transition-all cursor-pointer"
+              className="w-full bg-[#084c38] hover:bg-[#063b2b] text-white font-semibold py-3 h-12 rounded-xl shadow-sm transition-all cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
@@ -395,11 +395,11 @@ export default function LoginPage() {
           </form>
 
           <div className="flex items-center gap-4">
-            <div className="flex-1 h-px bg-neutral-200" />
-            <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
               or continue with
             </span>
-            <div className="flex-1 h-px bg-neutral-200" />
+            <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -407,7 +407,7 @@ export default function LoginPage() {
               onClick={handleGoogleLogin}
               disabled={isLoading}
               type="button"
-              className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer disabled:opacity-60"
+              className="flex items-center justify-center gap-2 h-11 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all cursor-pointer disabled:opacity-60 shadow-2xs"
             >
               <Chrome className="w-4 h-4 text-rose-500" /> Google
             </button>
@@ -415,77 +415,77 @@ export default function LoginPage() {
               onClick={handleGithubLogin}
               disabled={isLoading}
               type="button"
-              className="flex items-center justify-center gap-2 h-11 border border-[#ECECEC] rounded-xl text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-all cursor-pointer disabled:opacity-60"
+              className="flex items-center justify-center gap-2 h-11 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all cursor-pointer disabled:opacity-60 shadow-2xs"
             >
               <Github className="w-4 h-4 text-slate-900" /> GitHub
             </button>
           </div>
 
-          <p className="text-center text-xs font-semibold text-neutral-500">
+          <p className="text-center text-xs font-medium text-slate-500">
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="text-emerald-600 font-bold hover:underline cursor-pointer"
+              className="text-[#084c38] font-bold hover:underline cursor-pointer"
             >
               Create Account
             </Link>
           </p>
-        </GlassCard>
+        </div>
       ) : (
-        <GlassCard className="p-8 bg-white/75 border-[#ECECEC] rounded-[32px] shadow-2xl flex flex-col gap-6 items-center text-center">
+        <div className="p-8 sm:p-9 bg-white border border-slate-200/90 rounded-3xl shadow-xl shadow-slate-200/40 flex flex-col gap-6 items-center text-center">
           <BrandHeader />
 
           {authSuccess ? (
             <div className="w-full flex flex-col items-center justify-center gap-6 py-6">
-              <div className="w-24 h-24 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(16,185,129,0.15)] animate-pulse-subtle">
-                <ShieldCheck className="w-12 h-12 text-emerald-500" />
+              <div className="w-20 h-20 bg-[#ecfdf5] border border-[#d1fae5] rounded-full flex items-center justify-center shadow-xs">
+                <ShieldCheck className="w-10 h-10 text-[#084c38]" />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-2xl font-black text-neutral-900 leading-none">
+                <h2 className="text-2xl font-bold text-slate-900 leading-none">
                   Verified Successfully!
                 </h2>
-                <p className="text-xs text-neutral-500 font-semibold px-4 leading-relaxed">
-                  Establishing your secure study session. Setting up dashboard workspace...
+                <p className="text-xs text-slate-500 font-medium px-4 leading-relaxed">
+                  Establishing your secure session. Loading Aptora workspace...
                 </p>
               </div>
 
-              <div className="w-full flex items-center gap-2 p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-700 text-xs font-bold justify-center">
-                <RefreshCw className="w-4 h-4 animate-spin shrink-0 text-emerald-500" /> Redirecting...
+              <div className="w-full flex items-center gap-2 p-3.5 bg-[#ecfdf5] border border-[#d1fae5] rounded-xl text-[#084c38] text-xs font-semibold justify-center">
+                <RefreshCw className="w-4 h-4 animate-spin shrink-0 text-[#084c38]" /> Redirecting...
               </div>
             </div>
           ) : (
             <>
-              <div className="relative w-24 h-24 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center">
-                <KeyRound className="w-10 h-10 text-emerald-600" />
-                <div className="absolute -bottom-0.5 -right-0.5 bg-emerald-600 text-white rounded-full p-1.5 shadow-md">
+              <div className="relative w-20 h-20 bg-[#ecfdf5] border border-[#d1fae5] rounded-full flex items-center justify-center">
+                <KeyRound className="w-9 h-9 text-[#084c38]" />
+                <div className="absolute -bottom-0.5 -right-0.5 bg-[#084c38] text-white rounded-full p-1.5 shadow-xs">
                   <Mail className="w-3.5 h-3.5" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-black text-neutral-900">
+                <h2 className="text-2xl font-bold text-slate-900">
                   Verify OTP
                 </h2>
-                <p className="text-xs text-neutral-500 font-semibold px-2">
+                <p className="text-xs text-slate-500 font-medium px-2">
                   Enter the 6-digit code sent to{" "}
-                  <span className="text-neutral-900 font-bold">
+                  <span className="text-slate-900 font-bold">
                     {emailForVerification}
                   </span>
                 </p>
               </div>
 
-              <div className="text-sm font-black text-emerald-700 bg-emerald-50 px-5 py-2 rounded-full border border-emerald-100">
+              <div className="text-xs font-bold text-[#084c38] bg-[#ecfdf5] px-4 py-1.5 rounded-full border border-[#d1fae5]">
                 {otpTimer > 0 ? formatTimer(otpTimer) : "Code expired"}
               </div>
 
               {authError && (
-                <div className="w-full flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold">
+                <div className="w-full flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-semibold">
                   <Info className="w-4 h-4 shrink-0" /> {authError}
                 </div>
               )}
 
-              <div className="flex gap-2.5 justify-center">
+              <div className="flex gap-2 justify-center">
                 {otpValues.map((val, idx) => (
                   <input
                     key={idx}
@@ -497,7 +497,7 @@ export default function LoginPage() {
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                     autoComplete="one-time-code"
-                    className="w-12 h-14 text-center text-xl font-black bg-white/50 border-2 border-[#ECECEC] rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all"
+                    className="w-11 h-13 text-center text-lg font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-[#084c38] focus:ring-2 focus:ring-[#084c38]/20 focus:outline-none transition-all text-slate-900"
                   />
                 ))}
               </div>
@@ -505,7 +505,7 @@ export default function LoginPage() {
               <Button
                 onClick={onVerifyOtp}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 text-white font-bold py-3.5 h-12 rounded-2xl shadow-md hover:shadow-lg hover:shadow-emerald-500/20 transition-all cursor-pointer"
+                className="w-full bg-[#084c38] hover:bg-[#063b2b] text-white font-semibold py-3 h-12 rounded-xl shadow-sm transition-all cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -516,14 +516,14 @@ export default function LoginPage() {
                 )}
               </Button>
 
-              <div className="text-xs font-semibold text-neutral-500">
+              <div className="text-xs font-medium text-slate-500">
                 Didn&apos;t receive OTP?{" "}
                 <button
                   onClick={() => {
                     setOtpTimer(90);
                     setAuthError(null);
                   }}
-                  className="text-emerald-600 font-bold hover:underline cursor-pointer"
+                  className="text-[#084c38] font-bold hover:underline cursor-pointer"
                 >
                   Resend OTP
                 </button>
@@ -534,13 +534,13 @@ export default function LoginPage() {
                   setAuthError(null);
                   setStep("login");
                 }}
-                className="flex items-center justify-center gap-1.5 text-xs font-bold text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer"
+                className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" /> Back to Login
               </button>
             </>
           )}
-        </GlassCard>
+        </div>
       )}
     </AuthLayout>
   );

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Session Repository
+Aptora — Session Repository
 Handles DB persistence for active user sessions and refresh tokens.
 Never commits transactions.
 """

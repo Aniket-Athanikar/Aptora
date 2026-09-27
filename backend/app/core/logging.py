@@ -1,5 +1,5 @@
 """
-ExamForge AI — Logging Configuration
+Aptora — Logging Configuration
 Structured logging setup for the application.
 """
 import logging

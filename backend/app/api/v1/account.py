@@ -55,7 +55,7 @@ async def request_account_deletion(payload: DeleteAccountRequestPayload, db: Ses
     try:
         with open("last_email.html", "w", encoding="utf-8") as f:
             f.write(email_html)
-        send_real_email(payload.email, "ExamForge AI - Account Deletion Verification", email_html)
+        send_real_email(payload.email, "Aptora - Account Deletion Verification", email_html)
     except Exception as e:
         logger.warning(f"Could not send deletion email: {e}")
 

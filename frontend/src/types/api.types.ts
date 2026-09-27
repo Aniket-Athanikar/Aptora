@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — API Type Definitions
+ * Aptora — API Type Definitions
  */
 
 export interface ApiResponse<T = unknown> {

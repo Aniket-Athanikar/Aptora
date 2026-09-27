@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Time Slot Service
+Aptora - Study Time Slot Service
 
 Handles CRUD operations for Study Time Slots.
 """

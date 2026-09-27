@@ -1,5 +1,5 @@
 """
-ExamForge AI — Authentication Controller (API v1)
+Aptora — Authentication Controller (API v1)
 Standardized, layered authentication endpoints backed by AuthService and Pydantic v2 schemas.
 """
 import logging

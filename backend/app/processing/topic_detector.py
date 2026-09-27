@@ -1,5 +1,5 @@
 """
-ExamForge AI - Topic Detector
+Aptora - Topic Detector
 ==============================
 
 Processing stage: DocumentProcessor -> TopicDetector

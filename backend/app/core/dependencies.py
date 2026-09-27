@@ -1,5 +1,5 @@
 """
-ExamForge AI - FastAPI Dependencies
+Aptora - FastAPI Dependencies
 
 Reusable dependency injectors for:
 - Database Session

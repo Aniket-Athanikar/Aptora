@@ -1,5 +1,5 @@
 """
-ExamForge AI - AI Study Source & Library API Router
+Aptora - AI Study Source & Library API Router
 =====================================================
 
 Endpoints

@@ -145,7 +145,7 @@ export default function HowItWorksPage() {
 
   return (
     <PageLayout
-      title="How ExamForge AI Works"
+      title="How Aptora Works"
       description="Follow the journey from importing raw files to generating custom mock exams and tracking concept mastery."
       breadcrumb={[{ label: "How It Works", href: "/how-it-works" }]}
     >

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Chat Schemas
+Aptora - Chat Schemas
 """
 
 from pydantic import BaseModel, Field

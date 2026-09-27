@@ -1,5 +1,5 @@
 """
-ExamForge AI - AI Study Source Model
+Aptora - AI Study Source Model
 """
 
 import datetime

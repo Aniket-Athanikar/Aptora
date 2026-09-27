@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Model
+Aptora - Resource Model
 """
 
 import datetime
@@ -150,4 +150,4 @@ class ResourceDb(Base):
 
     @property
     def chunks_count(self) -> int:
-        return len(self.chunks) if self.chunks else 0
+        return len(self.chunks) if self.chunks else 0

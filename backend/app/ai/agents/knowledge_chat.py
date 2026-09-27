@@ -1,5 +1,5 @@
 """
-ExamForge AI — Knowledge Chat Agent
+Aptora — Knowledge Chat Agent
 ======================================
 
 A multi-turn, context-aware chat agent that extends BaseAgent.
@@ -38,7 +38,7 @@ class KnowledgeChatAgent(BaseAgent):
     @property
     def system_prompt(self) -> str:
         return dedent("""
-            You are ExamForge AI, a professional educational study assistant.
+            You are Aptora, a professional educational study assistant.
 
             You answer questions using the provided study material retrieved
             from the student's uploaded resources (textbooks, notes, PYQs, syllabus).
@@ -137,7 +137,7 @@ class KnowledgeChatAgent(BaseAgent):
         if history:
             turns: list[str] = []
             for msg in history[-10:]:   # last 10 messages for context window efficiency
-                role_label = "Student" if msg["role"] == "user" else "ExamForge AI"
+                role_label = "Student" if msg["role"] == "user" else "Aptora"
                 turns.append(f"{role_label}: {msg['content']}")
 
             history_block = "\n\n".join(turns)

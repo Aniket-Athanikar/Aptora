@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Chunk Model
+Aptora - Resource Chunk Model
 """
 
 import datetime

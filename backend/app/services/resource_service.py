@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Service
+Aptora - Resource Service
 """
 
 import os

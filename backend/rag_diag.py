@@ -1,5 +1,5 @@
 """
-ExamForge RAG Full Diagnostic
+Aptora RAG Full Diagnostic
 Connect to Qdrant on port 6433 (Docker exposed port) and run all filter tests.
 """
 import sys
@@ -14,7 +14,7 @@ from app.ai.services.embedding_service import EmbeddingService
 
 # Connect to the actual Docker-exposed Qdrant port
 client = QdrantClient(host="127.0.0.1", port=6433, timeout=10)
-TARGET = "examforge_documents"
+TARGET = "Aptora_documents"
 
 print("=" * 60)
 print("STEP 1: Collection info")

@@ -70,7 +70,7 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
   memory: defaultMemory,
   dailyScore: 87,
   chatHistory: [
-    { id: "msg_1", sender: "coach", text: "Hello! 👋 I'm your ExamForge AI Coach. How can I help calibrate your study plan today?", timestamp: new Date(Date.now() - 600000).toISOString() }
+    { id: "msg_1", sender: "coach", text: "Hello! 👋 I'm your Aptora Coach. How can I help calibrate your study plan today?", timestamp: new Date(Date.now() - 600000).toISOString() }
   ],
 
   initializeCoach: (userName, targetExam, weakSubjects) => {
@@ -81,12 +81,12 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
       weakSubjects,
     };
     set({ memory });
-    localStorage.setItem("examforge_ai_memory", JSON.stringify(memory));
+    localStorage.setItem("Aptora_ai_memory", JSON.stringify(memory));
   },
 
   updateDailyScore: (score) => {
     set({ dailyScore: score });
-    localStorage.setItem("examforge_daily_score", JSON.stringify({ score, date: new Date().toISOString().split("T")[0] }));
+    localStorage.setItem("Aptora_daily_score", JSON.stringify({ score, date: new Date().toISOString().split("T")[0] }));
   },
 
   sendChatMessage: (text) => {
@@ -99,7 +99,7 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
 
     const nextHistory = [...get().chatHistory, userMsg];
     set({ chatHistory: nextHistory });
-    localStorage.setItem("examforge_chat_history", JSON.stringify(nextHistory));
+    localStorage.setItem("Aptora_chat_history", JSON.stringify(nextHistory));
 
     // Evaluate simulated predefined reply
     setTimeout(() => {
@@ -121,14 +121,14 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
 
       const updatedHistory = [...get().chatHistory, coachMsg];
       set({ chatHistory: updatedHistory });
-      localStorage.setItem("examforge_chat_history", JSON.stringify(updatedHistory));
+      localStorage.setItem("Aptora_chat_history", JSON.stringify(updatedHistory));
     }, 700);
   },
 
   deleteChatMessage: (msgId) => {
     const updated = get().chatHistory.filter((m) => m.id !== msgId);
     set({ chatHistory: updated });
-    localStorage.setItem("examforge_chat_history", JSON.stringify(updated));
+    localStorage.setItem("Aptora_chat_history", JSON.stringify(updated));
   },
 
   editChatMessage: (msgId, newText) => {
@@ -136,7 +136,7 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
       m.id === msgId ? { ...m, text: newText, isEdited: true } : m
     );
     set({ chatHistory: updated });
-    localStorage.setItem("examforge_chat_history", JSON.stringify(updated));
+    localStorage.setItem("Aptora_chat_history", JSON.stringify(updated));
   },
 
   clearChatHistory: () => {
@@ -147,23 +147,23 @@ export const useAICoachStore = create<AICoachStore>((set, get) => ({
       timestamp: new Date().toISOString()
     };
     set({ chatHistory: [initialMsg] });
-    localStorage.setItem("examforge_chat_history", JSON.stringify([initialMsg]));
+    localStorage.setItem("Aptora_chat_history", JSON.stringify([initialMsg]));
   },
 
   loadCoachData: () => {
     try {
-      const storedMemory = localStorage.getItem("examforge_ai_memory");
+      const storedMemory = localStorage.getItem("Aptora_ai_memory");
       if (storedMemory) {
         set({ memory: JSON.parse(storedMemory) });
       }
 
-      const storedScore = localStorage.getItem("examforge_daily_score");
+      const storedScore = localStorage.getItem("Aptora_daily_score");
       if (storedScore) {
         const parsed = JSON.parse(storedScore);
         set({ dailyScore: parsed.score });
       }
 
-      const storedHistory = localStorage.getItem("examforge_chat_history");
+      const storedHistory = localStorage.getItem("Aptora_chat_history");
       if (storedHistory) {
         set({ chatHistory: JSON.parse(storedHistory) });
       }

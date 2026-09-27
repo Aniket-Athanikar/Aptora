@@ -69,7 +69,7 @@ export default function AiNotesPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `ExamForge_Note_${title.replace(/\s+/g, "_").slice(0, 50)}.pdf`;
+      a.download = `Aptora_Note_${title.replace(/\s+/g, "_").slice(0, 50)}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();

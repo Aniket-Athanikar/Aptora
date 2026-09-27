@@ -1,5 +1,5 @@
 """
-ExamForge AI — Analytics API Router
+Aptora — Analytics API Router
 ===================================
 Endpoints to retrieve token usage, latency, and audit analytics.
 """

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Study Advisor API Router
+Aptora — Study Advisor API Router
 =========================================
 
 Endpoints

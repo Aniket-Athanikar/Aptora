@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ExamForge AI — Database Seeder
+Aptora — Database Seeder
 Seeds the database with sample data for development.
 """
 import sys
@@ -25,7 +25,7 @@ def seed():
         # Create sample user
         user = UserDb(
             name="Demo User",
-            email="demo@examforge.ai",
+            email="demo@Aptora.ai",
             password="demo123456"
         )
         db.add(user)

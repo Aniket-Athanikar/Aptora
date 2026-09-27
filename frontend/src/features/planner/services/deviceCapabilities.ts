@@ -1,5 +1,5 @@
 /**
- * Device Capability Detection Engine for ExamForge AI Focus Timer 2.0
+ * Device Capability Detection Engine for Aptora Focus Timer 2.0
  * Safely inspects browser support across Mobile, Desktop, iOS, Android, Chrome, Safari, Firefox.
  */
 

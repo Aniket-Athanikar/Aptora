@@ -1,5 +1,5 @@
 """
-ExamForge AI — Retrieval Confidence Scorer
+Aptora — Retrieval Confidence Scorer
 ============================================
 
 Analyses Qdrant search results to produce a confidence level

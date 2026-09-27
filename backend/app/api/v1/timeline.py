@@ -1,5 +1,5 @@
 """
-ExamForge AI - Timeline API
+Aptora - Timeline API
 """
 
 from fastapi import APIRouter, Depends, HTTPException

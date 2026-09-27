@@ -15,7 +15,7 @@ const featuredPost = {
   title: "How AI is Changing the Way Students Prepare for Exams",
   category: "AI & Education",
   date: "29 May 2024",
-  author: "By Team ExamForge AI",
+  author: "By Team Aptora",
   excerpt:
     "Artificial intelligence is revolutionizing the education landscape. From personalized study plans to AI-generated practice questions, discover how modern tools are helping students achieve better results in less time.",
   slug: "how-ai-is-changing-the-way-students-prepare-for-exams",
@@ -120,7 +120,7 @@ export default function BlogPage() {
                 <div className="absolute bottom-6 left-6 flex items-center gap-3">
                   <BookOpen className="w-8 h-8 text-white/80" />
                   <span className="text-white/70 font-bold text-sm">
-                    ExamForge AI Blog
+                    Aptora Blog
                   </span>
                 </div>
               </div>

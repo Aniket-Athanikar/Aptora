@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Lifestyle API
+Aptora - Study Lifestyle API
 """
 
 from fastapi import APIRouter, Depends, HTTPException

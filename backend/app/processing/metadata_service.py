@@ -1,5 +1,5 @@
 """
-ExamForge AI - Metadata Service
+Aptora - Metadata Service
 """
 
 from pathlib import Path

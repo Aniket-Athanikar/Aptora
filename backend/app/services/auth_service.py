@@ -1,5 +1,5 @@
 """
-ExamForge AI — Auth Service
+Aptora — Auth Service
 Central authentication service coordinating dual authentication modes (Classic & Passwordless),
 OTP verification, password workflows, JWT token management, cookie sessions, and Google OAuth.
 """
@@ -95,7 +95,7 @@ class AuthService:
             try:
                 with open("last_email.html", "w", encoding="utf-8") as f:
                     f.write(email_html)
-                send_real_email(payload.email, "Welcome to ExamForge AI - Verify OTP", email_html)
+                send_real_email(payload.email, "Welcome to Aptora - Verify OTP", email_html)
             except Exception as e:
                 logger.warning(f"Could not dispatch email: {e}")
 
@@ -156,7 +156,7 @@ class AuthService:
         if not payload.skip_email:
             email_html = generate_otp_email_html(user.name, otp_code)
             try:
-                send_real_email(payload.email, "ExamForge AI - Login OTP", email_html)
+                send_real_email(payload.email, "Aptora - Login OTP", email_html)
             except Exception as e:
                 logger.warning(f"Could not send email: {e}")
 
@@ -203,7 +203,7 @@ class AuthService:
             try:
                 with open("last_email.html", "w", encoding="utf-8") as f:
                     f.write(email_html)
-                send_real_email(payload.email, "ExamForge AI - Login OTP", email_html)
+                send_real_email(payload.email, "Aptora - Login OTP", email_html)
             except Exception as e:
                 logger.warning(f"Could not send email: {e}")
 
@@ -269,7 +269,7 @@ class AuthService:
 
         return True, OtpResponse(
             success=True,
-            message="OTP verified successfully! Welcome to ExamForge AI.",
+            message="OTP verified successfully! Welcome to Aptora.",
             token=legacy_token,
             access_token=access_token,
             refresh_token=refresh_token,
@@ -288,7 +288,7 @@ class AuthService:
         otp_code = self.otp_service.generate_otp(payload.email)
         email_html = generate_otp_email_html(user.name, otp_code)
         try:
-            send_real_email(payload.email, "ExamForge AI - Password Reset OTP", email_html)
+            send_real_email(payload.email, "Aptora - Password Reset OTP", email_html)
         except Exception as e:
             logger.warning(f"Could not send email: {e}")
 

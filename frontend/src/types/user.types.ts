@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — TypeScript Type Definitions
+ * Aptora — TypeScript Type Definitions
  */
 
 export interface User {

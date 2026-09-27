@@ -1,11 +1,11 @@
-# ExamForge AI — Architecture Overview
+# Aptora — Architecture Overview
 
-ExamForge AI is an enterprise-grade, AI-powered preparation platform tailored for civil services and state-level competitive exams in India (UPSC CSE, MPSC, UPPSC, BPSC, RAS, TNPSC, etc.). This document describes the system architecture, component layout, and the flow of data across the platform.
+Aptora is an enterprise-grade, AI-powered preparation platform tailored for civil services and state-level competitive exams in India (UPSC CSE, MPSC, UPPSC, BPSC, RAS, TNPSC, etc.). This document describes the system architecture, component layout, and the flow of data across the platform.
 
 ---
 
 ## 1. Executive Goal & Vision
-The primary objective of ExamForge AI is to democratize high-quality, personalized mentoring for competitive exams in India. Aspiring civil servants in India, particularly those from rural or underprivileged backgrounds, face challenges in accessing premium coaching institutes. ExamForge AI solves this by providing:
+The primary objective of Aptora is to democratize high-quality, personalized mentoring for competitive exams in India. Aspiring civil servants in India, particularly those from rural or underprivileged backgrounds, face challenges in accessing premium coaching institutes. Aptora solves this by providing:
 - **Localized Learning:** Dynamic support for regional languages (Hindi, Marathi, Tamil, Telugu, etc.) alongside English.
 - **AI Mains Answer Evaluation:** Scoring and detailed feedback on subjective answer sheets based on official UPSC evaluation standards.
 - **Adaptive Prelims Engines:** Dynamic difficulty adjustment based on student response patterns.
@@ -106,7 +106,7 @@ The primary objective of ExamForge AI is to democratize high-quality, personaliz
 ---
 
 ## 5. Regional Language & Localization Pipeline
-To support aspirants across all states of India, ExamForge includes a multi-tiered localization wrapper:
+To support aspirants across all states of India, Aptora includes a multi-tiered localization wrapper:
 - **Language Detection:** Identifies the input language of the user query.
 - **Translation Wrapper:** If regional, translates the query into English for vector search across the primary database (which contains standard English syllabus materials).
 - **Localized Response Generation:** Generates the final mentoring output back in the regional language using high-fidelity multilingual LLM prompts.

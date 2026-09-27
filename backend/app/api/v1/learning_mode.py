@@ -1,5 +1,5 @@
 """
-ExamForge AI - Learning Mode API
+Aptora - Learning Mode API
 """
 
 import logging

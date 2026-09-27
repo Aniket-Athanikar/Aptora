@@ -36,7 +36,7 @@ const stats = [
 export default function AboutPage() {
   return (
     <PageLayout
-      title="About ExamForge AI"
+      title="About Aptora"
       description="Empowering students with AI-driven exam preparation tools"
       breadcrumb={[{ label: "About Us", href: "/about" }]}
     >
@@ -53,7 +53,7 @@ export default function AboutPage() {
             className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-12 shadow-lg"
           >
             <p className="text-lg md:text-xl text-neutral-600 font-medium leading-relaxed mb-8">
-              ExamForge AI is a next-generation, AI-powered exam preparation platform designed to
+              Aptora is a next-generation, AI-powered exam preparation platform designed to
               revolutionize how students learn and prepare for competitive exams. We leverage cutting-edge
               artificial intelligence to transform textbooks into smart study material — generating notes,
               practice questions, and personalized analytics that adapt to each learner&apos;s unique needs.
@@ -170,20 +170,20 @@ export default function AboutPage() {
           transition={{ duration: 0.5 }}
           className="text-center pt-8"
         >
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 md:p-12 rounded-[24px] shadow-xl relative overflow-hidden group max-w-[900px] mx-auto">
-            <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-            <h3 className="text-2xl md:text-3xl font-black mb-3">Ready to prep smarter?</h3>
-            <p className="text-emerald-50 text-sm font-semibold mb-6 max-w-lg mx-auto">
+          <div className="bg-[#084c38] text-white p-8 md:p-12 rounded-3xl shadow-xl relative overflow-hidden max-w-[900px] mx-auto">
+            <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Ready to prep smarter?</h3>
+            <p className="text-emerald-100 text-sm font-medium mb-6 max-w-lg mx-auto">
               Discover the powerful AI notes generators, practice exams, and analytics that make learning fast and adaptive.
             </p>
             <Link
               href="/features"
-              className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all border-none"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#084c38] bg-white px-8 py-3.5 rounded-xl hover:bg-slate-100 transition-all shadow-sm"
             >
               Explore AI Features <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </motion.section>
+
       </div>
     </PageLayout>
   );

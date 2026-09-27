@@ -1,5 +1,5 @@
 """
-ExamForge AI — Core Configuration
+Aptora — Core Configuration
 
 Centralized application configuration using Pydantic Settings.
 Includes centralized OpenAI model configuration.
@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
     HOST: str = Field(default="0.0.0.0")
 
-    PROJECT_NAME: str = Field(default="ExamForge-AI-Backend")
+    PROJECT_NAME: str = Field(default="Aptora-Backend")
 
     ALLOWED_ORIGINS: str = Field(default="http://localhost:3000")
 
@@ -74,8 +74,8 @@ class Settings(BaseSettings):
     # ======================================================
 
     AUTH_MODE: str = Field(default="passwordless")  # 'password' or 'passwordless'
-    JWT_SECRET_KEY: str = Field(default="examforge-jwt-secret-key-change-in-prod")
-    JWT_REFRESH_SECRET_KEY: str = Field(default="examforge-jwt-refresh-secret-key-change-in-prod")
+    JWT_SECRET_KEY: str = Field(default="Aptora-jwt-secret-key-change-in-prod")
+    JWT_REFRESH_SECRET_KEY: str = Field(default="Aptora-jwt-refresh-secret-key-change-in-prod")
     JWT_ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24)  # 24 hours
     REFRESH_TOKEN_EXPIRE_DAYS: int = Field(default=30)
@@ -115,7 +115,7 @@ class Settings(BaseSettings):
     QDRANT_PORT: int = 6333
 
     # One canonical collection for both indexing and retrieval.
-    QDRANT_COLLECTION: str = "examforge_documents"
+    QDRANT_COLLECTION: str = "Aptora_documents"
 
     # ======================================================
     # OpenAI / AI Models

@@ -610,8 +610,8 @@ export function buildSampleBooks(): BookMetadata[] {
 export function buildSampleVersions(bookId: string): BookVersion[] {
   const now = Date.now();
   return [
-    { id: `${bookId}_v1`, versionNumber: 1, createdAt: new Date(now - 86400000 * 28).toISOString(), createdBy: "developer@examforge.ai", changeSummary: "Initial upload + AI processing complete.", sizeBytes: 15420100, pageCount: 384, qualityScore: 94, ocrConfidence: 93, isCurrent: false },
-    { id: `${bookId}_v2`, versionNumber: 2, createdAt: new Date(now - 86400000 * 12).toISOString(), createdBy: "developer@examforge.ai", changeSummary: "Re-OCR with QELED v2. Added 32 missing pages.", sizeBytes: 15820000, pageCount: 384, qualityScore: 96, ocrConfidence: 95, parentVersionId: `${bookId}_v1`, isCurrent: false },
-    { id: `${bookId}_v3`, versionNumber: 3, createdAt: new Date(now - 86400000 * 2).toISOString(), createdBy: "developer@examforge.ai", changeSummary: "Re-generated AI notes. Updated mindmap nodes.", sizeBytes: 15940000, pageCount: 384, qualityScore: 97, ocrConfidence: 96.5, parentVersionId: `${bookId}_v2`, isCurrent: true },
+    { id: `${bookId}_v1`, versionNumber: 1, createdAt: new Date(now - 86400000 * 28).toISOString(), createdBy: "developer@Aptora.ai", changeSummary: "Initial upload + AI processing complete.", sizeBytes: 15420100, pageCount: 384, qualityScore: 94, ocrConfidence: 93, isCurrent: false },
+    { id: `${bookId}_v2`, versionNumber: 2, createdAt: new Date(now - 86400000 * 12).toISOString(), createdBy: "developer@Aptora.ai", changeSummary: "Re-OCR with QELED v2. Added 32 missing pages.", sizeBytes: 15820000, pageCount: 384, qualityScore: 96, ocrConfidence: 95, parentVersionId: `${bookId}_v1`, isCurrent: false },
+    { id: `${bookId}_v3`, versionNumber: 3, createdAt: new Date(now - 86400000 * 2).toISOString(), createdBy: "developer@Aptora.ai", changeSummary: "Re-generated AI notes. Updated mindmap nodes.", sizeBytes: 15940000, pageCount: 384, qualityScore: 97, ocrConfidence: 96.5, parentVersionId: `${bookId}_v2`, isCurrent: true },
   ];
 }

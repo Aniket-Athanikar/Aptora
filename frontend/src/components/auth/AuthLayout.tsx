@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-
-const ThreeHero = dynamic(() => import("../three/ThreeHero"), {
-  ssr: false,
-});
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -14,39 +9,36 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   const panelVariants = {
-    initial: { opacity: 0, y: 15, scale: 0.98 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, y: -15, scale: 0.98 },
+    initial: { opacity: 0, y: 12 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -12 },
   };
 
   return (
-    <main className="relative min-h-screen bg-[var(--background)] text-neutral-900 overflow-hidden font-sans flex flex-col items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-      {/* 3D Motion Background Canvas */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-50">
-        <ThreeHero />
-      </div>
+    <main className="relative min-h-screen bg-[#FAF9F6] text-slate-900 font-sans flex flex-col items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+      {/* Clean top subtle accent bar matching landing page branding */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-[#084c38] z-50" />
 
-      {/* Premium Clean Background Pattern & Glowing Ambient Mesh */}
-      <div className="absolute inset-0 bg-dot z-0 opacity-80" />
-      <div className="absolute inset-0 bg-noise z-0 pointer-events-none" />
-      <div className="absolute top-[10%] left-[20%] w-[450px] h-[450px] bg-emerald-500/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-[10%] right-[20%] w-[450px] h-[450px] bg-teal-550/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse" />
-      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-emerald-500/5 via-teal-500/5 to-transparent rounded-full filter blur-[140px] pointer-events-none" />
-
-      {/* Single Auth Template Card Container */}
-      <div className="relative z-10 w-full max-w-[460px]">
+      {/* Auth Container Card */}
+      <div className="relative z-10 w-full max-w-[440px]">
         <AnimatePresence mode="wait">
           <motion.div
             variants={panelVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
           >
             {children}
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Footer copyright matching landing page */}
+      <div className="mt-8 text-center text-xs text-slate-400 font-medium">
+        © {new Date().getFullYear()} Aptora. All rights reserved.
+      </div>
     </main>
   );
 }
+

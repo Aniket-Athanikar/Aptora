@@ -1,5 +1,5 @@
 """
-ExamForge AI - Flashcard API
+Aptora - Flashcard API
 """
 
 import logging

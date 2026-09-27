@@ -1,4 +1,4 @@
-# ExamForge AI — Developer Setup Guide
+# Aptora — Developer Setup Guide
 
 ## Prerequisites
 

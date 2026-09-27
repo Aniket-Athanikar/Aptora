@@ -1,5 +1,5 @@
 """
-ExamForge AI - Flashcard Schemas
+Aptora - Flashcard Schemas
 """
 
 from pydantic import BaseModel, Field

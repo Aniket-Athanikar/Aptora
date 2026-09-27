@@ -100,7 +100,7 @@ export default function DownloadsPage() {
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = exportItem.file_name || `ExamForge_Export_${exportItem.id}.pdf`;
+      link.download = exportItem.file_name || `Aptora_Export_${exportItem.id}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

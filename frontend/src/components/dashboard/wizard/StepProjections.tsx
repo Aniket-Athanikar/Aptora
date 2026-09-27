@@ -21,7 +21,7 @@ export function StepProjections({
             Calibration Forecast Established
           </span>
           <h4 className="text-xl font-black">Calibration Projections Calculated!</h4>
-          <p className="text-yellow-100 text-xs max-w-md">The ExamForge engine combined your inputs from all steps to calibrate target milestones</p>
+          <p className="text-yellow-100 text-xs max-w-md">The Aptora engine combined your inputs from all steps to calibrate target milestones</p>
         </div>
 
         <div className="flex items-center gap-4 bg-yellow-700/40 p-4.5 rounded-2xl border border-yellow-500/40 relative z-10 shrink-0">

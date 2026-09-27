@@ -1,1 +1,1 @@
-"""ExamForge AI — API v1 Module"""
+"""Aptora — API v1 Module"""

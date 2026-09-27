@@ -2,11 +2,9 @@
 
 import React, { useState, useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, ShieldCheck } from "lucide-react";
+import { Check, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
-import GlassCard from "@/components/ui/GlassCard";
-import GlowButton from "@/components/ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
 
 // High-Performance 3D Tilt Wrapper
@@ -20,8 +18,8 @@ function PricingTiltCard({ children, className, isPopular }: { children: React.R
   const xSpring = useSpring(x, springConfig);
   const ySpring = useSpring(y, springConfig);
 
-  const rotateX = useTransform(ySpring, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-10, 10]);
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-8, 8]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -45,7 +43,7 @@ function PricingTiltCard({ children, className, isPopular }: { children: React.R
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative w-full cursor-pointer group ${className} ${isPopular ? "z-20" : "z-10"}`}
+      className={`relative w-full group ${className} ${isPopular ? "z-20" : "z-10"}`}
     >
       {children}
     </motion.div>
@@ -64,12 +62,13 @@ export default function PricingPage() {
       yearlyTotal: 2999,
       features: [
         "10 Book Selected",
-        "AI Notes",
-        "10,000 Questions",
-        "Daily Practice",
+        "AI Notes Generator",
+        "10,000 Questions Bank",
+        "Daily Practice Tests",
         "Basic Analytics",
       ],
       popular: false,
+      ctaText: "Get Started",
     },
     {
       name: "Premium",
@@ -79,12 +78,13 @@ export default function PricingPage() {
       features: [
         "Everything in Basic",
         "Unlimited Book Selected",
-        "Advanced Analytics",
+        "Advanced Analytics & Insights",
         "Priority Support",
-        "Mock Tests (Unlimited)",
+        "Unlimited Mock Tests",
         "Personalized Mentoring",
       ],
       popular: true,
+      ctaText: "Choose Premium",
     },
     {
       name: "Elite",
@@ -93,13 +93,13 @@ export default function PricingPage() {
       yearlyTotal: 9999,
       features: [
         "Everything in Premium",
-        "Advanced Analytics",
         "Dedicated AI Mentor",
         "Custom Study Plans",
         "1-on-1 Live Mentoring",
-        "Priority Support",
+        "Priority Support & Exports",
       ],
       popular: false,
+      ctaText: "Choose Elite",
     },
   ];
 
@@ -109,156 +109,140 @@ export default function PricingPage() {
       description="Choose the plan that's right for you"
       breadcrumb={[{ label: "Pricing", href: "/pricing" }]}
     >
-      {/* Container holding the grid and layout elements */}
-      <div className="layout-container max-w-[1150px] px-4 mx-auto relative z-10">
+      <div className="max-w-6xl px-4 sm:px-6 mx-auto relative z-10 py-4">
 
-        {/* Medium Sized Toggle Switch */}
+        {/* Toggle Switch */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-4 mb-12 mt-6"
+          className="flex items-center justify-center gap-4 mb-12"
         >
-          <span className={`text-sm font-bold transition-colors duration-300 ${billingCycle === "monthly" ? "text-neutral-900" : "text-neutral-400"}`}>
+          <span className={`text-sm font-bold transition-colors ${billingCycle === "monthly" ? "text-slate-900" : "text-slate-400"}`}>
             Monthly
           </span>
 
           <button
             onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-emerald-500/40 focus:outline-none"
+            className="relative w-14 h-7 rounded-full bg-white border border-slate-200 shadow-inner p-1 transition-all duration-300 hover:border-[#084c38] focus:outline-none cursor-pointer"
           >
-            {/* The Toggle Knob */}
             <motion.div
               layout
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="w-5 h-5 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600 shadow-md shadow-emerald-600/30"
+              className="w-5 h-5 rounded-full bg-[#084c38] shadow-sm"
               style={{
                 marginLeft: billingCycle === "yearly" ? "26px" : "0px",
               }}
             />
           </button>
 
-          <span className={`text-sm font-bold transition-colors duration-300 flex items-center gap-2 ${billingCycle === "yearly" ? "text-neutral-900" : "text-neutral-400"}`}>
+          <span className={`text-sm font-bold transition-colors flex items-center gap-2 ${billingCycle === "yearly" ? "text-slate-900" : "text-slate-400"}`}>
             Yearly
-            <motion.span
-              initial={{ scale: 0.9 }}
-              animate={{ scale: billingCycle === "yearly" ? [1, 1.1, 1] : 1 }}
-              transition={{ duration: 0.3 }}
-              className="text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-sm"
-            >
+            <span className="text-[9px] font-extrabold text-[#084c38] bg-[#ecfdf5] border border-[#d1fae5] px-2 py-0.5 rounded-full shadow-2xs">
               SAVE 30%
-            </motion.span>
+            </span>
           </span>
         </motion.div>
 
-        {/* Centered Cards Grid (md:grid-cols-3 max-w-[1000px] mx-auto for 3 cards balanced and centered) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative max-w-[1000px] mx-auto mt-6">
+        {/* Grid of Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch relative max-w-6xl mx-auto">
+          {plans.map((plan, idx) => {
+            const checkoutUrl = isAuthenticated
+              ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}`
+              : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}`;
 
-          {/* Premium Plan Glow blur accent in the center background */}
-          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-teal-500/5 blur-[80px] pointer-events-none rounded-full" />
-
-          {plans.map((plan, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1, duration: 0.5, ease: [0.21, 1.02, 0.43, 1.01] }}
-              className="flex w-full"
-            >
-              <PricingTiltCard isPopular={plan.popular} className="w-full flex h-full">
-
-                <GlassCard
-                  className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-white/70 backdrop-blur-2xl ${plan.popular
-                    ? "border-emerald-500/40 ring-4 ring-emerald-500/10 shadow-[0_25px_50px_-12px_rgba(16,185,129,0.2)] bg-gradient-to-b from-white to-emerald-500/[0.02] transform lg:-translate-y-3"
-                    : "border-[#ECECEC] hover:shadow-lg hover:border-neutral-300 shadow-sm"
+            return (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1, duration: 0.4 }}
+                className="flex w-full"
+              >
+                <PricingTiltCard isPopular={plan.popular} className="w-full flex h-full">
+                  <div
+                    className={`p-8 rounded-3xl bg-white w-full h-full flex flex-col justify-between transition-all ${
+                      plan.popular
+                        ? "border-2 border-[#084c38] ring-4 ring-[#084c38]/10 shadow-xl relative transform lg:-translate-y-2"
+                        : "border border-slate-200 shadow-xs hover:border-slate-300"
                     }`}
-                >
+                  >
+                    <div>
+                      {plan.popular && (
+                        <div
+                          style={{ transform: "translateZ(25px)" }}
+                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#084c38] text-white text-[10px] font-extrabold uppercase tracking-wider mb-4 shadow-2xs"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>Most Popular</span>
+                        </div>
+                      )}
 
-                  {/* Popular Ribbon */}
-                  {plan.popular && (
-                    <div
-                      style={{ transform: "translateZ(30px)" }}
-                      className="absolute -top-3.5 left-0 right-0 flex justify-center pointer-events-none"
-                    >
-                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-emerald-600 to-teal-500 rounded-full shadow-md shadow-emerald-600/30 ring-2 ring-white">
-                        <Sparkles className="w-2.5 h-2.5" /> Popular
-                      </span>
-                    </div>
-                  )}
+                      <div style={{ transform: "translateZ(15px)" }}>
+                        <h3 className={`text-2xl font-bold font-display mb-1 ${plan.popular ? "text-[#084c38]" : "text-slate-900"}`}>
+                          {plan.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 font-medium mb-6">
+                          {plan.description}
+                        </p>
 
-                  <div style={{ transform: "translateZ(15px)" }}>
-                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-emerald-600" : "text-neutral-900"}`}>
-                      {plan.name}
-                    </h3>
-                    <p className="text-neutral-500 text-[11px] font-semibold mt-1">{plan.description}</p>
-
-                    <div style={{ transform: "translateZ(35px)" }} className="my-6">
-                      <div className="flex items-baseline gap-1 text-neutral-900">
-                        <span className="text-base font-bold text-neutral-400">₹</span>
-                        <AnimatePresence mode="popLayout">
-                          <motion.span
-                            key={billingCycle}
-                            initial={{ opacity: 0, y: -15, filter: "blur(4px)" }}
-                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            exit={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                            transition={{ duration: 0.4, type: "spring", bounce: 0 }}
-                            className="text-3xl xl:text-4xl font-black tracking-tighter tabular-nums"
-                          >
-                            {plan.price[billingCycle]}
-                          </motion.span>
-                        </AnimatePresence>
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest ml-1">
-                          /mo
-                        </span>
-                      </div>
-                      <div className="h-4 mt-0.5">
-                        <AnimatePresence>
-                          {billingCycle === "yearly" && plan.price.yearly > 0 && (
-                            <motion.p
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="text-[9px] font-bold text-emerald-600"
+                        <div className="flex items-baseline gap-1 mb-2 border-b border-slate-100 pb-6">
+                          <span className="text-base font-bold text-slate-400">₹</span>
+                          <AnimatePresence mode="popLayout">
+                            <motion.span
+                              key={billingCycle}
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              transition={{ duration: 0.3 }}
+                              className="text-4xl font-extrabold text-slate-900 font-display tracking-tight"
                             >
+                              {plan.price[billingCycle]}
+                            </motion.span>
+                          </AnimatePresence>
+                          <span className="text-xs font-semibold text-slate-500">
+                            / month
+                          </span>
+                        </div>
+
+                        <div className="h-5 mb-4">
+                          {billingCycle === "yearly" && (
+                            <p className="text-[11px] font-bold text-[#084c38]">
                               Billed ₹{plan.yearlyTotal} yearly
-                            </motion.p>
+                            </p>
                           )}
-                        </AnimatePresence>
+                        </div>
+
+                        <ul className="space-y-3 mb-8">
+                          {plan.features.map((feat, fIdx) => (
+                            <li key={fIdx} className="flex items-start gap-3 text-xs text-slate-700 font-semibold">
+                              <div className="w-4 h-4 rounded-full bg-[#ecfdf5] border border-[#d1fae5] text-[#084c38] flex items-center justify-center shrink-0 mt-0.5">
+                                <Check className="w-2.5 h-2.5" />
+                              </div>
+                              <span>{feat}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
 
-                    <ul className="flex flex-col gap-3 mb-6">
-                      {plan.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
-                          <div className={`mt-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? "bg-emerald-50 text-emerald-600" : "bg-emerald-50 text-emerald-500"}`}>
-                            <Check className="w-2 h-2" />
-                          </div>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div style={{ transform: "translateZ(25px)" }} className="mt-auto pt-2">
-                    <Link
-                      href={
-                        isAuthenticated
-                          ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}`
-                          : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}`
-                      }
-                    >
-                      <GlowButton
-                        variant={plan.popular ? "gradient" : "outline"}
-                        className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02]" : "hover:bg-neutral-50"}`}
-                        magnetic={false}
+                    <div style={{ transform: "translateZ(20px)" }} className="mt-auto">
+                      <Link
+                        href={checkoutUrl}
+                        className={`w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all inline-flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
+                          plan.popular
+                            ? "bg-[#084c38] hover:bg-[#063b2b] text-white shadow-emerald-900/10"
+                            : "bg-white hover:bg-slate-50 text-slate-800 border border-slate-200"
+                        }`}
                       >
-                        {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}
-                      </GlowButton>
-                    </Link>
+                        <span>{plan.ctaText}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
-                </GlassCard>
-              </PricingTiltCard>
-            </motion.div>
-          ))}
+                </PricingTiltCard>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* 30-Day Money Back Guarantee */}
@@ -268,13 +252,13 @@ export default function PricingPage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-full px-8 py-4 shadow-md">
-            <ShieldCheck className="w-6 h-6 text-[#22C55E]" />
+          <div className="inline-flex items-center gap-3.5 bg-white border border-slate-200 rounded-full px-8 py-4 shadow-sm">
+            <ShieldCheck className="w-6 h-6 text-[#084c38]" />
             <div className="text-left">
-              <p className="text-sm font-black text-neutral-900">
+              <p className="text-sm font-bold text-slate-900">
                 30-Day Money Back Guarantee
               </p>
-              <p className="text-xs text-neutral-500 font-semibold">
+              <p className="text-xs text-slate-500 font-medium">
                 Not satisfied? Get a full refund within 30 days, no questions asked.
               </p>
             </div>
@@ -285,3 +269,4 @@ export default function PricingPage() {
     </PageLayout>
   );
 }
+

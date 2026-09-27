@@ -74,7 +74,7 @@ const initialState: GoalEngineState = {
   dailyMissions: [],
   recommendations: [],
   notifications: [
-    { id: "n1", title: "Welcome to ExamForge AI", description: "Configure your success journey roadmap to start studying.", timestamp: new Date().toISOString(), read: false, type: "info" }
+    { id: "n1", title: "Welcome to Aptora", description: "Configure your success journey roadmap to start studying.", timestamp: new Date().toISOString(), read: false, type: "info" }
   ],
   achievements: initialAchievements,
   studyTimer: {

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Request Context
+Aptora — Request Context
 ==============================
 Context variables to track request-scoped metadata like request_id and user_id.
 """

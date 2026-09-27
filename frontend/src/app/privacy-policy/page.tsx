@@ -67,7 +67,7 @@ const sections = [
       },
       {
         subtitle: "Legal Requirements",
-        text: "We may disclose your information if required by law, regulation, or legal process, or if we believe disclosure is necessary to protect the rights, property, or safety of ExamForge AI, our users, or the public.",
+        text: "We may disclose your information if required by law, regulation, or legal process, or if we believe disclosure is necessary to protect the rights, property, or safety of Aptora, our users, or the public.",
       },
     ],
   },
@@ -97,7 +97,7 @@ const sections = [
     content: [
       {
         subtitle: "Privacy Questions",
-        text: "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please reach out to us at privacy@examforge.ai. We are committed to resolving any privacy-related issues promptly and transparently.",
+        text: "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please reach out to us at privacy@Aptora.ai. We are committed to resolving any privacy-related issues promptly and transparently.",
       },
     ],
   },
@@ -122,9 +122,9 @@ export default function PrivacyPolicyPage() {
             Last updated: 25 May 2024
           </div>
           <p className="text-neutral-600 font-medium leading-relaxed">
-            At ExamForge AI, we are committed to protecting the privacy and security of our users.
+            At Aptora, we are committed to protecting the privacy and security of our users.
             This Privacy Policy explains how we collect, use, disclose, and safeguard your information
-            when you use our platform and services. By using ExamForge AI, you agree to the collection
+            when you use our platform and services. By using Aptora, you agree to the collection
             and use of information in accordance with this policy.
           </p>
         </motion.div>

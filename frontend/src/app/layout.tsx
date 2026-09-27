@@ -2,7 +2,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/ToastContext";
 import { ProfileProvider } from "@/contexts";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,44 +11,60 @@ const inter = Inter({
   display: "swap",
 });
 
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700", "800"],
+});
+
 export const viewport: Viewport = {
-  themeColor: "#0fb37cff",
+  themeColor: "#084c38",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  title: "ExamForge-AI",
+  title: "Aptora",
   description:
-    "Upload books, notes & PYQs. Our AI generates tailored study guides, mock tests, and provides personalized tracking to ensure you ace your exams.",
+    "Aptora is an AI-powered exam preparation platform that helps students build personalized study plans, practice with mock tests, organize notes and track their progress.",
   keywords: [
+    "Aptora",
     "education",
+    "UPSC prep",
+    "SSC CGL",
+    "Banking exams",
     "exam preparation",
-    "personalized notes",
+    "personalized study plan",
     "AI tutor",
-    "mock exams",
+    "mock tests",
     "study assistant",
     "active recall",
   ],
-  authors: [{ name: "ExamForge Team" }],
+  authors: [{ name: "Aptora Team" }],
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "ExamForge-AI",
+    title: "Aptora — AI-Powered Exam Preparation",
     description:
-      "Convert your textbooks, notes & study materials into personalized mock tests and automated summary cards.",
-    url: "https://examforge.ai",
-    siteName: "ExamForge-AI",
+      "Aptora is an AI-powered exam preparation platform that helps students build personalized study plans, practice with mock tests, organize notes and track their progress.",
+    url: "https://aptora.ai",
+    siteName: "Aptora",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ExamForge-AI",
-    description: "AI-Powered Personalized Exam Prep and Study Platform.",
+    title: "Aptora — AI-Powered Exam Preparation",
+    description: "Aptora is an AI-powered exam preparation platform that helps students build personalized study plans, practice with mock tests, organize notes and track their progress.",
   },
 };
 
@@ -83,17 +99,13 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} antialiased min-h-screen text-slate-800 bg-slate-50 selection:bg-emerald-500/15 selection:text-emerald-600`}
+        className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased min-h-screen text-slate-800 bg-[#FAF9F6] selection:bg-[#ecfdf5] selection:text-[#084c38]`}
         suppressHydrationWarning
       >
         <AuthProvider>
           <ProfileProvider>
             <ToastProvider>
-              <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
-                {/* Premium Background Mesh Glows */}
-                <div className="pointer-events-none fixed inset-0 -z-10 bg-mesh opacity-45" />
-                <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-25" />
-
+              <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden bg-[#FAF9F6]">
                 {/* Main Content Tree */}
                 <div className="flex-grow w-full flex flex-col">
                   {children}

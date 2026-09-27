@@ -1,5 +1,5 @@
 """
-ExamForge AI - Context Builder
+Aptora - Context Builder
 
 Responsible for:
 1. Convert retrieved chunks into LLM context

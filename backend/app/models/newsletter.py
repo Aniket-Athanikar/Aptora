@@ -1,5 +1,5 @@
 """
-ExamForge AI — Newsletter Model
+Aptora — Newsletter Model
 """
 import datetime
 from sqlalchemy import Column, String, Integer, DateTime

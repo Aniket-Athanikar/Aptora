@@ -12,8 +12,8 @@ import { NotificationService } from "../services/notificationService";
 import { SoundManager } from "../services/soundManager";
 import { profileService } from "@/services";
 
-const PREFS_STORAGE_KEY = "examforge_focus_preferences_v2";
-const STATE_STORAGE_KEY = "examforge_focus_timer_state_v2";
+const PREFS_STORAGE_KEY = "Aptora_focus_preferences_v2";
+const STATE_STORAGE_KEY = "Aptora_focus_timer_state_v2";
 
 export const DEFAULT_PREFERENCES: FocusPreferences = {
   soundEnabled: true,

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Base Agent
+Aptora - Base Agent
 
 Base class for all AI agents.
 

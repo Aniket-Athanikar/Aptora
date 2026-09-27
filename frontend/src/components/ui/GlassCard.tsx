@@ -9,8 +9,8 @@ export default function GlassCard({ children, className, hoverEffect = true, ...
   return (
     <div
       className={cn(
-        "glass-panel p-6 bg-white/75 border-neutral-200/60 shadow-[0_10px_30px_-10px_rgba(16,185,129,0.04)]",
-        hoverEffect && "glass-panel-hover transition-all duration-300",
+        "p-6 bg-white border border-slate-200/90 rounded-2xl shadow-2xs",
+        hoverEffect && "hover:shadow-md hover:border-slate-300 transition-all duration-200",
         className
       )}
       {...props}
@@ -19,3 +19,4 @@ export default function GlassCard({ children, className, hoverEffect = true, ...
     </div>
   );
 }
+

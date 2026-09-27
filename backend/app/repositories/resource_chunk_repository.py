@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Chunk Repository
+Aptora - Resource Chunk Repository
 
 Handles all database operations related to resource chunks.
 """

@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Auth Service
+ * Aptora — Auth Service
  * API calls for authentication endpoints.
  */
 import { apiClient } from "./api-client";

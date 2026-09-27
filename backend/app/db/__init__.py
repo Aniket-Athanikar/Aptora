@@ -1,4 +1,4 @@
-"""ExamForge AI — Database Module"""
+"""Aptora — Database Module"""
 from app.db.base import Base
 from app.db.session import engine, SessionLocal
 from app.db.redis import redis_client

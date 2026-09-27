@@ -1,5 +1,5 @@
 """
-ExamForge AI — Concept Linker Schemas
+Aptora — Concept Linker Schemas
 ========================================
 
 Pydantic models for cross-document concept mapping.

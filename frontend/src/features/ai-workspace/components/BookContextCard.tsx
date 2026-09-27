@@ -66,7 +66,7 @@ export function BookContextCard({ book }: BookContextCardProps) {
 
               <div className="mb-1 pl-1">
                 <p className="text-[8px] font-black text-purple-200 uppercase tracking-widest">
-                  EXAMFORGE RESOURCE
+                  Aptora RESOURCE
                 </p>
                 <h5 className="text-xs font-black line-clamp-3 leading-snug mt-1 text-white drop-shadow-xs">
                   {book.name}

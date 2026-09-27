@@ -1,5 +1,5 @@
 """
-ExamForge AI - Workspace Schemas
+Aptora - Workspace Schemas
 """
 
 from datetime import datetime
@@ -102,4 +102,4 @@ class LibrarySearchResponse(BaseModel):
     total: int
     limit: int
     offset: int
-    items: list[ResourceResponse] = []
+    items: list[ResourceResponse] = []

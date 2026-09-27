@@ -1,5 +1,5 @@
 """
-ExamForge AI — Study Advisor Service
+Aptora — Study Advisor Service
 ======================================
 
 Orchestrates personalized study advice generation:

@@ -9,13 +9,10 @@ import {
   Compass,
   ArrowRight,
   ShieldCheck,
-  Printer,
+  FileDown,
   MailCheck,
   Loader2,
-  BookmarkCheck,
-  Cpu,
-  Zap,
-  HelpCircle
+  Zap
 } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import GlassCard from "@/components/ui/GlassCard";
@@ -32,6 +29,7 @@ export default function CheckoutSuccessPage() {
   const [txnId, setTxnId] = useState("");
   const [copied, setCopied] = useState(false);
   const [emailStatus, setEmailStatus] = useState<"pending" | "sent" | "failed">("pending");
+  const [downloading, setDownloading] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const planName = searchParams.get("plan") || "premium";
@@ -42,10 +40,10 @@ export default function CheckoutSuccessPage() {
   useEffect(() => {
     setMounted(true);
     const rand = Math.floor(100000 + Math.random() * 900000);
-    setTxnId(`EF-TXN-${Date.now().toString().slice(-6)}-${rand}`);
+    setTxnId(`APT-${Date.now().toString().slice(-6)}-${rand}`);
   }, []);
 
-  // Send receipt email on mount
+  // Send receipt email with PDF attachment on mount
   useEffect(() => {
     if (!txnId || !user?.email) return;
 
@@ -76,12 +74,42 @@ export default function CheckoutSuccessPage() {
     };
 
     dispatchInvoiceEmail();
-  }, [txnId, user?.email]);
+  }, [txnId, user?.email, planName, cycle, amount]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(txnId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDirectPdfDownload = async () => {
+    if (!user?.email && !txnId) return;
+    setDownloading(true);
+
+    try {
+      const downloadUrl = `${API_URL}/api/billing/download-invoice-pdf?email=${encodeURIComponent(
+        user?.email || "user@aptora.ai"
+      )}&plan=${encodeURIComponent(planName)}&cycle=${encodeURIComponent(cycle)}&amount=${encodeURIComponent(
+        amount
+      )}&txnId=${encodeURIComponent(txnId)}`;
+
+      const response = await fetch(downloadUrl);
+      if (!response.ok) throw new Error("Download failed");
+
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `Aptora_Invoice_${txnId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Error downloading PDF invoice:", error);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const getExpiryDate = () => {
@@ -101,7 +129,7 @@ export default function CheckoutSuccessPage() {
   return (
     <PageLayout
       title="Order Completed"
-      description="Thank you for subscribing! Your transaction details are listed below."
+      description="Thank you for subscribing! Your official PDF invoice has been sent to your email."
       breadcrumb={[
         { label: "Checkout", href: "/checkout" },
         { label: "Success Receipt", href: "/checkout/success" }
@@ -142,31 +170,31 @@ export default function CheckoutSuccessPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-500 border border-emerald-200 flex items-center justify-center mb-5 shadow-inner"
+                  className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mb-5 shadow-inner"
                 >
                   <CheckCircle2 className="w-7 h-7" />
                 </motion.div>
 
                 <h3 className="text-xl font-black text-neutral-900 mb-1.5 uppercase tracking-tight">Payment Approved</h3>
-                <p className="text-[11px] text-neutral-400 font-semibold mb-6 max-w-[260px]">
-                  Your subscription details are verified. A digital copy of the invoice is sent to your account.
+                <p className="text-[11px] text-neutral-500 font-semibold mb-6 max-w-[280px] leading-relaxed">
+                  Your subscription details are verified. A high-resolution PDF tax invoice has been generated and dispatched to your email.
                 </p>
 
                 {/* Email Sent Status Badge */}
                 <div className="flex items-center justify-center mb-6">
                   {emailStatus === "pending" && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200 rounded-full text-[9px] font-black uppercase tracking-wider">
-                      <Loader2 className="w-3 h-3 animate-spin" /> Dispatching Receipt Email...
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200 rounded-full text-[9.5px] font-black uppercase tracking-wider">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Dispatching PDF Invoice Email...
                     </span>
                   )}
                   {emailStatus === "sent" && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-[9px] font-black uppercase tracking-wider shadow-sm">
-                      <MailCheck className="w-3.5 h-3.5 text-emerald-500" /> Invoice Sent to {user?.email || "Email"}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[9.5px] font-black uppercase tracking-wider shadow-sm">
+                      <MailCheck className="w-3.5 h-3.5 text-emerald-600" /> Invoice PDF Sent to {user?.email || "Email"}
                     </span>
                   )}
                   {emailStatus === "failed" && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-full text-[9px] font-black uppercase tracking-wider">
-                      Invoice Logged Locally
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[9.5px] font-black uppercase tracking-wider">
+                      <MailCheck className="w-3.5 h-3.5 text-emerald-600" /> Invoice Logged & PDF Ready
                     </span>
                   )}
                 </div>
@@ -177,11 +205,11 @@ export default function CheckoutSuccessPage() {
                     <span className="font-bold text-neutral-400 uppercase tracking-wider">Transaction ID</span>
                     <button
                       onClick={handleCopy}
-                      className="flex items-center gap-1.5 font-black text-neutral-800 hover:text-emerald-600 transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 font-black text-neutral-800 hover:text-emerald-700 transition-colors cursor-pointer"
                     >
-                      <span className="font-mono text-[10px]">{txnId}</span>
+                      <span className="font-mono text-[10.5px]">{txnId}</span>
                       <Copy className="w-3.5 h-3.5" />
-                      {copied && <span className="text-[8px] text-emerald-600 font-bold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200 uppercase tracking-widest">Copied</span>}
+                      {copied && <span className="text-[8px] text-emerald-700 font-bold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200 uppercase tracking-widest">Copied</span>}
                     </button>
                   </div>
 
@@ -191,8 +219,8 @@ export default function CheckoutSuccessPage() {
                       <span className="text-sm font-black text-neutral-900 capitalize">{planName} ({cycle})</span>
                     </div>
                     <div className="space-y-0.5 text-right">
-                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Amount Billed</span>
-                      <span className="text-sm font-black text-neutral-900">₹{amount}</span>
+                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Amount Paid</span>
+                      <span className="text-sm font-black text-emerald-700">₹{amount}</span>
                     </div>
                   </div>
 
@@ -210,15 +238,21 @@ export default function CheckoutSuccessPage() {
                     <Compass className="w-4 h-4" /> Launch Dashboard <ArrowRight className="w-4 h-4" />
                   </GlowButton>
                 </Link>
-                <Link
-                  href={`/checkout/invoice?plan=${planName}&cycle=${cycle}&amount=${amount}&txnId=${txnId}&email=${user?.email || "user@examforge.ai"}`}
-                  target="_blank"
-                  className="block w-full"
+                <button
+                  onClick={handleDirectPdfDownload}
+                  disabled={downloading}
+                  className="w-full py-3.5 px-4 rounded-xl border border-neutral-300 bg-white text-neutral-800 text-[11px] font-black shadow-sm flex items-center justify-center gap-2 hover:bg-emerald-50 hover:border-emerald-300 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  <GlowButton variant="outline" className="w-full py-4 text-[11px] font-black shadow-sm flex items-center justify-center gap-2 hover:bg-neutral-50" magnetic={false}>
-                    <Printer className="w-4 h-4" /> Download PDF Invoice
-                  </GlowButton>
-                </Link>
+                  {downloading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-emerald-600" /> Generating Premium PDF...
+                    </>
+                  ) : (
+                    <>
+                      <FileDown className="w-4 h-4 text-emerald-600" /> Download PDF Invoice
+                    </>
+                  )}
+                </button>
               </div>
 
             </GlassCard>
@@ -237,38 +271,38 @@ export default function CheckoutSuccessPage() {
                 <ul className="space-y-4">
                   <li className="flex gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                     <div>
                       <h5 className="text-xs font-black text-neutral-800">Unlimited Exam Books</h5>
-                      <p className="text-[10px] text-neutral-400 font-semibold mt-0.5 leading-relaxed">Select as many syllabus assets and PYQs as needed.</p>
+                      <p className="text-[10px] text-neutral-500 font-semibold mt-0.5 leading-relaxed">Select as many syllabus assets and PYQs as needed.</p>
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                     <div>
                       <h5 className="text-xs font-black text-neutral-800">Contextual RAG Notes</h5>
-                      <p className="text-[10px] text-neutral-400 font-semibold mt-0.5 leading-relaxed">Get personalized reading chunk predictions and study guides.</p>
+                      <p className="text-[10px] text-neutral-500 font-semibold mt-0.5 leading-relaxed">Get personalized reading chunk predictions and study guides.</p>
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                     <div>
                       <h5 className="text-xs font-black text-neutral-800">Custom Mock Generator</h5>
-                      <p className="text-[10px] text-neutral-400 font-semibold mt-0.5 leading-relaxed">Simulated tests generated daily matching target exam configurations.</p>
+                      <p className="text-[10px] text-neutral-500 font-semibold mt-0.5 leading-relaxed">Simulated tests generated daily matching target exam configurations.</p>
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                     <div>
                       <h5 className="text-xs font-black text-neutral-800">24/7 Personal AI Coach</h5>
-                      <p className="text-[10px] text-neutral-400 font-semibold mt-0.5 leading-relaxed">Dedicated AI tutor resolves syllabus queries instantly.</p>
+                      <p className="text-[10px] text-neutral-500 font-semibold mt-0.5 leading-relaxed">Dedicated AI tutor resolves syllabus queries instantly.</p>
                     </div>
                   </li>
                 </ul>
@@ -276,7 +310,7 @@ export default function CheckoutSuccessPage() {
 
               {/* Secure badge footer */}
               <div className="pt-6 border-t border-[#ECECEC] mt-8 flex items-center justify-center gap-1.5 text-[9px] font-black text-neutral-400 uppercase tracking-widest">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" /> Verified subscription
+                <ShieldCheck className="w-4 h-4 text-emerald-600" /> Verified subscription
               </div>
 
             </GlassCard>

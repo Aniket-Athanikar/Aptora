@@ -1,6 +1,6 @@
-# ExamForge AI — System Prompts & LLM Rules
+# Aptora — System Prompts & LLM Rules
 
-This document outlines the standard system prompts used by the ExamForge AI Core Engine to guide LLM interactions, ensuring educational accuracy, proper evaluation standards, and target alignment for UPSC and State PSC exams.
+This document outlines the standard system prompts used by the Aptora Core Engine to guide LLM interactions, ensuring educational accuracy, proper evaluation standards, and target alignment for UPSC and State PSC exams.
 
 ---
 

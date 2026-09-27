@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "examforge.fullname" . }}
+  name: {{ include "Aptora.fullname" . }}
   labels:
-    app: {{ include "examforge.name" . }}
+    app: {{ include "Aptora.name" . }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.className }}
 spec:
@@ -18,7 +18,7 @@ spec:
         pathType: {{ .pathType }}
         backend:
           service:
-            name: {{ include "examforge.fullname" $ }}-{{ .serviceName }}
+            name: {{ include "Aptora.fullname" $ }}-{{ .serviceName }}
             port:
               number: {{ if eq .serviceName "backend" }}{{ $.Values.service.backendPort }}{{ else }}{{ $.Values.service.frontendPort }}{{ end }}
       {{- end }}

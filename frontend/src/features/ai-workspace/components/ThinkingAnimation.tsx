@@ -11,7 +11,7 @@ interface ThinkingAnimationProps {
 const STAGE_DETAILS = {
   thinking: {
     icon: Sparkles,
-    label: "ExamForge AI Thinking...",
+    label: "Aptora Thinking...",
     color: "text-purple-700",
     bgColor: "bg-purple-100/90",
     borderColor: "border-purple-300",
@@ -88,7 +88,7 @@ export function ThinkingAnimation({ stage }: ThinkingAnimationProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 text-[9px] font-black text-purple-700 uppercase tracking-widest leading-none">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-ping" />
-            ExamForge-AI Engine
+            Aptora Engine
           </div>
           <h4 className="text-xs font-black text-slate-900 truncate mt-1">
             {current.label}

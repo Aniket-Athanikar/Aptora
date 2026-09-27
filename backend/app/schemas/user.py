@@ -1,5 +1,5 @@
 """
-ExamForge AI — User/Profile Schemas
+Aptora — User/Profile Schemas
 """
 
 from typing import Optional

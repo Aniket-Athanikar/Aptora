@@ -1,5 +1,5 @@
 """
-ExamForge AI — Intent Analyzer
+Aptora — Intent Analyzer
 ================================
 
 Detects student intent from natural language questions or prompts.

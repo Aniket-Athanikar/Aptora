@@ -1,5 +1,5 @@
 """
-ExamForge AI - Base Service
+Aptora - Base Service
 
 Provides reusable CRUD operations for all services.
 """

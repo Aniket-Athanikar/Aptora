@@ -1,5 +1,5 @@
 """
-ExamForge AI — Contact & Newsletter Schemas
+Aptora — Contact & Newsletter Schemas
 """
 from pydantic import BaseModel, EmailStr, Field
 

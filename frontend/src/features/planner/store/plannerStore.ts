@@ -121,7 +121,7 @@ export const usePlannerStore = create<PlannerState>()(
       },
     }),
     {
-      name: "examforge_planner_store",
+      name: "Aptora_planner_store",
       partialize: (state) => ({
         tasks: state.tasks,
         sessions: state.sessions,

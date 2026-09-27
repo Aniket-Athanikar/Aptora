@@ -1,5 +1,5 @@
 """
-ExamForge AI — MCQ Service
+Aptora — MCQ Service
 ============================
 
 Orchestrates structured MCQ generation:

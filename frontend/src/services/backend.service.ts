@@ -1,6 +1,6 @@
 import { apiClient } from "./api-client";
 
-/** Complete typed surface for the routes implemented by the ExamForge backend. */
+/** Complete typed surface for the routes implemented by the Aptora backend. */
 export const backendService = {
   workspace: {
     current: () => apiClient.get<Workspace>("/workspace"),

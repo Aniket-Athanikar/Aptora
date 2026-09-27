@@ -14,53 +14,22 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, title, description, breadcrumb }: PageLayoutProps) {
   return (
-    <div className="relative min-h-screen bg-[var(--background)] text-slate-900 overflow-x-hidden font-sans">
-      {/* Premium Clean Background Pattern (Dot Pattern & Interactive Ambient Glows) */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none z-0" />
-      
-      {/* Drifting Ambient Glow Orbs */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <motion.div 
-          animate={{
-            x: [0, 40, -20, 0],
-            y: [0, -50, 30, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-[10%] left-[5%] w-[600px] h-[600px] bg-emerald-400/5 rounded-full filter blur-[130px]" 
-        />
-        <motion.div 
-          animate={{
-            x: [0, -50, 30, 0],
-            y: [0, 40, -40, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute bottom-[15%] right-[5%] w-[550px] h-[550px] bg-teal-400/5 rounded-full filter blur-[130px]" 
-        />
-      </div>
-
+    <div className="relative min-h-screen bg-[#FAF9F6] text-slate-900 overflow-x-hidden font-sans selection:bg-[#d1fae5] selection:text-[#084c38]">
       {/* Navbar */}
       <Navbar />
 
       {/* Page Hero Banner */}
-      <section className="relative z-10 pt-36 pb-12 overflow-hidden">
-        <div className="max-w-[1320px] px-6 mx-auto">
-          {/* Breadcrumb - Sleek Glass Pill */}
+      <section className="relative z-10 pt-32 pb-10 overflow-hidden">
+        <div className="max-w-[1240px] px-6 mx-auto">
+          {/* Breadcrumb */}
           {breadcrumb && breadcrumb.length > 0 && (
             <motion.nav
-              initial={{ opacity: 0, y: -12 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface)]/60 border border-white/20 backdrop-blur-md text-[11px] font-bold text-slate-500 mb-8 shadow-xs"
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-500 mb-6 shadow-2xs"
             >
-              <Link href="/" className="hover:text-emerald-600 transition-colors flex items-center gap-1">
+              <Link href="/" className="hover:text-[#084c38] transition-colors flex items-center gap-1">
                 <HomeIcon className="w-3.5 h-3.5" />
                 <span>Home</span>
               </Link>
@@ -68,9 +37,9 @@ export default function PageLayout({ children, title, description, breadcrumb }:
                 <span key={idx} className="flex items-center gap-2">
                   <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   {idx === breadcrumb.length - 1 ? (
-                    <span className="text-slate-800 font-extrabold">{crumb.label}</span>
+                    <span className="text-slate-900 font-bold">{crumb.label}</span>
                   ) : (
-                    <Link href={crumb.href} className="hover:text-emerald-600 transition-colors">{crumb.label}</Link>
+                    <Link href={crumb.href} className="hover:text-[#084c38] transition-colors">{crumb.label}</Link>
                   )}
                 </span>
               ))}
@@ -79,10 +48,10 @@ export default function PageLayout({ children, title, description, breadcrumb }:
 
           {/* Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, type: "spring", stiffness: 100 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight"
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight"
           >
             {title}
           </motion.h1>
@@ -90,31 +59,31 @@ export default function PageLayout({ children, title, description, breadcrumb }:
           {/* Description */}
           {description && (
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-5 text-base md:text-lg text-slate-500 font-bold max-w-2xl leading-relaxed"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mt-4 text-base md:text-lg text-slate-600 font-medium max-w-2xl leading-relaxed"
             >
               {description}
             </motion.p>
           )}
 
-          {/* Decorative glowing gradient line */}
+          {/* Deep emerald accent line matching Aptora design language */}
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            className="relative mt-8 h-1 w-36 bg-gradient-to-r from-emerald-500 via-amber-400 to-teal-500 rounded-full origin-left shadow-[0_1px_8px_rgba(16,185,129,0.4)]"
+            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+            className="relative mt-6 h-1 w-24 bg-[#084c38] rounded-full origin-left"
           />
         </div>
       </section>
 
       {/* Page Content */}
       <motion.main
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.25 }}
-        className="relative z-10 pb-28 max-w-[1320px] px-6 mx-auto"
+        transition={{ duration: 0.5, delay: 0.15 }}
+        className="relative z-10 pb-24 max-w-[1240px] px-6 mx-auto"
       >
         {children}
       </motion.main>
@@ -124,3 +93,4 @@ export default function PageLayout({ children, title, description, breadcrumb }:
     </div>
   );
 }
+

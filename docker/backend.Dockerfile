@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Stage 2: Final minimal runtime
+# Stage 2: Final minimal runtime for Aptora backend
 FROM python:3.11-slim AS runner
 
 WORKDIR /app
@@ -23,11 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-privileged user to run the app
+# Create non-privileged user
 RUN groupadd --gid 10001 appgroup && \
     useradd --uid 10001 --gid 10001 --shell /bin/bash --create-home appuser
 
-# Copy installed packages from builder stage
 COPY --from=builder /root/.local /home/appuser/.local
 COPY --chown=appuser:appgroup . .
 
@@ -39,7 +38,7 @@ USER appuser
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,6 +1,6 @@
 # Monitoring & Observability Guide
 
-ExamForge AI includes a built-in Prometheus, Grafana, Loki, and Promtail logging/metrics pipeline to ensure high availability and deep performance visibility.
+Aptora includes a built-in Prometheus, Grafana, Loki, and Promtail logging/metrics pipeline to ensure high availability and deep performance visibility.
 
 ## Architecture
 

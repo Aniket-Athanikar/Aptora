@@ -25,7 +25,7 @@ const blogPostsData: Record<string, BlogPost> = {
     title: "How AI is Changing the Way Students Prepare for Exams",
     category: "AI & Education",
     date: "29 May 2024",
-    author: "Team ExamForge AI",
+    author: "Team Aptora",
     readTime: "6 Min Read",
     image: "/blog-ai-prep.png",
     content: [
@@ -91,7 +91,7 @@ const blogPostsData: Record<string, BlogPost> = {
     title: "Best Books for UPSC Preparation",
     category: "Resources",
     date: "20 May 2024",
-    author: "Team ExamForge AI",
+    author: "Team Aptora",
     readTime: "5 Min Read",
     image: "/blog-upsc-books.png",
     content: [
@@ -227,7 +227,7 @@ export default function BlogPostDetail() {
         {/* Premium Upgrade Block */}
         <div className="bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 md:p-12 rounded-[32px] shadow-xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-          <h3 className="text-2xl md:text-3xl font-black mb-3">Prep Smarter with ExamForge AI</h3>
+          <h3 className="text-2xl md:text-3xl font-black mb-3">Prep Smarter with Aptora</h3>
           <p className="text-emerald-50 text-sm font-semibold mb-6 max-w-lg">
             Don&apos;t just read about strategies. Build your customized notes, practice sectional sets, and analyze performance dashboards inside our premium academy.
           </p>

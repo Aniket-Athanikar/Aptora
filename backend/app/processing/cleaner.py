@@ -1,5 +1,5 @@
 """
-ExamForge AI - Text Cleaner
+Aptora - Text Cleaner
 """
 
 import re

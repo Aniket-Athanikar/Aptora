@@ -128,7 +128,7 @@ export function ExportModal({
 
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = exportRecord.file_name || `ExamForge_Export_${conversationTitle.replace(/\s+/g, "_")}.pdf`;
+      link.download = exportRecord.file_name || `Aptora_Export_${conversationTitle.replace(/\s+/g, "_")}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -243,7 +243,7 @@ export function ExportModal({
               <div className="p-3 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 rounded-2xl flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-purple-600" />
-                  <span className="text-xs font-black text-purple-900">ExamForge Premium Guide</span>
+                  <span className="text-xs font-black text-purple-900">Aptora Premium Guide</span>
                 </div>
                 <span className="text-[9px] font-black uppercase bg-purple-600 text-white px-2 py-0.5 rounded-full">Academic</span>
               </div>

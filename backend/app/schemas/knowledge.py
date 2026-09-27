@@ -1,5 +1,5 @@
 """
-ExamForge AI — Knowledge Schemas
+Aptora — Knowledge Schemas
 ==================================
 
 Pydantic schemas for the Knowledge Engine (multi-turn chat, session history, sources).

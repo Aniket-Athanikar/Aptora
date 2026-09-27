@@ -1,5 +1,5 @@
 """
-ExamForge AI - Document Processor
+Aptora - Document Processor
 ===================================
 
 Processing stage: Upload → DocumentProcessor → (Embeddings – next stage)

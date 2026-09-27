@@ -1,5 +1,5 @@
 """
-ExamForge AI — Knowledge Synthesizer
+Aptora — Knowledge Synthesizer
 ======================================
 
 Synthesizes multi-source document chunks (Books, Notes, PYQs, Syllabus)

@@ -843,26 +843,27 @@ export function AnimatedWizard({ onClose, isEditMode = false }: AnimatedWizardPr
         </div>
 
         {/* Footer Navigation Buttons */}
-        <div className="p-4 sm:p-6 border-t border-slate-200/50 flex items-center justify-between bg-slate-55/60 bg-slate-50">
+        <div className="p-4 sm:p-6 border-t border-slate-200/60 flex items-center justify-between bg-[#FAF9F6]">
           <button
             onClick={() => {
               playClickSound();
               prevStep();
             }}
             disabled={currentStep === 1}
-            className="p-3 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center rounded-xl transition-all duration-300 hover:scale-[1.05] shadow-md border border-emerald-600 text-slate-950"
+            className="px-4 py-3 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-1.5 rounded-xl transition-all shadow-2xs text-xs font-bold"
             title="Previous Step"
           >
-            <ChevronLeft className="w-5.5 h-5.5 stroke-[3px]" />
+            <ChevronLeft className="w-4.5 h-4.5 text-slate-600" />
+            <span>Previous</span>
           </button>
 
           <button
             onClick={handleNext}
-            className={`${stepStyles.btnBg} font-black text-xs uppercase tracking-wider px-5 py-3.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-sm`}
+            className={`${stepStyles.btnBg} font-extrabold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-md shadow-[#084c38]/20`}
             title={currentStep === 7 ? "Launch success engine" : "Save & Continue"}
           >
             <span>{currentStep === 7 ? "Launch Engine" : "Next Step"}</span>
-            {currentStep === 7 ? <Trophy className="w-4.5 h-4.5 text-amber-350" /> : <ChevronRight className="w-4.5 h-4.5" />}
+            {currentStep === 7 ? <Trophy className="w-4.5 h-4.5 text-amber-300" /> : <ChevronRight className="w-4.5 h-4.5" />}
           </button>
         </div>
       </motion.div>

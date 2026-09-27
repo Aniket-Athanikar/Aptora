@@ -1,5 +1,5 @@
 """
-ExamForge AI - Qdrant Vector DB Service
+Aptora - Qdrant Vector DB Service
 =========================================
 
 Service layer for interacting with Qdrant Vector Database.
@@ -8,7 +8,7 @@ semantic similarity search, and document vector deletion.
 
 Stack & Specifications:
 - Client: qdrant-client
-- Collection Name: examforge_documents
+- Collection Name: Aptora_documents
 - Vector Size: 768 (nomic-embed-text)
 - Distance Metric: Cosine
 """
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_COLLECTION_NAME: Final[str] = "examforge_documents"
+DEFAULT_COLLECTION_NAME: Final[str] = "Aptora_documents"
 DEFAULT_VECTOR_SIZE: Final[int] = 768
 MAX_RETRIES: Final[int] = 3
 RETRY_DELAY_SECONDS: Final[float] = 1.0
@@ -42,7 +42,7 @@ class QdrantService:
     """
 
     COLLECTION_NAME: str = getattr(settings, "QDRANT_COLLECTION", DEFAULT_COLLECTION_NAME)
-    if not COLLECTION_NAME or COLLECTION_NAME == "examforge_resources":
+    if not COLLECTION_NAME or COLLECTION_NAME == "Aptora_resources":
         COLLECTION_NAME = DEFAULT_COLLECTION_NAME
 
     VECTOR_SIZE: int = getattr(settings, "EMBEDDING_DIMENSION", DEFAULT_VECTOR_SIZE)

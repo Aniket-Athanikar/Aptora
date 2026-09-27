@@ -1,6 +1,6 @@
 # Git Strategy & Branching Guide
 
-ExamForge AI adopts an enterprise-grade Git strategy to scale collaboration across multi-disciplinary teams (frontend, backend, AI, and DevOps).
+Aptora adopts an enterprise-grade Git strategy to scale collaboration across multi-disciplinary teams (frontend, backend, AI, and DevOps).
 
 ## Branch Architecture
 

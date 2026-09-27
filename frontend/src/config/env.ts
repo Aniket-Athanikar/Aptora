@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Environment Configuration
+ * Aptora — Environment Configuration
  * Typed access to environment variables with defaults.
  */
 export const env = {

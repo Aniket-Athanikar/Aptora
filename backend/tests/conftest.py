@@ -1,3 +1,3 @@
 """
-ExamForge AI — Test Fixtures
+Aptora — Test Fixtures
 """

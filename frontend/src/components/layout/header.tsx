@@ -124,7 +124,7 @@ export function Header() {
             >
               <Image
                 src="/favicon.ico"
-                alt="ExamForge AI Vision Logo"
+                alt="Aptora Vision Logo"
                 width={56}
                 height={56}
                 className="w-full h-full rounded-full object-cover"
@@ -141,7 +141,7 @@ export function Header() {
               textShadow: "0px 1px 0px #1bcfa2ff, 0px 2px 0px #cbd5e1, 0px 3px 0px #94a3b8, 0px 4px 6px rgba(0,0,0,0.15)",
             }}
           >
-            ExamForge-
+            Aptora-
             <span
               className="bg-gradient-to-r from-emerald-600 via-teal-605 to-emerald-800 bg-clip-text text-transparent inline-block"
               style={{

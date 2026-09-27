@@ -1,5 +1,5 @@
 """
-ExamForge AI — Contact Model
+Aptora — Contact Model
 """
 import datetime
 from sqlalchemy import Column, String, Integer, DateTime, Text

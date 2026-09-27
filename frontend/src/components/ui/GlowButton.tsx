@@ -19,10 +19,10 @@ export default function GlowButton({
   const content = (
     <button
       className={cn(
-        "relative inline-flex items-center justify-center font-semibold text-sm px-6 py-3 rounded-full cursor-pointer transition-all duration-300 select-none",
+        "relative inline-flex items-center justify-center font-semibold text-sm px-6 py-3 rounded-xl cursor-pointer transition-all duration-200 select-none",
         variant === "gradient"
-          ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-[0_4px_20px_-2px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_30px_0_rgba(16,185,129,0.5)] hover:scale-[1.02] border-none"
-          : "bg-white text-neutral-900 border border-[#ECECEC] hover:border-neutral-300 hover:bg-neutral-50/50 shadow-sm",
+          ? "bg-[#084c38] text-white shadow-sm hover:bg-[#063b2b] border-none"
+          : "bg-white text-slate-800 border border-slate-200 hover:bg-slate-50 shadow-2xs",
         className
       )}
       {...props}
@@ -33,3 +33,4 @@ export default function GlowButton({
 
   return magnetic ? <MagneticButton>{content}</MagneticButton> : content;
 }
+

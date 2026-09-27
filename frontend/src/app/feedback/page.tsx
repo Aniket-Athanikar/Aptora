@@ -44,7 +44,7 @@ export default function FeedbackPage() {
   return (
     <PageLayout
       title="We Value Your Feedback"
-      description="Help us improve ExamForge AI by sharing your thoughts and experience."
+      description="Help us improve Aptora by sharing your thoughts and experience."
       breadcrumb={[{ label: "Feedback", href: "/feedback" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto">

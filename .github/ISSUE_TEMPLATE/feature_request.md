@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature for ExamForge AI
+about: Suggest a new feature for Aptora
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""

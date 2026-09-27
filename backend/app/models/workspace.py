@@ -1,5 +1,5 @@
 """
-ExamForge AI - Goal Workspace Model
+Aptora - Goal Workspace Model
 """
 
 import datetime

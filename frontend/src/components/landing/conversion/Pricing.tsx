@@ -1,69 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { 
-  Check, CheckCircle2, Sparkles, BookOpen, FileText, HelpCircle, 
-  Calendar, BarChart3, UploadCloud, LineChart, Zap, Clock, 
-  Users, Cpu, ClipboardList, MessageSquare, ShieldCheck 
-} from "lucide-react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Sparkles, ArrowRight, ShieldCheck, Zap, Lock } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import GlassCard from "@/components/ui/GlassCard";
-import SectionHeading from "@/components/ui/SectionHeading";
-import GlowButton from "@/components/ui/GlowButton";
-
-// High-Performance 3D Tilt Wrapper
-function PricingTiltCard({ children, className, isPopular }: { children: React.ReactNode; className?: string; isPopular?: boolean }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springConfig = { damping: 20, stiffness: 150, mass: 0.6 };
-  const xSpring = useSpring(x, springConfig);
-  const ySpring = useSpring(y, springConfig);
-
-  const rotateX = useTransform(ySpring, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-10, 10]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = (e.clientX - rect.left) / width - 0.5;
-    const mouseY = (e.clientY - rect.top) / height - 0.5;
-    x.set(mouseX);
-    y.set(mouseY);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative w-full cursor-pointer group ${className} ${isPopular ? "z-20" : "z-10"}`}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export default function Pricing() {
   const { isAuthenticated } = useAuth();
-  const [mounted, setMounted] = useState(false);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const plans = [
     {
@@ -72,13 +17,14 @@ export default function Pricing() {
       price: { monthly: 299, yearly: 249 },
       yearlyTotal: 2999,
       features: [
-        { text: "10 Books Selected", icon: BookOpen },
-        { text: "AI Notes Generator", icon: FileText },
-        { text: "10,000 Practice Questions", icon: HelpCircle },
-        { text: "Daily Practice Sets", icon: Calendar },
-        { text: "Basic Performance Analytics", icon: BarChart3 },
+        "10 Books Access",
+        "AI Notes Generator",
+        "10,000+ Question Bank",
+        "Daily Practice Quizzes",
+        "Basic Performance Analytics",
       ],
       popular: false,
+      ctaText: "Get Started",
     },
     {
       name: "Premium",
@@ -86,14 +32,15 @@ export default function Pricing() {
       price: { monthly: 599, yearly: 499 },
       yearlyTotal: 5999,
       features: [
-        { text: "Everything in Basic", icon: CheckCircle2 },
-        { text: "Unlimited Books Selected", icon: UploadCloud },
-        { text: "Advanced Performance Analytics", icon: LineChart },
-        { text: "Priority Support (24/7)", icon: Zap },
-        { text: "Mock Tests (Unlimited)", icon: Clock },
-        { text: "Personalized Mentoring", icon: Users },
+        "Everything in Basic",
+        "Unlimited Books Access",
+        "Advanced Analytics & Insights",
+        "Priority AI Support",
+        "Unlimited Mock Tests",
+        "Personalized Mentoring",
       ],
       popular: true,
+      ctaText: "Choose Premium",
     },
     {
       name: "Elite",
@@ -101,200 +48,164 @@ export default function Pricing() {
       price: { monthly: 999, yearly: 833 },
       yearlyTotal: 9999,
       features: [
-        { text: "Everything in Premium", icon: CheckCircle2 },
-        { text: "Dedicated AI Mentor (1-on-1)", icon: Cpu },
-        { text: "Custom Study Plans", icon: ClipboardList },
-        { text: "1-on-1 Live Mentoring", icon: MessageSquare },
-        { text: "VIP Priority Support", icon: ShieldCheck },
+        "Everything in Premium",
+        "Dedicated AI Mentor",
+        "Custom Study Roadmaps",
+        "1-on-1 Live Mentoring",
+        "Priority Support & Exports",
       ],
       popular: false,
+      ctaText: "Choose Elite",
     },
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden perspective-[2000px]">
+    <section id="pricing" className="py-20 md:py-28 bg-[#FAF9F6] border-y border-slate-200/90 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Ambient Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 select-none">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-[100px]"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-gradient-to-tl from-teal-500/5 to-transparent rounded-full blur-[120px]"
-        />
-      </div>
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ecfdf5] border border-[#d1fae5] text-[#084c38] text-xs font-extrabold uppercase tracking-wider mb-4 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#084c38]" />
+            <span>Transparent Pricing</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-display">
+            Choose the way you want to prepare
+          </h2>
+          <p className="mt-3.5 text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+            Simple, predictable plans designed to support every stage of your examination journey
+          </p>
 
-      {/* Reduced max-width to 1150px for a medium, tighter layout */}
-      <div className="layout-container max-w-[1150px] px-4 mx-auto relative z-10">
+          {/* Billing Cycle Switcher */}
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <span className={`text-xs sm:text-sm font-bold transition-colors ${billingCycle === "monthly" ? "text-slate-900" : "text-slate-400"}`}>
+              Monthly
+            </span>
 
-        {/* Heading */}
-        <SectionHeading
-          badge="Pricing"
-          title="Simple, Transparent"
-          gradientTitle="Pricing"
-          description="Choose the exact plan you need to crush your upcoming exams."
-        />
-
-        {/* Medium Sized Toggle Switch */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex items-center justify-center gap-4 mb-12 mt-6"
-        >
-          <span className={`text-sm font-bold transition-colors duration-300 ${billingCycle === "monthly" ? "text-neutral-900" : "text-neutral-400"}`}>
-            Monthly
-          </span>
-
-          <button
-            onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-            className="relative w-14 h-7 rounded-full bg-white border border-[#ECECEC] shadow-inner p-1 transition-all duration-500 hover:border-emerald-500/40 focus:outline-none"
-          >
-            {/* The Toggle Knob */}
-            <motion.div
-              layout
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="w-5 h-5 rounded-full bg-gradient-to-b from-emerald-500 to-teal-600 shadow-md shadow-emerald-500/30"
-              style={{
-                marginLeft: billingCycle === "yearly" ? "26px" : "0px",
-              }}
-            />
-          </button>
-
-          <span className={`text-sm font-bold transition-colors duration-300 flex items-center gap-2 ${billingCycle === "yearly" ? "text-neutral-900" : "text-neutral-400"}`}>
-            Yearly
-            <motion.span
-              initial={{ scale: 0.9 }}
-              animate={{ scale: billingCycle === "yearly" ? [1, 1.1, 1] : 1 }}
-              transition={{ duration: 0.3 }}
-              className="text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-sm"
+            <button
+              onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
+              className="relative w-13 h-7 rounded-full bg-white border border-slate-300 shadow-inner p-1 transition-all duration-300 hover:border-[#084c38] focus:outline-none cursor-pointer shrink-0"
+              aria-label="Toggle Billing Cycle"
             >
-              SAVE 30%
-            </motion.span>
-          </span>
-        </motion.div>
+              <motion.div
+                layout
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="w-5 h-5 rounded-full bg-[#084c38] shadow-sm"
+                style={{
+                  marginLeft: billingCycle === "yearly" ? "22px" : "0px",
+                }}
+              />
+            </button>
 
-        {/* Centered Cards Grid (md:grid-cols-3 max-w-[1000px] mx-auto for 3 cards balanced and centered) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative max-w-[1000px] mx-auto mt-6">
+            <span className={`text-xs sm:text-sm font-bold transition-colors flex items-center gap-2 ${billingCycle === "yearly" ? "text-slate-900" : "text-slate-400"}`}>
+              Yearly
+              <span className="text-[10px] font-extrabold text-[#084c38] bg-[#ecfdf5] border border-[#d1fae5] px-2.5 py-0.5 rounded-full shadow-2xs">
+                SAVE 30%
+              </span>
+            </span>
+          </div>
+        </div>
 
-          {/* Premium Plan Glow blur accent in the center background */}
-          <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-teal-500/5 blur-[80px] pointer-events-none rounded-full" />
+        {/* Pricing Cards Grid - Responsive & Equal Fit */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
+          {plans.map((plan, idx) => {
+            const checkoutUrl = isAuthenticated
+              ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}`
+              : `/login?redirect=/checkout?plan=${plan.name.toLowerCase()}%26cycle=${billingCycle}`;
 
-          {plans.map((plan, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: idx * 0.1, duration: 0.5, ease: [0.21, 1.02, 0.43, 1.01] }}
-              className="flex w-full"
-            >
-              <PricingTiltCard isPopular={plan.popular} className="w-full flex h-full">
-
-                <GlassCard
-                  className={`relative flex flex-col justify-between p-5 lg:p-6 w-full h-full rounded-3xl transition-all duration-500 bg-[var(--surface)]/70 backdrop-blur-2xl ${plan.popular
-                    ? "border-emerald-500/40 ring-4 ring-emerald-500/10 shadow-[0_25px_50px_-12px_rgba(16,185,129,0.2)] bg-gradient-to-b from-[var(--surface)] to-emerald-500/[0.02] transform lg:-translate-y-3"
-                    : "border-white/20 hover:shadow-lg hover:border-neutral-300 shadow-sm"
-                    }`}
-                >
-
-                  {/* Popular Ribbon */}
-                  {plan.popular && (
-                    <div
-                      style={{ transform: "translateZ(30px)" }}
-                      className="absolute -top-3.5 left-0 right-0 flex justify-center pointer-events-none"
-                    >
-                      <span className="inline-flex items-center gap-1 px-3 py-1 text-[9px] font-black tracking-widest text-white uppercase bg-gradient-to-r from-emerald-600 to-teal-500 shadow-md shadow-emerald-600/30 ring-2 ring-white">
-                        <Sparkles className="w-2.5 h-2.5" /> Popular
-                      </span>
+            return (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className={`p-6 sm:p-7 lg:p-8 rounded-3xl bg-white flex flex-col justify-between h-full transition-all ${plan.popular
+                    ? "border-2 border-[#084c38] ring-4 ring-[#084c38]/10 shadow-xl relative transform md:-translate-y-1 z-10"
+                    : "border border-slate-200/90 shadow-sm hover:shadow-md"
+                  }`}
+              >
+                <div>
+                  {plan.popular ? (
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#084c38] text-white text-[10px] font-extrabold uppercase tracking-wider mb-4 shadow-2xs">
+                      <Sparkles className="w-3 h-3 text-emerald-300" />
+                      <span>Most Popular</span>
                     </div>
+                  ) : (
+                    <div className="h-7 mb-2" />
                   )}
 
-                  <div style={{ transform: "translateZ(15px)" }}>
-                    <h3 className={`font-black text-lg tracking-tight ${plan.popular ? "text-emerald-600" : "text-neutral-900"}`}>
-                      {plan.name}
-                    </h3>
-                    <p className="text-neutral-500 text-[11px] font-semibold mt-1">{plan.description}</p>
+                  <h3 className={`text-2xl font-bold font-display mb-1 ${plan.popular ? "text-[#084c38]" : "text-slate-900"}`}>
+                    {plan.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium mb-6 min-h-[32px] leading-relaxed">
+                    {plan.description}
+                  </p>
 
-                    <div style={{ transform: "translateZ(35px)" }} className="my-6">
-                      <div className="flex items-baseline gap-1 text-neutral-900">
-                        <span className="text-base font-bold text-neutral-400">₹</span>
-                        <AnimatePresence mode="popLayout">
-                          <motion.span
-                            key={billingCycle}
-                            initial={{ opacity: 0, y: -15, filter: "blur(4px)" }}
-                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            exit={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                            transition={{ duration: 0.4, type: "spring", bounce: 0 }}
-                            className="text-3xl xl:text-4xl font-black tracking-tighter tabular-nums"
-                          >
-                            {plan.price[billingCycle]}
-                          </motion.span>
-                        </AnimatePresence>
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest ml-1">
-                          /mo
-                        </span>
-                      </div>
-                      <div className="h-4 mt-0.5">
-                        <AnimatePresence>
-                          {billingCycle === "yearly" && plan.price.yearly > 0 && (
-                            <motion.p
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="text-[9px] font-bold text-emerald-600"
-                            >
-                              Billed ₹{plan.yearlyTotal} yearly
-                            </motion.p>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-
-                    <ul className="flex flex-col gap-3 mb-6">
-                      {plan.features.map((feature, fIdx) => {
-                        const IconComponent = feature.icon;
-                        return (
-                          <li key={fIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-snug">
-                            <IconComponent className={`w-3.5 h-3.5 ${plan.popular ? "text-emerald-600" : "text-neutral-400"} shrink-0 mt-0.5`} />
-                            <span>{feature.text}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                  <div className="flex items-baseline gap-1 mb-6 border-b border-slate-100 pb-6">
+                    <span className="text-base font-bold text-slate-400">₹</span>
+                    <AnimatePresence mode="popLayout">
+                      <motion.span
+                        key={billingCycle}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.25 }}
+                        className="text-4xl font-extrabold text-slate-900 font-display tracking-tight"
+                      >
+                        {plan.price[billingCycle]}
+                      </motion.span>
+                    </AnimatePresence>
+                    <span className="text-xs font-semibold text-slate-500">
+                      / month
+                    </span>
                   </div>
 
-                  <div style={{ transform: "translateZ(25px)" }} className="mt-auto pt-2">
-                    {(() => {
-                      const planPrice = plan.price[billingCycle];
-                      const targetHref = !mounted
-                        ? `/login`
-                        : isAuthenticated
-                        ? `/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}&amount=${planPrice}`
-                        : `/login?redirect=${encodeURIComponent(`/checkout?plan=${plan.name.toLowerCase()}&cycle=${billingCycle}&amount=${planPrice}`)}`;
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feat, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-700 font-semibold leading-snug">
+                        <div className="w-4 h-4 rounded-full bg-[#ecfdf5] border border-[#d1fae5] text-[#084c38] flex items-center justify-center shrink-0 mt-0.5">
+                          <Check className="w-2.5 h-2.5" />
+                        </div>
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                      return (
-                        <Link href={targetHref}>
-                          <GlowButton
-                            variant={plan.popular ? "gradient" : "outline"}
-                            className={`w-full text-[11px] font-black py-3 rounded-xl shadow-sm transition-all duration-300 ${plan.popular ? "shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02] border-none" : "hover:bg-neutral-50"}`}
-                            magnetic={false}
-                          >
-                            {plan.name === "Basic" ? "Get Started" : `Choose ${plan.name}`}
-                          </GlowButton>
-                        </Link>
-                      );
-                    })()}
-                  </div>
-                </GlassCard>
-              </PricingTiltCard>
-            </motion.div>
-          ))}
+                <div className="pt-2 mt-auto">
+                  <Link
+                    href={checkoutUrl}
+                    className={`w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all inline-flex items-center justify-center gap-2 cursor-pointer shadow-xs ${plan.popular
+                        ? "bg-[#084c38] hover:bg-[#063b2b] text-white shadow-md shadow-[#084c38]/20"
+                        : "bg-white hover:bg-slate-50 text-slate-800 border border-slate-200"
+                      }`}
+                  >
+                    <span>{plan.ctaText}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
+
+        {/* Trust Badges */}
+        <div className="mt-12 pt-8 border-t border-slate-200/80 max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-semibold">
+          <span className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#084c38]" />
+            30-Day Money-Back Guarantee
+          </span>
+          <span className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-[#084c38]" />
+            Instant Account Activation
+          </span>
+          <span className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-[#084c38]" />
+            Secure 256-Bit SSL Checkout
+          </span>
+        </div>
+
       </div>
     </section>
   );

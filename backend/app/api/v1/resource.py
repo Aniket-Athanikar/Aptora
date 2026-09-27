@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource API
+Aptora - Resource API
 """
 
 import os
@@ -261,7 +261,7 @@ def download_note_as_pdf(resource_id: int, db: Session = Depends(get_db), curren
     # Cover page
     flowables.append(Spacer(1, 100))
     flowables.append(Paragraph(
-        '<font size="12" color="#6366f1"><b>EXAMFORGE AI — STUDY NOTE</b></font>',
+        '<font size="12" color="#6366f1"><b>Aptora — STUDY NOTE</b></font>',
         styles['body']
     ))
     divider = Table([['']], colWidths=[500], rowHeights=[3])
@@ -307,8 +307,8 @@ def download_note_as_pdf(resource_id: int, db: Session = Depends(get_db), curren
     return FileResponse(
         path=tmp.name,
         media_type="application/pdf",
-        filename=f"ExamForge_Note_{safe_title}.pdf",
+        filename=f"Aptora_Note_{safe_title}.pdf",
         headers={
-            "Content-Disposition": f'attachment; filename="ExamForge_Note_{safe_title}.pdf"',
+            "Content-Disposition": f'attachment; filename="Aptora_Note_{safe_title}.pdf"',
         }
     )

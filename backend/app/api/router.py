@@ -1,5 +1,5 @@
 """
-ExamForge AI — Central API Router
+Aptora — Central API Router
 Aggregates all versioned API routers.
 """
 from fastapi import APIRouter
@@ -37,4 +37,4 @@ api_router.include_router(concept.router)
 api_router.include_router(notification.router)
 api_router.include_router(ai_study_source.router)
 api_router.include_router(analytics.router)
-api_router.include_router(chat_export.router)
+api_router.include_router(chat_export.router)

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Time Slot API
+Aptora - Study Time Slot API
 """
 
 from fastapi import APIRouter, Depends, HTTPException

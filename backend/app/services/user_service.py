@@ -1,5 +1,5 @@
 """
-ExamForge AI — User Service
+Aptora — User Service
 Single source of truth for User entity lifecycle operations (creation, updates,
 lookup, and deletion). Encapsulates UserRepository and database transaction safety.
 """

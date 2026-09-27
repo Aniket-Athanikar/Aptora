@@ -1,5 +1,5 @@
 """
-ExamForge AI — Redis Client
+Aptora — Redis Client
 Connection with dynamic resolution and local fallback.
 """
 import logging

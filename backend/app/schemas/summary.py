@@ -1,5 +1,5 @@
 """
-ExamForge AI - Summary Schemas
+Aptora - Summary Schemas
 """
 
 from pydantic import BaseModel, Field

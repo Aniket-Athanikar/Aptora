@@ -1,5 +1,5 @@
 """
-ExamForge AI - Topic Service
+Aptora - Topic Service
 
 Responsible for:
 1. Detecting subject

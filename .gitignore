@@ -9,6 +9,8 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+*.sqlite
+*.sqlite3
 
 # Node modules & Next.js cache
 node_modules/
@@ -33,18 +35,28 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Development artifacts
+# Development artifacts & Local databases
 backend/dev.db
 backend/last_email.html
-*.sqlite3
+backend/app/uploads/
+uploads/
 
-# Docker
+# Docker persistent data volumes (if mounted locally)
+pgdata/
+redis_data/
+qdrant_data/
+prometheus_data/
+grafana_data/
+loki_data/
 docker-compose.override.yml
 
 # Coverage & Test reports
 coverage/
 *.lcov
 
-# User uploaded runtime files
-backend/app/uploads/
+# System logs
+logs/
+*.log

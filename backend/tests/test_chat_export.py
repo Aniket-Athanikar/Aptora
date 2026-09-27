@@ -42,8 +42,8 @@ def test_setup():
 
     db = TestingSessionLocal()
     # Create two test users
-    user1 = UserDb(id=1, email="user1@examforge.ai", name="User One", password="hashed_password")
-    user2 = UserDb(id=2, email="user2@examforge.ai", name="User Two", password="hashed_password")
+    user1 = UserDb(id=1, email="user1@Aptora.ai", name="User One", password="hashed_password")
+    user2 = UserDb(id=2, email="user2@Aptora.ai", name="User Two", password="hashed_password")
     db.add_all([user1, user2])
     db.commit()
 
@@ -134,7 +134,7 @@ def test_get_export_status_and_pdf_generation(client_user1):
     assert status_response.status_code == 200
     data = status_response.json()
     assert data["status"] == "completed"
-    assert "ExamForge_Export" in data["file_name"]
+    assert "Aptora_Export" in data["file_name"]
     assert data["file_size"] > 0
 
     # Retrieve and verify file download works

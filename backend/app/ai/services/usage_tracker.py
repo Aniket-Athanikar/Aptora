@@ -1,5 +1,5 @@
 """
-ExamForge AI — Usage Tracker
+Aptora — Usage Tracker
 ============================
 Saves LLM token usage and latency metrics to the database.
 """

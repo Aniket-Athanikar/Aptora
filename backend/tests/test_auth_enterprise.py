@@ -1,5 +1,5 @@
 """
-ExamForge AI — Enterprise Auth v2 Unit & Integration Tests
+Aptora — Enterprise Auth v2 Unit & Integration Tests
 Tests PasswordService, OTPService, UserService, AuthService, JWTService, and API Endpoints.
 """
 # pyrefly: ignore [missing-import]

@@ -1,5 +1,5 @@
 """
-ExamForge AI — MCQ Schemas
+Aptora — MCQ Schemas
 ===========================
 
 Pydantic models for structured MCQ generation.

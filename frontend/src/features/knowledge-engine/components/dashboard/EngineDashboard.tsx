@@ -73,7 +73,7 @@ export function EngineDashboard() {
               </div>
             </div>
             <p className="text-sm text-slate-500 mt-3 max-w-xl leading-relaxed">
-              The ExamForge AI Select books, run OCR + AI pipelines, generate study materials, and publish to the student library
+              The Aptora Select books, run OCR + AI pipelines, generate study materials, and publish to the student library
             </p>
           </div>
           <div className="flex items-center gap-2">

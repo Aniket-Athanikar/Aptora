@@ -91,7 +91,7 @@ export default function SitemapPage() {
   return (
     <PageLayout
       title="Sitemap Directory"
-      description="Easily navigate through all functional routes and portals of ExamForge AI."
+      description="Easily navigate through all functional routes and portals of Aptora."
       breadcrumb={[{ label: "Sitemap", href: "/sitemap" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto space-y-16">

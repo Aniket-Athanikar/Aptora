@@ -1,6 +1,6 @@
 # Deployment Guide
 
-ExamForge AI is designed for containerized deployments across diverse environments (development, staging, production).
+Aptora is designed for containerized deployments across diverse environments (development, staging, production).
 
 ## Local Development (Docker Compose)
 
@@ -44,7 +44,7 @@ make helm-deploy
 To configure staging vs production settings, edit the overrides in `helm/values.yaml` or provide a separate environment values file:
 
 ```bash
-helm upgrade --install examforge ./helm -f helm/values-production.yaml -n examforge
+helm upgrade --install Aptora ./helm -f helm/values-production.yaml -n Aptora
 ```
 
 ## Rollbacks & Disaster Recovery
@@ -54,10 +54,10 @@ If a deployment fails health checks or exhibits production bugs:
 
 ```bash
 # Rollback backend deployment to previous revision
-kubectl rollout undo deployment/backend -n examforge
+kubectl rollout undo deployment/backend -n Aptora
 
 # Rollback frontend deployment
-kubectl rollout undo deployment/frontend -n examforge
+kubectl rollout undo deployment/frontend -n Aptora
 ```
 
 ### Database Restoration
@@ -65,5 +65,5 @@ To restore PostgreSQL from an automated backup volume:
 
 ```bash
 # Example restore command
-cat backup.sql | kubectl exec -i postgres-0 -n examforge -- psql -U examforge_admin -d examforgedb
+cat backup.sql | kubectl exec -i postgres-0 -n Aptora -- psql -U Aptora_admin -d Aptoradb
 ```

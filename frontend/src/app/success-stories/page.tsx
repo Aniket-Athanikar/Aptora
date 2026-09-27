@@ -24,7 +24,7 @@ const testimonials: Testimonial[] = [
     name: "Rohit Kumar",
     role: "SSC CGL 2023 Ranker",
     quote:
-      "ExamForge AI changed my preparation journey. The AI notes and daily practice helped me crack SSC CGL in my first attempt!",
+      "Aptora changed my preparation journey. The AI notes and daily practice helped me crack SSC CGL in my first attempt!",
     rating: 5,
     initials: "RK",
   },

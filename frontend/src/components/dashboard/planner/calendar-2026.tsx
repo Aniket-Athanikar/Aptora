@@ -44,7 +44,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
   // Hydrate CRUD state from local storage on mount
   useEffect(() => {
     if (!goal || typeof window === "undefined") return;
-    const storageKey = `examforge_calendar_sessions_${goal.id}_${currentMonthIdx}`;
+    const storageKey = `Aptora_calendar_sessions_${goal.id}_${currentMonthIdx}`;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
@@ -100,7 +100,7 @@ export function Calendar2026({ goal }: Calendar2026Props) {
   const examDay = isExamMonth ? examDateObj.getDate() : null;
 
   const saveSessions = (updatedDetails: Record<number, StudySession>, updatedDays: number[]) => {
-    const storageKey = `examforge_calendar_sessions_${goal.id}_${currentMonthIdx}`;
+    const storageKey = `Aptora_calendar_sessions_${goal.id}_${currentMonthIdx}`;
     setSessionDetails(updatedDetails);
     setStudyDays(updatedDays);
     if (typeof window !== "undefined") {

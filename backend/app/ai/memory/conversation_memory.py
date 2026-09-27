@@ -1,5 +1,5 @@
 """
-ExamForge AI — Conversation Memory
+Aptora — Conversation Memory
 ====================================
 
 Provides per-session chat history persistence using Redis.
@@ -8,7 +8,7 @@ workspace study session.
 
 Design
 ------
-- Key format  : ``examforge:memory:{session_id}``
+- Key format  : ``Aptora:memory:{session_id}``
 - Storage     : Redis list (LPUSH / LRANGE)
 - TTL         : 1 hour of inactivity (reset on each access)
 - Fallback    : In-process dict cache when Redis is unavailable
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-_KEY_PREFIX: Final[str] = "examforge:memory:"
+_KEY_PREFIX: Final[str] = "Aptora:memory:"
 _DEFAULT_TTL_SECONDS: Final[int] = 3600          # 1 hour
 _MAX_HISTORY_TURNS: Final[int] = 20              # keep last 20 messages (10 Q+A pairs)
 
@@ -72,7 +72,7 @@ class ConversationMemory:
 
     Redis key format
     ----------------
-    ``examforge:memory:<session_id>``
+    ``Aptora:memory:<session_id>``
 
     Each key is a Redis list where each element is a JSON-encoded
     ``{"role": ..., "content": ...}`` dict. The list is capped to

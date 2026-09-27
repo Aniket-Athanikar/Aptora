@@ -16,3 +16,11 @@ scrape_configs:
         labels:
           job: varlogs
           __path__: /var/log/*log
+
+  - job_name: aptora-docker-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: aptora-containers
+          __path__: /var/lib/docker/containers/*/*-json.log

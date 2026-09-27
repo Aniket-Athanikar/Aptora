@@ -44,10 +44,10 @@ def override_get_db():
 
 def override_get_current_user():
     db = TestingSessionLocal()
-    user = db.query(UserDb).filter(UserDb.email == "source_test@examforge.ai").first()
+    user = db.query(UserDb).filter(UserDb.email == "source_test@Aptora.ai").first()
     if not user:
         user = UserDb(
-            email="source_test@examforge.ai",
+            email="source_test@Aptora.ai",
             name="Source Test User",
             password="hashed",
         )
@@ -70,7 +70,7 @@ def setup_test_data():
 
     # User
     user = UserDb(
-        email="source_test@examforge.ai",
+        email="source_test@Aptora.ai",
         name="Source Test User",
         password="hashed",
     )

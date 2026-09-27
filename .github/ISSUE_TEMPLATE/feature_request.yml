@@ -1,5 +1,5 @@
 name: "🚀 Feature Request"
-description: "Suggest a new feature or improvement for ExamForge AI"
+description: "Suggest a new feature or improvement for Aptora"
 title: "[FEAT]: "
 labels: ["enhancement", "triage"]
 assignees: []
@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Have an idea to make ExamForge AI better? We'd love to hear about it!
+        Have an idea to make Aptora better? We'd love to hear about it!
   - type: textarea
     id: problem
     attributes:

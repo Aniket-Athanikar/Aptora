@@ -1,5 +1,5 @@
 """
-ExamForge AI — Qdrant Vector DB Client
+Aptora — Qdrant Vector DB Client
 Connection with local fallback.
 """
 import logging
@@ -30,7 +30,7 @@ for port in candidate_ports:
     client = _try_qdrant(QDRANT_HOST, port)
     if client:
         try:
-            cnt = client.count("examforge_documents", exact=True).count
+            cnt = client.count("Aptora_documents", exact=True).count
             if cnt > 0:
                 qdrant_client = client
                 logger.info(f"Connected to Qdrant Vector DB at {QDRANT_HOST}:{port} ({cnt} vectors found)!")

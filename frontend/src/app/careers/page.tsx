@@ -94,7 +94,7 @@ const openPositions = [
 export default function CareersPage() {
   return (
     <PageLayout
-      title="Careers at ExamForge AI"
+      title="Careers at Aptora"
       description="Help us shape the future of education with AI"
       breadcrumb={[{ label: "Careers", href: "/careers" }]}
     >
@@ -131,7 +131,7 @@ export default function CareersPage() {
                 Join Our Mission
               </h2>
               <p className="text-lg text-neutral-500 font-semibold max-w-2xl mx-auto leading-relaxed">
-                At ExamForge AI, we&apos;re building the future of exam preparation. We&apos;re looking
+                At Aptora, we&apos;re building the future of exam preparation. We&apos;re looking
                 for passionate, creative individuals who want to make a real impact on education through
                 technology and artificial intelligence.
               </p>
@@ -151,7 +151,7 @@ export default function CareersPage() {
               Why Us
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
-              Why Join ExamForge AI?
+              Why Join Aptora?
             </h2>
             <p className="mt-3 text-neutral-500 font-semibold max-w-xl mx-auto">
               More than a workplace — a launchpad for your career and impact

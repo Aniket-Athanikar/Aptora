@@ -1,6 +1,6 @@
-# Contributing to ExamForge AI
+# Contributing to Aptora
 
-Thank you for contributing to ExamForge AI! To maintain quality and velocity, we follow strict Git workflows, branch strategies, and code formatting rules.
+Thank you for contributing to Aptora! To maintain quality and velocity, we follow strict Git workflows, branch strategies, and code formatting rules.
 
 ## Git Branch Strategy
 

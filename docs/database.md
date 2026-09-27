@@ -1,6 +1,6 @@
-# ExamForge AI — Database Schema & Data Models
+# Aptora — Database Schema & Data Models
 
-ExamForge AI utilizes a hybrid database architecture optimized for high-performance transactional data, lightning-fast session caching, and low-latency semantic search queries.
+Aptora utilizes a hybrid database architecture optimized for high-performance transactional data, lightning-fast session caching, and low-latency semantic search queries.
 
 ---
 

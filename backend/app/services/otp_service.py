@@ -1,5 +1,5 @@
 """
-ExamForge AI — OTP Service
+Aptora — OTP Service
 Orchestrates 6-digit OTP code generation, Redis caching, Postgres DB fallback,
 attempt throttling, cooldown enforcement, and single-use verification.
 """

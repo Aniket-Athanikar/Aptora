@@ -1,5 +1,5 @@
 """
-ExamForge RAG End-to-End Verification Script (Task 10)
+Aptora RAG End-to-End Verification Script (Task 10)
 =========================================================
 
 Verifies the entire RAG pipeline from retrieval to final LLM response
@@ -28,7 +28,7 @@ logging.basicConfig(
 logger = logging.getLogger("rag_e2e_verification")
 
 print("\n" + "=" * 80)
-print("  EXAMFORGE AI - RAG PIPELINE END-TO-END VERIFICATION REPORT (TASK 10)")
+print("  Aptora - RAG PIPELINE END-TO-END VERIFICATION REPORT (TASK 10)")
 print("=" * 80 + "\n")
 
 # ── 1. Check Vector Count in Qdrant ───────────────────────────────────────────

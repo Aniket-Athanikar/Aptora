@@ -75,7 +75,7 @@ const modulesData: Record<string, {
         category: "Core AI Pipeline",
         color: "from-blue-600 to-indigo-600",
         description: "Select target competitive exams or define custom syllabi to align topic weights.",
-        longDescription: "ExamForge AI automatically updates all study guidelines, questions, and practice sets based on the student's selected exam category. This matches historical patterns for UPSC, SSC, GATE, Banking, Railway, and State PSCs, or maps chapters directly to a custom syllabus.",
+        longDescription: "Aptora automatically updates all study guidelines, questions, and practice sets based on the student's selected exam category. This matches historical patterns for UPSC, SSC, GATE, Banking, Railway, and State PSCs, or maps chapters directly to a custom syllabus.",
         specs: [
             "Supported Exams: UPSC, SSC CGL, Banking, GATE, Railway, state PSCs",
             "Custom Core: Dynamic weights builder per topic based on syllabus PDFs",

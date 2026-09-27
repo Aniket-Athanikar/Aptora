@@ -1,8 +1,8 @@
 """
-ExamForge AI — Orchestrator Package
+Aptora — Orchestrator Package
 =====================================
 
-Brain of ExamForge AI: intent analysis, query rewriting, retrieval planning,
+Brain of Aptora: intent analysis, query rewriting, retrieval planning,
 context optimization, multi-document knowledge synthesis, response formatting,
 and reasoning pipeline coordination.
 """

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Audit Logger
+Aptora — Audit Logger
 ===========================
 Writes structured audit events to the database.
 """

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Context Optimizer
+Aptora — Context Optimizer
 =================================
 
 Deduplicates, merges, reranks, and caps retrieved vector chunks to construct

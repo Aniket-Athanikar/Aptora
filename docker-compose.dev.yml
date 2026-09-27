@@ -1,10 +1,10 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: examforge_postgres
+    container_name: aptora_postgres
     environment:
-      POSTGRES_DB: Exame_forgeDB
-      POSTGRES_USER: aniket
+      POSTGRES_DB: aptora_db
+      POSTGRES_USER: aptora_user
       POSTGRES_PASSWORD: admin123
     ports:
       - "5433:5432"
@@ -13,7 +13,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: examforge_redis
+    container_name: aptora_redis
     ports:
       - "6479:6379"
     volumes:
@@ -21,7 +21,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant:latest
-    container_name: examforge_qdrant
+    container_name: aptora_qdrant
     ports:
       - "6433:6333"
       - "6434:6334"

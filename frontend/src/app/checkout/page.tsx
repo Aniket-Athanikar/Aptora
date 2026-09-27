@@ -83,7 +83,7 @@ export default function CheckoutPage() {
         "Linking Paytm secure wallet ledger API...",
         "Deducting tokenized wallet balance...",
         "Generating instant billing invoice credentials...",
-        "Completing ExamForge subscription activation..."
+        "Completing Aptora subscription activation..."
       ];
 
   useEffect(() => {
@@ -627,7 +627,7 @@ export default function CheckoutPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-xs font-black text-neutral-800 capitalize">
-                      ExamForge {planName} plan
+                      Aptora {planName} plan
                     </span>
                     <span className="block text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-0.5">
                       Selected Cycle: {cycle}
@@ -650,7 +650,7 @@ export default function CheckoutPage() {
               <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-100 space-y-3">
                 <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest block">PCI Compliance</span>
                 <p className="text-[9px] text-neutral-500 font-semibold leading-relaxed">
-                  ExamForge secures transactional data using 256-bit AES cryptographic protocols. Card and account credentials are not persisted in our database systems.
+                  Aptora secures transactional data using 256-bit AES cryptographic protocols. Card and account credentials are not persisted in our database systems.
                 </p>
               </div>
             </GlassCard>

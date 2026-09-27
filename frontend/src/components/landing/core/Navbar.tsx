@@ -3,27 +3,28 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, LogOut, LogIn, User, ChevronDown, Compass, Trash2 } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import GlowButton from "@/components/ui/GlowButton";
 import { useAuth } from "@/lib/auth-context";
-import { useProfile } from "@/contexts";
-import { getAvatarUrl } from "@/lib/avatar";
-import Image from "next/image";
 import DeleteAccountModal from "@/components/modals/DeleteAccountModal";
-import { NAV_ITEMS } from "@/components/layout/sidebar-constants";
+import { AptoraLogo } from "@/components/ui/AptoraLogo";
 
-const getFallbackAvatarUrl = (name: string) => {
-  const seed = encodeURIComponent(name || "User");
-  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
+const getAvatarUrl = (name?: string) => {
+  if (!name) return "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120";
+  const femaleNames = ["mrunal", "priya", "sneha", "neha", "reddy", "sharma", "puja", "pooja", "anita", "sunita", "rekha", "kiran", "chaudhari"];
+  const cleanName = name.toLowerCase().trim();
+  const isFemale = femaleNames.some((fName) => cleanName.includes(fName));
+  return isFemale
+    ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
+    : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120";
 };
 
-const formatDisplayName = (name: string) => {
+const formatDisplayName = (name?: string) => {
   if (!name) return "";
   let clean = name.replace(/[0-9]/g, ""); // Remove numbers
-  clean = clean.replace(/recruitology/gi, ""); // Remove recruitology
-  clean = clean.replace(/gmail/gi, ""); // Remove gmail
+  clean = clean.replace(/recruitology/gi, "");
+  clean = clean.replace(/gmail/gi, "");
   clean = clean.trim();
   if (clean.length > 0) {
     clean = clean.charAt(0).toUpperCase() + clean.slice(1);
@@ -31,11 +32,12 @@ const formatDisplayName = (name: string) => {
   return clean || name;
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
-  const { profile } = useProfile();
+  const { user, isAuthenticated, login, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(pathname || "/");
@@ -48,358 +50,343 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  const displayAvatar = getAvatarUrl(profile?.avatar_url);
-  const displayName = profile?.name || user?.name || "";
-
-  const navLinks = [
-    { name: "Home", href: "/", emoji: "🏠" },
-    { name: "Features", href: "/features", emoji: "✨" },
-    { name: "Exams", href: "/exams", emoji: "📝" },
-    { name: "Pricing", href: "/pricing", emoji: "💰" },
-    { name: "Blog", href: "/blog", emoji: "📰" },
-  ];
+  // Sync profile details from DB to Navbar
+  useEffect(() => {
+    if (isAuthenticated && user?.email && !user.avatar) {
+      const syncProfile = async () => {
+        try {
+          const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.profile) {
+              login({
+                name: data.profile.name || user.name,
+                email: user.email,
+                avatar: data.profile.avatar_url || ""
+              });
+            }
+          }
+        } catch (err) {
+          console.error("Error syncing profile to navbar:", err);
+        }
+      };
+      syncProfile();
+    }
+  }, [isAuthenticated, user?.email, user?.avatar, login, user?.name]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Auto-close menus on page navigation / pathname change
+  useEffect(() => {
+    setActiveLink(pathname || "/");
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Close menus when clicking outside or pressing Escape key
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setUserMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
+
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Features", href: "/features" },
+    { name: "Exams", href: "/exams" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Blog", href: "/blog" },
+  ];
 
   const handleLogout = async () => {
     setUserMenuOpen(false);
+    setMobileMenuOpen(false);
     await logout();
     router.push("/");
   };
 
+  const userAvatarUrl = user?.avatar || getAvatarUrl(user?.name);
+  const userDisplayName = formatDisplayName(user?.name);
+
   return (
     <header
       className={cn(
-        "absolute top-0 left-0 right-0 z-[999] w-full transition-all duration-500 border-b pointer-events-auto",
+        "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 border-b",
         scrolled
-          ? "bg-[var(--surface)]/80 backdrop-blur-xl border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3"
-          : "bg-[var(--surface)]/30 backdrop-blur-md border-white/20 shadow-none py-5"
+          ? "bg-white/95 backdrop-blur-md border-slate-200/80 shadow-xs py-3.5"
+          : "bg-transparent border-transparent py-5"
       )}
     >
-      {/* 3D perspective wireframe pattern simulating Three.js grid floor */}
-      <div
-        className="absolute inset-x-0 top-0 h-28 overflow-hidden opacity-25 pointer-events-none z-0"
-        style={{ perspective: "150px" }}
-      >
-        <div
-          className="w-full h-[200%] origin-top"
-          style={{
-            transform: "rotateX(65deg)",
-            backgroundImage: "linear-gradient(rgba(15, 165, 115, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px)",
-            backgroundSize: "16px 16px"
-          }}
-        />
-        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--surface)] to-transparent" />
-      </div>
-      <div className="absolute top-0 left-[35%] w-[30%] h-full bg-gradient-to-r from-emerald-500/5 to-amber-500/5 blur-[50px] pointer-events-none z-0" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        {/* Left: Aptora Brand Emblem */}
+        <AptoraLogo size="md" />
 
-      <div className="w-full px-4 sm:px-8 md:px-12 flex items-center justify-between relative z-10">
-
-        {/* Logo */}
-        <Link
-          href="/"
-          onClick={() => setActiveLink("/")}
-          className="flex items-center gap-2 sm:gap-3 font-black text-lg sm:text-2xl tracking-tight text-neutral-900 group transition-all duration-300 hover:scale-105"
-        >
-          <div className="relative shrink-0" style={{ perspective: 1000 }}>
-            <motion.div
-              whileHover={{ rotateY: 180, scale: 1.05 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="relative w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border-2 border-slate-150 shadow-md flex items-center justify-center bg-white"
-            >
-              <Image
-                src="/favicon.ico"
-                alt="ExamForge AI Vision Logo"
-                width={56}
-                height={56}
-                className="w-full h-full rounded-full object-cover"
-                priority
-              />
-            </motion.div>
-          </div>
-          <motion.span
-            whileHover={{ rotateX: 12, rotateY: -12, scale: 1.03 }}
-            transition={{ type: "spring", stiffness: 350, damping: 15 }}
-            className="font-black tracking-tight text-neutral-950 text-lg sm:text-2xl md:text-3xl mt-0.5 sm:mt-1 flex items-center gap-1 select-none"
-            style={{
-              transformStyle: "preserve-3d",
-              textShadow: "0px 1px 0px #0c7a3dff, 0px 2px 0px #cbd5e1, 0px 3px 0px #94a3b8, 0px 4px 6px rgba(0,0,0,0.15)",
-            }}
-          >
-            ExamForge-
-            <span
-              className="bg-gradient-to-r from-emerald-600 via-teal-605 to-emerald-800 bg-clip-text text-transparent inline-block"
-              style={{
-                filter: "drop-shadow(0px 1px 0px rgba(4, 122, 83, 0.4)) drop-shadow(0px 3px 6px rgba(0,0,0,0.1))",
-                transform: "translateZ(15px)",
-              }}
-            >
-              AI
-            </span>
-            📚
-          </motion.span>
-        </Link>
-
-        {/* Center Nav Links */}
-        <nav className="hidden lg:flex items-center gap-4 mt-1">
+        {/* Center: Nav Links */}
+        <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <motion.div
+            <Link
               key={link.name}
-              whileHover={{ scale: 1.08, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              href={link.href}
+              onClick={() => {
+                setActiveLink(link.href);
+                setUserMenuOpen(false);
+              }}
+              className={cn(
+                "text-sm font-semibold transition-colors py-1.5 relative",
+                activeLink === link.href
+                  ? "text-[#084c38] font-bold"
+                  : "text-slate-700 hover:text-[#084c38]"
+              )}
             >
-              <Link
-                href={link.href}
-                onClick={() => setActiveLink(link.href)}
-                className={cn(
-                  "relative text-xs font-black tracking-wider transition-all px-3 py-1.5 rounded-xl border flex items-center gap-1.5",
-                  activeLink === link.href
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
-                    : "bg-white/40 border-slate-200/60 text-neutral-605 hover:text-neutral-900 hover:bg-white/80 hover:border-slate-300"
-                )}
-              >
-                <span>{link.emoji}</span>
-                <span>{link.name}</span>
-              </Link>
-            </motion.div>
+              {link.name}
+              {activeLink === link.href && (
+                <motion.div
+                  layoutId="active-nav-indicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#084c38] rounded-full"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </Link>
           ))}
         </nav>
 
-        {/* Right Actions */}
-        <div className="hidden lg:flex items-center gap-4 mt-1">
+        {/* Right: User Actions */}
+        <div className="hidden lg:flex items-center gap-4">
           {mounted && isAuthenticated && user ? (
-            /* ── Logged-in User Menu ── */
-            <div 
-              className="relative" 
-              ref={userMenuRef}
-              onMouseEnter={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(true)}
-              onMouseLeave={() => typeof window !== "undefined" && window.innerWidth > 1024 && setUserMenuOpen(false)}
-            >
+            <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200/80 bg-white/50 hover:bg-white/80 transition-all cursor-pointer"
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:border-slate-300 transition-all cursor-pointer shadow-2xs"
+                aria-expanded={userMenuOpen}
+                aria-haspopup="true"
               >
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 flex items-center justify-center bg-neutral-100">
-                  {displayAvatar ? (
-                    <img
-                      src={displayAvatar}
-                      alt={displayName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
-                      {displayName ? displayName.charAt(0).toUpperCase() : "?"}
-                    </div>
-                  )}
+                <div className="w-7 h-7 rounded-full overflow-hidden border border-slate-200 flex items-center justify-center bg-slate-100 shrink-0">
+                  <img
+                    src={userAvatarUrl}
+                    alt={userDisplayName || "User Profile"}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <span className="text-sm font-bold text-neutral-800 max-w-[120px] truncate">
-                  {formatDisplayName(user.name)}
+                <span className="text-xs font-bold text-slate-800 max-w-[120px] truncate">
+                  {userDisplayName}
                 </span>
-                <ChevronDown className={cn(
-                  "w-3.5 h-3.5 text-neutral-400 transition-transform duration-200",
-                  userMenuOpen && "rotate-180"
-                )} />
+                <ChevronDown
+                  className={cn(
+                    "w-3.5 h-3.5 text-slate-400 transition-transform duration-200",
+                    userMenuOpen && "rotate-180 text-[#084c38]"
+                  )}
+                />
               </button>
 
-              {/* Dropdown */}
+              {/* User Dropdown */}
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.08 }}
-                    className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl overflow-hidden z-50 p-2 space-y-1"
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200/90 rounded-2xl shadow-xl p-2.5 z-50 space-y-1"
                   >
-                    <div className="p-3 border-b border-slate-100 mb-1.5">
-                      <p className="text-xs font-black text-slate-900 truncate">{formatDisplayName(user.name)}</p>
-                      <p className="text-[10px] font-bold text-slate-400 truncate mt-0.5">{user.email}</p>
+                    {/* User profile card in dropdown */}
+                    <div className="p-3 bg-[#FAF9F6] rounded-xl border border-slate-100 mb-1.5 flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 shrink-0 shadow-2xs">
+                        <img
+                          src={userAvatarUrl}
+                          alt={userDisplayName}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="truncate flex-1">
+                        <p className="text-xs font-bold text-slate-900 truncate font-display">{userDisplayName}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+                      </div>
                     </div>
 
                     <button
-                      onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        router.push("/profile");
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
                     >
-                      <User className="w-3.5 h-3.5 text-slate-400" /> Account Settings
+                      <User className="w-4 h-4 text-slate-400 group-hover:text-[#084c38] transition-colors" />
+                      <span>My Profile</span>
                     </button>
+
                     <button
-                      onClick={() => { setUserMenuOpen(false); router.push("/dashboard"); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        router.push("/dashboard");
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
                     >
-                      <Compass className="w-3.5 h-3.5 text-slate-400" /> Study Dashboard
+                      <Compass className="w-4 h-4 text-slate-400 group-hover:text-[#084c38] transition-colors" />
+                      <span>Dashboard</span>
                     </button>
+
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-red-650 hover:bg-red-50/50 transition-colors cursor-pointer text-left"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all text-left cursor-pointer"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-red-400" /> Sign Out
+                      <LogOut className="w-4 h-4 text-rose-400" />
+                      <span>Logout</span>
                     </button>
+
                     <button
-                      onClick={() => { setUserMenuOpen(false); setDeleteModalOpen(true); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-slate-100 mt-1 pt-2 text-left"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        setDeleteModalOpen(true);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all border-t border-slate-100 mt-1.5 pt-2.5 text-left cursor-pointer"
                     >
-                      <Trash2 className="w-3.5 h-3.5 text-red-450" /> Delete Account
+                      <Trash2 className="w-4 h-4 text-rose-500" />
+                      <span>Delete Account</span>
                     </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           ) : (
-            /* ── Guest Actions ── */
-            <>
-              {/* <Link
-                href="/login"
-                className="text-xs font-black text-slate-705 hover:text-emerald-700 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all cursor-pointer shadow-3xs flex items-center gap-1.5"
-              >
-                <LogIn className="w-3.5 h-3.5 text-emerald-600" />
-                Login
-              </Link> */}
-              <Link href="/login">
-                <GlowButton
-                  variant="gradient"
-                  className="text-xs px-6 py-2.5 font-black shadow-md from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 hover:shadow-emerald-500/40"
-                  magnetic={false}
-                >
-                  Get Started
-                </GlowButton>
-              </Link>
-            </>
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-white bg-[#084c38] hover:bg-[#063b2b] px-5 py-2.5 rounded-full shadow-xs transition-all"
+            >
+              Get Started
+            </Link>
           )}
         </div>
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-neutral-750 hover:text-emerald-600 transition-colors mt-1"
+          className="lg:hidden p-2 text-slate-700 hover:text-[#084c38] transition-colors cursor-pointer"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle mobile navigation menu"
         >
-          {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile Drawer - Premium White Glassmorphic Panel */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200/80 p-6 shadow-xl flex flex-col gap-5 animate-in fade-in slide-in-from-top-4 duration-300 max-h-[85vh] overflow-y-auto">
-          <nav className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => {
-                  setActiveLink(link.href);
-                  setMobileMenuOpen(false);
-                }}
-                className={cn(
-                  "relative text-sm font-black transition-all px-4 py-2.5 rounded-xl border flex items-center gap-2.5",
-                  activeLink === link.href
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
-                    : "bg-white border-slate-200/80 text-neutral-600 hover:bg-slate-50 hover:text-neutral-900"
-                )}
-              >
-                <span className="text-base">{link.emoji}</span>
-                <span>{link.name}</span>
-              </Link>
-            ))}
-          </nav>
-
-          <hr className="border-slate-100" />
-
-          {mounted && isAuthenticated && user ? (
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-2xl shadow-xs">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-250 flex items-center justify-center bg-slate-100 shrink-0">
-                  {displayAvatar ? (
-                    <img
-                      src={displayAvatar}
-                      alt={displayName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
-                      {displayName ? displayName.charAt(0).toUpperCase() : "?"}
-                    </div>
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white border-b border-slate-200 px-6 py-6 shadow-xl space-y-4"
+          >
+            <nav className="flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => {
+                    setActiveLink(link.href);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={cn(
+                    "text-base font-semibold transition-colors px-3 py-2 rounded-lg",
+                    activeLink === link.href
+                      ? "bg-[#ecfdf5] text-[#084c38] font-bold"
+                      : "text-slate-800 hover:bg-slate-50"
                   )}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-black text-slate-800 truncate">{formatDisplayName(user.name)}</p>
-                  <p className="text-xs text-slate-400 font-semibold truncate">{user.email}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <Link
-                  href="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 font-bold text-xs text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
                 >
-                  👤 My Profile
+                  {link.name}
                 </Link>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 font-bold text-xs text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
-                >
-                  🧭 My Dashboard
-                </Link>
-              </div>
+              ))}
+            </nav>
 
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                  className="w-full text-center py-2.5 font-bold text-xs text-red-650 border border-red-100 rounded-xl hover:bg-red-50 transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  🚪 Logout
-                </button>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
-                  className="w-full text-center py-2.5 font-bold text-red-500 border border-red-100/50 rounded-xl hover:bg-red-50/30 transition-all cursor-pointer text-[10px] flex items-center justify-center gap-1.5"
-                >
-                  ⚠️ Delete Account
-                </button>
-              </div>
+            <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
+              {mounted && isAuthenticated && user ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200">
+                    <img
+                      src={userAvatarUrl}
+                      alt={userDisplayName}
+                      className="w-9 h-9 rounded-full object-cover border border-slate-200"
+                    />
+                    <div className="truncate">
+                      <p className="text-xs font-bold text-slate-900 truncate">{userDisplayName}</p>
+                      <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
+                  >
+                    Preparation Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full text-center py-2.5 font-semibold text-red-600 border border-red-200 bg-red-50 rounded-xl transition-all text-xs cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setDeleteModalOpen(true);
+                    }}
+                    className="w-full text-center py-2.5 font-semibold text-red-500 border border-red-200 rounded-xl transition-all text-xs cursor-pointer"
+                  >
+                    Delete Account
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 font-semibold border border-slate-300 rounded-full text-slate-800 text-sm"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 font-semibold bg-[#084c38] text-white rounded-full text-sm shadow-xs"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {/* <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3 font-black text-slate-800 border border-slate-250 bg-white rounded-xl hover:bg-emerald-50/60 hover:text-emerald-700 hover:border-emerald-200 transition-all flex items-center justify-center gap-2 shadow-xs"
-              >
-                <LogIn className="w-4 h-4 text-emerald-600" />
-                Login
-              </Link> */}
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3 font-black bg-gradient-to-r from-emerald-600 to-teal-655 text-white rounded-xl shadow-md transition-all block"
-              >
-                Get Started
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Glowing Bottom Border of the capsule */}
-      <div className="absolute bottom-0 left-0 w-full h-[4.5px] bg-gradient-to-r from-transparent via-emerald-500 via-amber-400 via-teal-500 to-transparent bg-[length:200%_auto] shadow-[0_0_20px_4px_rgba(16,185,129,0.7)] z-50 pointer-events-none" />
-
-      {/* Delete Account Modal */}
       <DeleteAccountModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} />
     </header>
   );

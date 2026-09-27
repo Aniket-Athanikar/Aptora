@@ -1,5 +1,5 @@
 """
-ExamForge AI — Retrieval Planner
+Aptora — Retrieval Planner
 =================================
 
 Determines optimal document filtering and search strategies based on intent.

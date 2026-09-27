@@ -1,6 +1,6 @@
-# ExamForge AI — Security Architecture & Guidelines
+# Aptora — Security Architecture & Guidelines
 
-ExamForge AI is designed with an enterprise-grade security posture to protect sensitive student data, prevent unauthorized system access, secure LLM operations, and comply with standard data protection protocols in India (DPDP Act 2023).
+Aptora is designed with an enterprise-grade security posture to protect sensitive student data, prevent unauthorized system access, secure LLM operations, and comply with standard data protection protocols in India (DPDP Act 2023).
 
 ---
 
@@ -36,7 +36,7 @@ async def list_all_users():
 
 ## 3. Rate Limiting & Denial of Service Protection
 
-To prevent API abuse and cost overrun from LLM endpoints, ExamForge implements sliding-window rate limiting using Redis:
+To prevent API abuse and cost overrun from LLM endpoints, Aptora implements sliding-window rate limiting using Redis:
 
 - **Standard REST Routes:** 100 requests per minute per IP address.
 - **AI Chat & Ingestion Routes:** 10 requests per minute per user ID (to prevent resource starvation and protect API wallet).

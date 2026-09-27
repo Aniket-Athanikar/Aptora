@@ -33,9 +33,9 @@ const categories = [
         id: "pipeline",
         label: "Core AI Pipeline",
         description: "From raw textbooks to structured vector databases in seconds.",
-        color: "from-blue-600 to-indigo-600",
-        bgColor: "bg-blue-50/50",
-        accentColor: "#3B82F6",
+        color: "from-[#084c38] to-[#063b2b]",
+        bgColor: "bg-[#ecfdf5]",
+        accentColor: "#084c38",
         modules: [
             {
                 id: "auth",
@@ -288,7 +288,7 @@ export default function FeaturesPage() {
                             Powering Smarter Exam Preparation
                         </h2>
                         <p className="text-sm text-neutral-500 max-w-xl mx-auto mt-2 font-medium">
-                            ExamForge AI bridges the gap between raw textbooks and target exam success. Review the complete technical pipeline of modules below.
+                            Aptora bridges the gap between raw textbooks and target exam success. Review the complete technical pipeline of modules below.
                         </p>
                     </div>
 

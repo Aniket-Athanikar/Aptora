@@ -41,7 +41,7 @@ import uuid
 
 @pytest.fixture
 def test_user(db_session: Session):
-    unique_email = f"notif_{uuid.uuid4().hex[:6]}@examforge.ai"
+    unique_email = f"notif_{uuid.uuid4().hex[:6]}@Aptora.ai"
     user = UserDb(
         email=unique_email,
         password="hashed_secret",

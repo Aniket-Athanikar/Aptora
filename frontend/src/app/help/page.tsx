@@ -41,13 +41,13 @@ const topics: Topic[] = [
     id: "getting-started",
     icon: Rocket,
     title: "Getting Started",
-    description: "New to ExamForge? Start here",
+    description: "New to Aptora? Start here",
     color: "#059669",
     subtopics: [
       {
-        id: "what-is-examforge",
-        title: "What is ExamForge?",
-        content: "ExamForge is an AI-powered study companion designed to elevate your exam preparation. By leveraging advanced OCR to digitize handwritten notes, generating personalized mock tests, and analyzing your strengths/weaknesses with the AI Coach, ExamForge helps you study smarter and score higher.",
+        id: "what-is-Aptora",
+        title: "What is Aptora?",
+        content: "Aptora is an AI-powered study companion designed to elevate your exam preparation. By leveraging advanced OCR to digitize handwritten notes, generating personalized mock tests, and analyzing your strengths/weaknesses with the AI Coach, Aptora helps you study smarter and score higher.",
       },
       {
         id: "how-to-register",
@@ -57,7 +57,7 @@ const topics: Topic[] = [
       {
         id: "system-requirements",
         title: "System requirements",
-        content: "ExamForge runs smoothly in any modern web browser on desktop, tablet, or mobile. For the best experience, we recommend using the latest version of Google Chrome, Mozilla Firefox, Apple Safari, or Microsoft Edge. A working camera or document scanner is recommended if you wish to upload handwritten notes for OCR processing.",
+        content: "Aptora runs smoothly in any modern web browser on desktop, tablet, or mobile. For the best experience, we recommend using the latest version of Google Chrome, Mozilla Firefox, Apple Safari, or Microsoft Edge. A working camera or document scanner is recommended if you wish to upload handwritten notes for OCR processing.",
       },
     ],
   },
@@ -94,8 +94,8 @@ const topics: Topic[] = [
     subtopics: [
       {
         id: "pricing-plans",
-        title: "ExamForge Pricing Plans",
-        content: "ExamForge offers three tiers: Free, Pro ($15/month), and Scholar ($29/month). The Pro plan includes unlimited OCR scans, priority AI response times, and full mock test customization. The Scholar plan adds 1-on-1 AI Coach guidance and advanced analytics reporting. Check our pricing page for more details.",
+        title: "Aptora Pricing Plans",
+        content: "Aptora offers three tiers: Free, Pro ($15/month), and Scholar ($29/month). The Pro plan includes unlimited OCR scans, priority AI response times, and full mock test customization. The Scholar plan adds 1-on-1 AI Coach guidance and advanced analytics reporting. Check our pricing page for more details.",
       },
       {
         id: "update-payment-method",
@@ -105,7 +105,7 @@ const topics: Topic[] = [
       {
         id: "refund-policy",
         title: "Refund policy & processing times",
-        content: "We offer a 14-day money-back guarantee for all new subscriptions. If you are unsatisfied with ExamForge, you can request a full refund within 14 days of your purchase by contacting billing@examforge.com. Approved refunds take 5-10 business days to reflect in your account.",
+        content: "We offer a 14-day money-back guarantee for all new subscriptions. If you are unsatisfied with Aptora, you can request a full refund within 14 days of your purchase by contacting billing@Aptora.com. Approved refunds take 5-10 business days to reflect in your account.",
       },
     ],
   },
@@ -124,7 +124,7 @@ const topics: Topic[] = [
       {
         id: "supported-languages",
         title: "Supported OCR Languages",
-        content: "ExamForge OCR supports transcribing notes in English, Spanish, French, German, Portuguese, Italian, Chinese, Japanese, and Korean. We are constantly expanding our multi-language model to support more regional dialects and scientific notation styles.",
+        content: "Aptora OCR supports transcribing notes in English, Spanish, French, German, Portuguese, Italian, Chinese, Japanese, and Korean. We are constantly expanding our multi-language model to support more regional dialects and scientific notation styles.",
       },
       {
         id: "improve-ocr-accuracy",
@@ -177,7 +177,7 @@ const topics: Topic[] = [
       {
         id: "clear-cache",
         title: "Clearing site data and cache",
-        content: "If you experience visual glitches or unresponsive buttons, try clearing your browser cache. In Chrome, press Ctrl+Shift+Del (Windows) or Cmd+Shift+Del (Mac), select 'Cached images and files', and click 'Clear data'. Then reload ExamForge.",
+        content: "If you experience visual glitches or unresponsive buttons, try clearing your browser cache. In Chrome, press Ctrl+Shift+Del (Windows) or Cmd+Shift+Del (Mac), select 'Cached images and files', and click 'Clear data'. Then reload Aptora.",
       },
     ],
   },
@@ -330,7 +330,7 @@ export default function HelpCenterPage() {
   return (
     <PageLayout
       title="Help Center"
-      description="Find answers, guides, and resources to get the most out of ExamForge AI."
+      description="Find answers, guides, and resources to get the most out of Aptora AI."
       breadcrumb={[{ label: "Help Center", href: "/help" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto pb-24">

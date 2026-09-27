@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: examforge-network-policy
-  namespace: examforge
+  name: Aptora-network-policy
+  namespace: Aptora
 spec:
   podSelector:
     matchLabels:
-      app: examforge
+      app: Aptora
   policyTypes:
   - Ingress
   - Egress

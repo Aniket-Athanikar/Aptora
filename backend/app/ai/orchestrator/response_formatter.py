@@ -1,5 +1,5 @@
 """
-ExamForge AI — Response Formatter & Source Attribution
+Aptora — Response Formatter & Source Attribution
 ========================================================
 
 Post-processes and formats raw LLM output into a structured, educational tutor response.

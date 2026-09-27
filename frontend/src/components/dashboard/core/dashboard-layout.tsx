@@ -82,7 +82,7 @@ export function DashboardLayout({
             <div className="flex items-center gap-2 pl-1">
               <Compass className="w-4 h-4 text-emerald-600" />
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] hidden sm:inline">
-                ExamForge Success Center
+                Aptora Success Center
               </span>
             </div>
           </div>

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Text Extractor
+Aptora - Text Extractor
 
 Responsibilities:
 1. Extract text from uploaded documents

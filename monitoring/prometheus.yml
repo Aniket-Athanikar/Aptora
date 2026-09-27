@@ -7,11 +7,18 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'backend'
+  - job_name: 'aptora-backend'
     metrics_path: '/metrics'
     static_configs:
       - targets: ['backend:8000']
 
-  - job_name: 'cadvisor'
+  - job_name: 'aptora-frontend'
+    metrics_path: '/api/metrics'
     static_configs:
-      - targets: ['cadvisor:8080']
+      - targets: ['frontend:3000']
+    ignore_namespaces: true
+
+  - job_name: 'aptora-nginx'
+    metrics_path: '/nginx_status'
+    static_configs:
+      - targets: ['nginx:80']

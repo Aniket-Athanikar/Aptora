@@ -32,7 +32,7 @@ def override_get_db():
     finally:
         db.close()
 
-def get_test_user_override(email="persistence_test@examforge.ai", name="Persistence User"):
+def get_test_user_override(email="persistence_test@Aptora.ai", name="Persistence User"):
     def override_get_current_user_fn():
         db = TestingSessionLocal()
         user = db.query(UserDb).filter(UserDb.email == email).first()
@@ -53,7 +53,7 @@ def test_client():
     Base.metadata.create_all(bind=engine)
     
     db = TestingSessionLocal()
-    user = UserDb(email="persistence_test@examforge.ai", name="Persistence User", password="hashed")
+    user = UserDb(email="persistence_test@Aptora.ai", name="Persistence User", password="hashed")
     db.add(user)
     db.commit()
     db.close()
@@ -104,7 +104,7 @@ def test_unauthorized_conversation_access(test_client):
     db.commit()
     
     # Switch active user to User 2
-    fastapi_app.dependency_overrides[get_current_user] = get_test_user_override(email="hacker@examforge.ai", name="Hacker User")
+    fastapi_app.dependency_overrides[get_current_user] = get_test_user_override(email="hacker@Aptora.ai", name="Hacker User")
     
     # Try accessing User 1's conversation with a new client to ensure overrides are picked up
     client2 = TestClient(fastapi_app)

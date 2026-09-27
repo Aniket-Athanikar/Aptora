@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — API Client
+ * Aptora — API Client
  * Centralized fetch wrapper with base URL, error handling, and type safety.
  */
 

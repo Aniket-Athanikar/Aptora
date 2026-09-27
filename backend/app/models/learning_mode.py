@@ -1,5 +1,5 @@
 """
-ExamForge AI - Learning Mode Model
+Aptora - Learning Mode Model
 
 Stores the user's preferred learning modes.
 One workspace can have multiple learning modes.

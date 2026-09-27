@@ -1,5 +1,5 @@
 """
-ExamForge AI - Flashcard Agent
+Aptora - Flashcard Agent
 
 Responsible for:
 1. Generate revision flashcards
@@ -27,7 +27,7 @@ class FlashcardAgent(BaseAgent):
         """
 
         return """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Your task is to generate high-quality revision flashcards.
 

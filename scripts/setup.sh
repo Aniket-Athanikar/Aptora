@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────
-# ExamForge AI — Local Development Setup Script
+# Aptora — Local Development Setup Script
 # ──────────────────────────────────────────────
 set -euo pipefail
 
-echo "🚀 ExamForge AI — Setting up local development environment..."
+echo "🚀 Aptora — Setting up local development environment..."
 
 # ── Backend Setup ────────────────────────────
 echo ""

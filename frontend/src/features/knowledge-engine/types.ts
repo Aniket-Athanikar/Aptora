@@ -1,9 +1,9 @@
 /**
- * ExamForge AI — Knowledge Engine
+ * Aptora — Knowledge Engine
  * Type definitions for the Book Processing + OCR + AI Knowledge Engine module.
  *
  * This module is the SINGLE entry point for all study material that flows
- * into ExamForge. Uploaded books become AI Notes, Flashcards, MCQs, Mind
+ * into Aptora. Uploaded books become AI Notes, Flashcards, MCQs, Mind
  * Maps, Revision Sheets, Analytics, and Downloadable PDFs.
  */
 

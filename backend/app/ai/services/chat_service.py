@@ -1,5 +1,5 @@
 """
-ExamForge AI - Chat Service
+Aptora - Chat Service
 
 Responsibilities:
 1. Validate user requests

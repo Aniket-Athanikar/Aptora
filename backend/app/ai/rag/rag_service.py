@@ -1,5 +1,5 @@
 """
-ExamForge AI - RAG Service
+Aptora - RAG Service
 
 High-level orchestration for the Retrieval-Augmented
 Generation (RAG) pipeline.

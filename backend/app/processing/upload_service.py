@@ -1,5 +1,5 @@
 """
-ExamForge AI - Upload Service
+Aptora - Upload Service
 """
 
 import os

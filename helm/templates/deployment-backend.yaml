@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "examforge.fullname" . }}-backend
+  name: {{ include "Aptora.fullname" . }}-backend
   labels:
-    app: {{ include "examforge.name" . }}-backend
+    app: {{ include "Aptora.name" . }}-backend
 spec:
   replicas: {{ .Values.replicaCount.backend }}
   selector:
     matchLabels:
-      app: {{ include "examforge.name" . }}-backend
+      app: {{ include "Aptora.name" . }}-backend
   template:
     metadata:
       labels:
-        app: {{ include "examforge.name" . }}-backend
+        app: {{ include "Aptora.name" . }}-backend
     spec:
       containers:
       - name: backend
@@ -23,17 +23,17 @@ spec:
           name: http
         envFrom:
         - configMapRef:
-            name: {{ include "examforge.fullname" . }}-config
+            name: {{ include "Aptora.fullname" . }}-config
         env:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "examforge.fullname" . }}-secret
+              name: {{ include "Aptora.fullname" . }}-secret
               key: DB_PASSWORD
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ include "examforge.fullname" . }}-secret
+              name: {{ include "Aptora.fullname" . }}-secret
               key: SECRET_KEY
         resources:
           {{- toYaml .Values.resources.backend | nindent 10 }}

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Billing Models
+Aptora — Billing Models
 Order/transaction model.
 """
 import datetime

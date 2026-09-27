@@ -1,5 +1,5 @@
 """
-ExamForge AI - Prediction Agent
+Aptora - Prediction Agent
 
 Responsible for:
 1. Predict likely exam topics
@@ -28,7 +28,7 @@ class PredictionAgent(BaseAgent):
         """
 
         return """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Your task is to analyze the provided study material and identify
 the topics that are most likely to appear in an examination.

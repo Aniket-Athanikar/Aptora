@@ -1,6 +1,6 @@
-# ExamForge AI — Project Phases & Roadmap
+# Aptora — Project Phases & Roadmap
 
-This document outlines the phased implementation plan for ExamForge AI, designed to scale from a single-user prototype to a nationwide enterprise-grade learning platform supporting lakhs of aspirants preparing for UPSC and State PSC (Public Service Commissions) exams in India.
+This document outlines the phased implementation plan for Aptora, designed to scale from a single-user prototype to a nationwide enterprise-grade learning platform supporting lakhs of aspirants preparing for UPSC and State PSC (Public Service Commissions) exams in India.
 
 ---
 

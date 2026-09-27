@@ -1,5 +1,5 @@
 """
-ExamForge AI - Workspace Subject Model
+Aptora - Workspace Subject Model
 """
 
 import datetime

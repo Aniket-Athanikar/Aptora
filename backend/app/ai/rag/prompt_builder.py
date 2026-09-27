@@ -1,5 +1,5 @@
 """
-ExamForge AI - Prompt Builder
+Aptora - Prompt Builder
 
 Responsible for:
 1. Build prompts for the LLM
@@ -23,7 +23,7 @@ class PromptBuilder:
 
     SYSTEM_PROMPT = dedent(
         """
-        You are ExamForge AI, a study assistant.
+        You are Aptora, a study assistant.
 
         Ground rules:
 

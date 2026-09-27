@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Router
+Aptora - Resource Router
 """
 
 from fastapi import (

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Goal Timeline Model
+Aptora - Goal Timeline Model
 
 Stores exam timeline information for a workspace.
 """

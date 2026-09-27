@@ -1,5 +1,5 @@
 """
-ExamForge AI - Summary Service
+Aptora - Summary Service
 
 Responsible for:
 1. Retrieve relevant study material

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Token Budget Manager
+Aptora — Token Budget Manager
 ====================================
 Centralized utility to manage token budgets, count tokens using tiktoken,
 and slice retrieved RAG context and conversation history to budget thresholds.
@@ -7,8 +7,10 @@ and slice retrieved RAG context and conversation history to budget thresholds.
 
 from __future__ import annotations
 import logging
-import tiktoken
-from app.core.config import settings
+try:
+    import tiktoken
+except ImportError:
+    tiktoken = None
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,8 @@ class TokenBudgetManager:
     def get_encoder(cls):
         if cls._encoder is not None:
             return cls._encoder
+        if tiktoken is None:
+            return None
         try:
             model = settings.OPENAI_MODEL
             try:

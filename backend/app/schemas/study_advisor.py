@@ -1,5 +1,5 @@
 """
-ExamForge AI — Study Advisor Schemas
+Aptora — Study Advisor Schemas
 ======================================
 
 Pydantic models for study recommendations and plans.

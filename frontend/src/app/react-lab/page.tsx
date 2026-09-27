@@ -9,7 +9,7 @@ export default function ReactLabOverview() {
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
         <h2 className="text-3xl font-bold text-white mb-2">React Enterprise Architecture</h2>
         <p className="text-slate-300 max-w-3xl leading-relaxed">
-          Welcome to the ExamForge React Lab. This playground demonstrates building high-performance, enterprise-grade React applications that scale to millions of rows, support highly maintainable structures, and use modern state, rendering, and validation tools.
+          Welcome to the Aptora React Lab. This playground demonstrates building high-performance, enterprise-grade React applications that scale to millions of rows, support highly maintainable structures, and use modern state, rendering, and validation tools.
         </p>
       </div>
 

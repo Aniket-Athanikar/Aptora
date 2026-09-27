@@ -1,5 +1,5 @@
 """
-ExamForge AI - Question Generator API
+Aptora - Question Generator API
 """
 
 import logging

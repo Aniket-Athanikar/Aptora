@@ -185,7 +185,7 @@ export function ChatWindow() {
               <Sparkles className="w-7 h-7" />
             </div>
             <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest">
-              ExamForge-AI Assistant Ready
+              Aptora Assistant Ready
             </h4>
             <p className="text-xs text-slate-500 mt-2.5 leading-relaxed font-semibold">
               Ask any question, request conceptual summaries, convert notes into active recall quizzes, or start asking from uploaded PDFs.

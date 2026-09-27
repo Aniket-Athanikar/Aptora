@@ -55,12 +55,12 @@ test-backend:
     - postgres:15-alpine
     - redis:7-alpine
   variables:
-    POSTGRES_DB: test_examforgedb
+    POSTGRES_DB: test_Aptoradb
     POSTGRES_USER: test_user
     POSTGRES_PASSWORD: test_pass
     DB_HOST: postgres
     DB_PORT: 5432
-    DB_NAME: test_examforgedb
+    DB_NAME: test_Aptoradb
     DB_USER: test_user
     DB_PASSWORD: test_pass
     REDIS_HOST: redis

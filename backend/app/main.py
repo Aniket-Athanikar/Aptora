@@ -30,7 +30,7 @@ for noisy_name in ["websockets", "websockets.client", "websockets.server", "webs
 async def lifespan(app: FastAPI):
 
     logger.info("==================================================")
-    logger.info("ExamForge AI Backend Initialization Diagnostics")
+    logger.info("Aptora Backend Initialization Diagnostics")
     logger.info("==================================================")
     logger.info("  Running inside Docker : %s", settings.RUNNING_IN_DOCKER)
     logger.info("  LLM Provider          : OpenAI")
@@ -62,7 +62,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    logger.info("Shutting down ExamForge AI Backend...")
+    logger.info("Shutting down Aptora Backend...")
     try:
         from app.workers.resource_worker import ResourceWorker
         ResourceWorker.stop_background()
@@ -72,8 +72,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title=os.getenv("PROJECT_NAME", "ExamForge-AI-Backend"),
-    description="Full-stack containerized backend API for ExamForge AI with DB integrations",
+    title=os.getenv("PROJECT_NAME", "Aptora-Backend"),
+    description="Full-stack containerized backend API for Aptora with DB integrations",
     version="2.1.0",
     lifespan=lifespan
 )
@@ -132,7 +132,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_json({
             "type": "connection_status",
             "status": "connected",
-            "message": "Real-time sync established with ExamForge AI Engine"
+            "message": "Real-time sync established with Aptora Engine"
         })
         
         while True:
@@ -170,7 +170,7 @@ async def read_root():
 
     return {
         "status": "healthy",
-        "message": "Welcome to ExamForge AI Backend with Postgres, Redis & Qdrant",
+        "message": "Welcome to Aptora Backend with Postgres, Redis & Qdrant",
         "version": "2.1.0",
         "services": {
             "postgresql": db_status,

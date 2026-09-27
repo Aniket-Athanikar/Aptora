@@ -201,7 +201,7 @@ const INITIAL_WORKSPACES: GoalWorkspace[] = [
         subjectId: "subj-polity",
         title: "UPSC Prelims Polity 10-Year PYQs (2014-2024)",
         type: "PYQ",
-        author: "ExamForge PYQ Bank",
+        author: "Aptora PYQ Bank",
         pages: 42,
         size: "4.8 MB",
         uploadDate: "01 Feb 2026",
@@ -1065,7 +1065,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `ExamForge_Study_Notes_${activeConversation.title.replace(/\s+/g, "_")}.txt`;
+    a.download = `Aptora_Study_Notes_${activeConversation.title.replace(/\s+/g, "_")}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };

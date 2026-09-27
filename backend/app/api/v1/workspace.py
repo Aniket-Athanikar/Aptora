@@ -1,5 +1,5 @@
 """
-ExamForge AI - Workspace Router
+Aptora - Workspace Router
 
 Provides REST API endpoints for workspace management, workspace statistics,
 grouped document retrieval, recent documents, subject libraries, and search.

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Models Package
+Aptora — Models Package
 """
 
 # User Models

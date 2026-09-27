@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: examforge
+  name: Aptora
   labels:
-    name: examforge
+    name: Aptora

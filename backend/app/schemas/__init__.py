@@ -1,4 +1,4 @@
-"""ExamForge AI — Schemas Module"""
+"""Aptora — Schemas Module"""
 from app.schemas.auth import (
     LoginPayload, LoginResponse, SignupPayload, SignupResponse,
     OtpPayload, OtpResponse, ForgotPayload, ForgotResponse,

@@ -1,5 +1,5 @@
 """
-LLM generation service for ExamForge.
+LLM generation service for Aptora.
 
 Supports:
 - OpenAI text generation
@@ -52,12 +52,12 @@ def get_openai_client() -> OpenAI:
 
 class LLMService:
     """
-    Central LLM service for ExamForge.
+    Central LLM service for Aptora.
     """
     MODEL_NAME = LLM_MODEL
 
     DEFAULT_SYSTEM_PROMPT = """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Answer clearly and accurately.
 If information is unavailable, say that you do not know.

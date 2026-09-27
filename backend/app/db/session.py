@@ -1,5 +1,5 @@
 """
-ExamForge AI — PostgreSQL Session & Engine
+Aptora — PostgreSQL Session & Engine
 Multi-port failover connection strategy.
 """
 import logging

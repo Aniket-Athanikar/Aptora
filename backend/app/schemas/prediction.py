@@ -1,5 +1,5 @@
 """
-ExamForge AI - Prediction Schemas
+Aptora - Prediction Schemas
 """
 
 from pydantic import BaseModel, Field

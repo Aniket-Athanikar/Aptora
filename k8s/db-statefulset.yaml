@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: examforge
+  namespace: Aptora
 spec:
   serviceName: postgres-service
   replicas: 1
@@ -24,17 +24,17 @@ spec:
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
-              name: examforge-config
+              name: Aptora-config
               key: DB_NAME
         - name: POSTGRES_USER
           valueFrom:
             configMapKeyRef:
-              name: examforge-config
+              name: Aptora-config
               key: DB_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: examforge-secret
+              name: Aptora-secret
               key: DB_PASSWORD
         resources:
           limits:
@@ -59,7 +59,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
-  namespace: examforge
+  namespace: Aptora
 spec:
   ports:
   - port: 5432

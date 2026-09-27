@@ -113,7 +113,7 @@ def rebuild(resource_id: int | None = None, dry_run: bool = False) -> tuple[int,
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Rebuild ExamForge Qdrant vectors from PostgreSQL chunks.")
+    parser = argparse.ArgumentParser(description="Rebuild Aptora Qdrant vectors from PostgreSQL chunks.")
     parser.add_argument("--resource-id", type=int, help="Rebuild only one resource.")
     parser.add_argument("--dry-run", action="store_true", help="Validate embeddings without writing Qdrant or PostgreSQL.")
     args = parser.parse_args()

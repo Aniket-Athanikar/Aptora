@@ -30,7 +30,7 @@ export const useCalendarStore = create<CalendarState>()(
       removeEvent: (eventId) => set((state) => ({ events: state.events.filter((e) => e.id !== eventId) })),
     }),
     {
-      name: "examforge_calendar",
+      name: "Aptora_calendar",
     }
   )
 );

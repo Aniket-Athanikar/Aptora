@@ -1,5 +1,5 @@
 """
-ExamForge AI - Gap Analysis Service
+Aptora - Gap Analysis Service
 
 Handles CRUD operations for Gap Analysis.
 """

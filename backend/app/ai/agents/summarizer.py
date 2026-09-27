@@ -1,5 +1,5 @@
 """
-ExamForge AI - Summarizer Agent
+Aptora - Summarizer Agent
 
 Responsible for:
 1. Generate summaries from retrieved study material
@@ -26,7 +26,7 @@ class SummarizerAgent(BaseAgent):
         """
 
         return """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Your task is to summarize the provided study material.
 

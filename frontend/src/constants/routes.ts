@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Route Path Constants
+ * Aptora — Route Path Constants
  * Single source of truth for all application routes.
  */
 export const ROUTES = {

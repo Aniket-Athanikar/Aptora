@@ -71,7 +71,7 @@ function CoachDashboardContent() {
                 <Brain className="w-5 h-5 text-emerald-600" />
                 <div>
                   <h3 className="text-sm font-black text-slate-900">Learning Personality Calibration</h3>
-                  <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Real-time study traits analyzed by the ExamForge Engine.</p>
+                  <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Real-time study traits analyzed by the Aptora Engine.</p>
                 </div>
               </div>
 

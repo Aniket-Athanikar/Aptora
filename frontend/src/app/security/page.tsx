@@ -55,7 +55,7 @@ export default function SecurityPage() {
   return (
     <PageLayout
       title="Security Overview"
-      description="How we protect your data, privacy, and identity at ExamForge AI."
+      description="How we protect your data, privacy, and identity at Aptora."
       breadcrumb={[{ label: "Security", href: "/security" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto space-y-20">
@@ -73,7 +73,7 @@ export default function SecurityPage() {
               Enterprise-Grade Security Built Into Every Layer
             </h2>
             <p className="text-neutral-500 font-semibold leading-relaxed">
-              At ExamForge AI, we understand that your notes, textbooks, and prep history are precious assets.
+              At Aptora, we understand that your notes, textbooks, and prep history are precious assets.
               Our priority is to protect your information through rigorous security controls, ongoing system scans,
               and state-of-the-art encryption algorithms.
             </p>
@@ -95,7 +95,7 @@ export default function SecurityPage() {
             <Shield className="w-12 h-12 text-white/90 mb-6" />
             <h3 className="text-xl font-black mb-2">Found a Security Issue?</h3>
             <p className="text-emerald-50 text-sm font-semibold mb-6">
-              We reward researchers and developers who help keep ExamForge-AI safe. Submit reports directly to our team.
+              We reward researchers and developers who help keep Aptora safe. Submit reports directly to our team.
             </p>
             <Link
               href="/report-bug"

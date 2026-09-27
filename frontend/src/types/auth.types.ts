@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Auth Type Definitions
+ * Aptora — Auth Type Definitions
  */
 
 export interface LoginPayload {

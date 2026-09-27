@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Lifestyle Schemas
+Aptora - Study Lifestyle Schemas
 """
 
 from datetime import datetime

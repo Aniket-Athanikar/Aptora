@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Time Slot Model
+Aptora - Study Time Slot Model
 
 Stores the preferred study time slots selected by the user.
 A lifestyle can have multiple study slots.

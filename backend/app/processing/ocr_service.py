@@ -1,5 +1,5 @@
 """
-ExamForge AI - OCR Service
+Aptora - OCR Service
 """
 
 import os

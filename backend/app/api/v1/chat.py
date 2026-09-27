@@ -1,5 +1,5 @@
 """
-ExamForge AI - Chat API
+Aptora - Chat API
 
 Endpoints
 ---------

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Prediction API
+Aptora - Prediction API
 """
 
 import logging

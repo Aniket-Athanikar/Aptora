@@ -79,7 +79,7 @@ export default function ReportBugPage() {
   return (
     <PageLayout
       title="Found a Bug? Let Us Know!"
-      description="Help us improve by reporting issues you encounter while using ExamForge AI."
+      description="Help us improve by reporting issues you encounter while using Aptora."
       breadcrumb={[{ label: "Report a Bug", href: "/report-bug" }]}
     >
       <div className="layout-container max-w-[1320px] px-4 mx-auto">

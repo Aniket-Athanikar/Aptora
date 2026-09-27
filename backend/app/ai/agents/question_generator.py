@@ -1,5 +1,5 @@
 """
-ExamForge AI - Question Generator Agent
+Aptora - Question Generator Agent
 
 Responsible for:
 1. Generate exam-style questions
@@ -27,7 +27,7 @@ class QuestionGeneratorAgent(BaseAgent):
         """
 
         return """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Your task is to generate exam-style questions from the provided study material.
 

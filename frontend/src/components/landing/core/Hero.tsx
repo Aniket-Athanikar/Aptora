@@ -1,226 +1,230 @@
 "use client";
 
-import { Play, CheckCircle, Star, ArrowRight, ChevronDown } from "lucide-react";
-import { motion } from "framer-motion";
+import React from "react";
 import Link from "next/link";
-import GlowButton from "@/components/ui/GlowButton";
-import FloatingCards from "../sections/FloatingCards";
-import GlassCard from "@/components/ui/GlassCard";
-import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const HeroBackground = dynamic(() => import("./HeroBackground"), {
-  ssr: false,
-});
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  Sparkles,
+  Flame,
+  LineChart,
+  ChevronRight,
+  MessageSquare,
+  FileText,
+  Layers,
+  Clock,
+} from "lucide-react";
 
 export default function Hero() {
-  const checkmarks = [
-    "Select your exam syllabus",
-    "Instant AI book analysis",
-    "Interactive AI tutoring",
-    "Smart summarized notes",
-    "AI-generated mock tests",
-    "Predictive question focus",
-    "Dynamic progress tracking",
-    "24/7 personalized support",
-    "Focused weakness analysis",
-  ];
-
   return (
-    <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden flex items-center">
-      {/* Dynamic Animated particle & neural background */}
-      <HeroBackground />
+    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 bg-[#FAF9F6] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
-      <div className="layout-container max-w-[1320px] px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-start relative z-10 w-full mx-auto">
-        {/* Left: Text & Pitch */}
-        <div className="lg:col-span-6 flex flex-col gap-4 sm:gap-6 text-left">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="self-start text-[11px] sm:text-xs font-bold px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 flex items-center gap-1.5 shadow-xs"
-          >
-            <span>AI-Powered Exam Preparation Platform</span>
-            <ArrowRight className="w-3.5 h-3.5 text-emerald-650" />
-          </motion.div>
+          {/* Left Column: Headline & Action Buttons matching reference screenshot */}
+          <div className="lg:col-span-6 flex flex-col items-start">
 
-          {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-[60px] font-black tracking-tight leading-[1.1] sm:leading-[1.05] w-full lg:w-[120%] lg:max-w-none z-10"
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <span
-              className="inline-block text-slate-950 transform transition-transform duration-300 hover:scale-[1.01]"
-              style={{
-                textShadow: "0 1px 0 #0d62d1ff, 0 2px 0 #0850a8ff, 0 3px 0 #94a3b8, 0 4px 6px rgba(15, 23, 42, 0.12)"
-              }}
+            {/* Eyebrow Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ecfdf5] border border-[#d1fae5] text-[#084c38] text-xs font-black uppercase tracking-widest mb-5 shadow-2xs"
             >
-              Master Any Exam with
-            </span>
-            <br />
-            <span
-              className="inline-block text-emerald-600 pb-2 transform transition-transform duration-300 hover:scale-[1.02]"
-              style={{
-                textShadow: "0 1px 0 #09ec77ff, 0 2px 0 #a7f3d0, 0 3px 0 #34d399, 0 4px 6px rgba(16, 185, 129, 0.15)"
-              }}
+              <Sparkles className="w-3.5 h-3.5 text-[#084c38] animate-pulse" />
+              <span>SMARTER STUDY. BETTER RESULTS.</span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-[58px] font-black tracking-tight text-slate-900 leading-[1.08] font-display mb-6"
             >
-              Personalized AI Study Partner
-            </span>
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base lg:text-lg text-slate-600 font-medium leading-relaxed max-w-xl"
-          >
-            Select <span className="inline-block px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 font-black shadow-2xs">Books</span> +{" "}
-            <span className="inline-block px-2 py-0.5 rounded-lg bg-amber-50/80 text-amber-700 border border-amber-200/60 font-black shadow-2xs">Previous Year Papers</span> →{" "}
-            <span className="font-extrabold text-slate-900">AI Creates</span>{" "}
-            <span className="inline-block px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-emerald-50 via-amber-50 to-teal-55 text-emerald-800 border border-emerald-200/80 font-black shadow-2xs">Personalized Material</span>,{" "}
-            Daily Training, Mock Tests, Weakness Analysis, and Predicts{" "}
-            <span className="inline-block px-2 py-0.5 rounded-lg bg-teal-50/80 text-teal-700 border border-teal-200/60 font-black shadow-2xs">Important Topics</span>!
-          </motion.p>
-
-          {/* Checkmarks Grid for Mobile Optimization */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 my-1 max-w-2xl"
-          >
-            {checkmarks.map((text, idx) => (
-              <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-neutral-700">
-                <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
-                <span className="truncate sm:whitespace-normal">{text}</span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-3.5 sm:gap-5 items-stretch sm:items-center mt-2"
-          >
-            <Link href="/login" className="w-full sm:w-auto transform hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200">
-              <GlowButton
-                variant="gradient"
-                className="w-full sm:w-auto justify-center px-8 py-3.5 text-sm font-bold from-emerald-600 to-teal-650 hover:from-emerald-500 hover:to-teal-550 shadow-emerald-500/20 hover:shadow-emerald-500/40"
-                magnetic={false}
-              >
-                Start Preparing Free
-              </GlowButton>
-            </Link>
-            <Link href="/how-it-works" className="inline-flex items-center justify-center gap-2.5 text-neutral-600 hover:text-emerald-700 font-bold text-sm px-5 py-3 sm:py-3.5 transition-all group">
-              <div className="w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-xs group-hover:bg-emerald-600 group-hover:border-emerald-600 transition-all duration-300">
-                <Play className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600 group-hover:text-white group-hover:fill-white transition-all duration-300 translate-x-[0.5px]" />
-              </div>
-              <span className="group-hover:translate-x-0.5 transition-transform duration-200">Watch Demo</span>
-            </Link>
-          </motion.div>
-
-          {/* Ratings & Social Proof */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex items-center gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-[#ECECEC] mt-1 max-w-md"
-          >
-            {/* Avatars */}
-            <div className="flex -space-x-2.5 sm:-space-x-3">
-              {[
-                { name: "John", color: "bg-blue-100 text-blue-600 border-blue-200" },
-                { name: "Sarah", color: "bg-purple-100 text-purple-600 border-purple-200" },
-                { name: "Alex", color: "bg-orange-100 text-orange-600 border-orange-200" },
-                { name: "Emily", color: "bg-teal-100 text-teal-600 border-teal-200" },
-              ].map((av, idx) => (
-                <div
-                  key={idx}
-                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold ${av.color}`}
-                >
-                  {av.name[0]}
-                </div>
-              ))}
-            </div>
-            {/* Stars & Text */}
-            <div className="flex flex-col bg-slate-900/[0.03] border border-slate-900/[0.06] px-3.5 py-2 rounded-2xl backdrop-blur-xs">
-              <div className="flex items-center gap-1">
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ scale: 1.2, rotate: 15 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                      <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B] fill-[#F59E0B] drop-shadow-[0_0_4px_rgba(245,158,11,0.35)]" />
-                    </motion.div>
-                  ))}
-                </div>
-                <span className="text-[11px] sm:text-xs font-black text-slate-800 ml-1">4.8/5 Rating</span>
-              </div>
-              <span className="text-[10px] sm:text-xs font-semibold text-slate-600 mt-0.5">
-                Trusted by <span className="text-[#6d4aff] font-black">10,000+</span> Students
+              Your study material, <br />
+              <span className="bg-gradient-to-r from-[#084c38] via-[#059669] to-[#063b2b] bg-clip-text text-transparent">
+                turned into practice
               </span>
-            </div>
-          </motion.div>
-        </div>
+            </motion.h1>
 
-        {/* Right: Floating AI Avatar Coach Card with Glow and 3D Parallax */}
-        <div className="lg:col-span-6 relative flex items-center justify-center mt-4 lg:mt-0 lg:pt-14 w-full">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px] xl:max-w-[680px] mx-auto z-20"
-          >
-            {/* Pulsing light rings */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-amber-500/25 to-teal-500/20 rounded-full blur-3xl opacity-80 animate-pulse pointer-events-none" />
+            {/* Description Paragraph */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8 font-normal"
+            >
+              Select your notes, PDFs or textbooks and let Aptora build structured practice, tests and revision plans — powered by AI
+            </motion.p>
 
-            <div className="relative flex flex-col gap-6 items-center w-full">
-              <div className="relative w-full h-[340px] sm:h-[460px] rounded-[32px] overflow-hidden border-2 border-white/50 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 bg-white/20 backdrop-blur-md">
-                <img
-                  src="/ai-avatar.png"
-                  alt="AI Study Partner Avatar"
-                  loading="eager"
-                  decoding="async"
-                  className="w-full h-full object-cover"
-                />
+            {/* Glowing Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
+            >
+              <Link
+                href="/login"
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-base text-white bg-[#084c38] hover:bg-[#063c2b] shadow-lg shadow-[#084c38]/25 hover:shadow-xl hover:shadow-[#084c38]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              >
+                <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                <span>Start Preparing</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
 
-                {/* Floating overlay status badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 bg-white/95 backdrop-blur-md border border-neutral-100 rounded-full shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
-                  <span className="text-[10px] font-black text-emerald-800 uppercase tracking-wider">Active Online</span>
+              <Link
+                href="/features"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-bold text-base text-slate-800 bg-white border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50/80 shadow-xs hover:shadow-md hover:scale-[1.01] active:scale-[0.98] transition-all duration-300"
+              >
+                Explore Platform
+              </Link>
+            </motion.div>
+
+          </div>
+
+          {/* Right Column: Dashboard UI Preview Mockup matching reference screenshot */}
+          <div className="lg:col-span-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative rounded-2xl bg-white border border-slate-200/90 shadow-xl p-4 sm:p-5 text-slate-800 font-sans space-y-4"
+            >
+              {/* Mockup App Header */}
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded bg-[#084c38] flex items-center justify-center text-white text-[10px] font-black">
+                    A
+                  </div>
+                  <span className="font-extrabold text-sm text-slate-900 font-display">Aptora</span>
                 </div>
-
-                <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-neutral-900/80 backdrop-blur-md border border-white/10 text-white px-3 py-1.5 rounded-xl shadow-sm text-[10px] font-bold">
-                  <span>Accuracy:</span>
-                  <span className="text-emerald-400">99.8%</span>
+                <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">
+                  AA
                 </div>
               </div>
-            </div>
-          </motion.div>
-          <FloatingCards />
+
+              {/* Mockup Main Dashboard Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+
+                {/* Left Sidebar inside Mockup */}
+                <div className="hidden sm:block md:col-span-3 space-y-2 border-r border-slate-100 pr-3">
+                  <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-50 text-[#084c38] font-bold text-xs">
+                    <BookOpen className="w-3.5 h-3.5" /> Home
+                  </div>
+                  <div className="flex items-center gap-2 p-2 text-slate-500 font-medium text-xs hover:text-slate-900">
+                    <FileText className="w-3.5 h-3.5" /> Study Material
+                  </div>
+                  <div className="flex items-center gap-2 p-2 text-slate-500 font-medium text-xs hover:text-slate-900">
+                    <Sparkles className="w-3.5 h-3.5" /> Practice
+                  </div>
+                  <div className="flex items-center gap-2 p-2 text-slate-500 font-medium text-xs hover:text-slate-900">
+                    <Layers className="w-3.5 h-3.5" /> Tests
+                  </div>
+                  <div className="flex items-center gap-2 p-2 text-slate-500 font-medium text-xs hover:text-slate-900">
+                    <Clock className="w-3.5 h-3.5" /> Revision
+                  </div>
+                  <div className="flex items-center gap-2 p-2 text-slate-500 font-medium text-xs hover:text-slate-900">
+                    <LineChart className="w-3.5 h-3.5" /> Analytics
+                  </div>
+                </div>
+
+                {/* Center Content inside Mockup */}
+                <div className="md:col-span-9 space-y-4">
+                  {/* Greeting */}
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Good morning, Jhon👋</h4>
+                    <p className="text-[11px] text-slate-500 font-medium">Keep going! You're making great progress</p>
+                  </div>
+
+                  {/* Metrics row */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                      <span className="text-[10px] text-slate-500 font-medium">Overall Progress</span>
+                      <p className="text-sm font-bold text-slate-900">72%</p>
+                      <div className="w-full bg-slate-200 rounded-full h-1">
+                        <div className="bg-emerald-500 h-1 rounded-full" style={{ width: "72%" }} />
+                      </div>
+                      <span className="text-[9px] text-emerald-700 font-bold block mt-0.5">Keep it up!</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                      <span className="text-[10px] text-slate-500 font-medium">Tests Completed</span>
+                      <p className="text-sm font-bold text-slate-900">12</p>
+                      <span className="text-[9px] text-emerald-600 font-medium">+3 this week</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                      <span className="text-[10px] text-slate-500 font-medium">Questions Practiced</span>
+                      <p className="text-sm font-bold text-slate-900">842</p>
+                      <span className="text-[9px] text-emerald-600 font-medium">+120 this week</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                      <span className="text-[10px] text-slate-500 font-medium">Study Streak 🔥</span>
+                      <p className="text-sm font-bold text-slate-900">5 <span className="text-[11px] text-slate-500 font-normal">days</span></p>
+                      <span className="text-[9px] text-emerald-600 font-medium">+1 today</span>
+                    </div>
+                  </div>
+
+                  {/* Continue Learning List */}
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-bold text-slate-800">Continue Learning</span>
+                    <div className="space-y-1.5 text-xs">
+
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between shadow-2xs hover:border-slate-300">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[10px] flex items-center justify-center">
+                            English
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 text-xs">General English</p>
+                            <p className="text-[10px] text-slate-400">Last studied 2 days ago</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between shadow-2xs hover:border-slate-300">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-bold text-[10px] flex items-center justify-center">
+                            POL
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 text-xs">Polity & Governance</p>
+                            <p className="text-[10px] text-slate-400">Continue revision</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between shadow-2xs hover:border-slate-300">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[10px] flex items-center justify-center">
+                            PHY
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 text-xs">Physics - Modern Physics</p>
+                            <p className="text-[10px] text-slate-400">Practice test available</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </motion.div>
+          </div>
+
         </div>
-      </div>
-      {/* Animated Scroll Down indicator at the bottom center of Hero */}
-      <div className="hidden sm:flex absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex-col items-center gap-1.5 cursor-pointer">
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-          onClick={() => {
-            const el = document.getElementById("how-it-works");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }}
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center shadow-lg hover:shadow-xl hover:border-emerald-500/30 hover:text-emerald-650 text-slate-500 transition-all"
-        >
-          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
-        </motion.div>
       </div>
     </section>
   );

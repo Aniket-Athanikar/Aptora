@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: examforge
+  namespace: Aptora
   labels:
     app: backend
 spec:
@@ -29,17 +29,17 @@ spec:
           name: http
         envFrom:
         - configMapRef:
-            name: examforge-config
+            name: Aptora-config
         env:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: examforge-secret
+              name: Aptora-secret
               key: DB_PASSWORD
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: examforge-secret
+              name: Aptora-secret
               key: SECRET_KEY
         livenessProbe:
           httpGet:
@@ -65,7 +65,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: examforge
+  namespace: Aptora
 spec:
   type: ClusterIP
   ports:

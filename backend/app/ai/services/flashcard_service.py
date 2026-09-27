@@ -1,5 +1,5 @@
 """
-ExamForge AI - Flashcard Service
+Aptora - Flashcard Service
 
 Responsible for:
 1. Retrieve relevant study material

@@ -1,2 +1,2 @@
-"""ExamForge AI — Core Module"""
+"""Aptora — Core Module"""
 from app.core.config import settings

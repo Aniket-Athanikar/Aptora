@@ -101,7 +101,7 @@ function AchievementsContent() {
           <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-600/5 rounded-full blur-xl pointer-events-none" />
           <div className="space-y-2 flex-1">
             <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 uppercase tracking-widest bg-emerald-100/80 border border-emerald-300/60 px-3 py-1 rounded-full">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> ExamForge XP Progression
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Aptora XP Progression
             </span>
             <h2 className="text-2xl font-black text-slate-900">
               Mastery Rank: <span className="text-emerald-750">Scholar Level 14</span>
@@ -196,7 +196,7 @@ function AchievementsContent() {
             <div className="bg-white border border-slate-200/80 rounded-3xl p-5 space-y-4 shadow-xs">
               <div className="flex justify-between items-center pb-2 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-black text-slate-900">ExamForge Community</h3>
+                  <h3 className="text-sm font-black text-slate-900">Aptora Community</h3>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Weekly leaderboard ranking. Click member to view profile.</p>
                 </div>
                 <Users className="w-4 h-4 text-emerald-650" />

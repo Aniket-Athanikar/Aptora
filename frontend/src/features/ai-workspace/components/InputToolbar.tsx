@@ -88,7 +88,7 @@ export function InputToolbar() {
             onChange={(e) => setAiReasoningModel(e.target.value as any)}
             className="px-2 py-0.5 rounded-lg bg-purple-100/90 border border-purple-200 text-purple-900 font-black focus:outline-none cursor-pointer text-[10px]"
           >
-            <option value="deep_reasoning">ExamForge Deep Reasoning</option>
+            <option value="deep_reasoning">Aptora Deep Reasoning</option>
             <option value="ml_analytics">ML Gap Analytics & Retention</option>
             <option value="dl_neural">DL Qdrant Vector Embeddings</option>
             <option value="llm_multimodal">LLM Multimodal OCR & Vision</option>

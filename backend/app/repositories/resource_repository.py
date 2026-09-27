@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Repository
+Aptora - Resource Repository
 """
 
 from typing import List, Optional

@@ -1,5 +1,5 @@
 """
-ExamForge AI — Google Service
+Aptora — Google Service
 Handles Google OAuth authentication, token verification, and integration with
 UserService for account registration/lookup.
 """

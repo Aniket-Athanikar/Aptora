@@ -1,5 +1,5 @@
 """
-ExamForge AI - Gap Analysis Schemas
+Aptora - Gap Analysis Schemas
 """
 
 from datetime import datetime

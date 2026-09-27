@@ -1,5 +1,5 @@
 """
-ExamForge AI - Timeline Schemas
+Aptora - Timeline Schemas
 """
 
 from datetime import date, datetime

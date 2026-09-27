@@ -361,7 +361,7 @@ export function ResourceUploadModal({
                   Upload Study Resource
                 </h3>
                 <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                  Index books, notes, PYQs, and syllabus into ExamForge-AI
+                  Index books, notes, PYQs, and syllabus into Aptora
                 </p>
               </div>
             </div>

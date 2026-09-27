@@ -1,5 +1,5 @@
 """
-ExamForge AI — Study Advisor Agent
+Aptora — Study Advisor Agent
 ====================================
 
 AI agent responsible for generating personalized, actionable study plans
@@ -24,7 +24,7 @@ class StudyAdvisorAgent(BaseAgent):
     @property
     def system_prompt(self) -> str:
         return dedent("""
-            You are ExamForge AI, a expert study strategist and academic advisor.
+            You are Aptora, a expert study strategist and academic advisor.
 
             Your task is to analyze a student's workspace resources, subject breakdown,
             and study material to generate a structured, highly actionable study plan.

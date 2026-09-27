@@ -1,4 +1,4 @@
-# ExamForge AI — Error Handling & Resilience Guide
+# Aptora — Error Handling & Resilience Guide
 
 This document describes the platform's error handling strategies, retry policies, and failover mechanisms designed to maintain service availability for UPSC/State PSC aspirants.
 

@@ -59,8 +59,8 @@ function ProfileInner() {
       <DashboardLayout activeTab="profile">
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm font-black text-slate-500">Loading Profile System...</p>
+            <div className="w-12 h-12 border-4 border-[#084c38] border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-bold text-slate-500">Loading Profile System...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -112,13 +112,13 @@ function ProfileInner() {
     <DashboardLayout activeTab="profile">
       <div className="max-w-5xl mx-auto space-y-8 px-2 py-4">
         {/* Banner + Hero Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-white bg-white/70 backdrop-blur-md shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#084c38]/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Avatar Area */}
           <div className="relative group shrink-0">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 blur-sm opacity-40 group-hover:opacity-75 transition duration-300" />
-            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-100">
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#084c38] to-[#063b2b] blur-sm opacity-30 group-hover:opacity-60 transition duration-300" />
+            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white shadow-md bg-slate-100">
               {profile?.avatar_url ? (
                 <img
                   src={getAvatarUrl(profile.avatar_url)}
@@ -126,7 +126,7 @@ function ProfileInner() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center font-black text-3xl uppercase">
+                <div className="w-full h-full bg-[#084c38] text-white flex items-center justify-center font-black text-3xl uppercase">
                   {profile?.name ? profile.name.charAt(0) : "?"}
                 </div>
               )}
@@ -138,7 +138,7 @@ function ProfileInner() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 title="Upload Photo"
-                className="w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer border border-white"
+                className="w-8 h-8 rounded-full bg-[#084c38] hover:bg-[#063b2b] text-white flex items-center justify-center shadow-md transition-transform hover:scale-105 cursor-pointer border border-white"
               >
                 <Camera className="w-4 h-4" />
               </button>
@@ -147,7 +147,7 @@ function ProfileInner() {
                   type="button"
                   onClick={handleDeleteAvatar}
                   title="Remove Photo"
-                  className="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer border border-white"
+                  className="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-md transition-transform hover:scale-105 cursor-pointer border border-white"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -164,22 +164,22 @@ function ProfileInner() {
 
           {/* Identity details */}
           <div className="flex-1 text-center md:text-left space-y-2">
-            <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight font-display">
               {profile?.name || "Student User"}
             </h2>
-            <div className="flex flex-wrap justify-center md:justify-start gap-3 text-xs font-bold text-slate-500">
-              <span className="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full">
-                <Mail className="w-3.5 h-3.5" />
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 text-xs font-semibold text-slate-600">
+              <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60">
+                <Mail className="w-3.5 h-3.5 text-slate-500" />
                 {profile?.email}
               </span>
               {profile?.target_exam && (
-                <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-full border border-emerald-100">
+                <span className="flex items-center gap-1.5 bg-[#ecfdf5] text-[#084c38] px-3 py-1 rounded-full border border-[#d1fae5] font-bold">
                   <Compass className="w-3.5 h-3.5" />
                   Target: {profile.target_exam}
                 </span>
               )}
             </div>
-            <p className="text-xs font-extrabold text-slate-400 italic max-w-md">
+            <p className="text-xs font-medium text-slate-500 italic max-w-md">
               {profile?.bio || "No profile bio added yet."}
             </p>
           </div>
@@ -190,7 +190,7 @@ function ProfileInner() {
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl shadow-md transition-all hover:scale-105 cursor-pointer border border-emerald-500"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-xs transition-all hover:scale-102 cursor-pointer"
               >
                 <Edit3 className="w-4 h-4" />
                 Edit Profile
@@ -200,7 +200,7 @@ function ProfileInner() {
                 <button
                   type="submit"
                   form="profile-form"
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-2xl shadow-md transition-all cursor-pointer border border-emerald-500"
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   Save
@@ -208,7 +208,7 @@ function ProfileInner() {
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-black rounded-2xl shadow-md transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer border border-slate-200"
                 >
                   <X className="w-4 h-4" />
                   Cancel
@@ -218,7 +218,7 @@ function ProfileInner() {
 
             <button
               onClick={logout}
-              className="text-xs font-black text-rose-600 hover:underline hover:text-rose-700 cursor-pointer transition-colors"
+              className="text-xs font-bold text-rose-600 hover:underline hover:text-rose-700 cursor-pointer transition-colors"
             >
               Sign out of account
             </button>
@@ -227,43 +227,43 @@ function ProfileInner() {
 
         {/* Gamification / Live Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500 text-white">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-amber-500 text-white shadow-2xs">
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-amber-600 uppercase tracking-wider">Level</p>
-              <h4 className="text-lg font-black text-slate-800">{profile?.level || 1}</h4>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Level</p>
+              <h4 className="text-lg font-bold text-slate-900">{profile?.level || 1}</h4>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-600 text-white">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-[#084c38] text-white shadow-2xs">
               <Star className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">Total XP</p>
-              <h4 className="text-lg font-black text-slate-800">{profile?.xp || 0}</h4>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total XP</p>
+              <h4 className="text-lg font-bold text-slate-900">{profile?.xp || 0}</h4>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-500/10 to-orange-600/5 border border-orange-500/20 rounded-2xl p-4 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-orange-500 text-white animate-pulse">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-orange-500 text-white shadow-2xs">
               <Flame className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-orange-600 uppercase tracking-wider">Streak</p>
-              <h4 className="text-lg font-black text-slate-800">{profile?.streak || 0} Days</h4>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Streak</p>
+              <h4 className="text-lg font-bold text-slate-900">{profile?.streak || 0} Days</h4>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-yellow-500 text-white">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-yellow-500 text-white shadow-2xs">
               <Coins className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-yellow-600 uppercase tracking-wider">Coins</p>
-              <h4 className="text-lg font-black text-slate-800">{profile?.coins || 0}</h4>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Coins</p>
+              <h4 className="text-lg font-bold text-slate-900">{profile?.coins || 0}</h4>
             </div>
           </div>
         </div>
@@ -271,57 +271,57 @@ function ProfileInner() {
         {/* Detailed Sections Form */}
         <form id="profile-form" onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Personal Information */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-              <User className="w-5 h-5 text-emerald-600" />
-              <h3 className="text-base font-black text-slate-800">Personal Information</h3>
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+              <User className="w-5 h-5 text-[#084c38]" />
+              <h3 className="text-base font-bold text-slate-900 font-display">Personal Information</h3>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-emerald-600"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Mobile Phone</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Mobile Phone</label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Date of Birth</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date of Birth</label>
                   <input
                     type="date"
                     name="dob"
                     value={formData.dob || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Gender</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Gender</label>
                   <select
                     name="gender"
                     value={formData.gender || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
@@ -332,26 +332,26 @@ function ProfileInner() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Location / City</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Location / City</label>
                 <input
                   type="text"
                   name="location"
                   value={formData.location || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Bio / Description</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Bio / Description</label>
                 <textarea
                   name="bio"
                   value={formData.bio || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows={3}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500 resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors resize-none"
                 />
               </div>
             </div>
@@ -360,15 +360,15 @@ function ProfileInner() {
           {/* Education & Journey */}
           <div className="space-y-6">
             {/* Education Info */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
-              <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-                <GraduationCap className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-base font-black text-slate-800">Education & Academics</h3>
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                <GraduationCap className="w-5 h-5 text-[#084c38]" />
+                <h3 className="text-base font-bold text-slate-900 font-display">Education & Academics</h3>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Highest Qualification</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Highest Qualification</label>
                   <input
                     type="text"
                     name="education"
@@ -376,94 +376,94 @@ function ProfileInner() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     placeholder="e.g. Bachelor of Technology"
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">University / College</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">University / College</label>
                   <input
                     type="text"
                     name="college"
                     value={formData.college || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Occupation</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Occupation</label>
                   <input
                     type="text"
                     name="occupation"
                     value={formData.occupation || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
               </div>
             </div>
 
             {/* Exam Journey */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
-              <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-                <Compass className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-base font-black text-slate-800">Exam Journey</h3>
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                <Compass className="w-5 h-5 text-[#084c38]" />
+                <h3 className="text-base font-bold text-slate-900 font-display">Exam Journey</h3>
               </div>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Target Exam</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Target Exam</label>
                     <input
                       type="text"
                       name="target_exam"
                       value={formData.target_exam || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Secondary Exam</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Secondary Exam</label>
                     <input
                       type="text"
                       name="secondary_exam"
                       value={formData.secondary_exam || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Target Score</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Target Score</label>
                     <input
                       type="text"
                       name="target_score"
                       value={formData.target_score || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Target Rank</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Target Rank</label>
                     <input
                       type="text"
                       name="target_rank"
                       value={formData.target_rank || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Study Hours Goal</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Study Hours Goal</label>
                     <input
                       type="number"
                       name="study_hours_goal"
@@ -472,20 +472,20 @@ function ProfileInner() {
                       disabled={!isEditing}
                       min={1}
                       max={24}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5">Exam Date</label>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Exam Date</label>
                   <input
                     type="date"
                     name="target_date"
                     value={formData.target_date || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 disabled:opacity-75 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
               </div>
@@ -495,4 +495,4 @@ function ProfileInner() {
       </div>
     </DashboardLayout>
   );
-}
+}

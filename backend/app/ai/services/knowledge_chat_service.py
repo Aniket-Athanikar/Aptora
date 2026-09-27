@@ -1,5 +1,5 @@
 """
-ExamForge AI — Knowledge Chat Service
+Aptora — Knowledge Chat Service
 ========================================
 High-level orchestrator that manages conversational context (memory)
 and executes the ReasoningPipeline for multi-turn chat sessions.

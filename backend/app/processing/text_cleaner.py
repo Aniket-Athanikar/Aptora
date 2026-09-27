@@ -1,5 +1,5 @@
 """
-ExamForge AI - Text Cleaner
+Aptora - Text Cleaner
 ===========================
 
 Processing stage: OCR output → TextCleaner → Chunker

@@ -1218,7 +1218,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
             </div>
             <h2 className="text-sm font-black text-slate-900 mt-2 flex items-center gap-2 tracking-tight">
               <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="md:hidden rounded-xl p-1.5 text-slate-500 hover:bg-emerald-50"><Menu className="w-4 h-4" /></button>
-              <span>ExamForge-AI Chat</span>
+              <span>Aptora Chat</span>
               <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
                 {subjectName} · {resourceType}
               </span>
@@ -1250,7 +1250,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                       <Bot className="w-7 h-7" />
                     </div>
                     <div>
-                      <h4 className="text-base font-black text-slate-900 tracking-tight">ExamForge-AI Study Chat</h4>
+                      <h4 className="text-base font-black text-slate-900 tracking-tight">Aptora Study Chat</h4>
                       <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 font-semibold leading-relaxed">
                         Grounded directly on your selected AI Library book. Pick a quick prompt below or type your question.
                       </p>

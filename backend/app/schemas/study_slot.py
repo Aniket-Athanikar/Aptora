@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Time Slot Schemas
+Aptora - Study Time Slot Schemas
 """
 
 from datetime import datetime

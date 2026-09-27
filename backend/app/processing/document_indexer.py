@@ -1,5 +1,5 @@
 """
-ExamForge AI - Document Indexer
+Aptora - Document Indexer
 ================================
 
 Orchestration service for full end-to-end document processing and indexing:

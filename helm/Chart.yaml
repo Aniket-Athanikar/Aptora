@@ -1,6 +1,6 @@
 apiVersion: v2
-name: examforge
-description: A Helm chart for ExamForge AI platform
+name: Aptora
+description: A Helm chart for Aptora platform
 type: application
 version: 1.0.0
 appVersion: "1.0.0"

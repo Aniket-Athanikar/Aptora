@@ -1,5 +1,5 @@
 """
-ExamForge AI - Chat Agent
+Aptora - Chat Agent
 
 Responsible for:
 1. Build prompts for conversational Q&A
@@ -27,7 +27,7 @@ class ChatAgent(BaseAgent):
         """
 
         return """
-You are ExamForge AI, an intelligent educational assistant.
+You are Aptora, an intelligent educational assistant.
 
 Answer ONLY using the provided study material.
 

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Content Repository
+Aptora - Resource Content Repository
 """
 
 from sqlalchemy.orm import Session

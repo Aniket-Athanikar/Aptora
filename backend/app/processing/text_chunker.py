@@ -1,5 +1,5 @@
 """
-ExamForge AI - Text Chunker
+Aptora - Text Chunker
 ============================
 
 Processing stage: TextCleaner → TextChunker → Embeddings

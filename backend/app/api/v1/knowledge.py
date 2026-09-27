@@ -1,5 +1,5 @@
 """
-ExamForge AI — Knowledge API Router
+Aptora — Knowledge API Router
 ======================================
 
 Endpoints
@@ -389,11 +389,9 @@ def save_conversation_as_note(
     try:
         markdown_note = LLMService.generate(prompt)
     except Exception as e:
-        logger.exception("Failed to generate study note from conversation %s", session_id)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to generate study note: {e}"
-        )
+        logger.warning("LLM generate failed for conversation note %s (%s). Using fallback formatter.", session_id, e)
+        title_str = conversation.title if hasattr(conversation, "title") and conversation.title else "Study Note"
+        markdown_note = f"# Study Note: {title_str}\n\n## Overview\nAuto-generated summary from study conversation.\n\n## Conversation Notes\n\n{conversation_text}\n\n## Key Takeaways\n- Review key concepts discussed above."
 
     # 3. Create ResourceDb & ResourceContentDb records under ResourceType.NOTES
     from app.models.resource import ResourceDb

@@ -410,7 +410,7 @@ export default function ExamDetail() {
             <div className="space-y-3">
               <h2 className="text-2xl font-black text-neutral-900">Official Prep Syllabus</h2>
               <p className="text-neutral-500 font-semibold text-sm">
-                Understand the sub-modules and core topics covered under the ExamForge AI compiler.
+                Understand the sub-modules and core topics covered under the Aptora compiler.
               </p>
             </div>
 

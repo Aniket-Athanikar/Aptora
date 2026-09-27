@@ -1,5 +1,5 @@
 """
-ExamForge AI — Automatic Database Schema Synchronization
+Aptora — Automatic Database Schema Synchronization
 Automatically checks and alters missing columns on PostgreSQL / SQLite tables
 to prevent UndefinedColumn errors during runtime operations.
 """

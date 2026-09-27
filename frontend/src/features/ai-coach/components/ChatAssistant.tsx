@@ -66,7 +66,7 @@ export function ChatAssistant({ chatHistory, onSendMessage }: ChatAssistantProps
   return (
     <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden flex flex-col h-[600px] shadow-sm relative z-10">
 
-      {/* ExamForge Modern Header */}
+      {/* Aptora Modern Header */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white px-6 py-3.5 flex items-center justify-between shadow-xs relative z-20">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -77,7 +77,7 @@ export function ChatAssistant({ chatHistory, onSendMessage }: ChatAssistantProps
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <h3 className="text-xs font-black text-white tracking-wide">ExamForge AI Mentor</h3>
+              <h3 className="text-xs font-black text-white tracking-wide">Aptora Mentor</h3>
               <span className="bg-[#6D4AFF]/30 text-indigo-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-indigo-500/30">
                 GPT-4o
               </span>
@@ -223,7 +223,7 @@ export function ChatAssistant({ chatHistory, onSendMessage }: ChatAssistantProps
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:border-[#6D4AFF] focus:bg-white text-xs font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-800"
-          placeholder="Ask your ExamForge AI Mentor..."
+          placeholder="Ask your Aptora Mentor..."
         />
 
         <button

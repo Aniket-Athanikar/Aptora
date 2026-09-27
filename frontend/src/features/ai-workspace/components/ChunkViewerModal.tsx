@@ -280,7 +280,7 @@ export function ChunkViewerModal({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
                     <span className="font-black text-purple-950 uppercase tracking-widest text-[11px]">
-                      ExamForge Viewport
+                      Aptora Viewport
                     </span>
                   </div>
                   <div className="flex items-center gap-3 font-extrabold text-slate-600 text-[10.5px] sm:text-[11.5px]">

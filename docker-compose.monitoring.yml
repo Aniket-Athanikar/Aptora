@@ -1,9 +1,9 @@
-version: '3.8'
+name: aptora-monitoring
 
 services:
   prometheus:
     image: prom/prometheus:v2.45.0
-    container_name: examforge_prometheus
+    container_name: aptora_prometheus
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -15,41 +15,48 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - examforge-network
+      - aptora-network
     restart: always
 
   grafana:
     image: grafana/grafana:10.0.0
-    container_name: examforge_grafana
+    container_name: aptora_grafana
     ports:
       - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=aptora_grafana
+      - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
-      - examforge-network
+      - aptora-network
     depends_on:
       - prometheus
     restart: always
 
   loki:
     image: grafana/loki:2.8.2
-    container_name: examforge_loki
+    container_name: aptora_loki
     ports:
       - "3100:3100"
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/tmp/loki
     command: -config.file=/etc/loki/local-config.yaml
     networks:
-      - examforge-network
+      - aptora-network
     restart: always
 
   promtail:
     image: grafana/promtail:2.8.2
-    container_name: examforge_promtail
+    container_name: aptora_promtail
     volumes:
-      - /var/log:/var/log
+      - /var/log:/var/log:ro
       - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
     command: -config.file=/etc/promtail/config.yml
     networks:
-      - examforge-network
+      - aptora-network
     depends_on:
       - loki
     restart: always
@@ -57,8 +64,9 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+  loki_data:
 
 networks:
-  examforge-network:
+  aptora-network:
     external: true
-    name: docker-compose_examforge-network
+    name: aptora-network

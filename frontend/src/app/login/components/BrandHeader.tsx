@@ -1,33 +1,22 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { AptoraLogo } from "@/components/ui/AptoraLogo";
 
 export function BrandHeader() {
   return (
-    <div className="w-full flex items-center justify-between">
-      <div className="flex items-center gap-2.5">
-        <Image
-          src="/favicon.ico"
-          alt="Logo"
-          width={36}
-          height={36}
-          className="rounded-full animate-spin-slow glow-avatar object-cover border border-[var(--border)]"
-          priority
-        />
-        <span className="font-black text-xl tracking-tight text-slate-900">
-          ExamForge-<span className="bg-gradient-to-r from-emerald-600 via-teal-650 to-emerald-800 bg-clip-text text-transparent">AI</span>
-        </span>
-      </div>
+    <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100">
+      <AptoraLogo size="md" />
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-indigo-600 px-3.5 py-1.5 rounded-xl border border-gray-150 hover:bg-slate-55 transition-all cursor-pointer shadow-2xs hover:scale-[1.02]"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#084c38] hover:border-[#084c38]/30 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-all cursor-pointer shadow-2xs"
       >
-        <ArrowLeft className="w-3.5 h-3.5" /> Home
+        <ArrowLeft className="w-3.5 h-3.5" /> Back to Home
       </Link>
     </div>
   );
 }
 export default BrandHeader;
+

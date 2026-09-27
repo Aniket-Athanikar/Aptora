@@ -1,5 +1,5 @@
 """
-ExamForge AI — Security Utilities
+Aptora — Security Utilities
 JWT generation, password hashing, and CSRF helpers.
 """
 import hashlib

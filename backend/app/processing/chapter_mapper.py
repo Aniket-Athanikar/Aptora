@@ -1,5 +1,5 @@
 """
-ExamForge AI - Chapter Mapper
+Aptora - Chapter Mapper
 =============================
 
 Processing stage: DocumentProcessor -> ChapterMapper

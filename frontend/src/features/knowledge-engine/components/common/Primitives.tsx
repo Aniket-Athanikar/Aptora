@@ -710,7 +710,7 @@ export function BookCover({ title, subtitle, coverColor = "from-indigo-500 via-v
       <div className="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
       <div className="absolute -right-12 -bottom-12 w-40 h-40 rounded-full bg-black/10 blur-2xl" />
       <div className="relative z-10">
-        <p className="text-[8px] font-extrabold uppercase tracking-[0.2em] text-white/80">ExamForge</p>
+        <p className="text-[8px] font-extrabold uppercase tracking-[0.2em] text-white/80">Aptora</p>
         <h4 className={`font-black text-white tracking-tight leading-tight mt-0.5 line-clamp-2 ${titleSize[size]}`}>{title}</h4>
         {subtitle && <p className="text-[9px] font-bold text-white/70 line-clamp-1 mt-0.5">{subtitle}</p>}
       </div>

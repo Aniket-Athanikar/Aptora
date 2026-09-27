@@ -2,146 +2,176 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Welcome to ExamForge AI - Success Intercepted!</title>
+  <title>Aptora - Subscription Invoice</title>
   <style>
     body {
-      background-color: transparent;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #FAF9F6;
       margin: 0;
       padding: 40px 20px;
-      color: #374151;
-      text-align: center;
+      color: #0F172A;
     }
-    .email-container {
-      max-width: 540px;
+    .container {
+      max-width: 560px;
       margin: 0 auto;
       background: #FFFFFF;
-      border: 1.5px solid #E5E7EB;
+      border: 1px solid #E2E8F0;
       border-radius: 24px;
       padding: 40px 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      position: relative;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
     }
-    .logo-container {
+    .header {
+      border-bottom: 1px solid #F1F5F9;
+      padding-bottom: 25px;
       margin-bottom: 25px;
-    }
-    .logo {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      color: #111827;
-    }
-    .logo-ai {
-      color: #6D4AFF;
-    }
-    h1 {
-      font-size: 26px;
-      margin-bottom: 12px;
-      font-weight: 900;
-      color: #111827;
-      letter-spacing: -0.5px;
-    }
-    .cheer-message {
-      color: #6D4AFF;
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-    .body-text {
-      color: #4B5563;
-      line-height: 1.6;
-      font-size: 14.5px;
-      margin-bottom: 30px;
-      font-weight: 500;
-    }
-    .otp-wrapper {
-      margin: 35px 0;
       text-align: center;
     }
-    .cheer-badge {
-      display: inline-flex;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1.5px solid rgba(16, 185, 129, 0.2);
-      border-radius: 50px;
-      padding: 6px 18px;
-      font-size: 13px;
-      color: #059669;
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .logo-text {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0F172A;
+    }
+    .invoice-title {
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      letter-spacing: 1.5px;
+      color: #084C38;
+      background: #ECFDF5;
+      border: 1px solid #D1FAE5;
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 9999px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #64748B;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+    .invoice-table th {
+      text-align: left;
+      padding: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .invoice-table td {
+      padding: 15px 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #334155;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .total-row {
+      font-size: 15px;
+      font-weight: 900;
+      color: #084C38;
     }
     .footer {
       font-size: 11.5px;
-      color: #9CA3AF;
+      color: #94A3B8;
+      text-align: center;
       margin-top: 40px;
-      border-top: 1.5px solid #F3F4F6;
-      padding-top: 20px;
+      border-top: 1px solid #F1F5F9;
+      padding-top: 25px;
       font-weight: 600;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <div class="email-container">
-    <!-- SVG Geometric Node Network (Three.js geometry layout style) -->
-    <svg width="100%" height="80" viewBox="0 0 400 80" style="margin-bottom: 10px; overflow: visible;">
-      <defs>
-        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#6D4AFF" stop-opacity="0.3" />
-          <stop offset="100%" stop-color="#6D4AFF" stop-opacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="200" cy="40" r="60" fill="url(#glow)" />
-      
-      <!-- Connection Lines -->
-      <line x1="60" y1="45" x2="140" y2="25" stroke="#6D4AFF" stroke-width="2" stroke-dasharray="5 3" />
-      <line x1="140" y1="25" x2="200" y2="55" stroke="#8B5CF6" stroke-width="2.5" />
-      <line x1="200" y1="55" x2="260" y2="20" stroke="#10B981" stroke-width="2" stroke-dasharray="4 4" />
-      <line x1="260" y1="20" x2="340" y2="45" stroke="#4F46E5" stroke-width="2" />
-      <line x1="140" y1="25" x2="260" y2="20" stroke="#4F46E5" stroke-width="1.2" opacity="0.6" />
-      <line x1="60" y1="45" x2="200" y2="55" stroke="#6D4AFF" stroke-width="1.2" opacity="0.6" />
-      
-      <!-- Animated / Pulsing Nodes -->
-      <circle cx="60" cy="45" r="6" fill="#6D4AFF" />
-      <circle cx="140" cy="25" r="8" fill="#8B5CF6" />
-      <circle cx="200" cy="55" r="7" fill="#10B981" />
-      <circle cx="260" cy="20" r="9" fill="#4F46E5" />
-      <circle cx="340" cy="45" r="6" fill="#6D4AFF" />
-    </svg>
+  <div class="container">
+    <div class="header">
+      <div class="header-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+          <path d="M16 3L4 27H11.5L16 17.5L20.5 27H28L16 3Z" fill="#084c38" />
+          <path d="M16 11L12.5 19H19.5L16 11Z" fill="#ffffff" />
+        </svg>
+        <span class="logo-text">Aptora</span>
+      </div>
+      <div class="invoice-title">Order Confirmed & Invoice Attached 📎</div>
+    </div>
+    
+    <div class="section-title">Account Details</div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background: #FAF9F6; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; margin-bottom: 30px; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 8px 10px; font-size: 13px; width: 50%; vertical-align: top; border: none;">
+          <div style="color: #64748B; font-weight: 600; margin-bottom: 2px;">Customer Name</div>
+          <div style="color: #0F172A; font-weight: 800;">Valued Member</div>
+        </td>
+        <td style="padding: 8px 10px; font-size: 13px; width: 50%; vertical-align: top; border: none;">
+          <div style="color: #64748B; font-weight: 600; margin-bottom: 2px;">Customer Email</div>
+          <div style="color: #0F172A; font-weight: 800;">agentforge29@gmail.com</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 16px 10px 8px 10px; font-size: 13px; width: 50%; vertical-align: top; border: none;">
+          <div style="color: #64748B; font-weight: 600; margin-bottom: 2px;">Transaction ID</div>
+          <div style="color: #0F172A; font-weight: 800; font-family: monospace;">APT-781964-984921</div>
+        </td>
+        <td style="padding: 16px 10px 8px 10px; font-size: 13px; width: 50%; vertical-align: top; border: none;">
+          <div style="color: #64748B; font-weight: 600; margin-bottom: 2px;">Billing Date</div>
+          <div style="color: #0F172A; font-weight: 800;">27 Sep 2026, 06:09 PM</div>
+        </td>
+      </tr>
+    </table>
 
-    <div class="logo-container" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-        <rect width="32" height="32" rx="10" fill="#6D4AFF"/>
-        <path d="M17 6L8 18H15L13 26L24 13H16L17 6Z" fill="white"/>
-      </svg>
-      <span class="logo" style="font-size: 26px; font-weight: 900; color: #111827;">Exam<span class="logo-ai" style="color: #6D4AFF;">Forge-AI</span></span>
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th style="text-align: right; width: 100px;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Aptora Basic Subscription
+            <div style="font-size: 11px; color: #64748B; font-weight: 500; margin-top: 4px;">
+              Full features unlocked for selected billing cycle (monthly)
+            </div>
+          </td>
+          <td style="text-align: right; font-weight: 800; color: #0F172A;">₹299</td>
+        </tr>
+        <tr>
+          <td style="color: #64748B; font-weight: 600;">GST (18% Integrated Rate)</td>
+          <td style="text-align: right; color: #64748B; font-weight: 600;">₹54</td>
+        </tr>
+        <tr class="total-row">
+          <td style="border-top: 2px solid #084C38; padding-top: 15px; color: #084C38;">Total Amount Paid</td>
+          <td style="text-align: right; border-top: 2px solid #084C38; padding-top: 15px; font-size: 18px; color: #084C38;">₹353</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background: #ECFDF5; border: 1px solid #D1FAE5; border-radius: 16px; padding: 16px; font-size: 12.5px; color: #084C38; font-weight: 700; text-align: center; margin-bottom: 20px;">
+      📎 Your official PDF Tax Invoice has been generated and attached to this email.
     </div>
-    
-    <div class="cheer-badge">🎉 Celebration! Success Intercepted!</div>
-    
-    <h1>Welcome, Rucha Patle!</h1>
-    
-    <div class="cheer-message">
-      You are officially locked and loaded to crack your dream exams! 🚀
-    </div>
-    
-    <p class="body-text">
-      We are absolutely thrilled to welcome you to the ExamForge AI community. Your personalized AI companion is ready to transform your study materials into interactive summaries, practice question sets, and custom mock tests. 
-      <br><br>
-      To finalize your verification and jump straight into your dashboard, copy this secure OTP code:
-    </p>
-    
-    <div class="otp-wrapper">
-      <div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">3</div><div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">9</div><div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">4</div><div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">6</div><div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">8</div><div style="display: inline-block; width: 44px; height: 52px; line-height: 52px; text-align: center; background: #F9FAFB; border: 2px solid #6D4AFF; border-radius: 12px; font-size: 28px; font-weight: 800; color: #6D4AFF; margin: 0 5px; box-shadow: 0 4px 10px rgba(109,74,255,0.08);">6</div>
-    </div>
-    
-    <p style="font-size: 13px; color: #6B7280; margin-bottom: 0; font-weight: 500;">
-      This code is valid for 5 minutes. If you did not request this verification, you can safely ignore this mail.
-    </p>
-    
+
     <div class="footer">
-      &copy; 2026 ExamForge AI. Smart educational ecosystems powered by Artificial Intelligence.
+      Thank you for your business! Your support powers the intelligence of the Aptora ecosystem. 
+      If you did not make this purchase, please contact our support desk immediately at agentforge29@gmail.com.
+      <br><br>
+      &copy; 2026 Aptora. All rights reserved.
     </div>
   </div>
 </body>

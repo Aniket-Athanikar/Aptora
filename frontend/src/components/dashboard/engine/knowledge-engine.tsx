@@ -446,7 +446,7 @@
 //       const mockFile = new File([""], "Coaching_Physics_Handwritten_Notes.PNG", { type: "image/png" });
 //       handleFilesChosen([mockFile]);
 //     } catch {
-//       alert("Please grant clipboard reading permissions to ExamForge AI.");
+//       alert("Please grant clipboard reading permissions to Aptora.");
 //     }
 //   };
 

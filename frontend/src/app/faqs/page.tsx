@@ -1,68 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle, MessageCircleQuestion } from "lucide-react";
+import {
+  ChevronDown,
+  HelpCircle,
+  MessageCircleQuestion,
+  Search,
+  X,
+  Sparkles,
+  BookOpen,
+  CreditCard,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
+import { LANDING_FAQS, FAQItem } from "@/components/landing/sections/FAQ";
+import Link from "next/link";
 
-const faqs = [
-  {
-    question: "What is ExamForge AI?",
-    answer:
-      "ExamForge AI is an AI-powered platform for exam preparation that helps students select smart notes, generate MCQs, build flashcards, and take mock tests — all from their own study material. Select any content and let AI transform it into effective learning tools.",
-  },
-  {
-    question: "Which exams does ExamForge support?",
-    answer:
-      "ExamForge supports a wide range of competitive exams including SSC, UPSC, Banking (IBPS, SBI), Engineering (MBA, GATE), Teaching (CTET, TET), State PSC, and many more. Our AI adapts to any exam pattern and syllabus.",
-  },
-  {
-    question: "Can I upload handwritten notes?",
-    answer:
-      "Yes! Our advanced OCR technology can process both handwritten and printed materials. Simply select a photo or scan of your notes, and ExamForge will digitize, organize, and generate study resources from them automatically.",
-  },
-  {
-    question: "Is my data safe?",
-    answer:
-      "Absolutely. We use enterprise-grade encryption (AES-256) for all data at rest and in transit. Your study materials and personal information are protected by strict privacy policies, and we never share your data with third parties.",
-  },
-  {
-    question: "How are questions generated?",
-    answer:
-      "Our AI analyzes your selected content using advanced Natural Language Processing (NLP) to understand context, key concepts, and relationships. It then generates contextually relevant multiple-choice questions, fill-in-the-blanks, and short-answer questions with varying difficulty levels.",
-  },
-  {
-    question: "Can I download notes and tests?",
-    answer:
-      "Yes, PDF export is available for notes, flashcards, and test papers. You can download them for offline study or print them out. Premium users also get access to beautifully formatted exports with custom branding.",
-  },
-  {
-    question: "What payment methods are accepted?",
-    answer:
-      "We accept UPI, Credit/Debit cards (Visa, Mastercard, RuPay), Net Banking from all major banks, and popular digital wallets like Paytm, PhonePe, and Google Pay. All transactions are secured with SSL encryption.",
-  },
-  {
-    question: "Do you offer refunds?",
-    answer:
-      "Yes, we offer a 30-day money-back guarantee on all paid plans. If you're not satisfied with ExamForge AI for any reason, simply contact our support team within 30 days of purchase for a full refund — no questions asked.",
-  },
-];
+const categories = ["All", "General", "AI & Prep Engine", "Billing & Plans", "Security"];
+
+const categoryIcons: Record<string, React.ReactNode> = {
+  All: <Sparkles className="w-3.5 h-3.5" />,
+  General: <BookOpen className="w-3.5 h-3.5" />,
+  "AI & Prep Engine": <Zap className="w-3.5 h-3.5" />,
+  "Billing & Plans": <CreditCard className="w-3.5 h-3.5" />,
+  Security: <ShieldCheck className="w-3.5 h-3.5" />,
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.07 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
 };
 
 export default function FAQsPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredFaqs = useMemo(() => {
+    return LANDING_FAQS.filter((faq) => {
+      const matchesCategory =
+        selectedCategory === "All" || faq.category === selectedCategory;
+      const matchesSearch =
+        faq.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        faq.a.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [searchQuery, selectedCategory]);
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -71,130 +64,201 @@ export default function FAQsPage() {
   return (
     <PageLayout
       title="Frequently Asked Questions"
-      description="Everything you need to know about ExamForge AI. Can't find what you're looking for? Contact our support team."
+      description="Everything you need to know about Aptora's AI-powered exam preparation platform. Can't find what you're looking for? Reach out to our 24/7 support team."
       breadcrumb={[{ label: "FAQs", href: "/faqs" }]}
     >
-      <div className="layout-container max-w-[1320px] px-4 mx-auto">
-        {/* Section Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-center mb-14"
-        >
-          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
-            Got Questions?
-          </span>
-          <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
-            We&apos;ve Got Answers
-          </h2>
-          <p className="mt-3 text-neutral-500 font-semibold max-w-xl mx-auto">
-            Browse through our most commonly asked questions below
-          </p>
-        </motion.div>
-
-        {/* FAQ Accordion */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-3xl mx-auto space-y-4"
-        >
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            return (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className={`bg-white/70 backdrop-blur-xl border rounded-[20px] shadow-md transition-all duration-300 overflow-hidden ${
-                  isOpen
-                    ? "border-emerald-500/30 shadow-lg shadow-emerald-500/5"
-                    : "border-[#ECECEC] hover:border-emerald-500/20 hover:shadow-lg"
-                }`}
+      <div className="max-w-[1100px] mx-auto">
+        
+        {/* Search & Category Filter Section */}
+        <div className="mb-12 space-y-6">
+          {/* Search Box */}
+          <div className="relative max-w-2xl mx-auto">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <Search className="w-5 h-5 text-[#084c38]" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search questions or keywords (e.g. mock tests, syllabus, cancellation)..."
+              className="w-full pl-12 pr-10 py-4 rounded-2xl bg-white border border-slate-200 text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:border-[#084c38] focus:ring-4 focus:ring-[#084c38]/10 transition-all shadow-sm"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600"
               >
-                {/* Question Button */}
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
                 <button
-                  onClick={() => toggle(index)}
-                  className="w-full flex items-center justify-between gap-4 p-6 text-left cursor-pointer group"
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setOpenIndex(0);
+                  }}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#084c38] text-white shadow-sm shadow-[#084c38]/20"
+                      : "bg-white text-slate-600 hover:bg-[#ecfdf5] hover:text-[#084c38] border border-slate-200"
+                  }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
-                        isOpen
-                          ? "bg-emerald-600 text-white"
-                          : "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                      }`}
-                    >
-                      <MessageCircleQuestion className="w-5 h-5" />
-                    </div>
-                    <h3
-                      className={`text-base font-bold transition-colors duration-300 ${
-                        isOpen ? "text-emerald-600" : "text-neutral-900 group-hover:text-emerald-600"
-                      }`}
-                    >
-                      {faq.question}
-                    </h3>
-                  </div>
-
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" as const }}
-                    className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
-                      isOpen
-                        ? "bg-emerald-600 text-white"
-                        : "bg-neutral-100 text-neutral-400"
-                    }`}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </motion.div>
+                  {categoryIcons[cat]}
+                  <span>{cat}</span>
                 </button>
+              );
+            })}
+          </div>
+        </div>
 
-                {/* Answer */}
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: "easeInOut" as const }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 pl-20">
-                        <p className="text-sm text-neutral-600 font-medium leading-relaxed">
-                          {faq.answer}
-                        </p>
+        {/* FAQ Accordion List */}
+        {filteredFaqs.length > 0 ? (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-4 max-w-3xl mx-auto"
+          >
+            {filteredFaqs.map((faq, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  className={`bg-white border rounded-2xl shadow-xs transition-all duration-300 overflow-hidden ${
+                    isOpen
+                      ? "border-[#084c38]/40 shadow-md shadow-[#084c38]/5"
+                      : "border-slate-200 hover:border-slate-300"
+                  }`}
+                >
+                  {/* Question Header */}
+                  <button
+                    onClick={() => toggle(index)}
+                    className="w-full flex items-center justify-between gap-4 p-6 text-left cursor-pointer group"
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                          isOpen
+                            ? "bg-[#084c38] text-white"
+                            : "bg-[#ecfdf5] text-[#084c38] border border-[#d1fae5] group-hover:bg-[#084c38] group-hover:text-white"
+                        }`}
+                      >
+                        <MessageCircleQuestion className="w-5 h-5" />
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+                      <div>
+                        <h3
+                          className={`text-base font-bold transition-colors duration-300 ${
+                            isOpen ? "text-[#084c38]" : "text-slate-900 group-hover:text-[#084c38]"
+                          }`}
+                        >
+                          {faq.q}
+                        </h3>
+                        {faq.category && (
+                          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                            {faq.category}
+                          </span>
+                        )}
+                      </div>
+                    </div>
 
-        {/* Still have questions CTA */}
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                        isOpen
+                          ? "bg-[#084c38] text-white rotate-180"
+                          : "bg-slate-100 text-slate-400 group-hover:text-slate-700"
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+
+                  {/* Answer */}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" as const }}
+                        className="overflow-hidden border-t border-slate-100"
+                      >
+                        <div className="px-6 pb-6 pt-4 pl-20">
+                          <p className="text-sm text-slate-600 font-normal leading-relaxed">
+                            {faq.a}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 max-w-xl mx-auto px-6">
+            <HelpCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-slate-900 mb-1">No matching questions found</h3>
+            <p className="text-slate-500 text-sm mb-6">
+              We couldn&apos;t find any answers matching &quot;{searchQuery}&quot;. Try adjusting your search term or category filter.
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("All");
+              }}
+              className="px-5 py-2.5 rounded-xl bg-[#ecfdf5] text-[#084c38] font-bold text-xs hover:bg-[#d1fae5] transition-colors border border-[#d1fae5]"
+            >
+              Reset Filters
+            </button>
+          </div>
+        )}
+
+        {/* Still Have Questions Box */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-center mt-16"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center mt-16 max-w-2xl mx-auto"
         >
-          <div className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-10 shadow-lg max-w-2xl mx-auto">
-            <HelpCircle className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-neutral-900 mb-2">
-              Still have questions?
-            </h3>
-            <p className="text-neutral-500 font-medium text-sm mb-6">
-              Can&apos;t find the answer you&apos;re looking for? Our support team is here to help.
-            </p>
-            <a
-              href="/help"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all border-none"
-            >
-              Visit Help Center
-            </a>
+          <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ecfdf5] rounded-bl-full -z-0 pointer-events-none" />
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-[#ecfdf5] border border-[#d1fae5] flex items-center justify-center mx-auto mb-4 text-[#084c38]">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-extrabold text-slate-900 mb-2">
+                Still have questions?
+              </h3>
+              <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto">
+                Can&apos;t find the answer you&apos;re looking for? Our student support team is here to help 24/7.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 bg-[#084c38] hover:bg-[#059669] text-white font-bold px-6 py-3 rounded-xl shadow-md shadow-[#084c38]/20 transition-all text-xs"
+                >
+                  Contact Support
+                </Link>
+                <Link
+                  href="/help"
+                  className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-6 py-3 rounded-xl transition-all text-xs"
+                >
+                  Help Center
+                </Link>
+              </div>
+            </div>
           </div>
         </motion.div>
+
       </div>
     </PageLayout>
   );

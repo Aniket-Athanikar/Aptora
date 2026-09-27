@@ -1,175 +1,91 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import Link from "next/link";
-import { Star, Quote } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
-import SectionHeading from "@/components/ui/SectionHeading";
-import GlowButton from "@/components/ui/GlowButton";
+import React from "react";
+import { motion } from "framer-motion";
+import { Quote, Sparkles } from "lucide-react";
 
-// 3D Tilt Wrapper Component for Deep Logic Hover Mechanics
-function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
-  const xSpring = useSpring(x, springConfig);
-  const ySpring = useSpring(y, springConfig);
-
-  const rotateX = useTransform(ySpring, [-0.5, 0.5], [10, -10]); // Slightly softer tilt for reading
-  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-10, 10]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = (e.clientX - rect.left) / width - 0.5;
-    const mouseY = (e.clientY - rect.top) / height - 0.5;
-
-    x.set(mouseX);
-    y.set(mouseY);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative cursor-pointer group ${className}`}
-    >
-      {children}
-    </motion.div>
-  );
+interface TestimonialItem {
+  name: string;
+  exam: string;
+  quote: string;
+  role: string;
 }
 
 export default function Testimonials() {
-  const feedback = [
+  const testimonials: TestimonialItem[] = [
     {
-      name: "Rahul Kumar",
-      badge: "SSC CGL 2025 Ranker",
-      review: "ExamForge AI changed my preparation completely. The AI notes and daily practice helped me crack SSC CGL in my first attempt!",
-      stars: 5,
-      avatar: "R",
+      name: "UPSC Aspirant",
+      exam: "Civil Services Examination",
+      role: "Verified Aspirant",
+      quote: "The personalized daily planner transformed how I cover Laxmikanth and Spectrum. Automatically adjusting missed chapters kept my prep completely stress-free.",
     },
     {
-      name: "Priya Sharma",
-      badge: "UPSC Aspirant",
-      review: "The AI tutor is like having a personal teacher 24x7. I love how it explains everything from my own textbooks and uploads.",
-      stars: 5,
-      avatar: "P",
+      name: "SSC CGL Candidate",
+      exam: "SSC CGL Tier 1 & 2",
+      role: "Verified Aspirant",
+      quote: "The timed mock test analytics identified my exact weak areas in Quantitative Aptitude. My sectional speed improved significantly within 3 weeks.",
     },
     {
-      name: "Amit Verma",
-      badge: "Bank PO Aspirant",
-      review: "Best platform for practice and mock tests. The analytics helped me identify my weak areas and improve my score by 20%.",
-      stars: 5,
-      avatar: "A",
+      name: "Banking Aspirant",
+      exam: "SBI PO & IBPS Mains",
+      role: "Verified Aspirant",
+      quote: "Aptora's AI note summaries allowed me to revise financial awareness and reasoning puzzles in half the time. The spaced recall flashcards are top-tier.",
     },
   ];
 
-  // Quadrupled to ensure the marquee has enough length to never show a blank gap during the 50% loop reset
-  const extendedFeedback = [...feedback, ...feedback, ...feedback, ...feedback];
-
   return (
-    <section id="testimonials" className="py-20 bg-transparent relative border-t border-[#ECECEC] overflow-hidden perspective-[1200px]">
+    <section className="py-24 md:py-32 bg-white relative z-10 border-t border-slate-200/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Ambient Animated Background Rings */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 select-none overflow-hidden flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360, scale: [1, 1.05, 1] }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          className="absolute w-[800px] h-[800px] rounded-full border border-dashed border-emerald-500/15"
-        />
-      </div>
+        {/* Section Header */}
+        <div className="max-w-3xl mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ecfdf5] border border-[#d1fae5] text-[#084c38] text-xs font-extrabold uppercase tracking-wider mb-4 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Student Experiences</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-display">
+            Real preparation requires the right system
+          </h2>
+          <p className="mt-4 text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+            See how aspirants across India use Aptora&apos;s AI planning engine to bring structure to their competitive exam journey
+          </p>
+        </div>
 
-      <div className="layout-container max-w-[1320px] px-4 mx-auto relative z-10 mb-12">
-        <SectionHeading
-          badge="Testimonials"
-          title="What Students Say About"
-          gradientTitle="Us"
-          description="Real stories from real toppers who cracked their dream exams."
-        />
-      </div>
+        {/* Testimonials Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              className="p-8 rounded-3xl bg-[#FAF9F6] border border-slate-200/90 flex flex-col justify-between hover:border-[#084c38]/40 hover:shadow-md transition-all group"
+            >
+              <div>
+                <Quote className="w-8 h-8 text-[#084c38] mb-4 opacity-40 group-hover:opacity-70 transition-opacity" />
+                <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-6 font-normal italic">
+                  &quot;{item.quote}&quot;
+                </p>
+              </div>
 
-      {/* Framer Motion Auto-Carousel Wrapper */}
-      <div className="relative w-full flex overflow-hidden group py-8">
-
-        {/* Left and Right Gradient Masks for the vignette fade effect */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-r from-[var(--background)] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-48 bg-gradient-to-l from-[var(--background)] to-transparent z-20 pointer-events-none" />
-
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            ease: "linear",
-            duration: 60, // Slower speed for comfortable reading of text
-            repeat: Infinity
-          }}
-          className="flex gap-6 md:gap-8 px-4 md:px-8 w-max hover:[animation-play-state:paused]"
-        >
-          {extendedFeedback.map((item, idx) => (
-            <div key={idx} className="w-[320px] sm:w-[380px] flex-shrink-0">
-              <TiltCard className="h-full">
-                <GlassCard
-                  className="relative flex flex-col justify-between p-8 bg-[var(--surface)]/70 backdrop-blur-xl border-white/20 rounded-[32px] min-h-[240px] shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.15)] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden"
-                >
-                  {/* Decorative Background Quote Icon */}
-                  <Quote className="absolute top-6 right-6 w-16 h-16 text-emerald-500/5 -z-10 transform -scale-x-100" />
-
-                  <div style={{ transform: "translateZ(30px)" }}>
-                    {/* Stars */}
-                    <div className="flex gap-1 mb-5">
-                      {[...Array(item.stars)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B] drop-shadow-sm" />
-                      ))}
-                    </div>
-                    {/* Review Text */}
-                    <p className="text-sm text-neutral-600 font-semibold leading-relaxed">
-                      &ldquo;{item.review}&rdquo;
-                    </p>
-                  </div>
-
-                  {/* Profile Section with high Z-Depth */}
-                  <div
-                    style={{ transform: "translateZ(50px)" }}
-                    className="flex items-center gap-4 mt-8 pt-5 border-t border-[#ECECEC]/60"
-                  >
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white font-black flex items-center justify-center text-lg shadow-lg shadow-emerald-500/20">
-                      {item.avatar}
-                    </div>
-                    <div>
-                      <h4 className="font-extrabold text-neutral-900 text-sm leading-tight group-hover:text-emerald-600 transition-colors duration-300">
-                        {item.name}
-                      </h4>
-                      <span className="text-[10px] text-neutral-500 font-bold mt-1 block uppercase tracking-wider">
-                        {item.badge}
-                      </span>
-                    </div>
-                  </div>
-                </GlassCard>
-              </TiltCard>
-            </div>
+              <div className="pt-4 border-t border-slate-200/80 flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 font-display">
+                    {item.name}
+                  </h4>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {item.exam}
+                  </p>
+                </div>
+                <span className="px-2.5 py-1 rounded-full bg-[#ecfdf5] text-[#084c38] text-[10px] font-extrabold border border-[#d1fae5]">
+                  {item.role}
+                </span>
+              </div>
+            </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
 
-      {/* Success Stories CTA Button */}
-      <div className="flex justify-center mt-12 relative z-10">
-        <Link href="/success-stories">
-          <GlowButton variant="gradient" className="px-8 py-3.5 text-xs font-black" magnetic={false}>
-            Explore More Success Stories
-          </GlowButton>
-        </Link>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Gap Analysis API
+Aptora - Gap Analysis API
 """
 
 import logging

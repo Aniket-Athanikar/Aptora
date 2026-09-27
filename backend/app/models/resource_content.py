@@ -1,5 +1,5 @@
 """
-ExamForge AI - Resource Content Model
+Aptora - Resource Content Model
 """
 
 import datetime

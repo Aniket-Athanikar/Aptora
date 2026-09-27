@@ -1,5 +1,5 @@
 """
-ExamForge AI — Password Service
+Aptora — Password Service
 Handles secure password hashing, constant-time verification, strength validation,
 and password reset business rules.
 """

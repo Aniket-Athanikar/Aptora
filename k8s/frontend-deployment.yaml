@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: examforge
+  namespace: Aptora
   labels:
     app: frontend
 spec:
@@ -29,7 +29,7 @@ spec:
           name: http
         envFrom:
         - configMapRef:
-            name: examforge-config
+            name: Aptora-config
         resources:
           limits:
             cpu: 500m
@@ -42,7 +42,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
-  namespace: examforge
+  namespace: Aptora
 spec:
   type: ClusterIP
   ports:

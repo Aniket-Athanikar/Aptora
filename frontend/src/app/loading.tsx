@@ -34,13 +34,10 @@ export default function GlobalLoading() {
         {/* Brand Text */}
         <div className="flex flex-col items-center text-center space-y-2 w-full">
           <h2 className="text-xl font-extrabold tracking-tight text-slate-900 select-none">
-            ExamForge-{" "}
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              AI
-            </span>
+            Aptora
           </h2>
           <span className="text-xs text-slate-500 font-medium tracking-wide animate-pulse">
-            Syncing Study Cockpit...
+            Loading Preparation Dashboard...
           </span>
         </div>
       </div>

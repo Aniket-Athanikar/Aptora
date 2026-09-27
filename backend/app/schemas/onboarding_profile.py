@@ -1,5 +1,5 @@
 """
-ExamForge AI - Onboarding Profile Schemas
+Aptora - Onboarding Profile Schemas
 """
 
 from datetime import datetime

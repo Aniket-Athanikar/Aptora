@@ -1,5 +1,5 @@
 """
-ExamForge AI - Summary API
+Aptora - Summary API
 """
 
 import logging

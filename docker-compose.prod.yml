@@ -1,20 +1,17 @@
-version: '3.8'
-
 services:
   postgres:
-    ports: [] # Close host port bindings in production
+    ports: []
     environment:
-      POSTGRES_DB: examforgedb_prod
-      POSTGRES_USER: examforge_prod_admin
-    # In production, pass secret via environment variables or docker secrets
+      POSTGRES_DB: aptora_db_prod
+      POSTGRES_USER: aptora_prod_user
     restart: always
 
   redis:
-    ports: [] # Close host port bindings in production
+    ports: []
     restart: always
 
   qdrant:
-    ports: [] # Close host port bindings in production
+    ports: []
     restart: always
 
   backend:
@@ -23,8 +20,8 @@ services:
       dockerfile: ../docker/backend.Dockerfile
     environment:
       - ENV=production
-      - DB_NAME=examforgedb_prod
-      - DB_USER=examforge_prod_admin
+      - DB_NAME=aptora_db_prod
+      - DB_USER=aptora_prod_user
     ports: []
     restart: always
 
@@ -34,7 +31,7 @@ services:
       dockerfile: ../docker/frontend.Dockerfile
     ports: []
     environment:
-      - NEXT_PUBLIC_API_URL=https://api.examforge.ai
+      - NEXT_PUBLIC_API_URL=https://api.aptora.ai
     restart: always
 
   nginx:

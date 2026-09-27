@@ -1,5 +1,5 @@
 """
-ExamForge AI — Custom Exceptions
+Aptora — Custom Exceptions
 Application-specific exception classes.
 """
 from fastapi import HTTPException, status

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Retriever
+Aptora - Retriever
 
 Responsible for:
 1. Retrieving relevant chunks from the vector database

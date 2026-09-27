@@ -1,12 +1,12 @@
 """
-ExamForge AI - Metadata Extractor
+Aptora - Metadata Extractor
 ===================================
 
 Processing stage: DocumentProcessor → MetadataExtractor
 
 Extracts structured metadata from cleaned document text produced by
 TextCleaner.  The metadata powers search, library filters, AI retrieval,
-workspace UI, and analytics inside ExamForge.
+workspace UI, and analytics inside Aptora.
 
 All extraction is done with deterministic regex heuristics — no NLP
 libraries or external API calls are required.
@@ -494,7 +494,7 @@ class MetadataExtractor:
 
         This approach is fast, has zero dependencies, and is accurate enough
         for the typical mix of English / other-European academic documents
-        processed by ExamForge.
+        processed by Aptora.
 
         Parameters
         ----------

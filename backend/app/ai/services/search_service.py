@@ -1,4 +1,4 @@
-"""Canonical semantic retrieval contract for ExamForge RAG."""
+"""Canonical semantic retrieval contract for Aptora RAG."""
 
 from __future__ import annotations
 

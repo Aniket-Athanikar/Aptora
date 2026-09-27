@@ -324,7 +324,7 @@ function EngineInnerProvider({ children }: { children: React.ReactNode }) {
     const mindmap: MindMap = buildSampleMindMap(bookId, chapters);
     const analytics: BookAnalytics = buildSampleAnalytics(bookId, chapters, questions);
     const versions: BookVersion[] = [
-      { id: `${bookId}_v1`, versionNumber: 1, createdAt: new Date().toISOString(), createdBy: "developer@examforge.ai", changeSummary: "Initial upload.", sizeBytes: book.sizeBytes, pageCount: book.pageCount, qualityScore: 0, ocrConfidence: 0, isCurrent: true },
+      { id: `${bookId}_v1`, versionNumber: 1, createdAt: new Date().toISOString(), createdBy: "developer@Aptora.ai", changeSummary: "Initial upload.", sizeBytes: book.sizeBytes, pageCount: book.pageCount, qualityScore: 0, ocrConfidence: 0, isCurrent: true },
     ];
 
     dispatch({ type: "ADD_BOOK", book, chapters, formulas, flashcards, questions, mindmap, analytics, versions });

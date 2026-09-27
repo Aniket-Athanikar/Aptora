@@ -1,5 +1,5 @@
 """
-ExamForge AI - Study Lifestyle Model
+Aptora - Study Lifestyle Model
 
 Stores the user's study lifestyle preferences.
 One lifestyle record per workspace.

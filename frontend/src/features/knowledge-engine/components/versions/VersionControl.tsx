@@ -26,7 +26,7 @@ export function VersionControl() {
       id: nextId("v"),
       versionNumber: book.versionNumber + 1,
       createdAt: new Date().toISOString(),
-      createdBy: "developer@examforge.ai",
+      createdBy: "developer@Aptora.ai",
       changeSummary: "Manual snapshot with latest changes",
       sizeBytes: book.sizeBytes,
       pageCount: book.pageCount,

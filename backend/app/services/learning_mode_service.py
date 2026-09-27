@@ -1,5 +1,5 @@
 """
-ExamForge AI - Learning Mode Service
+Aptora - Learning Mode Service
 
 Handles CRUD operations for Learning Modes.
 """

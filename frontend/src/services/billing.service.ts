@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — Billing Service
+ * Aptora — Billing Service
  * API calls for billing endpoints.
  */
 import { apiClient } from "./api-client";

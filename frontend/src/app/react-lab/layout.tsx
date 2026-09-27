@@ -17,7 +17,7 @@ export default function ReactLabLayout({
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                ExamForge <span className="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono">React Lab</span>
+                Aptora <span className="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono">React Lab</span>
               </h1>
               <p className="text-xs text-slate-400">Enterprise High-Performance Architecture Showcase</p>
             </div>
@@ -50,7 +50,7 @@ export default function ReactLabLayout({
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-6 bg-slate-950/40 text-center text-xs text-slate-500">
-        <p>© 2026 ExamForge React Lab. Built for extreme scalability and optimized client-side interactions.</p>
+        <p>© 2026 Aptora React Lab. Built for extreme scalability and optimized client-side interactions.</p>
       </footer>
     </div>
   );

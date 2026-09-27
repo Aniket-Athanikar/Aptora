@@ -115,10 +115,10 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     set(state);
 
     // Save to requested LocalStorage keys
-    localStorage.setItem("examforge_progress", JSON.stringify(state));
-    localStorage.setItem("examforge_streak", JSON.stringify({ streak: 28, lastUpdated: new Date().toISOString() }));
-    localStorage.setItem("examforge_activity_history", JSON.stringify(history));
-    localStorage.setItem("examforge_analytics", JSON.stringify({
+    localStorage.setItem("Aptora_progress", JSON.stringify(state));
+    localStorage.setItem("Aptora_streak", JSON.stringify({ streak: 28, lastUpdated: new Date().toISOString() }));
+    localStorage.setItem("Aptora_activity_history", JSON.stringify(history));
+    localStorage.setItem("Aptora_analytics", JSON.stringify({
       weeklyHours: [4, 5, 3, 6, 4, 2, 5],
       monthlyProgress: [20, 35, 50, 72]
     }));
@@ -169,14 +169,14 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
 
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
-    localStorage.setItem("examforge_activity_history", JSON.stringify(updatedHistory));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_activity_history", JSON.stringify(updatedHistory));
   },
 
   incrementStreak: () => {
     const nextStreak = get().streak + 1;
     set({ streak: nextStreak });
-    localStorage.setItem("examforge_streak", JSON.stringify({ streak: nextStreak, lastUpdated: new Date().toISOString() }));
+    localStorage.setItem("Aptora_streak", JSON.stringify({ streak: nextStreak, lastUpdated: new Date().toISOString() }));
   },
 
   updateTaskCompletion: (subject, completed) => {
@@ -231,19 +231,19 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
 
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
-    localStorage.setItem("examforge_activity_history", JSON.stringify(activityHistory));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_activity_history", JSON.stringify(activityHistory));
   },
 
   loadFromLocalStorage: () => {
     try {
-      const storedProgress = localStorage.getItem("examforge_progress");
+      const storedProgress = localStorage.getItem("Aptora_progress");
       if (storedProgress) {
         const parsed = JSON.parse(storedProgress);
         set(parsed);
       }
 
-      const storedHistory = localStorage.getItem("examforge_activity_history");
+      const storedHistory = localStorage.getItem("Aptora_activity_history");
       if (storedHistory) {
         set({ activityHistory: JSON.parse(storedHistory) });
       } else {
@@ -260,10 +260,10 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
           history.push({ date: dateStr, hours, tasksCompleted, status });
         }
         set({ activityHistory: history });
-        localStorage.setItem("examforge_activity_history", JSON.stringify(history));
+        localStorage.setItem("Aptora_activity_history", JSON.stringify(history));
       }
 
-      const storedStreak = localStorage.getItem("examforge_streak");
+      const storedStreak = localStorage.getItem("Aptora_streak");
       if (storedStreak) {
         const parsed = JSON.parse(storedStreak);
         set({ streak: parsed.streak });
@@ -297,8 +297,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
 
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
-    localStorage.setItem("examforge_activity_history", JSON.stringify(activityHistory));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_activity_history", JSON.stringify(activityHistory));
   },
 
   addSubject: (subject) => {
@@ -308,7 +308,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       lastUpdated: new Date().toISOString()
     };
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
   },
 
   updateSubject: (name, updated) => {
@@ -333,7 +333,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       lastUpdated: new Date().toISOString()
     };
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
   },
 
   deleteSubject: (name) => {
@@ -343,6 +343,6 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       lastUpdated: new Date().toISOString()
     };
     set(newState);
-    localStorage.setItem("examforge_progress", JSON.stringify({ ...get(), ...newState }));
+    localStorage.setItem("Aptora_progress", JSON.stringify({ ...get(), ...newState }));
   }
 }));

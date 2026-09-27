@@ -24,7 +24,7 @@ export function GoalCard({ goal, onEdit }: GoalCardProps) {
   const toggleArchive = () => console.log("Archive clicked");
   const handleShare = () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(`My ExamForge Goal: Cracking the ${goal.targetExam} on ${goal.timeline.examDate}!`);
+      navigator.clipboard.writeText(`My Aptora Goal: Cracking the ${goal.targetExam} on ${goal.timeline.examDate}!`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

@@ -1,5 +1,5 @@
 /**
- * ExamForge AI — API Endpoint Constants
+ * Aptora — API Endpoint Constants
  * Single source of truth for all backend API URLs.
  */
 export const API_ENDPOINTS = {

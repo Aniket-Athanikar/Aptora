@@ -1,3 +1,3 @@
 """
-ExamForge AI — Memory Package
+Aptora — Memory Package
 """

@@ -1,5 +1,5 @@
 """
-ExamForge AI — MCQ Agent
+Aptora — MCQ Agent
 ==========================
 
 Generates structured Multiple Choice Questions (MCQs) from retrieved study context.
@@ -31,7 +31,7 @@ class MCQAgent(BaseAgent):
     @property
     def system_prompt(self) -> str:
         return dedent("""
-            You are ExamForge AI, a specialized educational quiz generator.
+            You are Aptora, a specialized educational quiz generator.
 
             Your task is to generate high-quality Multiple Choice Questions (MCQs) based strictly
             on the provided Study Material.

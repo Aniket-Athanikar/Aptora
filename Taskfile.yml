@@ -6,37 +6,52 @@ tasks:
       - task: help
 
   help:
-    desc: List all available tasks
+    desc: List all available Aptora automation tasks
     cmds:
       - task --list
 
   dev:
-    desc: Start local development stack (hot reloading)
+    desc: Start local development stack (Postgres, Redis, Qdrant, Backend, Frontend, Nginx)
     cmds:
-      - docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+      - docker compose -f docker-compose.yml up --build -d
 
   prod:
-    desc: Start production stack
+    desc: Start production stack with environment overrides
     cmds:
       - docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
   monitoring:
-    desc: Start monitoring stack (Prometheus & Grafana)
+    desc: Start Aptora monitoring stack (Prometheus, Grafana, Loki, Promtail)
     cmds:
       - docker compose -f docker-compose.monitoring.yml up -d
 
   down:
-    desc: Shutdown all active Docker containers
+    desc: Shutdown all active Aptora Docker containers
     cmds:
-      - docker compose down
+      - docker compose -f docker-compose.yml -f docker-compose.monitoring.yml down
+
+  status:
+    desc: Display status of all active Aptora containers
+    cmds:
+      - docker compose ps
+
+  logs:
+    desc: Stream logs from all Aptora containers
+    cmds:
+      - docker compose logs -f --tail=100
 
   test:
-    desc: Run pytest unit tests with coverage
+    desc: Run pytest unit tests for Aptora backend
     cmds:
       - cd backend && pytest tests/ -v --cov=app --cov-report=term-missing
 
+  test-frontend:
+    desc: Type check and test Aptora frontend
+    cmds:
+      - cd frontend && npm run build
+
   lint:
-    desc: Lint Python and Next.js projects
+    desc: Lint Python backend and Next.js frontend
     cmds:
       - cd backend && ruff check app/ && ruff format --check app/
       - cd frontend && npm run lint
@@ -45,6 +60,13 @@ tasks:
     desc: Run database head migrations
     cmds:
       - cd backend && alembic upgrade head
+
+  clean:
+    desc: Remove build artifacts, cache, and temporary docker state
+    cmds:
+      - cd frontend && npm run clean
+      - find . -type d -name "__pycache__" -exec rm -rf {} +
+      - find . -type d -name ".pytest_cache" -exec rm -rf {} +
 
   deploy:
     desc: Deploy to Kubernetes namespace

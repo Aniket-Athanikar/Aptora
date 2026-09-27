@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class ReasoningPipeline:
     """
-    Production-ready AI Reasoning Pipeline for ExamForge AI.
+    Production-ready AI Reasoning Pipeline for Aptora.
     Coordinated execution of intent detection, multi-query retrieval,
     context optimization, knowledge synthesis, LLM generation, and formatting.
     """
@@ -399,7 +399,7 @@ class ReasoningPipeline:
             history_text = "\n\nConversation History:\n" + "\n".join(turns)
 
         return f"""
-You are ExamForge AI, an expert educational tutor.
+You are Aptora, an expert educational tutor.
 
 Intent Focus: {intent.upper()}
 

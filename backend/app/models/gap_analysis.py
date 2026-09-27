@@ -1,5 +1,5 @@
 """
-ExamForge AI - Gap Analysis Model
+Aptora - Gap Analysis Model
 
 Stores subject-wise confidence and difficulty for a workspace.
 One workspace can have multiple subjects.

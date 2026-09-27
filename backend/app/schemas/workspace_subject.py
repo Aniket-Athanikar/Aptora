@@ -1,5 +1,5 @@
 """
-ExamForge AI - Workspace Subject Schemas
+Aptora - Workspace Subject Schemas
 """
 
 from datetime import datetime

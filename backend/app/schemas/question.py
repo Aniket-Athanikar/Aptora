@@ -1,5 +1,5 @@
 """
-ExamForge AI - Question Schemas
+Aptora - Question Schemas
 """
 
 from pydantic import BaseModel, Field

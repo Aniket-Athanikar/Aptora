@@ -1,5 +1,5 @@
 """
-ExamForge AI — JWT Service
+Aptora — JWT Service
 Access Token and Refresh Token generation, validation, rotation, and revocation blacklisting.
 """
 from typing import Any, Dict, Optional

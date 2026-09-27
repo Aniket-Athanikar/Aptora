@@ -52,7 +52,7 @@ class NumberedCanvas(canvas.Canvas):
         self.setFillColor(colors.HexColor("#64748b")) # slate-500
 
         # Header
-        self.drawString(54, 750, "ExamForge AI — Study Session Export")
+        self.drawString(54, 750, "Aptora — Study Session Export")
         self.setStrokeColor(colors.HexColor("#e2e8f0")) # slate-200
         self.setLineWidth(0.5)
         self.line(54, 742, 558, 742)
@@ -444,7 +444,7 @@ class ChatExportService:
             
             # Subtitle/Branding prefix
             flowables.append(Paragraph(
-                '<font size="12" color="#6366f1"><b>EXAMFORGE AI ASSISTANT</b></font>',
+                '<font size="12" color="#6366f1"><b>Aptora ASSISTANT</b></font>',
                 styles['body']
             ))
             
@@ -497,7 +497,7 @@ class ChatExportService:
             
             for msg in conversation.messages:
                 # Message Role Label
-                role_label = "STUDENT" if msg.role == "user" else "EXAMFORGE AI ASSISTANT"
+                role_label = "STUDENT" if msg.role == "user" else "Aptora ASSISTANT"
                 role_style = styles['role_user'] if msg.role == "user" else styles['role_assistant']
                 
                 # Keep the label and first few lines of content together to avoid orphan labels
@@ -543,7 +543,7 @@ class ChatExportService:
 
             # Update DB export status to completed
             export_rec.status = "completed"
-            export_rec.file_name = f"ExamForge_Export_{conversation.title.replace(' ', '_')[:50]}.pdf"
+            export_rec.file_name = f"Aptora_Export_{conversation.title.replace(' ', '_')[:50]}.pdf"
             export_rec.storage_path = str(file_path)
             export_rec.file_size = file_path.stat().st_size
             export_rec.completed_at = datetime.datetime.utcnow()

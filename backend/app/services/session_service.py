@@ -1,5 +1,5 @@
 """
-ExamForge AI — Session Service
+Aptora — Session Service
 Manages user HTTP cookies, active device sessions, multi-device tracking,
 and session revoking.
 """

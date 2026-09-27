@@ -57,7 +57,7 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_DB: test_examforgedb
+          POSTGRES_DB: test_Aptoradb
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_pass
         ports:
@@ -102,7 +102,7 @@ jobs:
         env:
           DB_HOST: localhost
           DB_PORT: 5432
-          DB_NAME: test_examforgedb
+          DB_NAME: test_Aptoradb
           DB_USER: test_user
           DB_PASSWORD: test_pass
           SECRET_KEY: ci-test-secret
@@ -166,7 +166,7 @@ jobs:
         env:
           SLACK_CHANNEL: devops-alerts
           SLACK_COLOR: ${{ needs.backend.result == 'success' && needs.frontend.result == 'success' && 'good' || 'danger' }}
-          SLACK_MESSAGE: "ExamForge AI CI Build: ${{ needs.backend.result == 'success' && needs.frontend.result == 'success' && 'PASSED' || 'FAILED' }}"
+          SLACK_MESSAGE: "Aptora CI Build: ${{ needs.backend.result == 'success' && needs.frontend.result == 'success' && 'PASSED' || 'FAILED' }}"
           SLACK_TITLE: CI Build Status
 
       - name: Discord Notification
@@ -175,4 +175,4 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           status: ${{ needs.backend.result == 'success' && needs.frontend.result == 'success' && 'success' || 'failure' }}
-          title: "ExamForge CI Build Status"
+          title: "Aptora CI Build Status"

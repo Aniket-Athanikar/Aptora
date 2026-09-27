@@ -1,5 +1,5 @@
 """
-ExamForge AI — Query Rewriter
+Aptora — Query Rewriter
 ==============================
 
 Generates 3 distinct, high-precision rewritten search queries for any user prompt.

@@ -1,5 +1,5 @@
 """
-ExamForge AI - Workspace Service
+Aptora - Workspace Service
 
 Service layer for managing workspaces, loading workspace documents, workspace statistics,
 subject libraries, and searching workspace resource libraries.

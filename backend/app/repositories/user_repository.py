@@ -1,5 +1,5 @@
 """
-ExamForge AI — User Repository
+Aptora — User Repository
 Handles data access logic for UserDb and UserProfileDb entities.
 Never commits transactions (commits/rollbacks are managed by services).
 """

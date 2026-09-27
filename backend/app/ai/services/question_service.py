@@ -1,5 +1,5 @@
 """
-ExamForge AI - Question Service
+Aptora - Question Service
 
 Responsible for:
 1. Retrieve relevant study material

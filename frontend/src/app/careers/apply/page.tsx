@@ -55,7 +55,7 @@ function JobApplyForm() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent pointer-events-none" />
         <div className="absolute bottom-6 left-6 md:left-8">
           <span className="text-xs font-black uppercase tracking-widest text-purple-200 block mb-1">
-            ExamForge Academy Recruitment
+            Aptora Academy Recruitment
           </span>
           <h2 className="text-xl md:text-2xl font-black text-white">
             Grow Your Tech Career

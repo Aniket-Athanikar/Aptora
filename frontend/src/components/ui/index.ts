@@ -9,6 +9,7 @@ export { Input } from "./input";
 export * from "./label";
 export { default as ScrollToTop } from "./ScrollToTop";
 export { default as SectionHeading } from "./SectionHeading";
+export { AptoraLogo } from "./AptoraLogo";
 export * from "./select";
 export * from "./separator";
 export * from "./skeleton";

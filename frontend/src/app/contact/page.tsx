@@ -60,18 +60,18 @@ const contactCards = [
   {
     icon: MapPin,
     title: "Address",
-    detail: "ExamForge AI, 3rd Floor, Bloak 21, Gandhi Chowk, Civil Line, Sangali, Maharastra, India",
+    detail: "Aptora, 3rd Floor, Bloak 21, Gandhi Chowk, Civil Line, Sangali, Maharastra, India",
     href: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3809.112674390326!2d74.56860000000001!3d16.8524!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc1230000000000%3A0x0!2sGandhi+Chowk%2C+Sangli!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin",
     color: "#F59E0B",
   },
 ];
 
 const socialLinks = [
-  { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/examforge" },
-  { icon: Twitter, label: "Twitter", href: "https://twitter.com/examforge" },
+  { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/Aptora" },
+  { icon: Twitter, label: "Twitter", href: "https://twitter.com/Aptora" },
   { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/s.o.n.u03" },
   { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/mrunal-chaudhari03" },
-  { icon: Youtube, label: "YouTube", href: "https://www.youtube.com/@examforge" },
+  { icon: Youtube, label: "YouTube", href: "https://www.youtube.com/@Aptora" },
   { icon: WhatsAppIcon, label: "WhatsApp 2", href: "https://wa.me/919970751798" },
 
 ];
@@ -302,7 +302,7 @@ export default function ContactPage() {
               Send us inquiries regarding institutional licenses, partnerships, or API setups.
             </p>
             <a
-              href="mailto:business@examforge.ai"
+              href="mailto:business@Aptora.ai"
               className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
             >
               Contact Business Team <ArrowRight className="w-4 h-4" />
