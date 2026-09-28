@@ -72,7 +72,7 @@ export default function FAQsPage() {
         {/* Search & Category Filter Section */}
         <div className="mb-12 space-y-6">
           {/* Search Box */}
-          <div className="relative max-w-2xl mx-auto">
+          <div className="relative max-w-2xl mx-auto rounded-3xl bg-white border-2 border-emerald-500/20 shadow-xl overflow-hidden glow-emerald">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
               <Search className="w-5 h-5 text-[#084c38]" />
             </div>
@@ -81,7 +81,7 @@ export default function FAQsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search questions or keywords (e.g. mock tests, syllabus, cancellation)..."
-              className="w-full pl-12 pr-10 py-4 rounded-2xl bg-white border border-slate-200 text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:border-[#084c38] focus:ring-4 focus:ring-[#084c38]/10 transition-all shadow-sm"
+              className="w-full pl-12 pr-10 py-4 rounded-3xl bg-white text-slate-900 text-sm font-semibold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#084c38]/20 transition-all"
             />
             {searchQuery && (
               <button
@@ -104,10 +104,10 @@ export default function FAQsPage() {
                     setSelectedCategory(cat);
                     setOpenIndex(0);
                   }}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black transition-all cursor-pointer ${
                     isActive
-                      ? "bg-[#084c38] text-white shadow-sm shadow-[#084c38]/20"
-                      : "bg-white text-slate-600 hover:bg-[#ecfdf5] hover:text-[#084c38] border border-slate-200"
+                      ? "bg-gradient-to-r from-[#084c38] to-[#059669] text-white shadow-md shadow-[#084c38]/20 scale-105"
+                      : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
                   }`}
                 >
                   {categoryIcons[cat]}
@@ -132,12 +132,14 @@ export default function FAQsPage() {
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  className={`bg-white border rounded-2xl shadow-xs transition-all duration-300 overflow-hidden ${
+                  className={`relative rounded-3xl bg-white border-2 transition-all duration-300 overflow-hidden ${
                     isOpen
-                      ? "border-[#084c38]/40 shadow-md shadow-[#084c38]/5"
-                      : "border-slate-200 hover:border-slate-300"
+                      ? "border-emerald-500/40 shadow-xl ring-2 ring-[#084c38]/10"
+                      : "border-emerald-500/20 hover:border-emerald-300 shadow-md"
                   }`}
                 >
+                  {/* Top Accent Line */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
                   {/* Question Header */}
                   <button
                     onClick={() => toggle(index)}

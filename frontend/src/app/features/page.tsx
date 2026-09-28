@@ -338,41 +338,40 @@ export default function FeaturesPage() {
                                                 const Icon = mod.icon;
                                                 return (
                                                     <Link href={`/features/${mod.slug}`} key={mod.id} className="block group">
-                                                        <GlassCard
-                                                            className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-[#ECECEC] hover:border-emerald-500/50 transition-all duration-300 bg-white/70 group-hover:-translate-y-1 relative overflow-hidden"
-                                                        >
+                                                        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 group-hover:-translate-y-1 h-full flex flex-col justify-between p-6">
+                                                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
                                                             <div>
-                                                                <div className="flex items-center justify-between mb-4">
+                                                                <div className="flex items-center justify-between mb-4 pt-1">
                                                                     <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">
                                                                         {mod.num}
                                                                     </span>
-                                                                    <span className="inline-block bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border border-emerald-100">
+                                                                    <span className="inline-block bg-emerald-100/70 text-emerald-800 text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-emerald-200/50">
                                                                         {mod.badge}
                                                                     </span>
                                                                 </div>
 
                                                                 <div className="flex items-center gap-3 mb-3">
-                                                                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:bg-emerald-50/80 transition-colors duration-300 shrink-0">
-                                                                        <Icon className="w-5 h-5 text-emerald-600" />
+                                                                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                                                                        <Icon className="w-5 h-5 text-white" />
                                                                     </div>
                                                                     <h4 className="text-sm font-black text-neutral-900 group-hover:text-emerald-600 transition-colors">
                                                                         {mod.title}
                                                                     </h4>
                                                                 </div>
 
-                                                                <p className="text-xs text-neutral-500 font-semibold leading-relaxed mb-4">
+                                                                <p className="text-xs text-neutral-600 font-semibold leading-relaxed mb-4">
                                                                     {mod.description}
                                                                 </p>
                                                             </div>
 
-                                                            <div className="border-t border-[#ECECEC] pt-4 mt-auto">
+                                                            <div className="border-t border-emerald-500/10 pt-4 mt-auto">
                                                                 <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest block mb-2">
                                                                     Capabilities
                                                                 </span>
                                                                 <ul className="space-y-2 mb-4">
                                                                     {mod.features.slice(0, 2).map((feat, fIdx) => (
-                                                                        <li key={fIdx} className="flex items-start gap-2 text-[10px] text-neutral-600 font-bold">
-                                                                            <Check className="w-3 h-3 text-emerald-500 shrink-0 mt-0.5" />
+                                                                        <li key={fIdx} className="flex items-start gap-2 text-[10px] text-neutral-700 font-bold">
+                                                                            <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                                                                             <span className="truncate">{feat}</span>
                                                                         </li>
                                                                     ))}
@@ -383,7 +382,7 @@ export default function FeaturesPage() {
                                                                     <ChevronRight className="w-3 h-3" />
                                                                 </div>
                                                             </div>
-                                                        </GlassCard>
+                                                        </div>
                                                     </Link>
                                                 );
                                             })}
@@ -400,13 +399,16 @@ export default function FeaturesPage() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
-                        className="flex flex-col items-center justify-center text-center mt-16 bg-gradient-to-r from-neutral-50 to-neutral-100/50 border border-[#ECECEC] p-10 rounded-[32px] max-w-4xl mx-auto"
+                        className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10 max-w-4xl mx-auto text-center mt-16"
                     >
-                        <BookOpenCheck className="w-10 h-10 text-emerald-600 mb-4" />
-                        <h3 className="text-lg font-black text-neutral-900 tracking-tight">
+                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-4 border border-emerald-200/60 shadow-inner">
+                            <BookOpenCheck className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-xl font-black text-neutral-900 tracking-tight">
                             Ready to Transform Your Study Material?
                         </h3>
-                        <p className="text-xs text-neutral-500 max-w-md mx-auto mt-2 font-medium mb-6">
+                        <p className="text-xs text-neutral-600 max-w-md mx-auto mt-2 font-medium mb-6">
                             Unlock grounded AI notes, dynamic question generating engines, previous year paper prediction indices, and custom revision modules today.
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-4">
@@ -415,7 +417,7 @@ export default function FeaturesPage() {
                                     Get Started Now
                                 </GlowButton>
                             </Link>
-                            <Link href="/how-it-works" className="group text-xs font-black text-neutral-600 hover:text-emerald-600 flex items-center gap-1 transition-colors">
+                            <Link href="/how-it-works" className="group text-xs font-black text-neutral-700 hover:text-emerald-600 flex items-center gap-1 transition-colors">
                                 See How It Works
                                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                             </Link>

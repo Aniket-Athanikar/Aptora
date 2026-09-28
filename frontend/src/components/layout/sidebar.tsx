@@ -43,7 +43,7 @@ export function Sidebar({
   setMobileOpen,
   openProfileModal: customOpenProfileModal,
 }: SidebarProps) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const { profile } = useProfile();
   const router = useRouter();
   const openProfileModal = () => {
@@ -262,10 +262,10 @@ export function Sidebar({
               <>
                 <div className="min-w-0 flex-1 text-left">
                   <p className="text-xs font-bold text-slate-900 truncate hover:text-[#084c38] transition cursor-pointer" onClick={openProfileModal}>
-                    {profile?.name || "Student User"}
+                    {profile?.name || user?.name || "Account User"}
                   </p>
                   <p className="text-[10px] text-slate-500 truncate font-medium">
-                    {profile?.email || "student@Aptora.ai"}
+                    {profile?.email || user?.email || ""}
                   </p>
                 </div>
                 <button
@@ -375,10 +375,10 @@ export function Sidebar({
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-slate-900 truncate">
-                      {profile?.name || "Student User"}
+                      {profile?.name || user?.name || "Account User"}
                     </p>
                     <p className="text-[10px] text-slate-500 truncate font-medium">
-                      {profile?.email || "student@Aptora.ai"}
+                      {profile?.email || user?.email || ""}
                     </p>
                   </div>
                 </div>

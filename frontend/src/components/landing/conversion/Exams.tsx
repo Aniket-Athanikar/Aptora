@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Layers, Target, Trophy, Award } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, Target, Trophy, Award, Sparkles } from "lucide-react";
 
 export default function Exams() {
   const examCategories = [
@@ -16,6 +16,8 @@ export default function Exams() {
       cta: "Explore UPSC",
       badge: "Premier Category",
       icon: Award,
+      color: "from-[#084c38] to-[#059669]",
+      badgeBg: "bg-emerald-50 text-[#084c38] border-emerald-200",
     },
     {
       id: "ssc",
@@ -26,6 +28,8 @@ export default function Exams() {
       cta: "Explore SSC CGL",
       badge: "Popular Category",
       icon: Target,
+      color: "from-blue-500 to-indigo-600",
+      badgeBg: "bg-blue-50 text-blue-900 border-blue-200",
     },
     {
       id: "banking",
@@ -36,6 +40,8 @@ export default function Exams() {
       cta: "Explore Banking",
       badge: "High Velocity",
       icon: Trophy,
+      color: "from-purple-500 to-pink-600",
+      badgeBg: "bg-purple-50 text-purple-900 border-purple-200",
     },
     {
       id: "railway",
@@ -46,6 +52,8 @@ export default function Exams() {
       cta: "Explore Railway",
       badge: "CBT Ready",
       icon: BookOpen,
+      color: "from-amber-500 to-orange-600",
+      badgeBg: "bg-amber-50 text-amber-900 border-amber-200",
     },
     {
       id: "state-psc",
@@ -56,23 +64,26 @@ export default function Exams() {
       cta: "Explore State PSC",
       badge: "State Specific",
       icon: Layers,
+      color: "from-teal-500 to-emerald-600",
+      badgeBg: "bg-teal-50 text-teal-900 border-teal-200",
     },
   ];
 
   return (
-    <section id="exams" className="py-24 md:py-32 bg-white">
+    <section id="exams" className="py-24 md:py-32 bg-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
-          <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-3">
-            Exam Discovery
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-display">
-            Prepare for the exam you're targeting
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#084c38] text-xs font-black uppercase tracking-widest mb-4 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <span>EXAM DISCOVERY</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight font-display">
+            Prepare for the exam you&apos;re targeting
           </h2>
-          <p className="mt-4 text-slate-600 text-lg leading-relaxed">
-            Aptora provides dedicated preparation modules tailored to the unique syllabus and exam pattern of India's major competitive examinations
+          <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
+            Aptora provides dedicated preparation modules tailored to the unique syllabus and exam pattern of India&apos;s major competitive examinations
           </p>
         </div>
 
@@ -83,23 +94,27 @@ export default function Exams() {
             return (
               <motion.div
                 key={exam.id}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                whileHover={{ y: -6 }}
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="p-8 rounded-2xl bg-[#FAF9F6] border border-slate-200 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition-all group"
+                className="relative rounded-3xl bg-white border-2 border-emerald-500/20 shadow-xl p-8 flex flex-col justify-between overflow-hidden hover:border-emerald-400 hover:shadow-2xl transition-all duration-300 group"
               >
+                {/* Top Accent Gradient Bar */}
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emerald-700 group-hover:bg-emerald-700 group-hover:text-white transition-colors">
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-center justify-between mb-6 pt-1">
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${exam.color} text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-all`}>
+                      <Icon className="w-6 h-6" />
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-xs font-semibold">
+                    <span className={`px-3 py-1 rounded-full border text-xs font-black font-display ${exam.badgeBg}`}>
                       {exam.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 font-display mb-3">
+                  <h3 className="text-2xl font-black text-slate-900 font-display mb-3 group-hover:text-[#084c38] transition-colors">
                     {exam.title}
                   </h3>
 
@@ -108,14 +123,14 @@ export default function Exams() {
                   </p>
 
                   <div className="mb-6">
-                    <p className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2.5">
                       Key Subjects
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {exam.subjects.map((sub, sIdx) => (
                         <span
                           key={sIdx}
-                          className="px-2.5 py-0.5 rounded bg-white border border-slate-200 text-slate-700 text-xs font-medium"
+                          className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80 text-slate-800 text-xs font-bold group-hover:border-emerald-300 transition-colors"
                         >
                           {sub}
                         </span>
@@ -124,16 +139,16 @@ export default function Exams() {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 font-medium">
+                <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-bold">
                     {exam.tools.length} Prep Tools Included
                   </span>
                   <Link
                     href="/signup"
-                    className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors group-hover:translate-x-0.5 transition-transform"
+                    className="inline-flex items-center gap-1.5 text-xs font-black text-[#084c38] hover:text-[#059669] transition-colors group/link"
                   >
                     <span>{exam.cta}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
                   </Link>
                 </div>
               </motion.div>

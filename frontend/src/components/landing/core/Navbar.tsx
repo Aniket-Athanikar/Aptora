@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2 } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, Compass, Trash2, Sparkles, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -40,7 +40,7 @@ export default function Navbar() {
   const { user, isAuthenticated, login, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState(pathname || "/");
+  const [activeLink, setActiveLink] = useState("/");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -133,41 +133,48 @@ export default function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 border-b",
         scrolled
-          ? "bg-white/95 backdrop-blur-md border-slate-200/80 shadow-xs py-3.5"
+          ? "bg-white/90 backdrop-blur-md border-slate-200/80 shadow-xs py-3.5"
           : "bg-transparent border-transparent py-5"
       )}
+      suppressHydrationWarning
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Left: Aptora Brand Emblem */}
         <AptoraLogo size="md" />
 
         {/* Center: Nav Links */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => {
-                setActiveLink(link.href);
-                setUserMenuOpen(false);
-              }}
-              className={cn(
-                "text-sm font-semibold transition-colors py-1.5 relative",
-                activeLink === link.href
-                  ? "text-[#084c38] font-bold"
-                  : "text-slate-700 hover:text-[#084c38]"
-              )}
-            >
-              {link.name}
-              {activeLink === link.href && (
-                <motion.div
-                  layoutId="active-nav-indicator"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#084c38] rounded-full"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </Link>
-          ))}
+        <nav
+          className="hidden lg:flex items-center gap-2 bg-slate-100/60 p-1.5 rounded-full border border-slate-200/60 backdrop-blur-xs"
+          suppressHydrationWarning
+        >
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => {
+                  setActiveLink(link.href);
+                  setUserMenuOpen(false);
+                }}
+                className={cn(
+                  "text-xs font-bold transition-all px-4 py-2 rounded-full relative z-10",
+                  isActive
+                    ? "text-[#084c38]"
+                    : "text-slate-600 hover:text-slate-900"
+                )}
+                suppressHydrationWarning
+              >
+                {link.name}
+                {isActive && (
+                  <span
+                    className="absolute inset-0 bg-white rounded-full shadow-xs border border-slate-200/60 -z-10 transition-all duration-200"
+                  />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right: User Actions */}
@@ -176,18 +183,18 @@ export default function Navbar() {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:border-slate-300 transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer shadow-2xs hover:shadow-xs"
                 aria-expanded={userMenuOpen}
                 aria-haspopup="true"
               >
-                <div className="w-7 h-7 rounded-full overflow-hidden border border-slate-200 flex items-center justify-center bg-slate-100 shrink-0">
+                <div className="w-7 h-7 rounded-full overflow-hidden border border-emerald-200 flex items-center justify-center bg-slate-100 shrink-0">
                   <img
                     src={userAvatarUrl}
                     alt={userDisplayName || "User Profile"}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="text-xs font-bold text-slate-800 max-w-[120px] truncate">
+                <span className="text-xs font-bold text-slate-800 max-w-[120px] truncate font-display">
                   {userDisplayName}
                 </span>
                 <ChevronDown
@@ -206,11 +213,11 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200/90 rounded-2xl shadow-xl p-2.5 z-50 space-y-1"
+                    className="absolute right-0 top-full mt-2 w-64 bg-white/95 border border-slate-200/90 rounded-2xl shadow-xl p-2.5 z-50 space-y-1 backdrop-blur-md"
                   >
                     {/* User profile card in dropdown */}
-                    <div className="p-3 bg-[#FAF9F6] rounded-xl border border-slate-100 mb-1.5 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 shrink-0 shadow-2xs">
+                    <div className="p-3 bg-gradient-to-r from-emerald-50/80 to-teal-50/50 rounded-xl border border-emerald-100 mb-1.5 flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full overflow-hidden border border-emerald-300 shrink-0 shadow-2xs">
                         <img
                           src={userAvatarUrl}
                           alt={userDisplayName}
@@ -218,7 +225,7 @@ export default function Navbar() {
                         />
                       </div>
                       <div className="truncate flex-1">
-                        <p className="text-xs font-bold text-slate-900 truncate font-display">{userDisplayName}</p>
+                        <p className="text-xs font-extrabold text-slate-900 truncate font-display">{userDisplayName}</p>
                         <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                       </div>
                     </div>
@@ -228,7 +235,7 @@ export default function Navbar() {
                         setUserMenuOpen(false);
                         router.push("/profile");
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
                     >
                       <User className="w-4 h-4 text-slate-400 group-hover:text-[#084c38] transition-colors" />
                       <span>My Profile</span>
@@ -239,7 +246,7 @@ export default function Navbar() {
                         setUserMenuOpen(false);
                         router.push("/dashboard");
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-[#ecfdf5] hover:text-[#084c38] transition-all text-left cursor-pointer group"
                     >
                       <Compass className="w-4 h-4 text-slate-400 group-hover:text-[#084c38] transition-colors" />
                       <span>Dashboard</span>
@@ -247,7 +254,7 @@ export default function Navbar() {
 
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-all text-left cursor-pointer"
                     >
                       <LogOut className="w-4 h-4 text-rose-400" />
                       <span>Logout</span>
@@ -258,7 +265,7 @@ export default function Navbar() {
                         setUserMenuOpen(false);
                         setDeleteModalOpen(true);
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all border-t border-slate-100 mt-1.5 pt-2.5 text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-all border-t border-slate-100 mt-1.5 pt-2.5 text-left cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4 text-rose-500" />
                       <span>Delete Account</span>
@@ -270,7 +277,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="text-sm font-semibold text-white bg-[#084c38] hover:bg-[#063b2b] px-5 py-2.5 rounded-full shadow-xs transition-all"
+              className="text-xs font-extrabold text-white bg-gradient-to-r from-[#084c38] to-[#059669] hover:from-[#063b2b] hover:to-[#047857] px-6 py-2.5 rounded-full shadow-md shadow-[#084c38]/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
               Get Started
             </Link>
@@ -279,7 +286,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-slate-700 hover:text-[#084c38] transition-colors cursor-pointer"
+          className="lg:hidden p-2 rounded-xl text-slate-700 hover:text-[#084c38] hover:bg-slate-100 transition-colors cursor-pointer"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle mobile navigation menu"
         >
@@ -294,27 +301,31 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-slate-200 px-6 py-6 shadow-xl space-y-4"
+            className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200 px-6 py-6 shadow-xl space-y-4"
           >
-            <nav className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => {
-                    setActiveLink(link.href);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={cn(
-                    "text-base font-semibold transition-colors px-3 py-2 rounded-lg",
-                    activeLink === link.href
-                      ? "bg-[#ecfdf5] text-[#084c38] font-bold"
-                      : "text-slate-800 hover:bg-slate-50"
-                  )}
-                >
-                  {link.name}
-                </Link>
-              ))}
+            <nav className="flex flex-col gap-2" suppressHydrationWarning>
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => {
+                      setActiveLink(link.href);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={cn(
+                      "text-sm font-bold transition-all px-4 py-2.5 rounded-xl",
+                      isActive
+                        ? "bg-[#ecfdf5] text-[#084c38]"
+                        : "text-slate-800 hover:bg-slate-50"
+                    )}
+                    suppressHydrationWarning
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
@@ -327,21 +338,21 @@ export default function Navbar() {
                       className="w-9 h-9 rounded-full object-cover border border-slate-200"
                     />
                     <div className="truncate">
-                      <p className="text-xs font-bold text-slate-900 truncate">{userDisplayName}</p>
+                      <p className="text-xs font-bold text-slate-900 truncate font-display">{userDisplayName}</p>
                       <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                     </div>
                   </div>
                   <Link
                     href="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
+                    className="w-full text-center py-2.5 font-bold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
                   >
                     My Profile
                   </Link>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 font-semibold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
+                    className="w-full text-center py-2.5 font-bold text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-xs"
                   >
                     Preparation Dashboard
                   </Link>
@@ -350,7 +361,7 @@ export default function Navbar() {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center py-2.5 font-semibold text-red-600 border border-red-200 bg-red-50 rounded-xl transition-all text-xs cursor-pointer"
+                    className="w-full text-center py-2.5 font-bold text-rose-600 border border-rose-200 bg-rose-50 rounded-xl transition-all text-xs cursor-pointer"
                   >
                     Logout
                   </button>
@@ -359,7 +370,7 @@ export default function Navbar() {
                       setMobileMenuOpen(false);
                       setDeleteModalOpen(true);
                     }}
-                    className="w-full text-center py-2.5 font-semibold text-red-500 border border-red-200 rounded-xl transition-all text-xs cursor-pointer"
+                    className="w-full text-center py-2.5 font-bold text-rose-500 border border-rose-200 rounded-xl transition-all text-xs cursor-pointer"
                   >
                     Delete Account
                   </button>
@@ -369,14 +380,14 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 font-semibold border border-slate-300 rounded-full text-slate-800 text-sm"
+                    className="w-full text-center py-2.5 font-bold border border-slate-300 rounded-full text-slate-800 text-xs"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 font-semibold bg-[#084c38] text-white rounded-full text-sm shadow-xs"
+                    className="w-full text-center py-2.5 font-bold bg-[#084c38] text-white rounded-full text-xs shadow-xs"
                   >
                     Get Started
                   </Link>

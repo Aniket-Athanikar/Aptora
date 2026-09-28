@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, FileCheck, BookMarked, Sparkles, LineChart, Bot, Check } from "lucide-react";
+import { Calendar, FileCheck, BookMarked, Sparkles, LineChart, Bot, Check, Clock, Award, ShieldCheck, Flame } from "lucide-react";
 
 export function ProductShowcase() {
   const [activeTab, setActiveTab] = useState("plan");
@@ -27,25 +27,48 @@ export function ProductShowcase() {
         "Time-blocking for revision & practice",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">AI Calendar Sync • Active Plan</span>
-            <span className="text-xs text-slate-400">Target: UPSC Prelims 2026</span>
+        <div className="relative rounded-3xl bg-white border-2 border-emerald-500/20 shadow-2xl p-5 sm:p-6 text-slate-800 font-sans space-y-4 overflow-hidden glow-emerald">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 pt-1">
+            <span className="text-xs font-black text-[#084c38] uppercase tracking-widest font-display flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              AI CALENDAR SYNC • ACTIVE PLAN
+            </span>
+            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              Target: UPSC Prelims 2026
+            </span>
           </div>
+
           <div className="space-y-3">
-            <div className="p-3.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between shadow-2xs">
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-white">09:00 AM - 11:30 AM • Indian Polity</span>
-                <p className="text-[11px] text-slate-400">Judiciary & Supreme Court Directives (Ch 26)</p>
+                <span className="text-xs font-black text-slate-900 font-display">09:00 AM - 11:30 AM • Indian Polity</span>
+                <p className="text-[11px] text-slate-500 font-medium">Judiciary & Supreme Court Directives (Ch 26)</p>
               </div>
-              <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[11px] border border-emerald-500/30">Completed</span>
+              <span className="px-3 py-1 rounded-full bg-emerald-600 text-white font-black text-[11px] shadow-xs">
+                Completed ✓
+              </span>
             </div>
-            <div className="p-3.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
+
+            <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200/80 flex items-center justify-between shadow-2xs">
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-white">02:00 PM - 04:00 PM • Mock Series</span>
-                <p className="text-[11px] text-slate-400">Full Length Polity Mock 04 (50 Questions)</p>
+                <span className="text-xs font-black text-slate-900 font-display">02:00 PM - 04:00 PM • Mock Series</span>
+                <p className="text-[11px] text-slate-500 font-medium">Full Length Polity Mock 04 (50 Questions)</p>
               </div>
-              <span className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-bold text-[11px] border border-amber-500/30">In Progress</span>
+              <span className="px-3 py-1 rounded-full bg-blue-600 text-white font-black text-[11px] shadow-xs">
+                In Progress ⚡
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200/80 flex items-center justify-between shadow-2xs">
+              <div className="space-y-0.5">
+                <span className="text-xs font-black text-slate-900 font-display">06:00 PM - 07:30 PM • Active Recall</span>
+                <p className="text-[11px] text-slate-500 font-medium">Modern History Flashcards • 45 Cards Queued</p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-black text-[11px]">
+                Upcoming
+              </span>
             </div>
           </div>
         </div>
@@ -61,21 +84,46 @@ export function ProductShowcase() {
         "Negative marking calculation & time analysis",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Question 14 of 50 • Polity Mock 04</span>
-            <span className="text-xs font-mono text-slate-300">Time Left: 42:10</span>
+        <div className="relative rounded-3xl bg-slate-900 text-white border-2 border-emerald-500/30 shadow-2xl p-5 sm:p-6 space-y-4 overflow-hidden glow-emerald">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500" />
+          
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3 pt-1">
+            <span className="text-xs font-black text-emerald-400 uppercase tracking-widest font-display">
+              Question 14 of 50 • Polity Mock 04
+            </span>
+            <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-700/60 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
+              Time Left: 42:10
+            </span>
           </div>
-          <p className="text-sm font-semibold text-slate-200 leading-relaxed">
-            Which of the following Constitutional Amendments inserted Article 21A into the Indian Constitution declaring Free and Compulsory Education?
+
+          <p className="text-sm font-black text-slate-100 leading-relaxed font-display">
+            Which Constitutional Amendment inserted Article 21A into the Indian Constitution declaring Free and Compulsory Education?
           </p>
+
           <div className="space-y-2">
-            {["86th Amendment Act, 2002", "44th Amendment Act, 1978", "42nd Amendment Act, 1976", "91st Amendment Act, 2003"].map((opt, i) => (
-              <div key={i} className={`p-3 rounded-lg border text-xs font-medium flex items-center justify-between ${i === 0 ? "bg-emerald-950/80 border-emerald-500 text-emerald-200" : "bg-slate-800/50 border-slate-700/50 text-slate-300"}`}>
-                <span>{String.fromCharCode(65 + i)}. {opt}</span>
-                {i === 0 && <Check className="w-4 h-4 text-emerald-400" />}
+            {[
+              { text: "86th Amendment Act, 2002", correct: true },
+              { text: "44th Amendment Act, 1978", correct: false },
+              { text: "42nd Amendment Act, 1976", correct: false },
+              { text: "91st Amendment Act, 2003", correct: false },
+            ].map((opt, i) => (
+              <div
+                key={i}
+                className={`p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-between transition-colors ${
+                  opt.correct
+                    ? "bg-emerald-950/90 border-emerald-500 text-emerald-200 shadow-md shadow-emerald-950/50"
+                    : "bg-slate-800/60 border-slate-700 text-slate-300"
+                }`}
+              >
+                <span>{String.fromCharCode(65 + i)}. {opt.text}</span>
+                {opt.correct && <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />}
               </div>
             ))}
+          </div>
+
+          <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-[11px] text-emerald-300 font-medium">
+            💡 <strong>AI Solution:</strong> The 86th Constitutional Amendment Act, 2002 inserted Article 21A making elementary education a fundamental right for children aged 6 to 14.
           </div>
         </div>
       ),
@@ -90,19 +138,41 @@ export function ProductShowcase() {
         "Custom tag & syllabus mapping",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">My Library • 12 Active Textbooks</span>
-            <span className="text-xs text-slate-400">Storage Used: 2.4 GB</span>
+        <div className="relative rounded-3xl bg-white border-2 border-emerald-500/20 shadow-2xl p-5 sm:p-6 text-slate-800 font-sans space-y-4 overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 pt-1">
+            <span className="text-xs font-black text-[#084c38] uppercase tracking-widest font-display">
+              My Library • 12 Active Textbooks
+            </span>
+            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              Storage Used: 2.4 GB
+            </span>
           </div>
+
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-lg bg-slate-800 border border-slate-700 space-y-1">
-              <span className="text-xs font-bold text-emerald-300">Indian Polity (M. Laxmikanth)</span>
-              <p className="text-[11px] text-slate-400">6th Edition • 800 Pages Indexed</p>
+            <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1 hover:border-emerald-400 transition-colors">
+              <span className="text-xs font-black text-[#084c38] font-display block">Indian Polity (M. Laxmikanth)</span>
+              <p className="text-[11px] text-slate-500 font-medium">6th Edition • 800 Pages Indexed</p>
+              <span className="inline-block mt-2 px-2 py-0.5 rounded bg-emerald-200/60 text-[#084c38] text-[9px] font-bold">100% OCR Processed</span>
             </div>
-            <div className="p-3.5 rounded-lg bg-slate-800 border border-slate-700 space-y-1">
-              <span className="text-xs font-bold text-emerald-300">Modern History (Spectrum)</span>
-              <p className="text-[11px] text-slate-400">Revised Edition • 650 Pages</p>
+
+            <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-1 hover:border-blue-400 transition-colors">
+              <span className="text-xs font-black text-blue-900 font-display block">Modern History (Spectrum)</span>
+              <p className="text-[11px] text-slate-500 font-medium">Revised Edition • 650 Pages</p>
+              <span className="inline-block mt-2 px-2 py-0.5 rounded bg-blue-200/60 text-blue-900 text-[9px] font-bold">Summary Flashcards Ready</span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-1 hover:border-purple-400 transition-colors">
+              <span className="text-xs font-black text-purple-900 font-display block">Indian Economy (Ramesh Singh)</span>
+              <p className="text-[11px] text-slate-500 font-medium">14th Edition • 540 Pages</p>
+              <span className="inline-block mt-2 px-2 py-0.5 rounded bg-purple-200/60 text-purple-900 text-[9px] font-bold">PYQ Mapped</span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-1 hover:border-amber-400 transition-colors">
+              <span className="text-xs font-black text-amber-900 font-display block">Environment (Shankar IAS)</span>
+              <p className="text-[11px] text-slate-500 font-medium">9th Edition • 420 Pages</p>
+              <span className="inline-block mt-2 px-2 py-0.5 rounded bg-amber-200/60 text-amber-900 text-[9px] font-bold">12 Revision Notes</span>
             </div>
           </div>
         </div>
@@ -118,16 +188,30 @@ export function ProductShowcase() {
         "One-click flashcard generation",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">AI Note Summary • Chapter 3: Preamble</span>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Active Recall Ready</span>
+        <div className="relative rounded-3xl bg-white border-2 border-emerald-500/20 shadow-2xl p-5 sm:p-6 text-slate-800 font-sans space-y-3.5 overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 pt-1">
+            <span className="text-xs font-black text-[#084c38] uppercase tracking-widest font-display">
+              AI Note Summary • Chapter 3: Preamble
+            </span>
+            <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black">
+              Active Recall Ready
+            </span>
           </div>
-          <div className="space-y-2 text-xs text-slate-300">
-            <p className="font-bold text-white">• Key Words Added by 42nd Amendment (1976):</p>
-            <p className="pl-4 text-emerald-300 font-mono">Socialist, Secular, Integrity</p>
-            <p className="font-bold text-white">• Kesavananda Bharati Case (1973):</p>
-            <p className="pl-4 text-slate-400">Supreme Court held that Preamble IS a part of the Constitution and CAN be amended subject to Basic Structure doctrine</p>
+
+          <div className="space-y-3 text-xs">
+            <div className="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-1">
+              <p className="font-black text-[#084c38] font-display">• Key Words Added by 42nd Amendment (1976):</p>
+              <p className="pl-3 text-emerald-900 font-bold font-mono">Socialist, Secular, Integrity</p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+              <p className="font-black text-slate-900 font-display">• Kesavananda Bharati Case (1973):</p>
+              <p className="pl-3 text-slate-600 font-medium leading-relaxed">
+                Supreme Court held that Preamble IS a part of the Constitution and CAN be amended subject to Basic Structure doctrine.
+              </p>
+            </div>
           </div>
         </div>
       ),
@@ -142,28 +226,46 @@ export function ProductShowcase() {
         "Historical mock score progression",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Performance Dashboard</span>
-            <span className="text-xs text-slate-400">Overall Accuracy: 84.2%</span>
+        <div className="relative rounded-3xl bg-white border-2 border-emerald-500/20 shadow-2xl p-5 sm:p-6 text-slate-800 font-sans space-y-4 overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 pt-1">
+            <span className="text-xs font-black text-[#084c38] uppercase tracking-widest font-display">
+              Performance Dashboard
+            </span>
+            <span className="text-xs font-black text-slate-900 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+              Overall Accuracy: 84.2%
+            </span>
           </div>
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between text-xs text-slate-300 mb-1">
-                <span>Polity & Constitution</span>
-                <span className="font-bold text-emerald-400">92%</span>
+
+          <div className="space-y-4">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+              <div className="flex justify-between text-xs text-slate-900 font-black font-display">
+                <span>Polity & Governance</span>
+                <span className="text-emerald-700">92%</span>
               </div>
-              <div className="w-full bg-slate-800 rounded-full h-2">
-                <div className="bg-emerald-500 h-[8px] rounded-full" style={{ width: "92%" }} />
+              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-emerald-500 h-full rounded-full" style={{ width: "92%" }} />
               </div>
             </div>
-            <div>
-              <div className="flex justify-between text-xs text-slate-300 mb-1">
-                <span>Environment & Ecology</span>
-                <span className="font-bold text-emerald-400">86%</span>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+              <div className="flex justify-between text-xs text-slate-900 font-black font-display">
+                <span>Indian Economy</span>
+                <span className="text-teal-700">86%</span>
               </div>
-              <div className="w-full bg-slate-800 rounded-full h-2">
-                <div className="bg-emerald-500 h-[8px] rounded-full" style={{ width: "86%" }} />
+              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-teal-500 h-full rounded-full" style={{ width: "86%" }} />
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+              <div className="flex justify-between text-xs text-slate-900 font-black font-display">
+                <span>Environment & Ecology</span>
+                <span className="text-blue-700">78%</span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-blue-500 h-full rounded-full" style={{ width: "78%" }} />
               </div>
             </div>
           </div>
@@ -180,20 +282,28 @@ export function ProductShowcase() {
         "Mnemonics & memory technique generator",
       ],
       mockup: (
-        <div className="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-2xl space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Aptora AI Tutor</span>
-            <span className="text-[11px] text-emerald-400 font-bold">Online</span>
+        <div className="relative rounded-3xl bg-slate-900 text-white border-2 border-emerald-500/30 shadow-2xl p-5 sm:p-6 space-y-3.5 overflow-hidden glow-emerald">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500" />
+
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3 pt-1">
+            <span className="text-xs font-black text-emerald-400 uppercase tracking-widest font-display">
+              Aptora AI Tutor
+            </span>
+            <span className="text-[10px] text-emerald-300 font-black px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-700 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> ONLINE
+            </span>
           </div>
+
           <div className="space-y-3 text-xs">
-            <div className="p-3 rounded-lg bg-slate-800 text-slate-200">
-              <p className="font-bold text-slate-400 text-[10px] mb-1">You</p>
+            <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-200">
+              <p className="font-black text-slate-400 text-[10px] mb-1 uppercase tracking-wider">User Question</p>
               Explain the difference between Writ of Habeas Corpus and Mandamus?
             </div>
-            <div className="p-3 rounded-lg bg-emerald-950/80 border border-emerald-700/60 text-emerald-100">
-              <p className="font-bold text-emerald-400 text-[10px] mb-1">Aptora AI Tutor</p>
+
+            <div className="p-4 rounded-2xl bg-emerald-950/90 border border-emerald-700/60 text-emerald-100 space-y-1 leading-relaxed shadow-lg">
+              <p className="font-black text-emerald-400 text-[10px] mb-1 uppercase tracking-wider">Aptora AI Tutor Answer</p>
               • <strong>Habeas Corpus</strong> ("To have the body"): Issued against illegal detention. Can be issued against public AND private individuals<br />
-              • <strong>Mandamus</strong> ("We command"): Issued to compel a public official to perform their statutory duty. CANNOT be issued against private individuals
+              • <strong>Mandamus</strong> ("We command"): Issued to compel a public official to perform statutory duty. CANNOT be issued against private individuals
             </div>
           </div>
         </div>
@@ -204,21 +314,22 @@ export function ProductShowcase() {
   const current = content[activeTab];
 
   return (
-    <section id="features" className="py-24 md:py-32 bg-white">
+    <section id="features" className="py-24 md:py-32 bg-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
         <div className="max-w-3xl mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-3">
-            Product Showcase
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-display">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#084c38] text-xs font-black uppercase tracking-widest mb-4 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <span>PRODUCT SHOWCASE</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight font-display">
             Everything you need to stay on track
           </h2>
         </div>
 
         {/* Horizontal Navigation Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 border-b border-slate-200">
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 border-b border-slate-200/80">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -226,13 +337,21 @@ export function ProductShowcase() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${isActive
-                  ? "bg-emerald-700 text-white shadow-xs"
-                  : "bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black whitespace-nowrap transition-all cursor-pointer ${isActive
+                  ? "text-white shadow-md shadow-[#084c38]/20"
+                  : "bg-slate-50/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/60"
                   }`}
               >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <Icon className="w-4 h-4 z-10 relative" />
+                <span className="z-10 relative font-display">{tab.label}</span>
+                {isActive && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute inset-0 bg-gradient-to-r from-[#084c38] to-[#059669] rounded-2xl -z-0"
+                  />
+                )}
               </button>
             );
           })}
@@ -242,31 +361,31 @@ export function ProductShowcase() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
+            exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
           >
             {/* Left: Feature Text & Details */}
             <div className="lg:col-span-5 space-y-6">
-              <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-display leading-tight">
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 font-display leading-tight">
                 {current.title}
               </h3>
-              <p className="text-emerald-800 font-semibold text-base">
+              <p className="text-[#084c38] font-bold text-base font-display">
                 {current.subtitle}
               </p>
-              <p className="text-slate-600 text-base leading-relaxed">
+              <p className="text-slate-600 text-base leading-relaxed font-normal">
                 {current.description}
               </p>
 
-              <div className="space-y-3 pt-2">
+              <div className="space-y-3.5 pt-2">
                 {current.highlights.map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 text-[#084c38] flex items-center justify-center shrink-0 shadow-2xs">
                       <Check className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-sm font-semibold text-slate-700">{item}</span>
+                    <span className="text-sm font-bold text-slate-800 font-display">{item}</span>
                   </div>
                 ))}
               </div>

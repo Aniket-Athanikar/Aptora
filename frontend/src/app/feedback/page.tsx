@@ -55,13 +55,13 @@ export default function FeedbackPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
+          <span className="inline-block bg-emerald-100/70 text-emerald-800 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-200/50 mb-4">
             Share Your Thoughts
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
             Your Feedback Matters
           </h2>
-          <p className="mt-3 text-neutral-500 font-semibold max-w-xl mx-auto">
+          <p className="mt-3 text-neutral-600 font-semibold max-w-xl mx-auto">
             Every piece of feedback helps us build a better learning experience
           </p>
         </motion.div>
@@ -75,29 +75,30 @@ export default function FeedbackPage() {
         >
           <motion.div
             variants={itemVariants}
-            className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg"
+            className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-12"
+                className="text-center py-12 pt-14"
               >
-                <div className="w-20 h-20 rounded-full bg-[#22C55E]/10 flex items-center justify-center mx-auto mb-6">
-                  <MessageSquareHeart className="w-10 h-10 text-[#22C55E]" />
+                <div className="w-20 h-20 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-6 border border-emerald-200/60 shadow-inner">
+                  <MessageSquareHeart className="w-10 h-10 text-emerald-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-neutral-900 mb-2">
+                <h3 className="text-2xl font-black text-neutral-900 mb-2">
                   Thank You!
                 </h3>
-                <p className="text-neutral-500 font-medium">
+                <p className="text-neutral-600 font-semibold">
                   Your feedback has been submitted successfully.
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-8 pt-2">
                 {/* Star Rating */}
                 <motion.div variants={itemVariants}>
-                  <label className="block text-sm font-bold text-neutral-900 mb-4">
+                  <label className="block text-sm font-black text-neutral-900 mb-4">
                     How would you rate your experience?
                   </label>
                   <div className="flex items-center gap-2">
@@ -120,7 +121,7 @@ export default function FeedbackPage() {
                       </button>
                     ))}
                     {(hoveredStar > 0 || rating > 0) && (
-                      <span className="ml-3 text-sm font-semibold text-neutral-500">
+                      <span className="ml-3 text-sm font-black text-neutral-600">
                         {ratingLabels[hoveredStar || rating]}
                       </span>
                     )}
@@ -131,7 +132,7 @@ export default function FeedbackPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="liked"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
                     What did you like?
                   </label>
@@ -141,7 +142,7 @@ export default function FeedbackPage() {
                     value={liked}
                     onChange={(e) => setLiked(e.target.value)}
                     placeholder="Tell us what you enjoyed most..."
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                    className="w-full bg-white border-2 border-emerald-500/20 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all shadow-sm"
                   />
                 </motion.div>
 
@@ -149,7 +150,7 @@ export default function FeedbackPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="improve"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
                     What can we improve?
                   </label>
@@ -159,7 +160,7 @@ export default function FeedbackPage() {
                     onChange={(e) => setImprove(e.target.value)}
                     placeholder="Share your suggestions for improvement..."
                     rows={4}
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                    className="w-full bg-white border-2 border-emerald-500/20 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all resize-none shadow-sm"
                   />
                 </motion.div>
 
@@ -167,7 +168,7 @@ export default function FeedbackPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="questions"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
                     Got any questions?
                   </label>
@@ -177,7 +178,7 @@ export default function FeedbackPage() {
                     value={questions}
                     onChange={(e) => setQuestions(e.target.value)}
                     placeholder="Any questions for the team?"
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                    className="w-full bg-white border-2 border-emerald-500/20 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all shadow-sm"
                   />
                 </motion.div>
 
@@ -185,7 +186,7 @@ export default function FeedbackPage() {
                 <motion.div variants={itemVariants}>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border-none"
+                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#084c38] via-emerald-600 to-teal-500 text-white font-black px-8 py-4 rounded-2xl shadow-md shadow-emerald-500/20 hover:scale-[1.01] transition-all duration-300 cursor-pointer border-none"
                   >
                     <Send className="w-5 h-5" />
                     Submit Feedback

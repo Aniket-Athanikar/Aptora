@@ -98,7 +98,7 @@ export default function SitemapPage() {
 
         {/* Search Bar section */}
         <div className="relative max-w-xl mx-auto">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-neutral-400">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-emerald-600">
             <Search className="w-5 h-5" />
           </div>
           <input
@@ -106,7 +106,7 @@ export default function SitemapPage() {
             placeholder="Search pages (e.g. Pricing, Security, Support)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/70 backdrop-blur-md border border-neutral-200 rounded-2xl pl-12 pr-4 py-4 text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-semibold shadow-sm"
+            className="w-full bg-white/90 backdrop-blur-md border-2 border-emerald-500/20 rounded-2xl pl-12 pr-4 py-4 text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all font-semibold shadow-xl"
           />
         </div>
 
@@ -121,37 +121,38 @@ export default function SitemapPage() {
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-sm flex flex-col gap-6"
+              className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 flex flex-col gap-6"
             >
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
               {/* Section Header */}
-              <div className="flex items-center gap-4 pb-4 border-b border-neutral-100">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${section.color} flex items-center justify-center`}>
-                  <section.icon className="w-6 h-6" />
+              <div className="flex items-center gap-4 pb-4 border-b border-emerald-500/10 pt-1">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                  <section.icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-neutral-900">{section.title}</h3>
-                  <p className="text-xs text-neutral-500 font-semibold">{section.desc}</p>
+                  <p className="text-xs text-neutral-600 font-semibold">{section.desc}</p>
                 </div>
               </div>
 
               {/* Links List */}
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col gap-3">
                 {section.links.map((link, lIdx) => (
                   <li key={lIdx}>
                     <Link
                       href={link.href}
-                      className="group flex items-start justify-between p-3.5 rounded-2xl hover:bg-neutral-50 border border-transparent hover:border-neutral-100 transition-all duration-300"
+                      className="group flex items-start justify-between p-3.5 rounded-2xl hover:bg-emerald-50/60 border border-transparent hover:border-emerald-500/20 transition-all duration-300"
                     >
                       <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold text-neutral-800 group-hover:text-emerald-600 transition-colors">
-                          <Link2 className="w-3.5 h-3.5 opacity-60" />
+                        <div className="flex items-center gap-1.5 font-black text-neutral-800 group-hover:text-emerald-600 transition-colors text-sm">
+                          <Link2 className="w-3.5 h-3.5 text-emerald-600 opacity-80" />
                           {link.name}
                         </div>
-                        <p className="text-xs text-neutral-400 font-semibold leading-relaxed">
+                        <p className="text-xs text-neutral-500 font-semibold leading-relaxed">
                           {link.desc}
                         </p>
                       </div>
-                      <div className="p-1.5 rounded-lg bg-neutral-100 text-neutral-500 opacity-0 group-hover:opacity-100 group-hover:text-emerald-600 group-hover:bg-emerald-50 transition-all duration-300">
+                      <div className="p-1.5 rounded-xl bg-emerald-50 border border-emerald-200/50 text-emerald-700 opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </Link>

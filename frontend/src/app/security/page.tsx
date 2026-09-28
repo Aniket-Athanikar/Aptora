@@ -72,36 +72,38 @@ export default function SecurityPage() {
             <h2 className="text-3xl font-black text-neutral-900 leading-tight">
               Enterprise-Grade Security Built Into Every Layer
             </h2>
-            <p className="text-neutral-500 font-semibold leading-relaxed">
+            <p className="text-neutral-600 font-semibold leading-relaxed">
               At Aptora, we understand that your notes, textbooks, and prep history are precious assets.
               Our priority is to protect your information through rigorous security controls, ongoing system scans,
               and state-of-the-art encryption algorithms.
             </p>
             <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-xs font-black text-neutral-900 bg-neutral-100 px-4 py-2.5 rounded-xl border border-neutral-200 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-black text-emerald-800 bg-emerald-100/70 px-4 py-2.5 rounded-full border border-emerald-200/50 uppercase tracking-wider">
                 <Shield className="w-4 h-4 text-emerald-600" /> AES-256 Protected
               </div>
-              <div className="flex items-center gap-2 text-xs font-black text-neutral-900 bg-neutral-100 px-4 py-2.5 rounded-xl border border-neutral-200 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-black text-emerald-800 bg-emerald-100/70 px-4 py-2.5 rounded-full border border-emerald-200/50 uppercase tracking-wider">
                 <Lock className="w-4 h-4 text-emerald-600" /> TLS 1.3 Certified
               </div>
             </div>
           </motion.div>
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-5 bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 rounded-[24px] shadow-xl relative overflow-hidden group"
+            className="lg:col-span-5 relative border-2 border-emerald-500/30 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-[#084c38] via-emerald-900 to-teal-950 p-8 text-white group"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-400 to-teal-300" />
             <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-            <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500" />
-            <Shield className="w-12 h-12 text-white/90 mb-6" />
-            <h3 className="text-xl font-black mb-2">Found a Security Issue?</h3>
-            <p className="text-emerald-50 text-sm font-semibold mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-6 pt-1">
+              <Shield className="w-6 h-6 text-emerald-300" />
+            </div>
+            <h3 className="text-xl font-black mb-2 text-white">Found a Security Issue?</h3>
+            <p className="text-emerald-100 text-sm font-semibold mb-6">
               We reward researchers and developers who help keep Aptora safe. Submit reports directly to our team.
             </p>
             <Link
               href="/report-bug"
-              className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-5 py-3 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 text-sm font-black text-emerald-950 bg-white px-5 py-3 rounded-xl hover:bg-emerald-50 hover:scale-[1.02] transition-all shadow-md"
             >
-              Report Vulnerability <ArrowRight className="w-4 h-4" />
+              Report Vulnerability <ArrowRight className="w-4 h-4 text-emerald-800" />
             </Link>
           </motion.div>
         </motion.section>
@@ -116,7 +118,7 @@ export default function SecurityPage() {
         >
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <h2 className="text-3xl font-black text-neutral-900">Security Safeguards</h2>
-            <p className="text-neutral-500 font-semibold">
+            <p className="text-neutral-600 font-semibold">
               Deep dive into the operational safety measures defending your credentials and data.
             </p>
           </div>
@@ -126,14 +128,15 @@ export default function SecurityPage() {
               <motion.div
                 key={idx}
                 variants={itemVariants}
-                className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-sm hover:shadow-lg hover:border-emerald-500/20 transition-all duration-300 flex flex-col items-start gap-5 group"
+                className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start gap-5 group"
               >
-                <div className="w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
-                  <pillar.icon className="w-6 h-6" />
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0 mt-1">
+                  <pillar.icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-lg font-black text-neutral-900">{pillar.title}</h3>
-                  <p className="text-neutral-500 text-sm font-semibold leading-relaxed">
+                  <p className="text-neutral-600 text-sm font-semibold leading-relaxed">
                     {pillar.desc}
                   </p>
                 </div>
@@ -148,10 +151,11 @@ export default function SecurityPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="bg-neutral-50 border border-neutral-200 rounded-[24px] p-8 md:p-12 text-center max-w-[900px] mx-auto space-y-4"
+          className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-12 text-center max-w-[900px] mx-auto space-y-4"
         >
-          <h3 className="text-2xl font-black text-neutral-900">Your Privacy, Guaranteed</h3>
-          <p className="text-neutral-500 font-semibold max-w-2xl mx-auto leading-relaxed">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          <h3 className="text-2xl font-black text-neutral-900 pt-1">Your Privacy, Guaranteed</h3>
+          <p className="text-neutral-600 font-semibold max-w-2xl mx-auto leading-relaxed">
             We will never sell or trade your personal files, mock test outputs, or notes with third-party advertising companies.
             All insights generated are strictly for your personalized education metrics.
           </p>

@@ -278,7 +278,9 @@ export default function CheckoutPage() {
             </div>
 
             {/* Main Interactive Details Card */}
-            <GlassCard className="p-6 md:p-8 border-neutral-200 bg-white shadow-lg rounded-[28px]">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
               
               {/* RAZORPAY GATEWAY SPECIFICS */}
               {gateway === "razorpay" && (
@@ -615,12 +617,14 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-            </GlassCard>
+            </div>
           </div>
 
           {/* Right panel: Order summary details */}
           <div className="lg:col-span-5">
-            <GlassCard className="p-6 md:p-8 rounded-[28px] border-[#ECECEC] bg-white shadow-lg space-y-6">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-6">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
               <h3 className="text-lg font-black text-neutral-900 pb-3 border-b border-[#ECECEC] uppercase tracking-tight">Order Details</h3>
 
               <div className="space-y-4">
@@ -653,7 +657,7 @@ export default function CheckoutPage() {
                   Aptora secures transactional data using 256-bit AES cryptographic protocols. Card and account credentials are not persisted in our database systems.
                 </p>
               </div>
-            </GlassCard>
+            </div>
           </div>
 
         </div>

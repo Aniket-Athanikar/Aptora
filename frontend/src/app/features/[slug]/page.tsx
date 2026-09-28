@@ -414,19 +414,20 @@ export default function FeatureSlugPage() {
                     {/* Left 2 Cols: Main Info */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Summary Header */}
-                        <div className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm">
-                            <div className="flex items-center justify-between mb-4">
+                        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                            <div className="flex items-center justify-between mb-4 pt-1">
                                 <span className="text-xs font-black text-neutral-400 uppercase tracking-widest">
                                     {moduleInfo.num}
                                 </span>
-                                <span className="inline-block bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-emerald-100">
+                                <span className="inline-block bg-emerald-100/70 text-emerald-800 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-emerald-200/50">
                                     {moduleInfo.badge}
                                 </span>
                             </div>
 
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                                    <Icon className="w-6 h-6 text-emerald-600" />
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                                    <Icon className="w-6 h-6 text-white" />
                                 </div>
                                 <h2 className="text-xl md:text-2xl font-black text-neutral-900 leading-tight">
                                     {moduleInfo.title}
@@ -437,31 +438,32 @@ export default function FeatureSlugPage() {
                                 {moduleInfo.description}
                             </p>
 
-                            <hr className="border-[#ECECEC] my-6" />
+                            <hr className="border-emerald-500/10 my-6" />
 
                             <h4 className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-3">
                                 Deep Feature Overview
                             </h4>
-                            <p className="text-xs text-neutral-500 font-semibold leading-relaxed">
+                            <p className="text-xs text-neutral-600 font-semibold leading-relaxed">
                                 {moduleInfo.longDescription}
                             </p>
                         </div>
 
                         {/* Step-by-Step Workflow */}
-                        <div className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm">
-                            <h3 className="text-sm font-black text-neutral-900 uppercase tracking-wider mb-6 flex items-center gap-2">
+                        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                            <h3 className="text-sm font-black text-neutral-900 uppercase tracking-wider mb-6 flex items-center gap-2 pt-1">
                                 <Terminal className="w-4 h-4 text-emerald-600" />
                                 how it works step-by-step
                             </h3>
-                            <div className="space-y-6 relative pl-4 border-l border-neutral-100">
+                            <div className="space-y-6 relative pl-4 border-l-2 border-emerald-500/20">
                                 {moduleInfo.workflow.map((step, idx) => (
                                     <div key={idx} className="relative">
                                         {/* Timeline Dot */}
-                                        <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-emerald-500" />
-                                        <h4 className="text-xs font-black text-emerald-650 mb-1 uppercase tracking-wider">
+                                        <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100" />
+                                        <h4 className="text-xs font-black text-emerald-700 mb-1 uppercase tracking-wider">
                                             Step 0{idx + 1}
                                         </h4>
-                                        <p className="text-xs text-neutral-600 font-bold leading-relaxed">
+                                        <p className="text-xs text-neutral-700 font-bold leading-relaxed">
                                             {step}
                                         </p>
                                     </div>
@@ -473,8 +475,9 @@ export default function FeatureSlugPage() {
                     {/* Right 1 Col: Tech Specs & Benefits */}
                     <div className="space-y-6">
                         {/* Tech Specs */}
-                        <GlassCard className="p-6 border-[#ECECEC] bg-white/70">
-                            <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                            <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2 pt-1">
                                 <Cpu className="w-4 h-4 text-emerald-600" />
                                 Technical Specifications
                             </h3>
@@ -482,7 +485,7 @@ export default function FeatureSlugPage() {
                                 {moduleInfo.specs.map((spec, sIdx) => {
                                     const [label, desc] = spec.split(":");
                                     return (
-                                        <li key={sIdx} className="text-[11px] font-bold leading-relaxed text-neutral-600">
+                                        <li key={sIdx} className="text-[11px] font-bold leading-relaxed text-neutral-700">
                                             <span className="block text-[9px] font-black uppercase text-neutral-400 tracking-wider">
                                                 {label}
                                             </span>
@@ -491,36 +494,38 @@ export default function FeatureSlugPage() {
                                     );
                                 })}
                             </ul>
-                        </GlassCard>
+                        </div>
 
                         {/* Core Benefits */}
-                        <GlassCard className="p-6 border-[#ECECEC] bg-white/70">
-                            <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Sparkles className="w-4 h-4 text-amber-500" />
+                        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                            <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2 pt-1">
+                                <Sparkles className="w-4 h-4 text-emerald-500" />
                                 Key Aspirant Benefits
                             </h3>
                             <ul className="space-y-3">
                                 {moduleInfo.benefits.map((benefit, bIdx) => (
-                                    <li key={bIdx} className="flex items-start gap-2.5 text-[10px] text-neutral-600 font-bold leading-snug">
-                                        <div className="mt-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-500">
+                                    <li key={bIdx} className="flex items-start gap-2.5 text-[10px] text-neutral-700 font-bold leading-snug">
+                                        <div className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-700 font-black">
                                             <Check className="w-2.5 h-2.5" />
                                         </div>
                                         <span>{benefit}</span>
                                     </li>
                                 ))}
                             </ul>
-                        </GlassCard>
+                        </div>
 
                         {/* Next Action */}
-                        <div className="bg-gradient-to-br from-emerald-600 to-teal-650 rounded-[24px] p-6 text-white shadow-lg shadow-emerald-500/15">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-emerald-100 mb-2">
+                        <div className="relative border-2 border-emerald-500/30 shadow-xl rounded-3xl overflow-hidden bg-gradient-to-br from-[#084c38] via-emerald-900 to-teal-950 p-6 text-white">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-400 to-teal-300" />
+                            <h4 className="text-xs font-black uppercase tracking-widest text-emerald-200 mb-2 pt-1">
                                 Platform Action
                             </h4>
-                            <p className="text-[11px] font-bold leading-relaxed text-emerald-50 mb-5">
+                            <p className="text-[11px] font-bold leading-relaxed text-emerald-100 mb-5">
                                 Try this module on your own books and prep files.
                             </p>
                             <Link href="/login">
-                                <GlowButton variant="outline" className="w-full bg-white text-emerald-600 border-transparent hover:bg-neutral-50 hover:scale-[1.02] text-[10px] font-black py-3 rounded-xl transition-all">
+                                <GlowButton variant="outline" className="w-full bg-white text-emerald-900 border-transparent hover:bg-emerald-50 hover:scale-[1.02] text-[10px] font-black py-3 rounded-xl transition-all shadow-md">
                                     Get Started
                                 </GlowButton>
                             </Link>

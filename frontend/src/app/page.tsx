@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Navbar,
   Hero,
@@ -20,7 +18,7 @@ import {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#FAF9F6] text-slate-900 font-sans selection:bg-emerald-500/15 selection:text-emerald-800">
+    <main className="relative min-h-screen bg-[#FAF9F6] text-slate-900 font-sans selection:bg-emerald-500/15 selection:text-emerald-800" suppressHydrationWarning>
       <Navbar />
 
       <div className="relative z-10 flex flex-col w-full">

@@ -142,7 +142,9 @@ export default function CheckoutSuccessPage() {
 
           {/* Left Side: Order Confirmation Receipt */}
           <div className="md:col-span-7 flex w-full">
-            <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-xl text-center w-full flex flex-col justify-between relative overflow-hidden">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 text-center w-full flex flex-col justify-between">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
 
               {/* Confetti Animation Elements */}
               <div className="absolute top-0 inset-x-0 h-40 flex justify-center overflow-hidden pointer-events-none z-0">
@@ -255,12 +257,14 @@ export default function CheckoutSuccessPage() {
                 </button>
               </div>
 
-            </GlassCard>
+            </div>
           </div>
 
           {/* Right Side: What's Unlocked Panel */}
           <div className="md:col-span-5 flex w-full">
-            <GlassCard className="p-6 md:p-8 rounded-[32px] border-[#ECECEC] bg-white shadow-lg w-full flex flex-col justify-between relative overflow-hidden">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 w-full flex flex-col justify-between">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-xl pointer-events-none" />
 
               <div>
@@ -313,7 +317,7 @@ export default function CheckoutSuccessPage() {
                 <ShieldCheck className="w-4 h-4 text-emerald-600" /> Verified subscription
               </div>
 
-            </GlassCard>
+            </div>
           </div>
 
         </div>

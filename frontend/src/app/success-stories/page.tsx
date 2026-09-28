@@ -114,8 +114,8 @@ export default function SuccessStoriesPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-14"
         >
-          <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full border border-emerald-100">
-            <Award className="w-4 h-4" />
+          <span className="inline-flex items-center gap-2 bg-emerald-100/70 text-emerald-800 text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full border border-emerald-200/50">
+            <Award className="w-4 h-4 text-emerald-600" />
             Student Testimonials
           </span>
         </motion.div>
@@ -127,15 +127,13 @@ export default function SuccessStoriesPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="relative bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[32px] p-10 md:p-14 shadow-xl overflow-hidden">
-            {/* Decorative gradient blobs */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-bl-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-teal-500/5 to-transparent rounded-tr-full pointer-events-none" />
-
-            <div className="relative z-10">
+          <div className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-10 md:p-14">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
+            
+            <div className="relative z-10 pt-2">
               {/* Big Quote Mark */}
               <div className="mb-6">
-                <Quote className="w-14 h-14 text-emerald-500/20 fill-emerald-500/10" />
+                <Quote className="w-14 h-14 text-emerald-500/30 fill-emerald-500/20" />
               </div>
 
               {/* Animated Testimonial Content */}
@@ -158,7 +156,7 @@ export default function SuccessStoriesPage() {
                     {/* Author */}
                     <div className="flex items-center gap-4">
                       {/* Avatar */}
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
                         <span className="text-white font-black text-sm">
                           {current.initials}
                         </span>
@@ -194,9 +192,9 @@ export default function SuccessStoriesPage() {
             {/* Left Arrow */}
             <button
               onClick={goPrev}
-              className="w-12 h-12 rounded-2xl bg-white/70 backdrop-blur-xl border border-[#ECECEC] flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className="w-12 h-12 rounded-2xl bg-white border-2 border-emerald-500/20 flex items-center justify-center shadow-md hover:border-emerald-500/40 hover:scale-105 transition-all duration-300"
             >
-              <ChevronLeft className="w-5 h-5 text-neutral-600" />
+              <ChevronLeft className="w-5 h-5 text-emerald-700" />
             </button>
 
             {/* Dot Indicators */}
@@ -207,8 +205,8 @@ export default function SuccessStoriesPage() {
                   onClick={() => goTo(idx)}
                   className={`rounded-full transition-all duration-300 ${
                     idx === activeIndex
-                      ? "w-8 h-3 bg-gradient-to-r from-emerald-600 to-teal-500"
-                      : "w-3 h-3 bg-neutral-200 hover:bg-neutral-300"
+                      ? "w-8 h-3 bg-gradient-to-r from-[#084c38] via-emerald-600 to-teal-500 shadow-sm"
+                      : "w-3 h-3 bg-neutral-300 hover:bg-emerald-300"
                   }`}
                 />
               ))}
@@ -217,9 +215,9 @@ export default function SuccessStoriesPage() {
             {/* Right Arrow */}
             <button
               onClick={goNext}
-              className="w-12 h-12 rounded-2xl bg-white/70 backdrop-blur-xl border border-[#ECECEC] flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className="w-12 h-12 rounded-2xl bg-white border-2 border-emerald-500/20 flex items-center justify-center shadow-md hover:border-emerald-500/40 hover:scale-105 transition-all duration-300"
             >
-              <ChevronRight className="w-5 h-5 text-neutral-600" />
+              <ChevronRight className="w-5 h-5 text-emerald-700" />
             </button>
           </div>
         </motion.div>
@@ -235,30 +233,33 @@ export default function SuccessStoriesPage() {
             <button
               key={idx}
               onClick={() => goTo(idx)}
-              className={`group text-left p-5 rounded-[20px] border transition-all duration-300 ${
+              className={`group text-left p-5 rounded-3xl border-2 transition-all duration-300 relative overflow-hidden ${
                 idx === activeIndex
-                  ? "bg-gradient-to-br from-emerald-500/5 to-teal-500/5 border-emerald-500/30 shadow-lg shadow-emerald-500/5"
-                  : "bg-white/50 backdrop-blur-xl border-[#ECECEC] hover:border-neutral-300 hover:shadow-md"
+                  ? "bg-white border-emerald-500 shadow-xl shadow-emerald-500/10 scale-[1.02]"
+                  : "bg-white/80 border-emerald-500/15 hover:border-emerald-500/40 hover:shadow-md"
               }`}
             >
+              {idx === activeIndex && (
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+              )}
               <div className="flex items-center gap-3 mb-3">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black ${
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black ${
                     idx === activeIndex
-                      ? "bg-gradient-to-br from-emerald-600 to-teal-500 text-white"
-                      : "bg-neutral-100 text-neutral-500"
+                      ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm"
+                      : "bg-emerald-50 text-emerald-800"
                   }`}
                 >
                   {t.initials}
                 </div>
                 <div>
                   <p className="text-xs font-black text-neutral-900">{t.name}</p>
-                  <p className="text-[10px] font-semibold text-neutral-400">
+                  <p className="text-[10px] font-semibold text-neutral-500">
                     {t.role}
                   </p>
                 </div>
               </div>
-              <p className="text-[11px] font-semibold text-neutral-500 line-clamp-2 leading-relaxed">
+              <p className="text-[11px] font-semibold text-neutral-600 line-clamp-2 leading-relaxed">
                 &ldquo;{t.quote}&rdquo;
               </p>
             </button>
@@ -270,9 +271,10 @@ export default function SuccessStoriesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.7 }}
-          className="mt-16 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 shadow-lg"
+          className="mt-16 relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center pt-1">
             {[
               { value: "10,000+", label: "Students Trained" },
               { value: "95%", label: "Success Rate" },
@@ -283,7 +285,7 @@ export default function SuccessStoriesPage() {
                 <div className="text-2xl md:text-3xl font-black text-neutral-900">
                   {stat.value}
                 </div>
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold mt-1">
+                <div className="text-[10px] text-emerald-700 uppercase tracking-widest font-black mt-1">
                   {stat.label}
                 </div>
               </div>

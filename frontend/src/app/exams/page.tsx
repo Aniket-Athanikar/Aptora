@@ -276,8 +276,8 @@ export default function ExamsPage() {
               onClick={() => setActiveCategory(cat.id)}
               className={`px-5 py-2.5 rounded-full text-xs font-black transition-all duration-300 cursor-pointer shadow-sm ${
                 activeCategory === cat.id
-                  ? "bg-neutral-900 text-white border-neutral-900"
-                  : "bg-[var(--surface)] border border-white/20 text-neutral-600 hover:bg-[var(--surface-soft)]"
+                  ? "bg-gradient-to-r from-[#084c38] via-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/20 border-transparent"
+                  : "bg-white border border-emerald-500/20 text-neutral-700 hover:bg-emerald-50/50"
               }`}
             >
               {cat.label}
@@ -308,26 +308,25 @@ export default function ExamsPage() {
                   key={exam.name}
                   className="block group"
                 >
-                  <GlassCard
-                    className="p-6 h-full flex flex-col justify-between hover:shadow-lg border-white/20 hover:border-emerald-500/50 transition-all duration-300 bg-[var(--surface)]/70 group-hover:-translate-y-1 relative overflow-hidden"
-                  >
+                  <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 group-hover:-translate-y-1 p-6 h-full flex flex-col justify-between">
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
                     <div>
                       {/* Header */}
-                      <div className="flex items-center justify-between mb-5 border-b border-[#ECECEC] pb-4">
+                      <div className="flex items-center justify-between mb-5 border-b border-emerald-500/10 pb-4 pt-1">
                         <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-xl ${exam.bgColor} ${exam.color} border ${exam.borderColor} flex items-center justify-center shrink-0`}>
-                            <ExamIcon className="w-5 h-5" />
+                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                            <ExamIcon className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <h4 className="text-base font-black text-neutral-900 group-hover:text-emerald-600 transition-colors">
                               {exam.name}
                             </h4>
-                            <p className="text-[10px] font-semibold text-neutral-400">
+                            <p className="text-[10px] font-semibold text-neutral-500">
                               {exam.subtitle}
                             </p>
                           </div>
                         </div>
-                        <div className="w-7 h-7 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors shrink-0">
+                        <div className="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-200/50 flex items-center justify-center text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
                           <ArrowRight className="w-3.5 h-3.5" />
                         </div>
                       </div>
@@ -337,19 +336,19 @@ export default function ExamsPage() {
                         <span className="text-[8px] font-black text-neutral-400 uppercase tracking-widest block mb-1">
                           Optimization Focus
                         </span>
-                        <p className="text-xs text-neutral-800 font-extrabold">
+                        <p className="text-xs text-neutral-900 font-extrabold">
                           {exam.toolkit.focus}
                         </p>
                       </div>
 
                       {/* Capabilities */}
-                      <div className="border-t border-[#ECECEC] pt-4 mt-4">
+                      <div className="border-t border-emerald-500/10 pt-4 mt-4">
                         <span className="text-[8px] font-black text-neutral-400 uppercase tracking-widest block mb-2.5">
                           AI Study Toolkit
                         </span>
                         <ul className="space-y-2">
                           {exam.toolkit.features.map((feat, fIdx) => (
-                            <li key={fIdx} className="flex items-start gap-2 text-[10px] text-neutral-600 font-bold leading-relaxed">
+                            <li key={fIdx} className="flex items-start gap-2 text-[10px] text-neutral-700 font-bold leading-relaxed">
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                               <span>{feat}</span>
                             </li>
@@ -357,7 +356,7 @@ export default function ExamsPage() {
                         </ul>
                       </div>
                     </div>
-                  </GlassCard>
+                  </div>
                 </Link>
               );
             })}

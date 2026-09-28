@@ -90,13 +90,13 @@ export default function ReportBugPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
+          <span className="inline-block bg-emerald-100/70 text-emerald-800 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-200/50 mb-4">
             Bug Report
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
             Report an Issue
           </h2>
-          <p className="mt-3 text-neutral-500 font-semibold max-w-xl mx-auto">
+          <p className="mt-3 text-neutral-600 font-semibold max-w-xl mx-auto">
             Describe the issue in detail so our team can investigate and fix it quickly
           </p>
         </motion.div>
@@ -110,47 +110,48 @@ export default function ReportBugPage() {
         >
           <motion.div
             variants={itemVariants}
-            className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg"
+            className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-12"
+                className="text-center py-12 pt-14"
               >
-                <div className="w-20 h-20 rounded-full bg-[#22C55E]/10 flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle2 className="w-10 h-10 text-[#22C55E]" />
+                <div className="w-20 h-20 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-6 border border-emerald-200/60 shadow-inner">
+                  <CheckCircle2 className="w-10 h-10 text-emerald-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-neutral-900 mb-2">
+                <h3 className="text-2xl font-black text-neutral-900 mb-2">
                   Report Submitted!
                 </h3>
-                <p className="text-neutral-500 font-medium">
+                <p className="text-neutral-600 font-semibold">
                   Thank you for helping us improve. We&apos;ll investigate this issue promptly.
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-2">
                 {/* Name */}
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="name"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
-                    Your Name <span className="text-red-500">*</span>
+                    Your Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="name"
                     type="text"
                     {...register("name")}
                     placeholder="Enter your full name"
-                    className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
+                    className={`w-full bg-white border-2 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none transition-all shadow-sm ${
                       errors.name
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
+                        ? "border-rose-400 focus:border-rose-500"
+                        : "border-emerald-500/20 focus:border-emerald-500"
                     }`}
                   />
                   {errors.name && (
-                    <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+                    <p className="mt-1.5 text-xs font-bold text-rose-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
                       {errors.name.message}
                     </p>
@@ -161,23 +162,23 @@ export default function ReportBugPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
-                    Email Address <span className="text-red-500">*</span>
+                    Email Address <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="email"
                     type="email"
                     {...register("email")}
                     placeholder="you@example.com"
-                    className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
+                    className={`w-full bg-white border-2 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none transition-all shadow-sm ${
                       errors.email
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
+                        ? "border-rose-400 focus:border-rose-500"
+                        : "border-emerald-500/20 focus:border-emerald-500"
                     }`}
                   />
                   {errors.email && (
-                    <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+                    <p className="mt-1.5 text-xs font-bold text-rose-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
                       {errors.email.message}
                     </p>
@@ -188,23 +189,23 @@ export default function ReportBugPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="title"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
-                    Title <span className="text-red-500">*</span>
+                    Title <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="title"
                     type="text"
                     {...register("title")}
                     placeholder="Describe the issue briefly"
-                    className={`w-full bg-white/50 border rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 transition-all ${
+                    className={`w-full bg-white border-2 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none transition-all shadow-sm ${
                       errors.title
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500"
+                        ? "border-rose-400 focus:border-rose-500"
+                        : "border-emerald-500/20 focus:border-emerald-500"
                     }`}
                   />
                   {errors.title && (
-                    <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+                    <p className="mt-1.5 text-xs font-bold text-rose-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
                       {errors.title.message}
                     </p>
@@ -215,25 +216,25 @@ export default function ReportBugPage() {
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="steps"
-                    className="block text-sm font-bold text-neutral-900 mb-2"
+                    className="block text-sm font-black text-neutral-900 mb-2"
                   >
                     Steps to Reproduce{" "}
-                    <span className="text-neutral-400 font-medium">(optional)</span>
+                    <span className="text-neutral-400 font-semibold">(optional)</span>
                   </label>
                   <textarea
                     id="steps"
                     {...register("steps")}
                     placeholder="1. Go to...&#10;2. Click on...&#10;3. See the error..."
                     rows={5}
-                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                    className="w-full bg-white border-2 border-emerald-500/20 rounded-2xl px-4 py-3 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all resize-none shadow-sm"
                   />
                 </motion.div>
 
                 {/* Upload Screenshot */}
                 <motion.div variants={itemVariants}>
-                  <label className="block text-sm font-bold text-neutral-900 mb-2">
+                  <label className="block text-sm font-black text-neutral-900 mb-2">
                     Upload Screenshot{" "}
-                    <span className="text-neutral-400 font-medium">(optional)</span>
+                    <span className="text-neutral-400 font-semibold">(optional)</span>
                   </label>
                   <div
                     onDrop={handleDrop}
@@ -241,10 +242,10 @@ export default function ReportBugPage() {
                     onDragLeave={handleDragLeave}
                     className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${
                       isDragging
-                        ? "border-emerald-500 bg-emerald-500/5"
+                        ? "border-emerald-500 bg-emerald-50/50"
                         : fileName
-                        ? "border-[#22C55E]/40 bg-[#22C55E]/5"
-                        : "border-neutral-200 bg-white/30 hover:border-emerald-500/40 hover:bg-emerald-500/5"
+                        ? "border-emerald-500/40 bg-emerald-50/30"
+                        : "border-emerald-500/20 bg-emerald-50/20 hover:border-emerald-500/40 hover:bg-emerald-50/40"
                     }`}
                   >
                     <input
@@ -256,8 +257,8 @@ export default function ReportBugPage() {
 
                     {fileName ? (
                       <div className="flex flex-col items-center gap-2">
-                        <FileImage className="w-10 h-10 text-[#22C55E]" />
-                        <p className="text-sm font-semibold text-neutral-700">
+                        <FileImage className="w-10 h-10 text-emerald-600" />
+                        <p className="text-sm font-semibold text-neutral-800">
                           {fileName}
                         </p>
                         <button
@@ -266,22 +267,22 @@ export default function ReportBugPage() {
                             e.stopPropagation();
                             setFileName(null);
                           }}
-                          className="text-xs font-bold text-red-500 hover:text-red-600 flex items-center gap-1 cursor-pointer"
+                          className="text-xs font-black text-rose-500 hover:text-rose-600 flex items-center gap-1 cursor-pointer"
                         >
                           <X className="w-3 h-3" /> Remove
                         </button>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center gap-3">
-                        <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                          <Upload className="w-7 h-7 text-emerald-600" />
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20">
+                          <Upload className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-neutral-700">
+                          <p className="text-sm font-black text-neutral-800">
                             Drag & drop or{" "}
                             <span className="text-emerald-600">click to upload</span>
                           </p>
-                          <p className="text-xs text-neutral-400 font-medium mt-1">
+                          <p className="text-xs text-neutral-500 font-medium mt-1">
                             PNG, JPG, GIF up to 10MB
                           </p>
                         </div>
@@ -294,7 +295,7 @@ export default function ReportBugPage() {
                 <motion.div variants={itemVariants}>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 border-none"
+                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#084c38] via-emerald-600 to-teal-500 text-white font-black px-8 py-4 rounded-2xl shadow-md shadow-emerald-500/20 hover:scale-[1.01] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border-none"
                   >
                     <Bug className="w-5 h-5" />
                     Submit Report

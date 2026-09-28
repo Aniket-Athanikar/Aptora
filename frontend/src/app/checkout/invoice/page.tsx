@@ -61,7 +61,10 @@ function InvoiceContent() {
       </div>
 
       {/* Invoice Sheet */}
-      <div className="max-w-[700px] mx-auto bg-white border border-slate-200 shadow-xl rounded-3xl p-8 md:p-12 print:border-none print:shadow-none print:rounded-none print:p-0">
+      <div className="relative max-w-[700px] mx-auto bg-white/95 backdrop-blur-md border-2 border-emerald-500/20 shadow-2xl rounded-3xl p-8 md:p-12 overflow-hidden print:border-none print:shadow-none print:rounded-none print:p-0">
+        {/* Top Accent Gradient Bar - Hidden on print */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 print:hidden" />
+
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start justify-between border-b-2 border-slate-100 pb-8 gap-4">
           <div>

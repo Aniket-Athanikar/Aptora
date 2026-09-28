@@ -342,13 +342,13 @@ export default function HelpCenterPage() {
           className="max-w-2xl mx-auto mb-16"
         >
           <div className="relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600" />
             <input
               type="text"
               placeholder="Search for articles, topics or questions"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-2xl pl-14 pr-6 py-4 text-sm font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-lg"
+              className="w-full bg-white/90 backdrop-blur-md border-2 border-emerald-500/20 rounded-2xl pl-14 pr-6 py-4 text-sm font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 transition-all shadow-xl"
             />
           </div>
         </motion.div>
@@ -360,13 +360,13 @@ export default function HelpCenterPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center mb-12"
         >
-          <span className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-4">
+          <span className="inline-block bg-emerald-100/70 text-emerald-800 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-200/50 mb-4">
             Browse Topics
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-neutral-900">
             Popular Topics
           </h2>
-          <p className="mt-3 text-neutral-500 font-semibold max-w-xl mx-auto">
+          <p className="mt-3 text-neutral-600 font-semibold max-w-xl mx-auto">
             Explore our most visited help categories to find quick answers
           </p>
         </motion.div>
@@ -385,39 +385,29 @@ export default function HelpCenterPage() {
                 key={topic.id}
                 variants={itemVariants}
                 onClick={() => handleTopicClick(topic.id)}
-                className={`group cursor-pointer bg-white/70 backdrop-blur-xl border rounded-[24px] p-7 shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden ${
-                  isSelected ? "border-emerald-500 ring-2 ring-emerald-500/20" : "border-[#ECECEC]"
+                className={`group cursor-pointer relative border-2 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-7 hover:-translate-y-1.5 transition-all duration-300 ${
+                  isSelected ? "border-emerald-500 shadow-emerald-500/10" : "border-emerald-500/20 hover:border-emerald-500/40"
                 }`}
               >
-                {/* Subtle gradient hover overlay */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px]"
-                  style={{
-                    background: `linear-gradient(135deg, ${topic.color}08, ${topic.color}04)`,
-                  }}
-                />
-
-                <div className="relative z-10">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                <div className="pt-1">
                   {/* Icon */}
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: `${topic.color}0D`, border: `1px solid ${topic.color}1A` }}
-                  >
-                    <topic.icon className="w-7 h-7" style={{ color: topic.color }} />
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center mb-5 shadow-md shadow-emerald-500/20 transition-transform duration-300 group-hover:scale-110">
+                    <topic.icon className="w-7 h-7 text-white" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold text-neutral-900 mb-1.5 group-hover:text-emerald-600 transition-colors">
+                  <h3 className="text-lg font-black text-neutral-900 mb-1.5 group-hover:text-emerald-600 transition-colors">
                     {topic.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm text-neutral-500 font-medium leading-relaxed">
+                  <p className="text-sm text-neutral-600 font-semibold leading-relaxed">
                     {topic.description}
                   </p>
 
                   {/* Arrow indicator */}
-                  <div className="mt-4 flex items-center gap-1 text-xs font-bold text-emerald-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
+                  <div className="mt-4 flex items-center gap-1 text-xs font-black text-emerald-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
                     Learn more <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 </div>
@@ -436,19 +426,17 @@ export default function HelpCenterPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.4 }}
-              className="bg-white/80 backdrop-blur-xl border border-[#ECECEC] rounded-[32px] p-8 md:p-10 shadow-xl max-w-4xl mx-auto"
+              className="relative border-2 border-emerald-500/20 shadow-2xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10 max-w-4xl mx-auto"
             >
-              <div className="flex items-center justify-between border-b border-neutral-100 pb-6 mb-8">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+              <div className="flex items-center justify-between border-b border-emerald-500/10 pb-6 mb-8 pt-1">
                 <div className="flex items-center gap-4">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${activeTopic.color}10` }}
-                  >
-                    <activeTopic.icon className="w-6 h-6" style={{ color: activeTopic.color }} />
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                    <activeTopic.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-black text-neutral-900">{activeTopic.title}</h3>
-                    <p className="text-sm text-neutral-500 font-medium mt-0.5">{activeTopic.description}</p>
+                    <p className="text-sm text-neutral-600 font-semibold mt-0.5">{activeTopic.description}</p>
                   </div>
                 </div>
                 <button

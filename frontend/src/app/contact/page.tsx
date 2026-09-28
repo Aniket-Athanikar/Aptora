@@ -142,22 +142,25 @@ export default function ContactPage() {
                   key={idx}
                   href={mounted && card.href.startsWith("https://wa.me/") ? getWhatsAppLink(card.href.split("/").pop() || "") : card.href}
                   variants={itemVariants}
-                  className="flex items-start gap-4 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group block"
+                  className="relative rounded-3xl bg-white border-2 border-emerald-500/20 p-6 shadow-xl hover:border-emerald-400 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group block overflow-hidden"
                 >
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 border"
-                    style={{
-                      backgroundColor: `${card.color}08`,
-                      borderColor: `${card.color}18`,
-                    }}
-                  >
-                    <Icon className="w-6 h-6" style={{ color: card.color }} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-neutral-900 mb-1">{card.title}</h3>
-                    <p className="text-sm font-semibold text-neutral-500 group-hover:text-emerald-600 transition-colors">
-                      {card.detail}
-                    </p>
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                  <div className="flex items-start gap-4 pt-1">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 border shadow-xs"
+                      style={{
+                        backgroundColor: `${card.color}12`,
+                        borderColor: `${card.color}30`,
+                      }}
+                    >
+                      <Icon className="w-6 h-6" style={{ color: card.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-slate-900 mb-1 font-display">{card.title}</h3>
+                      <p className="text-xs font-extrabold text-slate-600 group-hover:text-[#084c38] transition-colors">
+                        {card.detail}
+                      </p>
+                    </div>
                   </div>
                 </motion.a>
               );
@@ -167,10 +170,12 @@ export default function ContactPage() {
           {/* Right: Contact Form */}
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-3 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg"
+            className="relative lg:col-span-3 bg-white border-2 border-emerald-500/20 rounded-3xl p-8 md:p-10 shadow-2xl overflow-hidden glow-emerald"
           >
-            <h2 className="text-2xl font-black text-neutral-900 mb-2">Send us a Message</h2>
-            <p className="text-sm font-semibold text-neutral-500 mb-8">
+            {/* Top Accent Gradient Bar */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+            <h2 className="text-2xl font-black text-slate-900 mb-2 font-display pt-1">Send us a Message</h2>
+            <p className="text-xs font-bold text-slate-500 mb-8 font-display">
               Fill out the form below and we&apos;ll get back to you within 24 hours.
             </p>
 

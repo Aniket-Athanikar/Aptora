@@ -190,8 +190,10 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 16 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="relative w-full max-w-[460px] bg-white border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 space-y-6 z-10"
+          className="relative w-full max-w-[460px] bg-white border-2 border-rose-500/20 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 space-y-6 z-10 glow-emerald"
         >
+          {/* Top Accent Gradient Bar */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-600 via-amber-500 to-[#084c38]" />
           {/* Step Indicator Header */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-500">

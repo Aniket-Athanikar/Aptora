@@ -116,12 +116,13 @@ export default function PrivacyPolicyPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg"
+          className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10"
         >
-          <div className="inline-block bg-emerald-50 text-emerald-600 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-100 mb-6">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          <div className="inline-block bg-emerald-100/70 text-emerald-800 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full border border-emerald-200/50 mb-6 pt-1">
             Last updated: 25 May 2024
           </div>
-          <p className="text-neutral-600 font-medium leading-relaxed">
+          <p className="text-neutral-700 font-semibold leading-relaxed">
             At Aptora, we are committed to protecting the privacy and security of our users.
             This Privacy Policy explains how we collect, use, disclose, and safeguard your information
             when you use our platform and services. By using Aptora, you agree to the collection
@@ -143,14 +144,15 @@ export default function PrivacyPolicyPage() {
               <motion.div
                 key={idx}
                 variants={itemVariants}
-                className="bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-8 md:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 md:p-10 hover:border-emerald-500/40 transition-all duration-300"
               >
-                <div className="flex items-start gap-5 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-6 h-6 text-emerald-600" />
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                <div className="flex items-start gap-5 mb-6 pt-1">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <span className="text-xs font-black text-emerald-600 tracking-widest">
+                    <span className="text-xs font-black text-emerald-700 tracking-widest">
                       SECTION {section.number}
                     </span>
                     <h2 className="text-xl font-black text-neutral-900 mt-1">{section.title}</h2>
@@ -160,8 +162,8 @@ export default function PrivacyPolicyPage() {
                 <div className="space-y-5 pl-0 md:pl-[68px]">
                   {section.content.map((item, itemIdx) => (
                     <div key={itemIdx}>
-                      <h3 className="text-sm font-black text-neutral-800 mb-1.5">{item.subtitle}</h3>
-                      <p className="text-sm font-medium text-neutral-500 leading-relaxed">{item.text}</p>
+                      <h3 className="text-sm font-black text-neutral-900 mb-1.5">{item.subtitle}</h3>
+                      <p className="text-sm font-semibold text-neutral-600 leading-relaxed">{item.text}</p>
                     </div>
                   ))}
                 </div>

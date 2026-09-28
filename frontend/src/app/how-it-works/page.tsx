@@ -183,13 +183,13 @@ export default function HowItWorksPage() {
                 <button
                   key={stage.id}
                   onClick={() => setActiveStage(stage.id)}
-                  className={`px-4 py-3 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm border ${
+                  className={`px-5 py-3 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm ${
                     isActive
-                      ? "bg-neutral-900 border-neutral-900 text-white"
-                      : "bg-white border-[#ECECEC] text-neutral-600 hover:bg-neutral-50"
+                      ? "bg-gradient-to-r from-[#084c38] via-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/20 border-transparent"
+                      : "bg-white border border-emerald-500/20 text-neutral-700 hover:bg-emerald-50/50"
                   }`}
                 >
-                  <StageIcon className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-neutral-400"}`} />
+                  <StageIcon className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-emerald-600"}`} />
                   <span>{stage.title.split(" & ")[0].split(" &")[0]}</span>
                 </button>
               );
@@ -208,9 +208,10 @@ export default function HowItWorksPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm space-y-6"
+                  className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-6"
                 >
-                  <div className="flex items-center justify-between border-b border-[#ECECEC] pb-4">
+                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                  <div className="flex items-center justify-between border-b border-emerald-500/10 pb-4 pt-1">
                     <div>
                       <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">
                         {currentStage.num}
@@ -222,8 +223,8 @@ export default function HowItWorksPage() {
                         {currentStage.subtitle}
                       </p>
                     </div>
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${currentStage.color} text-white flex items-center justify-center shadow-lg ${currentStage.shadowColor}`}>
-                      <ActiveIcon className="w-6 h-6" />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20">
+                      <ActiveIcon className="w-6 h-6 text-white" />
                     </div>
                   </div>
 
@@ -233,23 +234,23 @@ export default function HowItWorksPage() {
 
                   {/* Flow pipeline indicators */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div className="bg-neutral-50 border border-neutral-100 rounded-2xl p-4 flex gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-neutral-200/50 flex items-center justify-center shrink-0">
-                        <ArrowLeftRight className="w-4 h-4 text-neutral-500" />
+                    <div className="bg-emerald-50/50 border border-emerald-200/50 rounded-2xl p-4 flex gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                        <ArrowLeftRight className="w-4 h-4 text-emerald-700" />
                       </div>
                       <div>
-                        <span className="text-[9px] font-black text-neutral-400 uppercase tracking-wider block">Input data</span>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">{currentStage.input}</p>
+                        <span className="text-[9px] font-black text-emerald-800 uppercase tracking-wider block">Input data</span>
+                        <p className="text-[11px] text-neutral-700 font-bold leading-relaxed">{currentStage.input}</p>
                       </div>
                     </div>
 
-                    <div className="bg-emerald-50/30 border border-emerald-100 rounded-2xl p-4 flex gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-100/50 flex items-center justify-center shrink-0">
-                        <Check className="w-4 h-4 text-emerald-600" />
+                    <div className="bg-teal-50/50 border border-teal-200/50 rounded-2xl p-4 flex gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
+                        <Check className="w-4 h-4 text-teal-700" />
                       </div>
                       <div>
-                        <span className="text-[9px] font-black text-emerald-600/80 uppercase tracking-wider block">Generated output</span>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">{currentStage.output}</p>
+                        <span className="text-[9px] font-black text-teal-800 uppercase tracking-wider block">Generated output</span>
+                        <p className="text-[11px] text-neutral-700 font-bold leading-relaxed">{currentStage.output}</p>
                       </div>
                     </div>
                   </div>
@@ -257,12 +258,13 @@ export default function HowItWorksPage() {
               </AnimatePresence>
 
               {/* Progress Flow Timeline */}
-              <div className="bg-white/80 border border-[#ECECEC] rounded-3xl p-6 md:p-8 shadow-sm">
-                <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+              <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-6 flex items-center gap-2 pt-1">
                   <Terminal className="w-4 h-4 text-emerald-600" />
                   System Sequence Timeline
                 </h3>
-                <div className="space-y-6 relative pl-4 border-l border-neutral-100">
+                <div className="space-y-6 relative pl-4 border-l-2 border-emerald-500/20">
                   {stages.map((st, sIdx) => (
                     <button
                       key={st.id}
@@ -272,13 +274,13 @@ export default function HowItWorksPage() {
                       }`}
                     >
                       {/* Timeline indicator node */}
-                      <div className={`absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full transition-colors ${
-                        st.id === activeStage ? `bg-gradient-to-br ${st.color}` : "bg-neutral-200"
+                      <div className={`absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full transition-colors ring-4 ${
+                        st.id === activeStage ? "bg-emerald-500 ring-emerald-100" : "bg-neutral-300 ring-neutral-100"
                       }`} />
 
                       <div className="flex items-center justify-between">
                         <h4 className={`text-xs font-black uppercase tracking-wider ${
-                          st.id === activeStage ? "text-emerald-600" : "text-neutral-500"
+                          st.id === activeStage ? "text-emerald-700" : "text-neutral-500"
                         }`}>
                           {st.num} • {st.title}
                         </h4>
@@ -304,40 +306,42 @@ export default function HowItWorksPage() {
                   transition={{ duration: 0.2 }}
                   className="w-full"
                 >
-                  <GlassCard className="p-6 border-[#ECECEC] bg-white/70">
-                    <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6">
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+                    <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest mb-4 flex items-center gap-2 pt-1">
                       <Layers className="w-4 h-4 text-emerald-600" />
                       Core Capabilities
                     </h3>
                     <ul className="space-y-3.5">
                       {currentStage.bullets.map((bullet, bIdx) => (
-                        <li key={bIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 bg-neutral-100 text-neutral-600`}>
+                        <li key={bIdx} className="flex items-start gap-2.5 text-[11px] text-neutral-700 font-bold leading-relaxed">
+                          <div className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-700 font-black">
                             <Check className="w-2.5 h-2.5" />
                           </div>
                           <span>{bullet}</span>
                         </li>
                       ))}
                     </ul>
-                  </GlassCard>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
               {/* Ready CTA Card */}
-              <div className="bg-gradient-to-br from-emerald-600 to-teal-650 rounded-[24px] p-6 text-white shadow-lg shadow-emerald-500/15 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-emerald-100 mb-2">
+              <div className="relative border-2 border-emerald-500/30 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-[#084c38] via-emerald-900 to-teal-950 p-6 text-white text-center md:text-left">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-400 to-teal-300" />
+                <h4 className="text-xs font-black uppercase tracking-widest text-emerald-200 mb-2 pt-1">
                   Accelerate Preparation
                 </h4>
-                <p className="text-[11px] font-bold leading-relaxed text-emerald-50 mb-5">
+                <p className="text-[11px] font-bold leading-relaxed text-emerald-100 mb-5">
                   Begin your multi-stage study loop with our grounded AI preparation pipeline today.
                 </p>
                 <div className="flex flex-col gap-2">
                   <Link href="/login">
-                    <GlowButton variant="outline" className="w-full bg-white text-emerald-600 border-transparent hover:bg-neutral-50 text-[10px] font-black py-3 rounded-xl transition-all" magnetic={false}>
+                    <GlowButton variant="outline" className="w-full bg-white text-emerald-950 border-transparent hover:bg-emerald-50 text-[10px] font-black py-3 rounded-xl transition-all shadow-md" magnetic={false}>
                       Register Free Account
                     </GlowButton>
                   </Link>
-                  <Link href="/features" className="text-[10px] font-black text-emerald-100 hover:text-white transition-colors flex items-center justify-center gap-1 mt-2">
+                  <Link href="/features" className="text-[10px] font-black text-emerald-200 hover:text-white transition-colors flex items-center justify-center gap-1 mt-2">
                     Review Specifications
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>

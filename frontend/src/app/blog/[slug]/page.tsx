@@ -158,8 +158,9 @@ export default function BlogPostDetail() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="relative w-full h-[350px] md:h-[450px] rounded-[32px] overflow-hidden border border-[#ECECEC] shadow-xl"
+          className="relative w-full h-[350px] md:h-[450px] rounded-3xl overflow-hidden border-2 border-emerald-500/20 shadow-xl"
         >
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400 z-20" />
           <Image
             src={post.image}
             alt={post.title}
@@ -168,12 +169,13 @@ export default function BlogPostDetail() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
         </motion.div>
 
         {/* Meta Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-white/70 backdrop-blur-xl border border-[#ECECEC] rounded-[24px] p-5 shadow-sm">
-          <div className="flex items-center gap-6 text-xs text-neutral-500 font-bold">
+        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          <div className="flex items-center gap-6 text-xs text-neutral-600 font-bold pt-1">
             <span className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-emerald-600" />
               {post.date}
@@ -189,21 +191,21 @@ export default function BlogPostDetail() {
           </div>
 
           {/* Social Stats Block */}
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
+          <div className="flex items-center gap-3 pt-1">
+            <button className="p-2 rounded-xl bg-emerald-50 border border-emerald-200/50 hover:bg-emerald-100 text-emerald-700 transition-all">
               <Heart className="w-4 h-4" />
             </button>
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
+            <button className="p-2 rounded-xl bg-emerald-50 border border-emerald-200/50 hover:bg-emerald-100 text-emerald-700 transition-all">
               <MessageSquare className="w-4 h-4" />
             </button>
-            <button className="p-2 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-500 hover:text-emerald-600 transition-all">
+            <button className="p-2 rounded-xl bg-emerald-50 border border-emerald-200/50 hover:bg-emerald-100 text-emerald-700 transition-all">
               <Share2 className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Content sections */}
-        <div className="space-y-10">
+        <div className="space-y-8">
           {post.content.map((sec, idx) => (
             <motion.section
               key={idx}
@@ -211,13 +213,16 @@ export default function BlogPostDetail() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="space-y-4"
+              className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-4"
             >
-              <h2 className="text-xl md:text-2xl font-black text-neutral-900 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-emerald-600" />
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+              <h2 className="text-xl md:text-2xl font-black text-neutral-900 flex items-center gap-3 pt-1">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-sm">
+                  <BookOpen className="w-4 h-4 text-white" />
+                </div>
                 {sec.heading}
               </h2>
-              <p className="text-neutral-600 font-medium leading-relaxed text-base md:text-lg">
+              <p className="text-neutral-700 font-medium leading-relaxed text-base md:text-lg">
                 {sec.text}
               </p>
             </motion.section>
@@ -225,15 +230,16 @@ export default function BlogPostDetail() {
         </div>
 
         {/* Premium Upgrade Block */}
-        <div className="bg-gradient-to-br from-emerald-600 to-teal-650 text-white p-8 md:p-12 rounded-[32px] shadow-xl relative overflow-hidden group">
+        <div className="relative border-2 border-emerald-500/30 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-[#084c38] via-emerald-900 to-teal-950 p-8 md:p-12 text-white group">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-400 to-teal-300" />
           <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-          <h3 className="text-2xl md:text-3xl font-black mb-3">Prep Smarter with Aptora</h3>
-          <p className="text-emerald-50 text-sm font-semibold mb-6 max-w-lg">
+          <h3 className="text-2xl md:text-3xl font-black mb-3 text-white pt-2">Prep Smarter with Aptora</h3>
+          <p className="text-emerald-100 text-sm font-semibold mb-6 max-w-lg">
             Don&apos;t just read about strategies. Build your customized notes, practice sectional sets, and analyze performance dashboards inside our premium academy.
           </p>
           <Link
             href="/pricing"
-            className="inline-flex items-center gap-2 text-sm font-black text-emerald-600 bg-white px-8 py-3.5 rounded-xl hover:bg-neutral-50 hover:shadow-lg transition-all border-none"
+            className="inline-flex items-center gap-2 text-sm font-black text-emerald-950 bg-white px-8 py-3.5 rounded-xl hover:bg-emerald-50 hover:scale-[1.02] shadow-xl transition-all border-none"
           >
             Explore Pricing Plans
           </Link>

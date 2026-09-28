@@ -1,94 +1,146 @@
 import Link from "next/link";
 import React from "react";
+import { Cpu, Layers, Zap, ArrowRight, Code2, Sparkles, FolderTree } from "lucide-react";
 
 export default function ReactLabOverview() {
   return (
-    <div className="flex flex-col gap-8 animate-fade-in">
-      {/* Intro Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 p-8 border border-emerald-500/25 shadow-2xl">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
-        <h2 className="text-3xl font-bold text-white mb-2">React Enterprise Architecture</h2>
-        <p className="text-slate-300 max-w-3xl leading-relaxed">
+    <div className="flex flex-col gap-8 animate-fade-in py-2">
+      {/* Intro Hero Box */}
+      <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 sm:p-10">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#084c38] to-emerald-700 text-white flex items-center justify-center shadow-md shadow-[#084c38]/20">
+            <Cpu className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="inline-block px-3 py-1 bg-emerald-50 text-[#084c38] text-[11px] font-extrabold uppercase tracking-widest rounded-full border border-emerald-200">
+              Interactive Lab
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-display mt-0.5">
+              React Enterprise Architecture
+            </h2>
+          </div>
+        </div>
+        <p className="text-slate-600 text-sm max-w-3xl leading-relaxed font-medium">
           Welcome to the Aptora React Lab. This playground demonstrates building high-performance, enterprise-grade React applications that scale to millions of rows, support highly maintainable structures, and use modern state, rendering, and validation tools.
         </p>
       </div>
 
       {/* Grid of Key Concepts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Virtual DOM card */}
-        <div className="bg-slate-950/40 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 flex flex-col justify-between group hover:border-emerald-500/40 transition-all">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400" />
           <div>
-            <div className="text-3xl mb-3">🌳</div>
-            <h3 className="text-lg font-bold text-white mb-2">Virtual DOM & Reconciliation</h3>
-            <p className="text-sm text-slate-400 leading-relaxed mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 mb-4">
+              <Layers className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2 font-display">Virtual DOM & Reconciliation</h3>
+            <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
               React creates a lightweight in-memory representation of the real DOM. When state changes, React diffs the old virtual tree with the new one and batches minimal real DOM updates.
             </p>
           </div>
-          <Link href="/react-lab/virtual-dom" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-            Try Interactive Visualizer →
+          <Link
+            href="/react-lab/virtual-dom"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#084c38] hover:text-[#063b2b] group-hover:translate-x-1 transition-transform"
+          >
+            Try Interactive Visualizer <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {/* High Performance 1M List */}
-        <div className="bg-slate-950/40 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 flex flex-col justify-between group hover:border-emerald-500/40 transition-all">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-500 to-emerald-500" />
           <div>
-            <div className="text-3xl mb-3">🚀</div>
-            <h3 className="text-lg font-bold text-white mb-2">Millions of Data Rows</h3>
-            <p className="text-sm text-slate-400 leading-relaxed mb-4">
-              Rendering millions of list items natively will crash the browser. We solve this using **DOM Virtualization (Windowing)**, rendering only what is inside the viewport buffer.
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-md shadow-teal-500/20 mb-4">
+              <Zap className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2 font-display">Millions of Data Rows</h3>
+            <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+              Rendering millions of list items natively will crash the browser. We solve this using DOM Virtualization (Windowing), rendering only what is inside the viewport buffer.
             </p>
           </div>
-          <Link href="/react-lab/virtual-list" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-            Scroll 1,000,000 Rows →
+          <Link
+            href="/react-lab/virtual-list"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#084c38] hover:text-[#063b2b] group-hover:translate-x-1 transition-transform"
+          >
+            Scroll 1,000,000 Rows <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {/* State Management vs Context */}
-        <div className="bg-slate-950/40 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 flex flex-col justify-between group hover:border-emerald-500/40 transition-all">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-600 to-teal-500" />
           <div>
-            <div className="text-3xl mb-3">⚡</div>
-            <h3 className="text-lg font-bold text-white mb-2">State & Context API</h3>
-            <p className="text-sm text-slate-400 leading-relaxed mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center shadow-md shadow-emerald-600/20 mb-4">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2 font-display">State & Context API</h3>
+            <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
               React Context API is great for low-frequency updates (e.g. themes), but triggers global tree re-renders for high-frequency state. Learn subscription-based state management patterns.
             </p>
           </div>
-          <Link href="/react-lab/state-demo" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-            Compare Re-renders →
+          <Link
+            href="/react-lab/state-demo"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#084c38] hover:text-[#063b2b] group-hover:translate-x-1 transition-transform"
+          >
+            Compare Re-renders <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
 
       {/* Folder Structure & Setup section */}
-      <div className="bg-slate-950/60 border border-slate-800 p-8 rounded-2xl">
-        <h3 className="text-xl font-bold text-white mb-6">📁 Enterprise Folder Structure</h3>
-        
+      <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 sm:p-10">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#084c38] flex items-center justify-center border border-emerald-200">
+            <FolderTree className="w-5 h-5" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900 font-display">Enterprise Folder Structure</h3>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <p className="text-slate-300 text-sm leading-relaxed mb-4">
+            <p className="text-slate-600 text-xs font-medium leading-relaxed mb-4">
               An enterprise application scales not just in runtime performance, but in developer velocity. We structure the project using a highly-scalable, feature-based and layout-based directory architecture:
             </p>
-            <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl font-mono text-xs text-emerald-300 flex flex-col gap-2">
-              <div>├── <span className="text-white">src/app</span> <span className="text-slate-500"># Next.js App Router Pages & Layouts</span></div>
-              <div>├── <span className="text-white">src/components</span></div>
-              <div>│   ├── <span className="text-white">common</span> <span className="text-slate-500"># Reusable atomic UI (Buttons, Cards, Modals)</span></div>
-              <div>│   └── <span className="text-white">features</span> <span className="text-slate-500"># Feature-specific, non-reusable layout sections</span></div>
-              <div>├── <span className="text-white">src/contexts</span> <span className="text-slate-500"># React Contexts for low-frequency theme/auth data</span></div>
-              <div>├── <span className="text-white">src/hooks</span> <span className="text-slate-500"># Custom hooks for encapsulation & business logic</span></div>
-              <div>├── <span className="text-white">src/store</span> <span className="text-slate-500"># High-frequency subscription state managers</span></div>
-              <div>└── <span className="text-white">src/types</span> <span className="text-slate-500"># Centralized TypeScript definitions & schemas</span></div>
+            <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl font-mono text-xs text-emerald-400 flex flex-col gap-2 shadow-inner">
+              <div>├── <span className="text-white font-bold">src/app</span> <span className="text-slate-500"># Next.js App Router Pages & Layouts</span></div>
+              <div>├── <span className="text-white font-bold">src/components</span></div>
+              <div>│   ├── <span className="text-white font-bold">common</span> <span className="text-slate-500"># Reusable atomic UI (Buttons, Cards, Modals)</span></div>
+              <div>│   └── <span className="text-white font-bold">features</span> <span className="text-slate-500"># Feature-specific, non-reusable layout sections</span></div>
+              <div>├── <span className="text-white font-bold">src/contexts</span> <span className="text-slate-500"># React Contexts for low-frequency theme/auth data</span></div>
+              <div>├── <span className="text-white font-bold">src/hooks</span> <span className="text-slate-500"># Custom hooks for encapsulation & business logic</span></div>
+              <div>├── <span className="text-white font-bold">src/store</span> <span className="text-slate-500"># High-frequency subscription state managers</span></div>
+              <div>└── <span className="text-white font-bold">src/types</span> <span className="text-slate-500"># Centralized TypeScript definitions & schemas</span></div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <h4 className="text-white font-semibold text-sm">Key Architectural Pillars:</h4>
-            <ul className="list-disc pl-5 text-sm text-slate-400 space-y-2">
-              <li><strong className="text-emerald-400">Strict TypeScript Models:</strong> Every API payload, state shape, and component prop is fully typed.</li>
-              <li><strong className="text-emerald-400">Environment Decoupling:</strong> Use `.env.local` for local secrets and Next.js public environment variables (`NEXT_PUBLIC_`) for client configs.</li>
-              <li><strong className="text-emerald-400">Declarative Forms:</strong> Standardized on `react-hook-form` paired with `zod` for parsing and client-side schemas.</li>
-            </ul>
-            <div className="mt-4">
-              <Link href="/react-lab/forms" className="inline-block bg-emerald-600 text-white font-medium text-sm px-6 py-2.5 rounded-xl hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-600/20 border-none">
-                Explore Enterprise Forms →
+          <div className="flex flex-col justify-between gap-4">
+            <div>
+              <h4 className="text-slate-900 font-bold text-xs uppercase tracking-wider mb-3">Key Architectural Pillars:</h4>
+              <ul className="space-y-2 text-xs text-slate-600 font-medium">
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#084c38] mt-1.5 shrink-0" />
+                  <span><strong className="text-slate-900 font-bold">Strict TypeScript Models:</strong> Every API payload, state shape, and component prop is fully typed.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#084c38] mt-1.5 shrink-0" />
+                  <span><strong className="text-slate-900 font-bold">Environment Decoupling:</strong> Use `.env.local` for local secrets and Next.js public environment variables (`NEXT_PUBLIC_`) for client configs.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#084c38] mt-1.5 shrink-0" />
+                  <span><strong className="text-slate-900 font-bold">Declarative Forms:</strong> Standardized on `react-hook-form` paired with `zod` for parsing and client-side schemas.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-2">
+              <Link
+                href="/react-lab/forms"
+                className="inline-flex items-center gap-2 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-[#084c38]/20 border-none"
+              >
+                <Code2 className="w-4 h-4" /> Explore Enterprise Forms <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -97,3 +149,4 @@ export default function ReactLabOverview() {
     </div>
   );
 }
+

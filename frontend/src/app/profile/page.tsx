@@ -5,11 +5,12 @@ import { useAuth, useProfile } from "@/contexts";
 import { getAvatarUrl } from "@/lib/avatar";
 import { DashboardLayout } from "@/components/dashboard";
 import { useToast } from "@/lib/ToastContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import {
-  User, Award, Star, Flame, Trophy, Coins, MapPin, Clock, Calendar,
-  Mail, Phone, BookOpen, GraduationCap, Edit3, Camera, Trash2,
-  Lock, Shield, Save, X, Compass, CheckCircle, Zap
+  User, Award, Star, Flame, Coins,
+  Mail, GraduationCap, Edit3, Camera, Trash2,
+  Save, X, Compass, LogIn
 } from "lucide-react";
 import { GoalEngineProvider } from "@/contexts/goal-engine.context";
 
@@ -22,7 +23,7 @@ export default function ProfilePage() {
 }
 
 function ProfileInner() {
-  const { logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { profile, isLoading, updateProfile, uploadAvatar, deleteAvatar } = useProfile();
   const { toast } = useToast();
 
@@ -34,7 +35,7 @@ function ProfileInner() {
   useEffect(() => {
     if (profile) {
       setFormData({
-        name: profile.name || "",
+        name: profile.name || user?.name || "",
         phone: profile.phone || "",
         dob: profile.dob || "",
         gender: profile.gender || "",
@@ -52,7 +53,35 @@ function ProfileInner() {
         study_hours_goal: profile.study_hours_goal || 4,
       });
     }
-  }, [profile, isEditing]);
+  }, [profile, user, isEditing]);
+
+  // Handle unauthenticated user state
+  if (!isAuthenticated && !isLoading) {
+    return (
+      <DashboardLayout activeTab="profile">
+        <div className="max-w-md mx-auto my-12 text-center">
+          <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-8 sm:p-10 flex flex-col items-center gap-5">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#084c38] to-emerald-700 text-white flex items-center justify-center shadow-md shadow-[#084c38]/20">
+              <User className="w-7 h-7" />
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-xl font-black text-slate-900 font-display">Authentication Required</h3>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                Please sign in to your Aptora account to view, synchronize, and update your personal profile stored in the database.
+              </p>
+            </div>
+            <Link
+              href="/login"
+              className="w-full py-3 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-[#084c38]/20 flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4" /> Sign In to Access Profile
+            </Link>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   if (isLoading && !profile) {
     return (
@@ -60,7 +89,7 @@ function ProfileInner() {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-[#084c38] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs font-bold text-slate-500">Loading Profile System...</p>
+            <p className="text-xs font-bold text-slate-500">Loading Profile Data...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -80,7 +109,7 @@ function ProfileInner() {
     try {
       await updateProfile(formData);
       setIsEditing(false);
-      toast("Your profile details have been saved successfully.", "success");
+      toast("Your profile details have been saved to the database successfully.", "success");
     } catch (err: any) {
       toast(err.message || "Could not save profile details.", "error");
     }
@@ -108,12 +137,16 @@ function ProfileInner() {
     }
   };
 
+  const displayName = profile?.name || user?.name || "Authenticated User";
+  const displayEmail = profile?.email || user?.email || "";
+
   return (
     <DashboardLayout activeTab="profile">
       <div className="max-w-5xl mx-auto space-y-8 px-2 py-4">
-        {/* Banner + Hero Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#084c38]/5 rounded-full blur-3xl pointer-events-none" />
+        {/* Hero Card */}
+        <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Avatar Area */}
           <div className="relative group shrink-0">
@@ -122,12 +155,12 @@ function ProfileInner() {
               {profile?.avatar_url ? (
                 <img
                   src={getAvatarUrl(profile.avatar_url)}
-                  alt={profile?.name}
+                  alt={displayName}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-[#084c38] text-white flex items-center justify-center font-black text-3xl uppercase">
-                  {profile?.name ? profile.name.charAt(0) : "?"}
+                <div className="w-full h-full bg-[#084c38] text-white flex items-center justify-center font-black text-3xl uppercase font-display">
+                  {displayName ? displayName.charAt(0) : "?"}
                 </div>
               )}
             </div>
@@ -164,14 +197,16 @@ function ProfileInner() {
 
           {/* Identity details */}
           <div className="flex-1 text-center md:text-left space-y-2">
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight font-display">
-              {profile?.name || "Student User"}
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight font-display">
+              {displayName}
             </h2>
             <div className="flex flex-wrap justify-center md:justify-start gap-3 text-xs font-semibold text-slate-600">
-              <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60">
-                <Mail className="w-3.5 h-3.5 text-slate-500" />
-                {profile?.email}
-              </span>
+              {displayEmail && (
+                <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60 font-medium">
+                  <Mail className="w-3.5 h-3.5 text-slate-500" />
+                  {displayEmail}
+                </span>
+              )}
               {profile?.target_exam && (
                 <span className="flex items-center gap-1.5 bg-[#ecfdf5] text-[#084c38] px-3 py-1 rounded-full border border-[#d1fae5] font-bold">
                   <Compass className="w-3.5 h-3.5" />
@@ -190,7 +225,7 @@ function ProfileInner() {
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-xs transition-all hover:scale-102 cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-md shadow-[#084c38]/20 transition-all hover:scale-102 cursor-pointer border-none"
               >
                 <Edit3 className="w-4 h-4" />
                 Edit Profile
@@ -200,7 +235,7 @@ function ProfileInner() {
                 <button
                   type="submit"
                   form="profile-form"
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-[#084c38] hover:bg-[#063b2b] text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer border-none"
                 >
                   <Save className="w-4 h-4" />
                   Save
@@ -227,43 +262,43 @@ function ProfileInner() {
 
         {/* Gamification / Live Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
-            <div className="p-2.5 rounded-xl bg-amber-500 text-white shadow-2xs">
+          <div className="relative border-2 border-amber-500/20 shadow-md rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-xs">
               <Award className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Level</p>
-              <h4 className="text-lg font-bold text-slate-900">{profile?.level || 1}</h4>
+              <h4 className="text-lg font-black text-slate-900 font-display">{profile?.level || 1}</h4>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
-            <div className="p-2.5 rounded-xl bg-[#084c38] text-white shadow-2xs">
+          <div className="relative border-2 border-emerald-500/20 shadow-md rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#084c38] to-emerald-700 text-white flex items-center justify-center shadow-xs">
               <Star className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total XP</p>
-              <h4 className="text-lg font-bold text-slate-900">{profile?.xp || 0}</h4>
+              <h4 className="text-lg font-black text-slate-900 font-display">{profile?.xp || 0}</h4>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
-            <div className="p-2.5 rounded-xl bg-orange-500 text-white shadow-2xs">
+          <div className="relative border-2 border-orange-500/20 shadow-md rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 text-white flex items-center justify-center shadow-xs">
               <Flame className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Streak</p>
-              <h4 className="text-lg font-bold text-slate-900">{profile?.streak || 0} Days</h4>
+              <h4 className="text-lg font-black text-slate-900 font-display">{profile?.streak || 0} Days</h4>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-2xs">
-            <div className="p-2.5 rounded-xl bg-yellow-500 text-white shadow-2xs">
+          <div className="relative border-2 border-yellow-500/20 shadow-md rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex items-center justify-center shadow-xs">
               <Coins className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Coins</p>
-              <h4 className="text-lg font-bold text-slate-900">{profile?.coins || 0}</h4>
+              <h4 className="text-lg font-black text-slate-900 font-display">{profile?.coins || 0}</h4>
             </div>
           </div>
         </div>
@@ -271,9 +306,12 @@ function ProfileInner() {
         {/* Detailed Sections Form */}
         <form id="profile-form" onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Personal Information */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+          <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-6">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <User className="w-5 h-5 text-[#084c38]" />
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#084c38] flex items-center justify-center border border-emerald-200">
+                <User className="w-4 h-4" />
+              </div>
               <h3 className="text-base font-bold text-slate-900 font-display">Personal Information</h3>
             </div>
 
@@ -286,6 +324,7 @@ function ProfileInner() {
                   value={formData.name || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  placeholder="Enter full name"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
@@ -298,6 +337,7 @@ function ProfileInner() {
                   value={formData.phone || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  placeholder="Enter mobile phone"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
@@ -339,6 +379,7 @@ function ProfileInner() {
                   value={formData.location || ""}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  placeholder="e.g. Pune, Maharashtra"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                 />
               </div>
@@ -351,6 +392,7 @@ function ProfileInner() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows={3}
+                  placeholder="Short bio about your preparation background"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors resize-none"
                 />
               </div>
@@ -360,9 +402,12 @@ function ProfileInner() {
           {/* Education & Journey */}
           <div className="space-y-6">
             {/* Education Info */}
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-6">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <GraduationCap className="w-5 h-5 text-[#084c38]" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#084c38] flex items-center justify-center border border-emerald-200">
+                  <GraduationCap className="w-4 h-4" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 font-display">Education & Academics</h3>
               </div>
 
@@ -388,6 +433,7 @@ function ProfileInner() {
                     value={formData.college || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
+                    placeholder="e.g. Pune University"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
@@ -400,6 +446,7 @@ function ProfileInner() {
                     value={formData.occupation || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
+                    placeholder="e.g. Full Time Student"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                   />
                 </div>
@@ -407,9 +454,12 @@ function ProfileInner() {
             </div>
 
             {/* Exam Journey */}
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+            <div className="relative border-2 border-emerald-500/20 shadow-xl rounded-3xl overflow-hidden bg-white/90 backdrop-blur-md p-6 md:p-8 space-y-6">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#084c38] via-emerald-500 to-teal-400" />
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <Compass className="w-5 h-5 text-[#084c38]" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#084c38] flex items-center justify-center border border-emerald-200">
+                  <Compass className="w-4 h-4" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 font-display">Exam Journey</h3>
               </div>
 
@@ -423,6 +473,7 @@ function ProfileInner() {
                       value={formData.target_exam || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
+                      placeholder="e.g. MPSC Rajyaseva"
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
@@ -434,6 +485,7 @@ function ProfileInner() {
                       value={formData.secondary_exam || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
+                      placeholder="e.g. UPSC CSE"
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
@@ -448,6 +500,7 @@ function ProfileInner() {
                       value={formData.target_score || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
+                      placeholder="e.g. 520"
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
@@ -459,6 +512,7 @@ function ProfileInner() {
                       value={formData.target_rank || ""}
                       onChange={handleInputChange}
                       disabled={!isEditing}
+                      placeholder="e.g. Top 100"
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 disabled:opacity-75 focus:outline-none focus:border-[#084c38] focus:ring-1 focus:ring-[#084c38] transition-colors"
                     />
                   </div>
@@ -495,4 +549,5 @@ function ProfileInner() {
       </div>
     </DashboardLayout>
   );
-}
+}
+
