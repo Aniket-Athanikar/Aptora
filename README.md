@@ -1,148 +1,245 @@
-# 🚀 Aptora —  AI Exam Prepration Platform
+# 🚀 Aptora — AI Exam Preparation Platform
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-15.5.20-black?style=for-the-badge&logo=next.js" alt="Next.js" />
   <img src="https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react" alt="React" />
   <img src="https://img.shields.io/badge/FastAPI-0.139.0-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python" alt="Python" />
-  <img src="https://img.shields.io/badge/PostgreSQL-15.0-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Qdrant-Vector--DB-DC2626?style=for-the-badge&logo=qdrant" alt="Qdrant" />
+  <img src="https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Qdrant-Vector_DB-DC2626?style=for-the-badge&logo=qdrant" alt="Qdrant" />
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker" alt="Docker" />
   <img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" alt="License" />
 </p>
 
 ---
 
-## 📖 Executive Summary
+## 📖 Overview
 
-**Aptora** (*Study Katta / AI Prep Engine*) is an enterprise-grade, multi-tenant AI educational ecosystem designed to accelerate competitive examination success (UPSC, SSC, GATE, Banking, & State PSCs). 
+**Aptora** is an AI-powered exam preparation platform designed to help students organize their preparation, study with contextual AI assistance, work with learning resources, practice through mock examinations, and track their progress.
 
-By combining **RAG (Retrieval-Augmented Generation)**, **Qdrant Vector Embeddings**, **OpenAI LLMs**, **ReportLab PDF Invoicing**, and an **Animated Glassmorphism Next.js 15 App Router Frontend**, Aptora delivers personalized learning paths, instant mock test generation, active-recall study notes, and real-time performance analytics.
+The platform combines a modern **Next.js frontend**, **FastAPI backend**, **PostgreSQL**, **Redis**, **Qdrant Vector Database**, and **LLM-powered retrieval workflows** to provide an integrated learning environment.
+
+Aptora focuses on turning a student's study material and preparation goals into a structured learning experience through:
+
+* 🤖 AI-powered study assistance
+* 📚 Personal learning resources
+* 🔎 Retrieval-Augmented Generation (RAG)
+* 📝 AI-generated study notes
+* 🎯 Mock examination workflows
+* 📊 Study progress and performance tracking
+* 📅 Personalized study planning
+* 🔐 Secure authentication and account management
+* 📄 Automated PDF invoice generation
+* 📧 Email delivery with PDF attachments
 
 ---
 
-## 🎨 Aptora UI Showcase & Visual Previews
+# 🎨 Aptora UI Showcase
 
-### 1. 🌐 Landing Page & Platform Overview (`/`)
-* **Design Aesthetic**: Premium Deep Emerald (`#084C38`) & Warm Off-White (`#FAF9F6`) canvas layout with glassmorphism and 3D micro-animations.
-* **Key Sections**: Hero with interactive particle banner, Feature Grid, AI Automation Flow, Pricing Matrix with GST breakdown, Synced FAQs, and Compact CTA Banner.
+## 1. 🌐 Landing Page & Platform Overview
+
+The Aptora landing page introduces the platform, its learning capabilities, AI workflows, resources, pricing, FAQs, and primary calls to action.
+
+### Landing Page Screens
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/1.png" alt="Aptora Landing Page 1" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/2.png" alt="Aptora Landing Page 2" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/3.png" alt="Aptora Landing Page 3" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/4.png" alt="Aptora Landing Page 4" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/5.png" alt="Aptora Landing Page 5" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/6.png" alt="Aptora Landing Page 6" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/7.png" alt="Aptora Landing Page 7" width="100%" />
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+---
+
+## 2. 🤖 AI Study Flow & Conversational Learning
+
+Aptora provides a conversational AI study workflow designed to guide students through multiple stages of contextual learning.
+
+The following screens demonstrate the AI study journey from the initial interaction through the different stages of the learning workflow.
+
+### AI Study Flow — 7 Stages
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/stage-1.png" alt="Aptora AI Study Flow Stage 1" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/stage-2.png" alt="Aptora AI Study Flow Stage 2" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/stage-3.png" alt="Aptora AI Study Flow Stage 3" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/stage-4.png" alt="Aptora AI Study Flow Stage 4" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/stage-5.png" alt="Aptora AI Study Flow Stage 5" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/stage-6.png" alt="Aptora AI Study Flow Stage 6" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/stage-7.png" alt="Aptora AI Study Flow Stage 7" width="100%" />
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+---
+
+## 3. 📊 Student Dashboard & Interactive Study Engine
+
+The dashboard provides students with an overview of their preparation and current study activity.
+
+**Features include:**
+
+* Study goals and progress
+* Streak tracking
+* Recommended study activities
+* Recent activity
+* Interactive study sessions
+* Pomodoro-style study workflows
 
 <p align="center">
-  <img src="frontend/public/about.png" alt="Aptora Platform Overview & Landing Page" width="850" />
+  <img src="frontend/public/student-study.png" alt="Aptora Student Dashboard" width="850" />
 </p>
 
 ---
 
-### 2. 📊 Student Dashboard & Interactive Study Engine (`/dashboard`)
-* **Features**: Live study goal rings, streak counter, daily AI recommended study tasks, recent activity history, and interactive pomodoro study cards.
+## 4. 🎯 Custom Mock Exams & Practice
+
+Aptora supports structured practice and mock examination workflows.
+
+**Features include:**
+
+* Timed examination sessions
+* Question and option evaluation
+* Answer explanations
+* Subject-wise practice
+* Performance tracking
 
 <p align="center">
-  <img src="frontend/public/student-study.png" alt="Aptora Student Dashboard & Interactive Session" width="850" />
+  <img src="frontend/public/blog-mock-tests.png" alt="Aptora Mock Examination Platform" width="850" />
 </p>
 
 ---
 
-### 3. 🤖 AI Coach & RAG Knowledge Engine (`/dashboard/coach`)
-* **Features**: Real-time conversational AI mentor with token budget optimization, syllabus context awareness, Markdown streaming, and direct PDF note export.
+## 5. 📚 Digital Syllabus & Resource Library
+
+Students can organize learning resources and reference material inside the platform.
+
+**Features include:**
+
+* Learning resource management
+* Book and document organization
+* Previous Year Question (PYQ) resources
+* Syllabus-oriented preparation
+* Resource indexing for AI-assisted workflows
 
 <p align="center">
-  <img src="frontend/public/blog-ai-prep.png" alt="Aptora AI Prep & RAG Knowledge Engine" width="850" />
+  <img src="frontend/public/blog-upsc-books.png" alt="Aptora Digital Resource Library" width="850" />
 </p>
 
 ---
 
-### 4. 🎯 Custom Mock Exam & Practice Hub (`/exams`)
-* **Features**: Timed exam simulations, instant option evaluation, active-recall explanation cards, and subject-wise accuracy tracking.
-
-<p align="center">
-  <img src="frontend/public/blog-mock-tests.png" alt="Aptora Custom Mock Test Generator" width="850" />
-</p>
-
----
-
-### 5. 📚 Digital Syllabus & Resource Library (`/dashboard/ai-sources`)
-* **Features**: Structured book upload, past year question (PYQ) indexing, and syllabus milestone mapping.
-
-<p align="center">
-  <img src="frontend/public/blog-upsc-books.png" alt="Aptora Syllabus & Digital Reference Books" width="850" />
-</p>
-
----
-
-### 6. 📄 Automatic PDF Invoice & Checkout (`/checkout/success`)
-* **Features**: Live payment verification, confetti celebration, automated ReportLab PDF invoice generation with 18% GST breakdown, and direct SMTP email dispatch with attached PDF.
-
----
-
-## 🏗 System Architecture & Topology
+# 🏗 System Architecture
 
 ```mermaid
 graph TD
-    %% Clients Layer
+
     subgraph Clients["🌐 Client Layer"]
         Browser["Next.js 15 Web App<br/>(React 19 / TypeScript)"]
-        Mobile["Responsive Mobile UI<br/>(PWA Ready)"]
+        Mobile["Responsive Web UI"]
     end
 
-    %% Gateway Layer
     subgraph Gateway["🛡️ Gateway & Reverse Proxy"]
-        Nginx["Nginx Reverse Proxy<br/>(Port 80 / 443)"]
+        Nginx["Nginx Reverse Proxy"]
     end
 
-    %% Backend Core
-    subgraph Backend["⚡ Backend Application Core"]
-        FastAPI["FastAPI App<br/>(Uvicorn / Python 3.11)"]
-        AuthService["Auth & JWT Service"]
-        BillingService["Billing & PDF Service<br/>(ReportLab Engine)"]
-        EmailService["SMTP Dispatcher<br/>(MIME Attachment Engine)"]
-        ChatExport["Chat Export Engine"]
+    subgraph Backend["⚡ Backend Application"]
+        FastAPI["FastAPI<br/>(Uvicorn / Python 3.11+)"]
+        AuthService["Authentication & JWT"]
+        BillingService["Billing & PDF Service"]
+        EmailService["SMTP Email Service"]
+        ChatExport["Chat Export"]
     end
 
-    %% AI & Data Pipeline
-    subgraph AI_Engine["🧠 AI & Vector Engine"]
-        OpenAI["OpenAI API<br/>(GPT-4 / Text Embeddings)"]
-        TokenManager["Token Budget Manager<br/>(tiktoken / Fallback)"]
-        QdrantService["Qdrant Vector Service"]
+    subgraph AI["🧠 AI & Retrieval Layer"]
+        OpenAI["OpenAI API"]
+        TokenManager["Token Budget Manager"]
+        QdrantService["Qdrant Service"]
     end
 
-    %% Persistence Layer
-    subgraph Storage["💾 Persistence & Cache Layer"]
-        Postgres[(PostgreSQL 15<br/>Relational Database)]
-        Redis[(Redis 7<br/>Session & Queue Cache)]
-        Qdrant[(Qdrant Vector DB<br/>Semantic Collections)]
+    subgraph Storage["💾 Data & Cache Layer"]
+        Postgres[(PostgreSQL)]
+        Redis[(Redis)]
+        Qdrant[(Qdrant Vector DB)]
     end
 
-    %% Monitoring Stack
-    subgraph Observability["📊 Monitoring & Observability"]
-        Prometheus["Prometheus Metric Collector"]
-        Grafana["Grafana Dashboards"]
-        Loki["Grafana Loki"]
-        Promtail["Promtail Log Scraper"]
+    subgraph Observability["📊 Observability"]
+        Prometheus["Prometheus"]
+        Grafana["Grafana"]
+        Loki["Loki"]
+        Promtail["Promtail"]
     end
 
-    %% Connections
     Browser --> Nginx
     Mobile --> Nginx
-    Nginx -->|/api/*| FastAPI
-    Nginx -->|/*| Browser
+
+    Nginx --> FastAPI
 
     FastAPI --> AuthService
     FastAPI --> BillingService
     FastAPI --> ChatExport
-    
+    FastAPI --> TokenManager
+    FastAPI --> QdrantService
+
     BillingService --> EmailService
     BillingService --> Postgres
-    
-    FastAPI --> TokenManager
+
     TokenManager --> OpenAI
-    FastAPI --> QdrantService
+
     QdrantService --> Qdrant
-    
+
     FastAPI --> Postgres
     FastAPI --> Redis
 
-    Prometheus -->|Scrape Metrics| FastAPI
-    Prometheus -->|Scrape Metrics| Nginx
+    Prometheus --> FastAPI
+    Prometheus --> Nginx
+
     Grafana --> Prometheus
     Promtail --> Loki
     Grafana --> Loki
@@ -150,17 +247,18 @@ graph TD
 
 ---
 
-## 🗄 Entity-Relationship (ER) Diagram
+# 🗄 Entity-Relationship Diagram
 
 ```mermaid
 erDiagram
-    USERS ||--o| USER_PROFILES : "has"
-    USERS ||--o| USER_ONBOARDING_PROFILES : "configures"
-    USERS ||--o{ ORDERS : "places"
-    USERS ||--o{ RESOURCES : "owns"
-    USERS ||--o{ WORKSPACE_SUBJECTS : "enrolls"
-    USERS ||--o{ NOTIFICATIONS : "receives"
-    USERS ||--o{ ACHIEVEMENTS : "earns"
+
+    USERS ||--o| USER_PROFILES : has
+    USERS ||--o| USER_ONBOARDING_PROFILES : configures
+    USERS ||--o{ ORDERS : places
+    USERS ||--o{ RESOURCES : owns
+    USERS ||--o{ WORKSPACE_SUBJECTS : enrolls
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ ACHIEVEMENTS : earns
 
     USERS {
         int id PK
@@ -217,7 +315,7 @@ erDiagram
         jsonb metadata
     }
 
-    RESOURCES ||--o| RESOURCE_CONTENTS : "contains"
+    RESOURCES ||--o| RESOURCE_CONTENTS : contains
 
     WORKSPACE_SUBJECTS {
         int id PK
@@ -239,10 +337,11 @@ erDiagram
 
 ---
 
-## 🧩 Software Class Diagram
+# 🧩 Software Class Diagram
 
 ```mermaid
 classDiagram
+
     class FastAPIApp {
         +lifespan(app)
         +include_router()
@@ -289,232 +388,350 @@ classDiagram
     FastAPIApp --> QdrantService
     FastAPIApp --> PDFService
     FastAPIApp --> EmailService
+    FastAPIApp --> AuthService
+
     TokenBudgetManager --> LLMService
     PDFService --> EmailService
-    AuthService --> FastAPIApp
 ```
 
 ---
 
-## 🛠 Technology Stack
+# 🛠 Technology Stack
 
-| Domain | Framework / Library | Purpose |
-| :--- | :--- | :--- |
-| **Frontend UI** | **Next.js 15.5.20 App Router** | React 19 SSR, RSC, and route optimization |
-| **Styling & Motion** | **Vanilla CSS, Tailwind 4, Framer Motion** | Glassmorphism, 3D bubble pop, micro-interactions |
-| **Backend Core** | **FastAPI 0.139.0** | Async Python API gateway with Pydantic validation |
-| **Relational Database** | **PostgreSQL 15** | User profiles, subscriptions, orders, and resources |
-| **Cache & Queue** | **Redis 7** | Session cache, OTP throttle, and task state |
-| **Vector Engine** | **Qdrant** | High-performance embedding storage & RAG retrieval |
-| **PDF Engine** | **ReportLab 5.0.0** | Pixel-perfect vector PDF invoice generation |
-| **Email Gateway** | **Python `smtplib` + MIME** | Multi-part HTML & PDF attachment dispatch |
-| **AI LLM Integration** | **OpenAI API & `tiktoken`** | GPT-4 reasoning, prompt slicing, and embeddings |
-| **Container & Proxy** | **Docker Compose & Nginx** | Unified multi-container deployment & reverse proxy |
-| **Observability** | **Prometheus, Grafana, Loki** | Distributed metrics, log aggregation, & alerts |
+| Domain               | Technology               | Purpose                                  |
+| :------------------- | :----------------------- | :--------------------------------------- |
+| **Frontend**         | **Next.js 15.5.20**      | Application framework and routing        |
+| **UI Library**       | **React 19.1.0**         | Component-based UI                       |
+| **Styling**          | **CSS / Tailwind CSS**   | Responsive interface and design system   |
+| **Animation**        | **Framer Motion**        | UI interactions and animations           |
+| **Backend**          | **FastAPI 0.139.0**      | High-performance Python REST API         |
+| **Language**         | **Python 3.11+**         | Backend and AI services                  |
+| **Database**         | **PostgreSQL 15**        | Persistent relational data               |
+| **Cache**            | **Redis 7**              | Caching, OTP throttling, and task state  |
+| **Vector Database**  | **Qdrant**               | Embedding storage and semantic retrieval |
+| **AI Integration**   | **OpenAI API**           | LLM generation and embeddings            |
+| **Token Management** | **tiktoken**             | Token counting and context management    |
+| **PDF Generation**   | **ReportLab**            | Invoice PDF generation                   |
+| **Email**            | **smtplib + MIME**       | Transactional email and attachments      |
+| **Containerization** | **Docker Compose**       | Multi-service development and deployment |
+| **Reverse Proxy**    | **Nginx**                | Request routing and service proxying     |
+| **Monitoring**       | **Prometheus + Grafana** | Metrics and system monitoring            |
+| **Logging**          | **Loki + Promtail**      | Centralized log collection               |
 
 ---
 
-## 📂 Project Directory Structure
+# 📂 Project Directory Structure
 
-```
-Exam_Forge/
-├── docker/                         # Multi-stage Dockerfiles
-│   ├── backend.Dockerfile          # Production Python 3.11 backend image
-│   ├── backend.dev.Dockerfile      # Live reload backend image
-│   ├── frontend.Dockerfile         # Production Next.js standalone runner
-│   ├── frontend.dev.Dockerfile     # Live HMR frontend image
-│   └── nginx/nginx.conf            # Container Nginx config
+```text
+Aptora/
 │
-├── nginx/                          # Root Nginx Reverse Proxy config
+├── backend/
+│   ├── app/
+│   │   ├── ai/
+│   │   │   ├── orchestrator/
+│   │   │   └── services/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   └── services/
+│   │
+│   ├── tests/
+│   ├── Dockerfile
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── public/
+│   │   ├── 1.png
+│   │   ├── 2.png
+│   │   ├── 3.png
+│   │   ├── 4.png
+│   │   ├── 5.png
+│   │   ├── 6.png
+│   │   ├── 7.png
+│   │   ├── stage-1.png
+│   │   ├── stage-2.png
+│   │   ├── stage-3.png
+│   │   ├── stage-4.png
+│   │   ├── stage-5.png
+│   │   ├── stage-6.png
+│   │   ├── stage-7.png
+│   │   └── other UI assets
+│   │
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── features/
+│   │   └── middleware.ts
+│   │
+│   ├── next.config.ts
+│   └── package.json
+│
+├── nginx/
 │   └── nginx.conf
 │
-├── monitoring/                     # Prometheus & Grafana Observability
+├── monitoring/
 │   ├── prometheus.yml
 │   ├── promtail-config.yml
 │   └── loki-config.yml
 │
-├── backend/                        # FastAPI Backend Application
-│   ├── app/
-│   │   ├── ai/                     # RAG & LLM Orchestration
-│   │   │   ├── orchestrator/       # Reasoning & Context Optimizers
-│   │   │   └── services/           # Qdrant, TokenBudgetManager, LLMService
-│   │   ├── api/v1/                 # REST Routers (Auth, Billing, Workspace, Chat)
-│   │   ├── core/                   # Security, JWT, Config Settings
-│   │   ├── db/                     # SQLAlchemy Base, Sessions & Migrations
-│   │   ├── models/                 # ORM Database Schema Definitions
-│   │   ├── schemas/                # Pydantic Request & Response Contracts
-│   │   └── services/               # PDF Engine & Email Dispatcher
-│   ├── tests/                      # Pytest suite (37 unit & API tests)
-│   └── Dockerfile
-│
-├── frontend/                       # Next.js 15 App Router Frontend
-│   ├── public/                     # Canvas vector PNG assets & brand icons
-│   ├── src/
-│   │   ├── app/                    # App Router pages (Landing, Dash, Checkout)
-│   │   ├── components/             # UI Design System, Modals, Navbar, Footer
-│   │   ├── contexts/               # React Context Providers (GoalEngine, Auth)
-│   │   ├── features/               # AI Workspace, Knowledge Engine, Planner
-│   │   └── middleware.ts           # Route matcher & manifest generator
-│   ├── next.config.ts              # Asset header & transpile rules
-│   └── package.json
-│
-├── docker-compose.yml              # Base Docker Compose Services
-├── docker-compose.dev.yml          # Local Dev Environment Override
-├── docker-compose.monitoring.yml   # Prometheus/Grafana Stack
-├── Taskfile.yml                    # Automated CLI Command Runner
-└── README.md                       # Master Documentation
+├── docker-compose.yml
+├── docker-compose.dev.yml
+├── docker-compose.monitoring.yml
+├── Taskfile.yml
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-## ⚡ Quickstart & Deployment Guide
+# ⚡ Quickstart
 
-### Option 1: One-Command Docker Compose (Recommended)
+## Option 1 — Docker Compose
 
-To spin up the complete Aptora stack (PostgreSQL, Redis, Qdrant, Backend, Frontend, and Nginx):
+Docker Compose is the recommended way to run the complete Aptora stack.
+
+### Clone the repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/Aniket-Athanikar/Exam_Forge.git
-cd Exam_Forge
+git clone https://github.com/Aniket-Athanikar/Aptora.git
+cd Aptora
+```
 
-# Start all containers in background
+### Start the application
+
+```bash
 docker compose up --build -d
 ```
 
-Access services:
-* **Frontend Web App**: `http://localhost:80`
-* **FastAPI Backend Swagger**: `http://localhost:8000/docs`
-* **Qdrant Vector Dashboard**: `http://localhost:6433/dashboard`
+### Access the services
+
+| Service              | URL                               |
+| :------------------- | :-------------------------------- |
+| **Aptora Web App**   | `http://localhost:80`             |
+| **FastAPI Swagger**  | `http://localhost:8000/docs`      |
+| **Qdrant Dashboard** | `http://localhost:6433/dashboard` |
 
 ---
 
-### Option 2: Using Taskfile Automation CLI
+# 🧰 Taskfile Commands
 
-Aptora provides a pre-configured `Taskfile.yml` for unified operations:
+Aptora includes a `Taskfile.yml` for common development operations.
 
 ```bash
-# Start local development stack with hot reloading
+# Start development environment
 task dev
 
-# Start Aptora monitoring stack (Prometheus & Grafana)
+# Start monitoring services
 task monitoring
 
-# View status of active services
+# View container status
 task status
 
-# Tail logs across all containers
+# View application logs
 task logs
 
-# Run backend unit tests with coverage
+# Run backend tests
 task test
 
-# Perform clean frontend build validation
+# Validate frontend build
 task test-frontend
 
-# Stop all containers
+# Stop services
 task down
 ```
 
 ---
 
-### Option 3: Manual Local Development Setup
+# 💻 Manual Development Setup
 
-#### 1. Backend Environment Setup (`/backend`)
+## Backend
 
 ```bash
 cd backend
 
 # Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
 
-# Install dependencies
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-# Configure Environment Variables (.env)
+Create your environment file:
+
+```bash
 cp .env.example .env
+```
 
-# Run FastAPI Server
+Start the FastAPI server:
+
+```bash
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-#### 2. Frontend Setup (`/frontend`)
+---
+
+## Frontend
 
 ```bash
 cd frontend
 
-# Install dependencies
 npm install
-
-# Clear stale cache and start dev server
-npm run dev:clean
+npm run dev
 ```
 
 ---
 
-## ⚙️ Environment Configuration (`.env`)
+# ⚙️ Environment Configuration
 
-Create a `.env` file inside `backend/`:
+Create a `.env` file inside the `backend/` directory.
 
 ```env
-# General
 PROJECT_NAME=Aptora
 ENV=development
-SECRET_KEY=your_super_secret_jwt_key_here
 
-# PostgreSQL Database
+SECRET_KEY=your_secret_key
+
+# PostgreSQL
 DB_HOST=localhost
 DB_PORT=5433
 DB_NAME=aptora_db
 DB_USER=aptora_user
-DB_PASSWORD=admin123
+DB_PASSWORD=your_database_password
 
-# Redis & Qdrant
+# Redis
 REDIS_HOST=localhost
 REDIS_PORT=6479
+
+# Qdrant
 QDRANT_HOST=localhost
 QDRANT_PORT=6433
 QDRANT_COLLECTION=aptora_documents
 
-# OpenAI API Key
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxx
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 
-# SMTP Email Configuration (For Invoice PDF Dispatch)
+# SMTP
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=agentforge29@gmail.com
+MAIL_USERNAME=your_email
 MAIL_PASSWORD=your_app_password
 ```
 
+> **Security:** Never commit `.env`, API keys, passwords, SMTP credentials, tokens, or other secrets to the repository. Use `.env.example` for safe configuration templates.
+
 ---
 
-## 🧪 Testing & Verification
+# 🧪 Testing
+
+## Backend Tests
 
 ```bash
-# Execute Backend Pytest Suite
 cd backend
 python -m pytest tests/ -v
+```
 
-# Execute Frontend Build Validation
+## Frontend Build
+
+```bash
 cd frontend
 npm run build
 ```
 
 ---
 
-## 📜 License
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+# 🔐 Security
+
+Aptora uses environment-based configuration for sensitive credentials.
+
+The following should **never** be committed to Git:
+
+* API keys
+* Database passwords
+* JWT secrets
+* SMTP passwords
+* Access tokens
+* Private credentials
+* Production environment files
+
+Use `.gitignore` and `.env.example` to separate configuration from source code.
 
 ---
 
-## 👥 Engineering & Author Credits
+# 👥 Engineering & Author Credits
 
-* **Mrunal Chaudhari** — *Full Stack AI Architect* (FastAPI, Qdrant RAG Engine, ReportLab PDF Service, Security)
-* **Aniket Athanikar** — *Frontend & UI/UX Architect* (Next.js 15, Framer Motion, Design Systems, Tailwind)
+### Aniket Athanikar
+
+**Backend & AI Engineering**
+
+Responsible for the backend architecture and AI engineering, including:
+
+* FastAPI backend
+* REST API development
+* Authentication and authorization
+* JWT-based security
+* PostgreSQL integration
+* Redis integration
+* Qdrant vector database integration
+* RAG workflows
+* Document processing
+* AI/LLM integration
+* Token management
+* PDF generation
+* Email services
+* Backend Docker configuration
+
+### Mrunal Chaudhari
+
+**Frontend Engineering & UI/UX**
+
+Responsible for the frontend application and user experience, including:
+
+* Next.js application
+* React components
+* UI/UX implementation
+* Responsive layouts
+* Landing page
+* Authentication screens
+* Dashboard interface
+* Learning workflows
+* Frontend state and interactions
+* Design system and visual implementation
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+See the [`LICENSE`](LICENSE) file for details.
+
+---
 
 <p align="center">
-  ⭐ <b>If you find Aptora useful for your AI prep workflows, please consider starring this repository!</b>
+  ⭐ <strong>If you find Aptora useful, consider starring the repository.</strong>
+</p>
+
+<p align="center">
+  <strong>Aptora — Learn smarter. Prepare better.</strong>
 </p>
