@@ -79,7 +79,7 @@ jobs:
           version: 'latest'
 
       - name: Set Kubernetes Context (Staging)
-        uses: azure/k8s-set-context@v3
+        uses: azure/k8s-set-context@v5
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG_STAGING }}
@@ -111,7 +111,7 @@ jobs:
           version: 'latest'
 
       - name: Set Kubernetes Context (Production)
-        uses: azure/k8s-set-context@v3
+        uses: azure/k8s-set-context@v5
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG_PRODUCTION }}
