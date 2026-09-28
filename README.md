@@ -88,31 +88,31 @@ The following screens demonstrate the AI study journey from the initial interact
 <table>
   <tr>
     <td width="50%">
-      <img src="frontend/public/stage-1.png" alt="Aptora AI Study Flow Stage 1" width="100%" />
+      <img src="frontend/public/Stage-1.png" alt="Aptora AI Study Flow Stage 1" width="100%" />
     </td>
     <td width="50%">
-      <img src="frontend/public/stage-2.png" alt="Aptora AI Study Flow Stage 2" width="100%" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <img src="frontend/public/stage-3.png" alt="Aptora AI Study Flow Stage 3" width="100%" />
-    </td>
-    <td width="50%">
-      <img src="frontend/public/stage-4.png" alt="Aptora AI Study Flow Stage 4" width="100%" />
+      <img src="frontend/public/Stage-2.png" alt="Aptora AI Study Flow Stage 2" width="100%" />
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <img src="frontend/public/stage-5.png" alt="Aptora AI Study Flow Stage 5" width="100%" />
+      <img src="frontend/public/Stage-3.png" alt="Aptora AI Study Flow Stage 3" width="100%" />
     </td>
     <td width="50%">
-      <img src="frontend/public/stage-6.png" alt="Aptora AI Study Flow Stage 6" width="100%" />
+      <img src="frontend/public/Stage-4.png" alt="Aptora AI Study Flow Stage 4" width="100%" />
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <img src="frontend/public/stage-7.png" alt="Aptora AI Study Flow Stage 7" width="100%" />
+      <img src="frontend/public/Stage-5.png" alt="Aptora AI Study Flow Stage 5" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="frontend/public/Stage-6.png" alt="Aptora AI Study Flow Stage 6" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="frontend/public/Stage-7.png" alt="Aptora AI Study Flow Stage 7" width="100%" />
     </td>
     <td></td>
   </tr>
