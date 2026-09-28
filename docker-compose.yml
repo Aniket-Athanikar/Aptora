@@ -11,12 +11,13 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - aptora_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aptora_user -d aptora_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
     networks:
       - aptora-network
     restart: unless-stopped
@@ -27,12 +28,13 @@ services:
     ports:
       - "6479:6379"
     volumes:
-      - redis_data:/data
+      - aptora_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 5s
     networks:
       - aptora-network
     restart: unless-stopped
@@ -44,12 +46,7 @@ services:
       - "6433:6333"
       - "6434:6334"
     volumes:
-      - qdrant_data:/qdrant/storage
-    healthcheck:
-      test: ["CMD-SHELL", "cat /dev/null > /dev/tcp/localhost/6333 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - aptora_qdrant_data:/qdrant/storage
     networks:
       - aptora-network
     restart: unless-stopped
@@ -65,22 +62,28 @@ services:
       DB_NAME: aptora_db
       DB_USER: aptora_user
       DB_PASSWORD: admin123
+
       REDIS_HOST: redis
       REDIS_PORT: "6379"
+
       QDRANT_HOST: qdrant
       QDRANT_PORT: "6333"
       QDRANT_COLLECTION: aptora_documents
+
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
       qdrant:
-        condition: service_healthy
+        condition: service_started
+
     expose:
       - "8000"
+
     networks:
       - aptora-network
+
     restart: unless-stopped
 
   frontend:
@@ -89,7 +92,7 @@ services:
       dockerfile: Dockerfile
     container_name: aptora_frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: /api
     expose:
       - "3000"
     networks:
@@ -111,9 +114,14 @@ services:
     restart: unless-stopped
 
 volumes:
-  pgdata:
-  redis_data:
-  qdrant_data:
+  aptora_pgdata:
+    name: aptora_pgdata
+
+  aptora_redis_data:
+    name: aptora_redis_data
+
+  aptora_qdrant_data:
+    name: aptora_qdrant_data
 
 networks:
   aptora-network:
