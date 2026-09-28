@@ -90,7 +90,7 @@ rignore==0.7.6
 sentry-sdk==2.64.0
 setuptools==80.9.0
 shellingham==1.5.4
-six==1.16.0
+six==1.17.0
 sniffio==1.2.0
 SQLAlchemy==2.0.51
 SQLAlchemy-Utils==0.38.3
