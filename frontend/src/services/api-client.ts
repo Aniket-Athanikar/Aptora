@@ -3,7 +3,7 @@
  * Centralized fetch wrapper with base URL, error handling, and type safety.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 interface ApiResponse<T = unknown> {
   success: boolean;

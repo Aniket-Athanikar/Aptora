@@ -44,6 +44,10 @@ def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
 # ----------------------------------------------------------
 
 @router.put(
+    "",
+    response_model=list[GapAnalysisResponse],
+)
+@router.put(
     "/",
     response_model=list[GapAnalysisResponse],
 )
@@ -71,6 +75,10 @@ def replace_gap_analysis(
 # Get Gap Analysis
 # ----------------------------------------------------------
 
+@router.get(
+    "",
+    response_model=list[GapAnalysisResponse],
+)
 @router.get(
     "/",
     response_model=list[GapAnalysisResponse],

@@ -42,6 +42,10 @@ def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
 # --------------------------------------------------------
 
 @router.post(
+    "",
+    response_model=StudyLifestyleResponse,
+)
+@router.post(
     "/",
     response_model=StudyLifestyleResponse,
 )
@@ -68,6 +72,10 @@ def create_lifestyle(
 # Get Lifestyle
 # --------------------------------------------------------
 
+@router.get(
+    "",
+    response_model=StudyLifestyleResponse,
+)
 @router.get(
     "/",
     response_model=StudyLifestyleResponse,
@@ -98,6 +106,10 @@ def get_lifestyle(
 # Update Lifestyle
 # --------------------------------------------------------
 
+@router.put(
+    "",
+    response_model=StudyLifestyleResponse,
+)
 @router.put(
     "/",
     response_model=StudyLifestyleResponse,
@@ -134,6 +146,7 @@ def update_lifestyle(
 # Delete Lifestyle
 # --------------------------------------------------------
 
+@router.delete("")
 @router.delete("/")
 def delete_lifestyle(
     db: Session = Depends(get_db),

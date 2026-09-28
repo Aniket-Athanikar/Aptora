@@ -25,7 +25,7 @@ import { Button, Input, GlassCard } from "@/components/ui";
 import { useAuth } from "@/lib/auth-context";
 import { BrandHeader } from "./components/BrandHeader";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),

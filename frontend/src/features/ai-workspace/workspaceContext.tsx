@@ -664,7 +664,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
       
       const workspaceId = activeWorkspace?.id ? parseInt(activeWorkspace.id) : 0;
       if (!workspaceId) throw new Error("No active workspace selected.");

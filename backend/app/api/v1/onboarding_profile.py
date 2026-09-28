@@ -20,8 +20,12 @@ from app.schemas.onboarding_profile import (
 )
 
 router = APIRouter(
-    prefix="/profile",
+    prefix="/onboarding-profile",
     tags=["Onboarding Profile"],
+)
+legacy_router = APIRouter(
+    prefix="/profile",
+    tags=["Onboarding Profile Legacy"],
 )
 
 
@@ -65,6 +69,18 @@ def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
 # --------------------------------------------------------
 
 @router.post(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@router.post(
+    "/",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.post(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.post(
     "/",
     response_model=OnboardingProfileResponse,
 )
@@ -97,6 +113,18 @@ def create_profile(
 # --------------------------------------------------------
 
 @router.get(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@router.get(
+    "/",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.get(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.get(
     "/",
     response_model=OnboardingProfileResponse,
 )
@@ -133,6 +161,18 @@ def get_profile(
 # --------------------------------------------------------
 
 @router.put(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@router.put(
+    "/",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.put(
+    "",
+    response_model=OnboardingProfileResponse,
+)
+@legacy_router.put(
     "/",
     response_model=OnboardingProfileResponse,
 )
@@ -176,7 +216,10 @@ def update_profile(
 # Delete Profile
 # --------------------------------------------------------
 
+@router.delete("")
 @router.delete("/")
+@legacy_router.delete("")
+@legacy_router.delete("/")
 def delete_profile(
     db: Session = Depends(get_db),
     current_user: UserDb = Depends(get_current_user),

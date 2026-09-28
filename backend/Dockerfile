@@ -29,6 +29,8 @@ RUN groupadd --gid 10001 appgroup && \
 COPY --from=builder /root/.local /home/appuser/.local
 COPY --chown=appuser:appgroup . .
 
+RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app/uploads
+
 ENV PATH=/home/appuser/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1

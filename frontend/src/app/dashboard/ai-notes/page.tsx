@@ -56,7 +56,7 @@ export default function AiNotesPage() {
     try {
       toast("Generating PDF...", "info");
       const token = localStorage.getItem("access_token");
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
       const res = await fetch(`${apiBase}/documents/${resourceId}/download-pdf`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         credentials: "include",

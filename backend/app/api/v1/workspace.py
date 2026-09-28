@@ -42,6 +42,11 @@ router = APIRouter(
     response_model=WorkspaceResponse,
     status_code=status.HTTP_201_CREATED,
 )
+@router.post(
+    "/",
+    response_model=WorkspaceResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_workspace(
     payload: WorkspaceCreate,
     db: Session = Depends(get_db),
@@ -77,6 +82,10 @@ def create_workspace(
     "",
     response_model=Optional[WorkspaceResponse],
 )
+@router.get(
+    "/",
+    response_model=Optional[WorkspaceResponse],
+)
 def get_user_workspace(
     db: Session = Depends(get_db),
     current_user: UserDb = Depends(get_current_user),
@@ -97,6 +106,10 @@ def get_user_workspace(
 
 @router.put(
     "",
+    response_model=WorkspaceResponse,
+)
+@router.put(
+    "/",
     response_model=WorkspaceResponse,
 )
 def update_workspace(

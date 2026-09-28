@@ -2,21 +2,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { ToastProvider } from "@/lib/ToastContext";
 import { ProfileProvider } from "@/contexts";
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-display",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
-});
 
 export const viewport: Viewport = {
   themeColor: "#084c38",
@@ -64,7 +50,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Aptora — AI-Powered Exam Preparation",
-    description: "Aptora is an AI-powered exam preparation platform that helps students build personalized study plans, practice with mock tests, organize notes and track their progress.",
+    description:
+      "Aptora is an AI-powered exam preparation platform that helps students build personalized study plans, practice with mock tests, organize notes and track their progress.",
   },
 };
 
@@ -74,7 +61,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="scroll-smooth"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -94,19 +86,18 @@ export default function RootLayout({
                   originalWarn.apply(console, args);
                 };
               })();
-            `
+            `,
           }}
         />
       </head>
       <body
-        className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased min-h-screen text-slate-800 bg-[#FAF9F6] selection:bg-[#ecfdf5] selection:text-[#084c38]`}
+        className="font-sans antialiased min-h-screen text-slate-800 bg-[#FAF9F6] selection:bg-[#ecfdf5] selection:text-[#084c38]"
         suppressHydrationWarning
       >
         <AuthProvider>
           <ProfileProvider>
             <ToastProvider>
               <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden bg-[#FAF9F6]">
-                {/* Main Content Tree */}
                 <div className="flex-grow w-full flex flex-col">
                   {children}
                 </div>

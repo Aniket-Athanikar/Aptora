@@ -44,6 +44,10 @@ def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
 # ----------------------------------------------------------
 
 @router.put(
+    "",
+    response_model=list[LearningModeResponse],
+)
+@router.put(
     "/",
     response_model=list[LearningModeResponse],
 )
@@ -71,6 +75,10 @@ def replace_learning_modes(
 # Get Learning Modes
 # ----------------------------------------------------------
 
+@router.get(
+    "",
+    response_model=list[LearningModeResponse],
+)
 @router.get(
     "/",
     response_model=list[LearningModeResponse],

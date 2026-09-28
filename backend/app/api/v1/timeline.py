@@ -41,10 +41,8 @@ def get_active_workspace(db: Session, user_id: int) -> GoalWorkspaceDb:
 # Create / Upsert Timeline
 # ----------------------------------------------------------
 
-@router.post(
-    "/",
-    response_model=TimelineResponse,
-)
+@router.post("", response_model=TimelineResponse)
+@router.post("/", response_model=TimelineResponse)
 def create_timeline(
     timeline: TimelineCreate,
     db: Session = Depends(get_db),
@@ -68,10 +66,8 @@ def create_timeline(
 # Get Timeline
 # ----------------------------------------------------------
 
-@router.get(
-    "/",
-    response_model=TimelineResponse,
-)
+@router.get("", response_model=TimelineResponse)
+@router.get("/", response_model=TimelineResponse)
 def get_timeline(
     db: Session = Depends(get_db),
     current_user: UserDb = Depends(get_current_user),
@@ -96,10 +92,8 @@ def get_timeline(
 # Update Timeline
 # ----------------------------------------------------------
 
-@router.put(
-    "/",
-    response_model=TimelineResponse,
-)
+@router.put("", response_model=TimelineResponse)
+@router.put("/", response_model=TimelineResponse)
 def update_timeline(
     timeline: TimelineUpdate,
     db: Session = Depends(get_db),
@@ -130,6 +124,7 @@ def update_timeline(
 # Delete Timeline
 # ----------------------------------------------------------
 
+@router.delete("")
 @router.delete("/")
 def delete_timeline(
     db: Session = Depends(get_db),

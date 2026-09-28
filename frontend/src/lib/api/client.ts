@@ -1,6 +1,7 @@
 import type { ApiResponse, ApiError, ApiRequestConfig } from '@/types/api';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+const API_BASE_URL = rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`;
 
 class ApiClient {
   private baseURL: string;
@@ -27,7 +28,10 @@ class ApiClient {
   }
 
   private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
-    const url = new URL(`${this.baseURL}${endpoint}`, window.location.origin);
+    const cleanEndpoint = endpoint.startsWith('/api/') ? endpoint.slice(4) : endpoint;
+    const base = this.baseURL.replace(/\/+$/, '');
+    const path = cleanEndpoint.startsWith('/') ? cleanEndpoint : `/${cleanEndpoint}`;
+    const url = new URL(`${base}${path}`, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8081');
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {

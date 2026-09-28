@@ -116,7 +116,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   },
 
   connectWebSocket: () => {
-    let apiHost = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    let apiHost = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
     let cleanHost = apiHost.replace("http://", "").replace("https://", "");
     let protocol = apiHost.startsWith("https") ? "wss://" : "ws://";
     let socketUrl = `${protocol}${cleanHost}/ws/dashboard`;

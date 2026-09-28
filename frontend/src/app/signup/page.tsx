@@ -26,7 +26,7 @@ import { BrandHeader } from "../login/components/BrandHeader";
 import { getPasswordStrength } from "../login/components/getPasswordStrength";
 import { cn } from "@/lib/utils";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 const signupSchema = z
   .object({

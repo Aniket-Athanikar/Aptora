@@ -10,7 +10,7 @@ export function getAvatarUrl(path?: string | null): string {
     return path;
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   
   return `${baseUrl.replace(/\/$/, "")}${cleanPath}`;

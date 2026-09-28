@@ -21,7 +21,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();

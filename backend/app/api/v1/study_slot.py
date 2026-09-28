@@ -58,6 +58,10 @@ def get_active_lifestyle(db: Session, workspace_id: int) -> StudyLifestyleDb:
 # ----------------------------------------------------------
 
 @router.put(
+    "",
+    response_model=list[StudyTimeSlotResponse],
+)
+@router.put(
     "/",
     response_model=list[StudyTimeSlotResponse],
 )
@@ -80,6 +84,10 @@ def replace_study_slots(
 # Get Study Slots
 # ----------------------------------------------------------
 
+@router.get(
+    "",
+    response_model=list[StudyTimeSlotResponse],
+)
 @router.get(
     "/",
     response_model=list[StudyTimeSlotResponse],

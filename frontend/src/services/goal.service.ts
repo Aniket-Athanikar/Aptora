@@ -162,7 +162,7 @@ export const goalService = {
     inFlightWorkspacePromise = (async () => {
       try {
         const workspace = await optional(
-          apiClient.get<WorkspaceDto>("/workspace")
+          apiClient.get<WorkspaceDto>("/api/workspace")
         );
 
         if (!workspace) {
@@ -181,12 +181,12 @@ export const goalService = {
           modes,
           gaps,
         ] = await Promise.all([
-          optional(apiClient.get<ProfileDto>("/profile/")),
-          optional(apiClient.get<TimelineDto>("/timeline/")),
-          optional(apiClient.get<LifestyleDto>("/lifestyle/")),
-          optional(apiClient.get<SlotDto[]>("/study-slots/")),
-          optional(apiClient.get<ModeDto[]>("/learning-modes/")),
-          optional(apiClient.get<GapDto[]>("/gap-analysis/")),
+          optional(apiClient.get<ProfileDto>("/api/onboarding-profile")),
+          optional(apiClient.get<TimelineDto>("/api/timeline")),
+          optional(apiClient.get<LifestyleDto>("/api/lifestyle")),
+          optional(apiClient.get<SlotDto[]>("/api/study-slots")),
+          optional(apiClient.get<ModeDto[]>("/api/learning-modes")),
+          optional(apiClient.get<GapDto[]>("/api/gap-analysis")),
         ]);
 
         if (!profile || !timeline || !lifestyle) {
@@ -225,7 +225,7 @@ export const goalService = {
     _changeDescription?: string
   ): Promise<WorkspaceState> {
     const existing = await optional(
-      apiClient.get<WorkspaceDto>("/workspace")
+      apiClient.get<WorkspaceDto>("/api/workspace")
     );
 
     const workspacePayload = {
@@ -234,8 +234,8 @@ export const goalService = {
     };
 
     await (existing
-      ? apiClient.put("/workspace", workspacePayload)
-      : apiClient.post("/workspace", workspacePayload));
+      ? apiClient.put("/api/workspace", workspacePayload)
+      : apiClient.post("/api/workspace", workspacePayload));
 
     const profilePayload = {
       full_name: goal.profile.fullName,
@@ -264,35 +264,35 @@ export const goalService = {
     };
 
     const [profile, timeline, lifestyle] = await Promise.all([
-      optional(apiClient.get<ProfileDto>("/profile/")),
-      optional(apiClient.get<TimelineDto>("/timeline/")),
-      optional(apiClient.get<LifestyleDto>("/lifestyle/")),
+      optional(apiClient.get<ProfileDto>("/api/onboarding-profile")),
+      optional(apiClient.get<TimelineDto>("/api/timeline")),
+      optional(apiClient.get<LifestyleDto>("/api/lifestyle")),
     ]);
 
     await Promise.all([
       profile
-        ? apiClient.put("/profile/", profilePayload)
-        : apiClient.post("/profile/", profilePayload),
+        ? apiClient.put("/api/onboarding-profile", profilePayload)
+        : apiClient.post("/api/onboarding-profile", profilePayload),
 
       timeline
-        ? apiClient.put("/timeline/", timelinePayload)
-        : apiClient.post("/timeline/", timelinePayload),
+        ? apiClient.put("/api/timeline", timelinePayload)
+        : apiClient.post("/api/timeline", timelinePayload),
 
       lifestyle
-        ? apiClient.put("/lifestyle/", lifestylePayload)
-        : apiClient.post("/lifestyle/", lifestylePayload),
+        ? apiClient.put("/api/lifestyle", lifestylePayload)
+        : apiClient.post("/api/lifestyle", lifestylePayload),
     ]);
 
     await Promise.all([
-      apiClient.put("/study-slots/", {
+      apiClient.put("/api/study-slots", {
         study_slots: goal.lifestyle.slots,
       }),
 
-      apiClient.put("/learning-modes/", {
+      apiClient.put("/api/learning-modes", {
         learning_modes: goal.preferences,
       }),
 
-      apiClient.put("/gap-analysis/", {
+      apiClient.put("/api/gap-analysis", {
         subjects: goal.weaknesses.map(
           ({ subject, confidence, difficulty }) => ({
             subject,
@@ -307,7 +307,7 @@ export const goalService = {
   },
 
   async deleteActiveGoal(): Promise<WorkspaceState> {
-    await apiClient.delete("/workspace");
+    await apiClient.delete("/api/workspace");
 
     return {
       activeGoal: null,

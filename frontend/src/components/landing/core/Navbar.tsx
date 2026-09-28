@@ -32,7 +32,7 @@ const formatDisplayName = (name?: string) => {
   return clean || name;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 export default function Navbar() {
   const pathname = usePathname();
