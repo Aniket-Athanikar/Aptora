@@ -22,6 +22,8 @@ services:
       - ENV=production
       - DB_NAME=aptora_db_prod
       - DB_USER=aptora_prod_user
+    volumes:
+      - ./backend/app/uploads:/app/app/uploads
     ports: []
     restart: always
 

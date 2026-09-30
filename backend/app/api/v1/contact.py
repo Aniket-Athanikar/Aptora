@@ -8,7 +8,7 @@ from app.schemas.contact import ContactForm, ContactResponse
 from app.services.email_service import send_real_email
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/contact", tags=["contact"])
+router = APIRouter(prefix="/contact", tags=["contact"])
 
 @router.post("", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
 async def submit_contact_form(payload: ContactForm, db: Session = Depends(get_db)):

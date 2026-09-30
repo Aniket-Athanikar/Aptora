@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard";
 import { backendService, Resource } from "@/services/backend.service";
+import { resolveApiUrl } from "@/lib/api-url";
 import { useToast } from "@/lib/ToastContext";
 import { renderMarkdown } from "@/features/ai-workspace/components/ChatMessage";
 
@@ -56,8 +57,7 @@ export default function AiNotesPage() {
     try {
       toast("Generating PDF...", "info");
       const token = localStorage.getItem("access_token");
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const res = await fetch(`${apiBase}/documents/${resourceId}/download-pdf`, {
+      const res = await fetch(resolveApiUrl(`/documents/${resourceId}/download-pdf`), {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         credentials: "include",
       });

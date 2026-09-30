@@ -32,7 +32,7 @@ const formatDisplayName = (name?: string) => {
   return clean || name;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { resolveApiUrl } from "@/lib/api-url";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -55,7 +55,7 @@ export default function Navbar() {
     if (isAuthenticated && user?.email && !user.avatar) {
       const syncProfile = async () => {
         try {
-          const res = await fetch(`${API_URL}/api/profile?email=${encodeURIComponent(user.email)}`);
+          const res = await fetch(resolveApiUrl(`/profile?email=${encodeURIComponent(user.email)}`));
           if (res.ok) {
             const data = await res.json();
             if (data.success && data.profile) {

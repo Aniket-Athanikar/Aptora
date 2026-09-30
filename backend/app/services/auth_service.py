@@ -110,7 +110,8 @@ class AuthService:
         return True, SignupResponse(
             success=True,
             message="Account created! OTP generated and printed in logs.",
-            email=payload.email
+            email=payload.email,
+            otp=otp_code
         )
 
     def login(
@@ -164,7 +165,8 @@ class AuthService:
             success=True,
             message="Credentials verified! OTP generated and sent to email.",
             email=payload.email,
-            name=user.name
+            name=user.name,
+            otp=otp_code
         )
 
     def passwordless_login(
@@ -219,7 +221,8 @@ class AuthService:
             success=True,
             message="Login successful! OTP generated and printed in logs.",
             email=payload.email,
-            name=user.name
+            name=user.name,
+            otp=otp_code
         )
 
     def verify_otp(

@@ -23,11 +23,44 @@ class ApiClient {
     return localStorage.getItem("access_token");
   }
 
+  private buildFullUrl(endpoint: string): string {
+    let cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    let base = (process.env.NEXT_PUBLIC_API_URL || this.baseUrl || "http://localhost:8000").trim();
+
+    if (typeof window !== "undefined") {
+      if (!base.startsWith("http://") && !base.startsWith("https://")) {
+        const origin = window.location.origin;
+        const prefix = base.startsWith("/") ? base : `/${base}`;
+        base = `${origin}${prefix === "/" ? "" : prefix}`;
+      } else {
+        try {
+          const u = new URL(base);
+          if (u.hostname === "api" || u.hostname === "backend") {
+            base = `${window.location.origin}${u.pathname}`;
+          }
+        } catch {}
+      }
+    }
+
+    let cleanBase = base.replace(/\/+$/, "");
+
+    if (cleanBase.endsWith("/api") && (cleanEndpoint.startsWith("/api/") || cleanEndpoint === "/api")) {
+      cleanEndpoint = cleanEndpoint === "/api" ? "" : cleanEndpoint.substring(4);
+    } else if (!cleanBase.endsWith("/api") && !cleanEndpoint.startsWith("/api/") && cleanEndpoint !== "/api") {
+      cleanEndpoint = `/api${cleanEndpoint}`;
+    }
+
+    let fullUrl = `${cleanBase}${cleanEndpoint}`;
+    fullUrl = fullUrl.replace(/\/api\/api\//g, "/api/").replace(/\/api\/api$/g, "/api");
+
+    return fullUrl;
+  }
+
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = this.buildFullUrl(endpoint);
     const config: RequestInit = {
       headers: { ...options.headers },
       ...options,
@@ -94,7 +127,7 @@ class ApiClient {
     body: FormData,
     onProgress?: (percent: number) => void
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = this.buildFullUrl(endpoint);
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", url);

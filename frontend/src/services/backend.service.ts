@@ -58,7 +58,7 @@ export const backendService = {
     reprocess: (id: number) => apiClient.post<Resource>(`/documents/${id}/reprocess`),
     get: (id: number) => apiClient.get<Resource>(`/documents/${id}`),
     status: (id: number) => apiClient.get<{ resource_id: number; status: string }>(`/documents/${id}/status`),
-    preview: (id: number) => apiClient.get<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string }> }>(`/documents/${id}/preview`),
+    preview: (id: number) => apiClient.get<{ resource_id: number; title: string; chunks: Array<{ index: number; content: string; page_number?: number; chapter?: string; score?: number }> }>(`/documents/${id}/preview`),
     getPdfUrl: (id: number) => {
       const apiRoot = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/v1\/?$/, "");
       return `${apiRoot}/documents/${id}/file`;

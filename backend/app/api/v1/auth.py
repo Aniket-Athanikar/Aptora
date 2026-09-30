@@ -27,7 +27,7 @@ from app.models import UserDb
 
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=LoginResponse)

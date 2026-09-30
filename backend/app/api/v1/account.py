@@ -18,7 +18,7 @@ from app.schemas.account import (
 from app.services.email_service import generate_account_deletion_email_html, send_real_email
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/account", tags=["account"])
+router = APIRouter(prefix="/account", tags=["account"])
 
 
 @router.post("/request-deletion", response_model=DeleteAccountResponse)

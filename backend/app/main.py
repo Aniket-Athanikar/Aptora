@@ -111,13 +111,15 @@ app.add_middleware(
 # Flushing it at every backend restart silently discarded uploads before the
 # worker could create embeddings and Qdrant points.
 
-# Include all API routes via the central router
+# Include all API routes via the central router with and without /api prefix
 from app.api.router import api_router
+app.include_router(api_router, prefix="/api")
 app.include_router(api_router)
 
 from fastapi.staticfiles import StaticFiles
 os.makedirs("app/uploads/profile", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
+app.mount("/api/uploads", StaticFiles(directory="app/uploads"), name="api_uploads")
 
 
 from fastapi import WebSocket, WebSocketDisconnect
@@ -125,6 +127,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from app.core.websocket import ws_manager
 
 @app.websocket("/ws/dashboard")
+@app.websocket("/api/ws/dashboard")
 async def websocket_endpoint(websocket: WebSocket):
     await ws_manager.connect(websocket)
     try:

@@ -13,7 +13,7 @@ from app.services.email_service import send_email_with_pdf_attachment, send_real
 from app.services.pdf_service import generate_invoice_pdf
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/billing", tags=["billing"])
+router = APIRouter(prefix="/billing", tags=["billing"])
 
 INVOICES_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "uploads", "invoices")
 os.makedirs(INVOICES_DIR, exist_ok=True)

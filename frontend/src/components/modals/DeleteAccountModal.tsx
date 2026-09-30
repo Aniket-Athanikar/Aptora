@@ -12,7 +12,9 @@ interface DeleteAccountModalProps {
   onClose: () => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { resolveApiUrl } from "@/lib/api-url";
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").trim();
 
 export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps) {
   const { user, logout } = useAuth();
@@ -65,7 +67,7 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
   const fetchOtpFromBackend = async () => {
     if (!user?.email) return;
     try {
-      const res = await fetch(`${API_URL}/api/account/get-otp`, {
+      const res = await fetch(resolveApiUrl("/account/get-otp"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email }),
@@ -88,7 +90,7 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/request-deletion`, {
+      const res = await fetch(resolveApiUrl("/account/request-deletion"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email, reason }),
@@ -143,7 +145,7 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/verify-deletion`, {
+      const res = await fetch(resolveApiUrl("/account/verify-deletion"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email, otp: otpStr }),

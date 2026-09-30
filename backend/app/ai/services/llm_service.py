@@ -31,22 +31,27 @@ def get_openai_client() -> OpenAI:
     global _client_instance, _client_api_key
 
     api_key = settings.OPENAI_API_KEY.strip()
+    import os
+    base_url = getattr(settings, "OPENAI_BASE_URL", None) or os.getenv("OPENAI_BASE_URL")
 
     if not api_key:
         raise RuntimeError(
             "OpenAI API key is not configured. Set OPENAI_API_KEY."
         )
 
+    client_key = f"{api_key}:{base_url}"
     if (
         _client_instance is None
-        or _client_api_key != api_key
+        or _client_api_key != client_key
     ):
-        logger.info("[LLMService] Creating OpenAI client")
+        logger.info("[LLMService] Creating OpenAI client (base_url=%s)", base_url)
 
-        _client_instance = OpenAI(
-            api_key=api_key
-        )
-        _client_api_key = api_key
+        kwargs: dict[str, Any] = {"api_key": api_key}
+        if base_url:
+            kwargs["base_url"] = base_url
+
+        _client_instance = OpenAI(**kwargs)
+        _client_api_key = client_key
     return _client_instance
 
 
@@ -175,6 +180,17 @@ Required format:
                 "[LLM Generate Failed] %s",
                 exc
             )
+            err_str = str(exc)
+            if "insufficient_quota" in err_str or "credit_balance_exhausted" in err_str or "429" in err_str:
+                logger.warning("[LLMService] OpenAI quota exhausted. Returning fallback response.")
+                extracted = prompt.split("Retrieved Textbook Content:")[-1].strip() if "Retrieved Textbook Content:" in prompt else prompt
+                return (
+                    "⚠️ **OpenAI API Credit Quota Exhausted**\n\n"
+                    "The OpenAI API key configured in `backend/.env` has no remaining credits (`insufficient_quota`).\n\n"
+                    "**Retrieved Study Material Context**:\n"
+                    f"{extracted[:2000]}\n\n"
+                    "*(Please update `OPENAI_API_KEY` in `backend/.env` with active OpenAI credits to resume AI reasoning.)*"
+                )
             raise RuntimeError(
                 f"LLM generation failed: {exc}"
             ) from exc
@@ -256,6 +272,20 @@ Required format:
                 "[LLM JSON Failed] %s",
                 exc
             )
+            err_str = str(exc)
+            if "insufficient_quota" in err_str or "credit_balance_exhausted" in err_str or "429" in err_str:
+                logger.warning("[LLMService] OpenAI quota exhausted. Returning structured fallback JSON.")
+                extracted = prompt.split("Retrieved Textbook Content:")[-1].strip() if "Retrieved Textbook Content:" in prompt else prompt
+                return {
+                    "explanation": f"⚠️ **OpenAI API Credit Quota Exhausted**: The OpenAI account for `OPENAI_API_KEY` has run out of API credits (`insufficient_quota`). Below is the direct content retrieved from your textbook:\n\n{extracted[:1500]}",
+                    "key_points": [
+                        "Document context was successfully retrieved and validated from your uploaded material.",
+                        "LLM AI text generation failed due to HTTP 429 quota exhaustion on the current OpenAI API key.",
+                        "To enable full AI AI explanations, top up OpenAI API credits or provide an active OPENAI_API_KEY."
+                    ],
+                    "example": "",
+                    "summary": "Document context retrieved successfully. Update OpenAI API credits in backend/.env to resume AI explanations."
+                }
             raise RuntimeError(
                 f"JSON generation failed: {exc}"
             ) from exc

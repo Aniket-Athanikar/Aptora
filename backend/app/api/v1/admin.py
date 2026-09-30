@@ -5,7 +5,7 @@ from app.core.dependencies import get_db
 from app.models.contact import ContactDb
 from app.models.newsletter import NewsletterDb
 
-router = APIRouter(prefix="/api/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"])
 
 @router.get("/contacts")
 async def get_contacts(db: Session = Depends(get_db)):

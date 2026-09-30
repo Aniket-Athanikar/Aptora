@@ -14,7 +14,7 @@ from app.schemas.notification import (
 from app.core.websocket import ws_manager
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/notifications", tags=["notifications"])
+router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 DEFAULT_SEED_NOTIFICATIONS = [
     {

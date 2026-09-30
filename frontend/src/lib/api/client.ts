@@ -27,7 +27,36 @@ class ApiClient {
   }
 
   private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
-    const url = new URL(`${this.baseURL}${endpoint}`, window.location.origin);
+    let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    let base = (process.env.NEXT_PUBLIC_API_URL || this.baseURL || 'http://localhost:8000').trim();
+
+    if (typeof window !== 'undefined') {
+      if (!base.startsWith('http://') && !base.startsWith('https://')) {
+        const origin = window.location.origin;
+        const prefix = base.startsWith('/') ? base : `/${base}`;
+        base = `${origin}${prefix === '/' ? '' : prefix}`;
+      } else {
+        try {
+          const u = new URL(base);
+          if (u.hostname === 'api' || u.hostname === 'backend') {
+            base = `${window.location.origin}${u.pathname}`;
+          }
+        } catch {}
+      }
+    }
+
+    let cleanBase = base.replace(/\/+$/, '');
+
+    if (cleanBase.endsWith('/api') && (cleanEndpoint.startsWith('/api/') || cleanEndpoint === '/api')) {
+      cleanEndpoint = cleanEndpoint === '/api' ? '' : cleanEndpoint.substring(4);
+    } else if (!cleanBase.endsWith('/api') && !cleanEndpoint.startsWith('/api/') && cleanEndpoint !== '/api') {
+      cleanEndpoint = `/api${cleanEndpoint}`;
+    }
+
+    let fullUrl = `${cleanBase}${cleanEndpoint}`;
+    fullUrl = fullUrl.replace(/\/api\/api\//g, '/api/').replace(/\/api\/api$/g, '/api');
+
+    const url = new URL(fullUrl, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {

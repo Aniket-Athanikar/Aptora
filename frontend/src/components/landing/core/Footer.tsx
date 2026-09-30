@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/lib/ToastContext";
 import { AptoraLogo } from "@/components/ui/AptoraLogo";
+import { resolveApiUrl } from "@/lib/api-url";
 
 export default function Footer() {
   const { toast } = useToast();
@@ -37,7 +38,7 @@ export default function Footer() {
     }
     setIsSubscribing(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/newsletter/subscribe`, {
+      const res = await fetch(resolveApiUrl("/newsletter/subscribe"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })

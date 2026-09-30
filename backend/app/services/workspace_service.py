@@ -249,9 +249,9 @@ class WorkspaceService(BaseService):
         workspace_id: int,
     ) -> List[WorkspaceSubjectDb]:
         """
-        Retrieve all subjects belonging to a workspace.
+        Retrieve all subjects belonging to a workspace. Auto-populates default subjects if none exist.
         """
-        return (
+        subjects = (
             db.query(WorkspaceSubjectDb)
             .filter(WorkspaceSubjectDb.workspace_id == workspace_id)
             .order_by(
@@ -260,6 +260,42 @@ class WorkspaceService(BaseService):
             )
             .all()
         )
+
+        if not subjects:
+            workspace = db.query(GoalWorkspaceDb).filter(GoalWorkspaceDb.id == workspace_id).first()
+            target_exam = workspace.target_exam if workspace else "General"
+            default_names = cls._get_default_subjects(target_exam)
+            if not default_names or default_names == ["General"]:
+                default_names = [
+                    "History & Culture",
+                    "Geography & Ecology",
+                    "Polity & Governance",
+                    "Economy & Growth",
+                    "Science & Technology",
+                ]
+
+            for index, name in enumerate(default_names, start=1):
+                db.add(
+                    WorkspaceSubjectDb(
+                        workspace_id=workspace_id,
+                        name=name,
+                        display_order=index,
+                        is_active=True,
+                    )
+                )
+            db.commit()
+
+            subjects = (
+                db.query(WorkspaceSubjectDb)
+                .filter(WorkspaceSubjectDb.workspace_id == workspace_id)
+                .order_by(
+                    WorkspaceSubjectDb.display_order.asc(),
+                    WorkspaceSubjectDb.name.asc(),
+                )
+                .all()
+            )
+
+        return subjects
 
 
     @classmethod

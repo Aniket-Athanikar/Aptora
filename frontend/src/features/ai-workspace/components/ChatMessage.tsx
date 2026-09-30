@@ -52,12 +52,12 @@ function parseInline(text: string): React.ReactNode[] {
   const parts = text.split(rx);
 
   return parts.map((seg, i) => {
-    // ── **Bold Text** (Clean Bold Purple Text - like "Spatial Distribution:" in screenshot)
+    // ── **Bold Text** (Clean Bold Emerald Text for key terms)
     if (seg.startsWith("**") && seg.endsWith("**") && seg.length > 4) {
       return (
         <strong
           key={i}
-          className="font-bold text-purple-900"
+          className="font-bold text-emerald-950"
         >
           {seg.slice(2, -2)}
         </strong>
@@ -74,12 +74,12 @@ function parseInline(text: string): React.ReactNode[] {
     // ── ==Highlight Text==
     if (seg.startsWith("==") && seg.endsWith("==") && seg.length > 4) {
       return (
-        <mark key={i} className="font-bold text-purple-900 bg-purple-100/70 px-1 py-0.5 rounded">
+        <mark key={i} className="font-bold text-emerald-950 bg-emerald-100/80 px-1 py-0.5 rounded">
           {seg.slice(2, -2)}
         </mark>
       );
     }
-    // ── (Source: ...) (Muted citation text - like in screenshot)
+    // ── (Source: ...) (Muted citation text)
     if (seg.startsWith("(Source:") && seg.endsWith(")")) {
       return (
         <span key={i} className="text-[11.5px] text-slate-400 font-medium ml-1">
@@ -90,7 +90,7 @@ function parseInline(text: string): React.ReactNode[] {
     // ── [Bracketed Tag]
     if (seg.startsWith("[") && seg.endsWith("]") && seg.length > 2 && !seg.includes("http")) {
       return (
-        <span key={i} className="font-extrabold text-purple-800 bg-purple-50 border border-purple-100 px-1.5 py-0.5 rounded text-[10.5px] uppercase tracking-wider mx-0.5 inline">
+        <span key={i} className="font-black text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded text-[10.5px] uppercase tracking-wider mx-0.5 inline">
           {seg.slice(1, -1)}
         </span>
       );
@@ -100,7 +100,7 @@ function parseInline(text: string): React.ReactNode[] {
       return (
         <code
           key={i}
-          className="font-mono font-semibold text-purple-900 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200/60 text-[12px] mx-0.5 inline"
+          className="font-mono font-bold text-emerald-900 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80 text-[12px] mx-0.5 inline"
         >
           {seg.slice(1, -1)}
         </code>
@@ -142,8 +142,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
-      className={`flex items-start gap-3.5 w-full ${isAi ? "justify-start" : "justify-end"
-        }`}
+      className={`flex items-start gap-3.5 w-full ${isAi ? "justify-start" : "justify-end"}`}
     >
       {/* ── AI Avatar ── */}
       {isAi && (
@@ -151,43 +150,52 @@ export function ChatMessage({ message }: ChatMessageProps) {
           variants={fadeVariants}
           initial="hidden"
           animate="visible"
-          className="w-8 h-8 rounded-xl bg-purple-600 flex items-center justify-center shrink-0 shadow-xs"
+          className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/15 border border-emerald-400/30"
         >
-          <Bot className="w-4 h-4 text-white" />
+          <Bot className="w-5 h-5 text-white" />
         </motion.div>
       )}
 
-      {/* ── Bubble ── */}
-      <div
-        className={`relative min-w-0 max-w-[85%] sm:max-w-[80%] ${isAi ? "" : "ml-auto"
-          }`}
-      >
-        {/* Source reference chip */}
-        {isAi && message.sourceInfo && (
-          <div className="flex items-center gap-1.5 mb-2 pl-0.5">
-            <div className="p-1 rounded-md bg-purple-100/70 border border-purple-200/60">
-              <BookOpen className="w-3.5 h-3.5 text-purple-700" />
-            </div>
-            <span className="text-[10.5px] font-bold text-purple-900 tracking-wide truncate bg-purple-50/70 px-2 py-0.5 rounded-md border border-purple-200/50">
-              {message.sourceInfo.bookTitle} · {message.sourceInfo.chapter} · p.{message.sourceInfo.pages}
+      {/* ── Bubble Container ── */}
+      <div className={`relative min-w-0 max-w-[90%] sm:max-w-[82%] ${isAi ? "" : "ml-auto"}`}>
+        {/* Source reference & Grounding Confidence Badge */}
+        {isAi && (
+          <div className="flex items-center gap-2 mb-2 pl-0.5 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs">
+              <Sparkles className="w-3 h-3 text-emerald-600" />
+              <span>Grounded Answer</span>
             </span>
+
+            {message.confidence && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200/80">
+                <span>Score {message.confidence}</span>
+              </span>
+            )}
+
+            {message.sources && message.sources.length > 0 && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-900 border border-emerald-200/80">
+                <BookOpen className="w-3 h-3 text-emerald-600" />
+                <span>{message.sources.length} Verified Sources</span>
+              </span>
+            )}
           </div>
         )}
 
         <div
-          className={`rounded-2xl text-[13.5px] leading-relaxed ${isAi
-              ? "bg-white border border-purple-100/80 shadow-xs text-slate-800 px-5 py-4 rounded-tl-xs"
-              : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2.5 shadow-xs rounded-2xl rounded-tr-xs font-medium"
-            }`}
+          className={`rounded-3xl text-[13.5px] leading-relaxed transition-all ${
+            isAi
+              ? "bg-white border border-slate-200/90 shadow-md shadow-slate-900/5 text-slate-800 px-5 sm:px-6 py-4.5 rounded-tl-xs"
+              : "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white px-5 py-3.5 shadow-md shadow-emerald-600/15 rounded-3xl rounded-tr-xs font-semibold"
+          }`}
         >
           {/* ── Image attachment ── */}
           {message.imageUrl && (
-            <div className="mb-3.5 rounded-xl overflow-hidden border border-purple-100 bg-white shadow-xs">
-              <div className="flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-purple-50 via-indigo-50/40 to-purple-50 border-b border-purple-100 text-[10px] font-bold text-purple-800 uppercase tracking-wider">
+            <div className="mb-3.5 rounded-xl overflow-hidden border border-emerald-100 bg-white shadow-xs">
+              <div className="flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-emerald-50 via-teal-50/40 to-emerald-50 border-b border-emerald-100 text-[10px] font-bold text-emerald-900 uppercase tracking-wider">
                 <span>AI Concept Visual</span>
                 <button
                   onClick={() => toast("Downloading image...", "info")}
-                  className="p-1 rounded-md hover:bg-purple-100 hover:text-purple-950 transition-all cursor-pointer"
+                  className="p-1 rounded-md hover:bg-emerald-100 hover:text-emerald-950 transition-all cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                 </button>
@@ -207,12 +215,12 @@ export function ChatMessage({ message }: ChatMessageProps) {
                 <div
                   key={idx}
                   className={`flex items-center justify-between gap-2.5 px-3.5 py-2.5 rounded-xl text-xs transition-all ${isAi
-                      ? "bg-purple-50/60 border border-purple-100 hover:bg-purple-100/50 text-slate-800"
+                      ? "bg-emerald-50/60 border border-emerald-100 hover:bg-emerald-100/50 text-slate-800"
                       : "bg-white/15 border border-white/20 hover:bg-white/25 text-white"
                     }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className={`p-1.5 rounded-lg shrink-0 ${isAi ? "bg-purple-100 text-purple-700" : "bg-white/20 text-white"
+                    <div className={`p-1.5 rounded-lg shrink-0 ${isAi ? "bg-emerald-100 text-emerald-700" : "bg-white/20 text-white"
                       }`}>
                       <FileText className="w-3.5 h-3.5" />
                     </div>
@@ -225,7 +233,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   </div>
                   <button
                     onClick={() => toast("Downloading...", "info")}
-                    className={`p-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${isAi ? "hover:bg-purple-100 text-purple-800" : "hover:bg-white/20 text-white"
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${isAi ? "hover:bg-emerald-100 text-emerald-800" : "hover:bg-white/20 text-white"
                       }`}
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -248,20 +256,20 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
           {/* Claude-style UI Indicator: Display actual token counts and latencies */}
           {isAi && (
-            <div className="mt-3 pt-3 border-t border-purple-100/60 text-[10px] text-slate-500 font-semibold select-none">
+            <div className="mt-3 pt-3 border-t border-slate-150 text-[10px] text-slate-500 font-semibold select-none">
               <div 
-                className="flex items-center justify-between cursor-pointer hover:text-purple-700 transition-colors" 
+                className="flex items-center justify-between cursor-pointer hover:text-emerald-700 transition-colors" 
                 onClick={() => setShowDetails(!showDetails)}
               >
                 <span className="flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-purple-500" />
+                  <Terminal className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Request ID: {message.requestId ? message.requestId.slice(0, 8) : `ef-${message.id.slice(-6)}`}...</span>
                 </span>
                 <div className="flex items-center gap-2">
                   <span>
                     {(message.latency ?? (0.8 + (message.text ? message.text.length : 0) / 600)).toFixed(2)}s
                   </span>
-                  <span className="bg-purple-50 border border-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">
+                  <span className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 px-2.5 py-0.5 rounded-full font-black">
                     {message.tokens?.total ?? Math.round((message.text ? message.text.length : 0) / 4 + 320)} tokens
                   </span>
                   <ChevronRight className={`w-3 h-3 transition-transform ${showDetails ? "rotate-90" : ""}`} />
@@ -269,7 +277,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
               </div>
               
               {showDetails && (
-                <div className="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-purple-100/80 grid grid-cols-2 gap-2 text-[9.5px] font-semibold text-slate-600">
+                <div className="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-emerald-100 grid grid-cols-2 gap-2 text-[9.5px] font-semibold text-slate-600">
                   <div>
                     <p className="text-slate-400">Context Budget</p>
                     <p className="text-slate-800 font-black">
@@ -290,7 +298,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   </div>
                   <div>
                     <p className="text-slate-400">Model</p>
-                    <p className="text-slate-800 font-black">gpt-4o-mini</p>
+                    <p className="text-emerald-700 font-black">gpt-4.1-mini</p>
                   </div>
                 </div>
               )}
@@ -320,7 +328,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           variants={fadeVariants}
           initial="hidden"
           animate="visible"
-          className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shrink-0 shadow-xs"
+          className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-700 via-teal-700 to-emerald-900 flex items-center justify-center shrink-0 shadow-xs"
         >
           <User className="w-4 h-4 text-white" />
         </motion.div>
@@ -360,10 +368,10 @@ export function renderMarkdown(
     segments.push(
       <div
         key={`code-${m.index}`}
-        className="my-3.5 rounded-xl overflow-hidden border border-purple-200/80 bg-white shadow-xs"
+        className="my-3.5 rounded-xl overflow-hidden border border-emerald-200/80 bg-white shadow-xs"
       >
         {/* Code header */}
-        <div className="flex items-center justify-between px-3.5 py-2 bg-purple-50/60 border-b border-purple-100">
+        <div className="flex items-center justify-between px-3.5 py-2 bg-emerald-50/60 border-b border-emerald-100">
           <div className="flex items-center gap-2.5">
             <div className="flex gap-1.5">
               <span className="w-2 h-2 rounded-full bg-red-400/80" />
@@ -371,15 +379,15 @@ export function renderMarkdown(
               <span className="w-2 h-2 rounded-full bg-emerald-400/80" />
             </div>
             <div className="flex items-center gap-1.5 ml-1">
-              <Terminal className="w-3.5 h-3.5 text-purple-600" />
-              <span className="text-[10.5px] font-mono font-bold text-purple-900 uppercase tracking-wider">
+              <Terminal className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10.5px] font-mono font-bold text-emerald-900 uppercase tracking-wider">
                 {lang}
               </span>
             </div>
           </div>
           <button
             onClick={() => copyCode(code, idx)}
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10.5px] font-bold text-purple-700 hover:text-purple-950 hover:bg-purple-100 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10.5px] font-bold text-emerald-700 hover:text-emerald-950 hover:bg-emerald-100 transition-all cursor-pointer"
           >
             {copiedIdx === idx ? (
               <>
@@ -388,14 +396,14 @@ export function renderMarkdown(
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5 text-purple-600" />
+                <Copy className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Copy</span>
               </>
             )}
           </button>
         </div>
         {/* Code body */}
-        <pre className="px-4 py-3.5 text-[12.5px] font-mono text-slate-800 font-medium overflow-x-auto leading-relaxed bg-purple-50/20 selection:bg-purple-200/60">
+        <pre className="px-4 py-3.5 text-[12.5px] font-mono text-slate-800 font-medium overflow-x-auto leading-relaxed bg-emerald-50/20 selection:bg-emerald-200/60">
           <code>{code}</code>
         </pre>
       </div>,
@@ -433,26 +441,26 @@ function renderProse(raw: string): React.ReactNode {
     elements.push(
       <div
         key={key}
-        className="my-3.5 overflow-x-auto rounded-xl border border-purple-200/80 shadow-xs bg-white"
+        className="my-3.5 overflow-x-auto rounded-xl border border-emerald-200/80 shadow-xs bg-white"
       >
         <table className="min-w-full text-xs border-collapse">
           <thead>
-            <tr className="bg-purple-50/80 border-b border-purple-200/80">
+            <tr className="bg-emerald-50/80 border-b border-emerald-200/80">
               {h.map((col, ci) => (
                 <th
                   key={ci}
-                  className="px-3.5 py-2 text-left font-bold text-purple-900 uppercase tracking-wider text-[9.5px]"
+                  className="px-3.5 py-2 text-left font-bold text-emerald-900 uppercase tracking-wider text-[9.5px]"
                 >
                   {col}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-purple-100">
+          <tbody className="divide-y divide-emerald-100">
             {r.map((row, ri) => (
               <tr
                 key={ri}
-                className="hover:bg-purple-50/40 transition-colors"
+                className="hover:bg-emerald-50/40 transition-colors"
               >
                 {row.map((cell, ci) => (
                   <td
@@ -500,7 +508,7 @@ function renderProse(raw: string): React.ReactNode {
       elements.push(
         <hr
           key={`hr-${i}`}
-          className="my-3.5 border-t border-purple-200/60"
+          className="my-3.5 border-t border-emerald-200/60"
         />,
       );
       return;
@@ -521,7 +529,7 @@ function renderProse(raw: string): React.ReactNode {
           key={`h-${i}`}
           className="mt-5 mb-2"
         >
-          <h3 className="text-[15px] font-black text-purple-900 tracking-tight">
+          <h3 className="text-[15px] font-black text-emerald-950 tracking-tight">
             {title}
           </h3>
         </div>,
@@ -535,9 +543,9 @@ function renderProse(raw: string): React.ReactNode {
       elements.push(
         <blockquote
           key={`q-${i}`}
-          className="flex gap-2.5 my-3 px-3.5 py-2.5 rounded-xl bg-purple-50/60 border-l-3 border-purple-500 shadow-2xs"
+          className="flex gap-2.5 my-3 px-3.5 py-2.5 rounded-xl bg-emerald-50/60 border-l-3 border-emerald-500 shadow-2xs"
         >
-          <Quote className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+          <Quote className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           <span className="text-[13px] text-slate-800 leading-relaxed font-medium">
             {parseInline(q)}
           </span>
@@ -546,7 +554,7 @@ function renderProse(raw: string): React.ReactNode {
       return;
     }
 
-    // ── Bullet list (clean bullet with purple key terms - like screenshot)
+    // ── Bullet list (clean bullet with emerald key terms)
     if (t.startsWith("- ") || t.startsWith("* ")) {
       const item = t.replace(/^[-*]\s+/, "");
       elements.push(
@@ -554,7 +562,7 @@ function renderProse(raw: string): React.ReactNode {
           key={`li-${i}`}
           className="flex items-start gap-2.5 my-2 pl-0.5 text-[13.5px] leading-relaxed"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0 mt-2" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 mt-2" />
           <span className="text-slate-800 font-normal">
             {parseInline(item)}
           </span>
@@ -572,7 +580,7 @@ function renderProse(raw: string): React.ReactNode {
             key={`ol-${i}`}
             className="flex items-start gap-2.5 my-2 text-[13.5px] leading-relaxed"
           >
-            <span className="text-[10.5px] font-black text-purple-700 bg-purple-100/80 w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 border border-purple-200/80">
+            <span className="text-[10.5px] font-black text-emerald-800 bg-emerald-100/80 w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 border border-emerald-200/80">
               {match[1]}
             </span>
             <span className="text-slate-800 font-normal">

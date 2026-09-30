@@ -30,7 +30,8 @@ import {
   PanelLeftOpen,
   SlidersHorizontal,
   X,
-  Check
+  Check,
+  Database
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { backendService, type Resource, type LibraryBookItem } from "@/services/backend.service";
@@ -62,11 +63,11 @@ const getSubjectTheme = (colorStr: string) => {
   }
   if (s.includes("blue") || s.includes("sky")) {
     return {
-      hoverBg: "hover:bg-blue-50/40",
-      hoverBorder: "hover:border-blue-300",
-      hoverText: "group-hover:text-blue-700",
-      badgeBg: "bg-blue-50 text-blue-650",
-      iconBg: "bg-blue-50 text-blue-600",
+      hoverBg: "hover:bg-emerald-50/40",
+      hoverBorder: "hover:border-emerald-300",
+      hoverText: "group-hover:text-emerald-700",
+      badgeBg: "bg-emerald-50 text-emerald-800",
+      iconBg: "bg-emerald-50 text-emerald-600",
     };
   }
   if (s.includes("emerald") || s.includes("green") || s.includes("teal")) {
@@ -74,7 +75,7 @@ const getSubjectTheme = (colorStr: string) => {
       hoverBg: "hover:bg-emerald-50/40",
       hoverBorder: "hover:border-emerald-300",
       hoverText: "group-hover:text-emerald-700",
-      badgeBg: "bg-emerald-50 text-emerald-650",
+      badgeBg: "bg-emerald-50 text-emerald-800",
       iconBg: "bg-emerald-50 text-emerald-600",
     };
   }
@@ -97,16 +98,36 @@ const getSubjectTheme = (colorStr: string) => {
     };
   }
   return {
-    hoverBg: "hover:bg-indigo-50/40",
-    hoverBorder: "hover:border-indigo-300",
-    hoverText: "group-hover:text-indigo-700",
-    badgeBg: "bg-indigo-50 text-indigo-650",
-    iconBg: "bg-indigo-50 text-indigo-600",
+    hoverBg: "hover:bg-emerald-50/40",
+    hoverBorder: "hover:border-emerald-300",
+    hoverText: "group-hover:text-emerald-700",
+    badgeBg: "bg-emerald-50 text-emerald-800",
+    iconBg: "bg-emerald-50 text-emerald-600",
   };
 };
 
 export function AIChatStepFlow() {
-  return <AiStudyHome />;
+  const [chunkViewerData, setChunkViewerData] = useState<{
+    isOpen: boolean;
+    title: string;
+    chunks: Array<{ index: number; content: string; page_number?: number; chapter?: string; score?: number }>;
+  }>({
+    isOpen: false,
+    title: "Document Chunks",
+    chunks: [],
+  });
+
+  return (
+    <>
+      <AiStudyHome setChunkViewerData={setChunkViewerData} />
+      <ChunkViewerModal
+        isOpen={chunkViewerData.isOpen}
+        onClose={() => setChunkViewerData((prev) => ({ ...prev, isOpen: false }))}
+        documentTitle={chunkViewerData.title}
+        chunks={chunkViewerData.chunks}
+      />
+    </>
+  );
 }
 
 const FLOW_STEPS = [
@@ -122,14 +143,14 @@ function FlowStepProgressBar({ currentStep, onStepClick }: { currentStep: number
   const progressPercent = ((currentStep - 1) / (FLOW_STEPS.length - 1)) * 100;
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white/95 backdrop-blur-md border border-purple-200/80 rounded-full px-6 sm:px-10 py-3 shadow-md shadow-purple-950/5 mb-7">
+    <div className="w-full max-w-3xl mx-auto bg-white/95 backdrop-blur-md border border-emerald-200/80 rounded-full px-6 sm:px-10 py-3 shadow-md shadow-emerald-950/5 mb-7">
       <div className="relative flex items-center justify-between">
         {/* Background Subtle Line */}
-        <div className="absolute left-4 right-4 top-4 h-1 bg-purple-100/80 rounded-full z-0" />
+        <div className="absolute left-4 right-4 top-4 h-1.5 bg-emerald-100/80 rounded-full z-0" />
 
-        {/* Active Animated Gradient Progress Line */}
+        {/* Active Animated Gradient Progress Line (Matching Landing Page Emerald Gradient) */}
         <div
-          className="absolute left-4 top-4 h-1 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 rounded-full z-0 transition-all duration-500 ease-out shadow-xs"
+          className="absolute left-4 top-4 h-1.5 bg-gradient-to-r from-[#084c38] via-[#059669] to-[#10b981] rounded-full z-0 transition-all duration-500 ease-out shadow-2xs"
           style={{ width: `calc(${progressPercent}% * 0.95)` }}
         />
 
@@ -149,20 +170,20 @@ function FlowStepProgressBar({ currentStep, onStepClick }: { currentStep: number
             >
               {/* Circular Badge Icon Node */}
               <div
-                className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xs transition-all duration-300 font-black ${isCurrent
-                  ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white ring-4 ring-purple-100/90 shadow-md scale-110"
+                className={`w-9.5 h-9.5 rounded-2xl flex items-center justify-center text-xs transition-all duration-300 font-black ${isCurrent
+                  ? "bg-gradient-to-r from-[#084c38] via-[#059669] to-[#047857] text-white ring-4 ring-emerald-100 shadow-md scale-110 border border-emerald-400/40"
                   : isCompleted
-                    ? "bg-emerald-500 text-white shadow-xs font-black"
-                    : "bg-purple-50/60 text-slate-400 border border-purple-200/80 hover:border-purple-400 hover:text-purple-700"
+                    ? "bg-[#059669] text-white shadow-2xs font-black border border-emerald-400/40"
+                    : "bg-emerald-50/60 text-slate-400 border border-emerald-200/80 hover:border-emerald-400 hover:text-emerald-700"
                   }`}
               >
-                {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+                {isCompleted ? <CheckCircle2 className="w-4.5 h-4.5" /> : <Icon className="w-4.5 h-4.5" />}
               </div>
 
               {/* Step Label */}
               <span
                 className={`text-[10px] font-black tracking-widest uppercase transition-colors ${isCurrent
-                  ? "text-purple-950 font-black"
+                  ? "text-[#084c38] font-black"
                   : isCompleted
                     ? "text-slate-800"
                     : "text-slate-400"
@@ -178,10 +199,35 @@ function FlowStepProgressBar({ currentStep, onStepClick }: { currentStep: number
   );
 }
 
-function AiStudyHome() {
+function AiStudyHome({
+  setChunkViewerData,
+}: {
+  setChunkViewerData: React.Dispatch<
+    React.SetStateAction<{
+      isOpen: boolean;
+      title: string;
+      chunks: Array<{ index: number; content: string; page_number?: number; chapter?: string; score?: number }>;
+    }>
+  >;
+}) {
   const router = useRouter();
   const { activeWorkspace, activeWorkspaceId, flowStep, setFlowStep, selectedSubjectId, selectedResourceType, selectedResourceId, selectSubject, selectResourceType, selectResource, refreshResources } = useWorkspace();
   const [subjectSearch, setSubjectSearch] = useState("");
+
+  const handleInspectDocumentChunks = async (resourceId: string | number, resourceTitle: string) => {
+    try {
+      const numId = Number(resourceId);
+      if (!numId) return;
+      const preview = await backendService.documents.preview(numId);
+      setChunkViewerData({
+        isOpen: true,
+        title: preview.title || resourceTitle || "Document Chunks",
+        chunks: preview.chunks || [],
+      });
+    } catch {
+      /* Fallback handling */
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -204,9 +250,9 @@ function AiStudyHome() {
   const defaultDiverseSubjects = [
     { id: "subj-history", name: "History & Culture", color: "from-amber-500 to-orange-600", resourceCount: getResourceCountForSubject("subj-history") },
     { id: "subj-geography", name: "Geography & Ecology", color: "from-emerald-500 to-teal-600", resourceCount: getResourceCountForSubject("subj-geography") },
-    { id: "subj-polity", name: "Polity & Governance", color: "from-purple-500 to-indigo-600", resourceCount: getResourceCountForSubject("subj-polity") },
-    { id: "subj-economy", name: "Economy & Growth", color: "from-blue-500 to-cyan-600", resourceCount: getResourceCountForSubject("subj-economy") },
-    { id: "subj-science", name: "Science & Technology", color: "from-violet-500 to-pink-600", resourceCount: getResourceCountForSubject("subj-science") },
+    { id: "subj-polity", name: "Polity & Governance", color: "from-emerald-600 to-teal-700", resourceCount: getResourceCountForSubject("subj-polity") },
+    { id: "subj-economy", name: "Economy & Growth", color: "from-emerald-600 to-teal-700", resourceCount: getResourceCountForSubject("subj-economy") },
+    { id: "subj-science", name: "Science & Technology", color: "from-teal-600 to-emerald-700", resourceCount: getResourceCountForSubject("subj-science") },
   ];
 
   const mappedWorkspaceSubjects = (activeWorkspace?.subjects ?? []).map((subject) => ({
@@ -227,10 +273,10 @@ function AiStudyHome() {
     const rawSubjectResources = activeWorkspace?.resources.filter((resource) => resource.subjectId === selectedSubject.id) ?? [];
     const subjectResources = rawSubjectResources.length > 0 ? rawSubjectResources : (activeWorkspace?.resources ?? []);
     const resourceTypes = [
-      { label: "Books", type: "Book", icon: BookOpen, tone: "text-purple-600 bg-purple-50" },
-      { label: "Notes", type: "Note", icon: FileCheck, tone: "text-amber-600 bg-amber-50" },
-      { label: "PYQs", type: "PYQ", icon: HelpCircle, tone: "text-blue-600 bg-blue-50" },
-      { label: "Syllabus", type: "Syllabus", icon: Layers, tone: "text-emerald-600 bg-emerald-50" },
+      { label: "Books", type: "Book", icon: BookOpen, tone: "text-emerald-700 bg-emerald-50" },
+      { label: "Notes", type: "Note", icon: FileCheck, tone: "text-amber-700 bg-amber-50" },
+      { label: "PYQs", type: "PYQ", icon: HelpCircle, tone: "text-emerald-700 bg-emerald-50" },
+      { label: "Syllabus", type: "Syllabus", icon: Layers, tone: "text-teal-700 bg-teal-50" },
     ] as const;
 
     return (
@@ -334,7 +380,7 @@ function AiStudyHome() {
   }
 
   if (flowStep === 3 && selectedSubject && selectedResourceType) {
-    return <ResourceListStage subjectId={selectedSubject.id} subjectName={selectedSubject.name} resourceType={selectedResourceType} onBack={() => setFlowStep(2)} onSelect={selectResource} />;
+    return <ResourceListStage subjectId={selectedSubject.id} subjectName={selectedSubject.name} resourceType={selectedResourceType} onBack={() => setFlowStep(2)} onSelect={selectResource} onInspectChunks={handleInspectDocumentChunks} />;
   }
 
   if (flowStep === 4 && selectedResourceId) {
@@ -449,7 +495,7 @@ function AiStudyHome() {
 type ResourceTypeFilter = "Book" | "PDF" | "Note" | "PYQ" | "Syllabus";
 const backendResourceType: Record<ResourceTypeFilter, string> = { Book: "book", PDF: "pdf", Note: "notes", PYQ: "pyq", Syllabus: "syllabus" };
 
-function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSelect }: { subjectId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void; onSelect: (id: string) => void }) {
+function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSelect, onInspectChunks }: { subjectId: string; subjectName: string; resourceType: ResourceTypeFilter; onBack: () => void; onSelect: (id: string) => void; onInspectChunks: (id: string | number, title: string) => void }) {
   const { activeWorkspaceId, setFlowStep, selectResource } = useWorkspace();
   const [query, setQuery] = useState("");
   const [resources, setResources] = useState<Resource[]>([]);
@@ -599,6 +645,18 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
                       <span>View PDF</span>
                     </button>
 
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onInspectChunks(resource.id, resource.title);
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 transition-colors cursor-pointer"
+                      title="View document chunks"
+                    >
+                      <Database className="w-3 h-3 text-emerald-600" />
+                      <span>Chunks ({resource.chunks_count || 0})</span>
+                    </button>
+
                     {isCompleted && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -629,7 +687,7 @@ function ResourceListStage({ subjectId, subjectName, resourceType, onBack, onSel
                       onSelect(String(resource.id));
                     }}
                     className={`w-full h-10 rounded-2xl font-black text-xs transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer border ${isSelected
-                      ? "bg-purple-50 text-purple-750 border-purple-200 hover:bg-purple-100/50"
+                      ? "bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100/50"
                       : "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200/90"
                       }`}
                   >
@@ -969,65 +1027,69 @@ function AiThinkingPipeline({ active }: { active: boolean }) {
   if (!active) return null;
 
   const progressPercent = Math.round(((currentStep + 1) / AI_THINKING_STAGES.length) * 100);
+  const activeStage = AI_THINKING_STAGES[currentStep];
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.97, y: 12 }}
+      initial={{ opacity: 0, scale: 0.96, y: 14 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.97, y: 12 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="mr-auto max-w-[95%] sm:max-w-xl rounded-3xl border border-purple-200/80 bg-gradient-to-br from-white via-purple-50/50 to-indigo-50/40 p-5 shadow-lg shadow-purple-100/40 space-y-4 my-3 backdrop-blur-md relative overflow-hidden"
+      exit={{ opacity: 0, scale: 0.96, y: 14 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="mr-auto max-w-[95%] sm:max-w-xl rounded-3xl border border-emerald-200/90 bg-gradient-to-br from-white via-emerald-50/40 to-indigo-50/30 p-5 sm:p-6 shadow-xl shadow-emerald-500/10 space-y-4 my-4 backdrop-blur-xl relative overflow-hidden"
     >
-      {/* Background Soft Glow & Shimmer */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-400/10 rounded-full blur-2xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl pointer-events-none" />
+      {/* Background Soft Ambient Glow & Mesh Shimmer */}
+      <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-400/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-36 h-36 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header Bar */}
       <div className="flex items-center justify-between gap-3 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative shrink-0">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              className="w-9 h-9 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700 text-white flex items-center justify-center shadow-md shadow-purple-200"
+              transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+              className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/20 border border-emerald-300/30"
             >
-              <Sparkles className="w-4.5 h-4.5" />
+              <Sparkles className="w-5 h-5 text-white" />
             </motion.div>
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-white animate-ping" />
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-white" />
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-white animate-ping" />
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow-2xs" />
           </div>
 
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] font-black text-purple-700 uppercase tracking-widest bg-purple-100/80 border border-purple-200 px-2 py-0.5 rounded-full">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[9.5px] font-black text-emerald-800 uppercase tracking-widest bg-emerald-100/90 border border-emerald-300/60 px-2.5 py-0.5 rounded-full shadow-2xs">
                 AI Pipeline
               </span>
-              <span className="text-[10px] font-extrabold text-slate-400">
+              <span className="text-[10.5px] font-black text-slate-500">
                 Step {currentStep + 1} of {AI_THINKING_STAGES.length}
               </span>
             </div>
-            <h4 className="text-xs font-black text-slate-900 mt-0.5">
-              {AI_THINKING_STAGES[currentStep].label}
+            <h4 className="text-xs sm:text-sm font-black text-slate-900 mt-1 truncate">
+              {activeStage.label}
             </h4>
+            <p className="text-[11px] font-semibold text-slate-500 truncate">
+              {activeStage.detail}
+            </p>
           </div>
         </div>
 
-        <div className="text-right">
-          <span className="text-sm font-black text-purple-700 tabular-nums">
+        <div className="text-right shrink-0">
+          <span className="text-base font-black text-emerald-700 tabular-nums">
             {progressPercent}%
           </span>
         </div>
       </div>
 
-      {/* Animated Glowing Progress Bar */}
-      <div className="w-full bg-purple-100/70 h-2 rounded-full overflow-hidden p-0.5 relative">
+      {/* Animated Glowing Multi-Color Progress Bar */}
+      <div className="w-full bg-emerald-100/80 h-2.5 rounded-full overflow-hidden p-0.5 relative border border-emerald-200/50 shadow-inner">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-500 rounded-full relative"
+          className="h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600 rounded-full relative"
           initial={{ width: "0%" }}
           animate={{ width: `${progressPercent}%` }}
           transition={{ duration: 0.35, ease: "easeInOut" }}
         >
-          <div className="absolute inset-0 bg-white/30 animate-pulse rounded-full" />
+          <div className="absolute inset-0 bg-white/40 animate-pulse rounded-full" />
         </motion.div>
       </div>
 
@@ -1040,24 +1102,25 @@ function AiThinkingPipeline({ active }: { active: boolean }) {
           return (
             <motion.div
               key={stage.label}
-              initial={{ opacity: 0, x: -6 }}
+              initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.05 }}
-              className={`flex items-center gap-2.5 text-[10px] font-bold px-3 py-2 rounded-2xl border transition-all duration-300 ${isCurrent
-                ? "bg-white border-purple-400 text-purple-950 shadow-md shadow-purple-100/60 ring-2 ring-purple-100"
-                : isDone
-                  ? "bg-purple-50/70 border-purple-200/60 text-purple-800"
+              transition={{ delay: idx * 0.04 }}
+              className={`flex items-center gap-2.5 text-[10.5px] px-3.5 py-2.5 rounded-2xl border transition-all duration-300 ${
+                isCurrent
+                  ? "bg-white border-emerald-400 text-slate-900 shadow-md shadow-emerald-500/10 ring-2 ring-emerald-200"
+                  : isDone
+                  ? "bg-emerald-50/80 border-emerald-200/80 text-emerald-900"
                   : "bg-white/60 border-slate-200/60 text-slate-400"
-                }`}
+              }`}
             >
               <div className="shrink-0 flex items-center justify-center">
                 {isDone ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 ) : isCurrent ? (
                   <motion.span
-                    animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    className="w-2.5 h-2.5 rounded-full bg-purple-600 inline-block ring-4 ring-purple-200"
+                    animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 0.9, repeat: Infinity }}
+                    className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block ring-4 ring-emerald-200"
                   />
                 ) : (
                   <span className="w-2 h-2 rounded-full bg-slate-300 inline-block" />
@@ -1065,7 +1128,9 @@ function AiThinkingPipeline({ active }: { active: boolean }) {
               </div>
 
               <div className="min-w-0 flex-1">
-                <p className={`truncate ${isCurrent ? "font-black" : ""}`}>{stage.label}</p>
+                <p className={`truncate font-black ${isCurrent ? "text-emerald-950" : ""}`}>
+                  {stage.label}
+                </p>
               </div>
             </motion.div>
           );
@@ -1083,9 +1148,9 @@ function StudyAnswer({ content }: { content: string }) {
       {sections.map((section, index) => {
         const [heading, ...body] = section.split("\n");
         return (
-          <section key={`${heading}-${index}`} className="rounded-2xl border border-purple-200/80 bg-purple-50/30 p-4 shadow-2xs">
-            <h4 className="text-[10px] font-black uppercase tracking-wider text-purple-800 flex items-center gap-1.5 mb-1.5">
-              <span className="w-1.5 h-3 bg-purple-600 rounded-full inline-block" />
+          <section key={`${heading}-${index}`} className="rounded-2xl border border-emerald-200/80 bg-emerald-50/30 p-4 shadow-2xs">
+            <h4 className="text-[10px] font-black uppercase tracking-wider text-emerald-900 flex items-center gap-1.5 mb-1.5">
+              <span className="w-1.5 h-3 bg-emerald-600 rounded-full inline-block" />
               {heading}
             </h4>
             <p className="mt-1 whitespace-pre-wrap leading-relaxed text-slate-800 text-xs font-medium">
@@ -1204,35 +1269,35 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
       {historyOpen && <div className="md:hidden fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs" onClick={() => setHistoryOpen(false)}><div className="h-full w-[290px] bg-white shadow-xl" onClick={(event) => event.stopPropagation()}><ConversationSidebar className="stage-five-history" /><button aria-label="Close chat history" onClick={() => setHistoryOpen(false)} className="absolute left-[254px] top-3.5 rounded-xl bg-white p-2 text-slate-700 shadow-xs"><X className="w-4 h-4" /></button></div></div>}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top Workspace Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-gradient-to-r from-emerald-500/10 via-amber-500/10 to-purple-500/10 px-5 py-3.5 sm:px-6 backdrop-blur-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-200/80 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 px-5 py-3.5 sm:px-6 backdrop-blur-xs">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <button onClick={onBack} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-slate-800 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl transition-all cursor-pointer shadow-2xs group">
+              <button onClick={onBack} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-black text-[#084c38] bg-white hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-400 rounded-2xl transition-all cursor-pointer shadow-2xs group">
                 <ArrowLeft className="w-3.5 h-3.5 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
                 <span>Back to Steps</span>
               </button>
-              <button onClick={() => router.push("/ai-study/sources")} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-2xl transition-all cursor-pointer shadow-2xs">
-                <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+              <button onClick={() => router.push("/ai-study/sources")} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-black text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-2xl transition-all cursor-pointer shadow-2xs">
+                <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
                 <span>AI Library</span>
               </button>
             </div>
             <h2 className="text-sm font-black text-slate-900 mt-2 flex items-center gap-2 tracking-tight">
               <button aria-label="Open chat history" onClick={() => setHistoryOpen(true)} className="md:hidden rounded-xl p-1.5 text-slate-500 hover:bg-emerald-50"><Menu className="w-4 h-4" /></button>
               <span>Aptora Chat</span>
-              <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
+              <span className="text-[10px] font-black uppercase text-[#084c38] bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
                 {subjectName} · {resourceType}
               </span>
             </h2>
             <p className="text-[10.5px] text-slate-500 mt-1 font-bold">
-              Active Source #{resourceId || "Indexed"} · Session Duration: <span className="text-emerald-700 font-mono font-black">{sessionDuration}</span>
+              Active Source #{resourceId || "Indexed"} · Session Duration: <span className="text-[#059669] font-mono font-black">{sessionDuration}</span>
             </p>
           </div>
           <div className="flex gap-2 shrink-0">
-            <button onClick={startNewStudySession} className="px-4 py-2 text-xs font-black rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer transition-all shadow-xs">
+            <button onClick={startNewStudySession} className="px-4 py-2 text-xs font-black rounded-2xl bg-gradient-to-r from-[#084c38] to-[#059669] hover:from-[#063b2b] hover:to-[#047857] text-white cursor-pointer transition-all shadow-md shadow-[#084c38]/20">
               New Chat
             </button>
-            <button onClick={() => setContextOpen((open) => !open)} className={`px-3.5 py-2 text-xs font-black rounded-2xl border transition-all cursor-pointer ${contextOpen ? "border-amber-300 bg-amber-100 text-amber-950" : "border-slate-200 bg-white text-slate-700 hover:bg-amber-50"}`}>
-              <SlidersHorizontal className="inline w-3.5 h-3.5 mr-1.5 text-amber-600" />Context
+            <button onClick={() => setContextOpen((open) => !open)} className={`px-3.5 py-2 text-xs font-black rounded-2xl border transition-all cursor-pointer ${contextOpen ? "border-emerald-300 bg-emerald-100 text-[#084c38]" : "border-emerald-200 bg-white text-slate-700 hover:bg-emerald-50"}`}>
+              <SlidersHorizontal className="inline w-3.5 h-3.5 mr-1.5 text-emerald-600" />Context
             </button>
             <button onClick={() => void clearConversation()} className="hidden sm:block px-3.5 py-2 text-xs font-black rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-700 cursor-pointer">Clear</button>
           </div>
@@ -1246,7 +1311,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
               <div data-lenis-prevent className="flex-1 overflow-y-auto space-y-4 pr-1.5 scroll-smooth">
                 {messages.length === 0 ? (
                   <div className="py-12 text-center space-y-5">
-                    <div className="w-14 h-14 rounded-3xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20 mx-auto">
+                    <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-[#084c38] to-[#059669] text-white flex items-center justify-center shadow-lg shadow-[#084c38]/20 mx-auto border border-emerald-400/30">
                       <Bot className="w-7 h-7" />
                     </div>
                     <div>
@@ -1261,7 +1326,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                         <button
                           key={promptText}
                           onClick={() => void ask(promptText)}
-                          className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-900 text-xs font-extrabold transition-all hover:scale-103 cursor-pointer shadow-2xs"
+                          className="px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 text-[#084c38] text-xs font-extrabold transition-all hover:scale-103 cursor-pointer shadow-2xs"
                         >
                           ✨ {promptText}
                         </button>
@@ -1353,7 +1418,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
           {contextOpen && <div className="absolute inset-y-0 right-0 z-30 w-full sm:static sm:w-[300px] shrink-0 overflow-y-auto border-l border-slate-200 bg-white p-4 shadow-xl sm:shadow-none space-y-4">
             <div className="flex items-center justify-between"><h3 className="text-xs font-black text-slate-800">AI Context</h3><button aria-label="Close context" onClick={() => setContextOpen(false)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"><X className="w-4 h-4" /></button></div>
             {/* AI Context Card */}
-            <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm space-y-3.5">
+            <div className="bg-white border border-emerald-100/80 rounded-3xl p-5 shadow-sm space-y-3.5">
               <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest border-b border-slate-50 pb-2">
                 AI Context View
               </h4>
@@ -1390,7 +1455,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                               : [...current, resource.id]
                           )
                         }
-                        className="rounded border-slate-200 text-purple-600 focus:ring-purple-100 cursor-pointer"
+                        className="rounded border-slate-200 text-emerald-600 focus:ring-emerald-100 cursor-pointer"
                       />
                       <span className="truncate font-bold">{resource.title}</span>
                     </label>
@@ -1401,7 +1466,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
 
             {/* AI Study Memory Card */}
             {sessionId && (
-              <div className="bg-white border border-purple-100/60 rounded-3xl p-5 shadow-sm space-y-4">
+              <div className="bg-white border border-emerald-100/80 rounded-3xl p-5 shadow-sm space-y-4">
                 <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest border-b border-slate-50 pb-2">
                   AI Study Card
                 </h4>
@@ -1420,7 +1485,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                       </tr>
                       <tr className="border-b border-slate-100 bg-slate-50/50">
                         <td className="px-3.5 py-2.5 text-slate-450 font-bold">Scope</td>
-                        <td className="px-3.5 py-2.5 font-black text-purple-700">
+                        <td className="px-3.5 py-2.5 font-black text-emerald-700">
                           {scope === "subject" ? "Subject" : scope === "resource" ? "Resource" : "Selected"}
                         </td>
                       </tr>
@@ -1451,10 +1516,10 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
               <motion.section
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-purple-200/80 rounded-3xl p-5 shadow-sm space-y-3"
+                className="bg-white border border-emerald-200/80 rounded-3xl p-5 shadow-sm space-y-3"
               >
-                <h4 className="text-[10px] font-black text-purple-800 uppercase tracking-widest border-b border-purple-100 pb-2 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" /> Study Templates
+                <h4 className="text-[10px] font-black text-emerald-800 uppercase tracking-widest border-b border-emerald-100 pb-2 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Study Templates
                 </h4>
                 <div className="flex flex-col gap-2">
                   {PROMPT_SUGGESTIONS.map((suggestion) => (
@@ -1465,7 +1530,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
                         setQuestion(suggestion);
                         inputRef.current?.focus();
                       }}
-                      className="w-full text-left rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-black text-slate-800 hover:bg-purple-50 hover:border-purple-400 hover:text-purple-900 transition-all cursor-pointer shadow-xs"
+                      className="w-full text-left rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-black text-slate-800 hover:bg-emerald-50 hover:border-emerald-400 hover:text-emerald-900 transition-all cursor-pointer shadow-xs"
                     >
                       {suggestion}
                     </button>
@@ -1487,7 +1552,7 @@ function KnowledgeStudyWorkspace({ resourceId, subjectName, resourceType, onBack
               <div className="flex gap-2">
                 <button
                   onClick={handleConfirmNewStudySession}
-                  className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition-colors cursor-pointer"
                 >
                   Yes, start new
                 </button>

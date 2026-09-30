@@ -184,9 +184,9 @@ export function InputToolbar() {
         <button
           type="button"
           onClick={() => triggerQuickAction("questions")}
-          className="px-3 py-1.5 rounded-xl bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-[10px] font-extrabold text-slate-800 hover:text-blue-700 flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+          className="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[10px] font-extrabold text-slate-800 hover:text-emerald-800 flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
         >
-          <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+          <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
           Quiz
         </button>
 

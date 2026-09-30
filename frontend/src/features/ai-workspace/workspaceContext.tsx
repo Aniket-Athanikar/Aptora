@@ -11,6 +11,7 @@ import {
   ResourceItem
 } from "./types";
 import { backendService, type Resource as BackendResource, type SubjectDocuments } from "@/services/backend.service";
+import { resolveApiUrl } from "@/lib/api-url";
 
 interface WorkspaceContextProps {
   conversations: Conversation[];
@@ -664,12 +665,10 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      
       const workspaceId = activeWorkspace?.id ? parseInt(activeWorkspace.id) : 0;
       if (!workspaceId) throw new Error("No active workspace selected.");
 
-      const response = await fetch(`${apiBase}/api/v1/knowledge/chat/stream`, {
+      const response = await fetch(resolveApiUrl("/knowledge/chat/stream"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -753,7 +752,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
               if (requestId) {
                 setTimeout(async () => {
                   try {
-                    const res = await fetch(`${apiBase}/api/v1/analytics/request/${requestId}`, {
+                    const res = await fetch(resolveApiUrl(`/analytics/request/${requestId}`), {
                       headers: token ? { "Authorization": `Bearer ${token}` } : {},
                     });
                     if (res.ok) {

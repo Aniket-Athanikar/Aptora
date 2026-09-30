@@ -193,12 +193,19 @@ def get_document_preview(resource_id: int, db: Session = Depends(get_db), curren
         return {
             "resource_id": resource.id,
             "title": resource.title,
-            "chunks": [{"index": 0, "content": resource.content.raw_text}]
+            "chunks": [{"index": 0, "content": resource.content.raw_text, "page_number": 1, "chapter": "Document Text", "topic": ""}]
         }
     return {
         "resource_id": resource.id,
         "title": resource.title,
-        "chunks": [{"index": c.chunk_index, "content": c.content} for c in chunks]
+        "chunks": [{
+            "index": c.chunk_index,
+            "content": c.content,
+            "page_number": c.page_number or (c.chunk_index + 1),
+            "chapter": c.chapter or f"Chunk #{c.chunk_index + 1}",
+            "topic": c.topic or "",
+            "subject": c.subject or ""
+        } for c in chunks]
     }
 
 

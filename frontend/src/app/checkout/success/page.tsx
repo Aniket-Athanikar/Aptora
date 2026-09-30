@@ -21,7 +21,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { resolveApiUrl } from "@/lib/api-url";
 
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();
@@ -49,7 +49,7 @@ export default function CheckoutSuccessPage() {
 
     const dispatchInvoiceEmail = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/billing/send-invoice`, {
+        const response = await fetch(resolveApiUrl("/billing/send-invoice"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -87,11 +87,11 @@ export default function CheckoutSuccessPage() {
     setDownloading(true);
 
     try {
-      const downloadUrl = `${API_URL}/api/billing/download-invoice-pdf?email=${encodeURIComponent(
+      const downloadUrl = resolveApiUrl(`/billing/download-invoice-pdf?email=${encodeURIComponent(
         user?.email || "user@aptora.ai"
       )}&plan=${encodeURIComponent(planName)}&cycle=${encodeURIComponent(cycle)}&amount=${encodeURIComponent(
         amount
-      )}&txnId=${encodeURIComponent(txnId)}`;
+      )}&txnId=${encodeURIComponent(txnId)}`);
 
       const response = await fetch(downloadUrl);
       if (!response.ok) throw new Error("Download failed");

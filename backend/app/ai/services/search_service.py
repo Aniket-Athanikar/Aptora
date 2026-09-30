@@ -71,13 +71,26 @@ class SearchService:
 
             if not results:
                 cls._log_retrieval_diagnostics(workspace_id, subject_id, resource_types)
+                logger.info("[SearchService] Qdrant returned 0 results. Executing PostgreSQL database fallback...")
+                db_chunks = cls._search_db_fallback(workspace_id, question, subject_id, resource_ids, limit=limit)
+                if db_chunks:
+                    return db_chunks
 
         except Exception as exc:
-            logger.exception("[SearchService] Semantic search failed.")
+            logger.warning("[SearchService] Qdrant vector search failed (%s). Falling back to PostgreSQL DB...", exc)
+            db_chunks = cls._search_db_fallback(workspace_id, question, subject_id, resource_ids, limit=limit)
+            if db_chunks:
+                return db_chunks
             raise RetrievalUnavailable("Embedding or vector search is unavailable.") from exc
 
         reranked = cls._rerank(cls._format_results(results), question, subject_id, resource_types)
         formatted = cls._select_relevant(reranked, limit)
+
+        if not formatted:
+            logger.info("[SearchService] Reranking filtered out all Qdrant results. Executing PostgreSQL database fallback...")
+            db_chunks = cls._search_db_fallback(workspace_id, question, subject_id, resource_ids, limit=limit)
+            if db_chunks:
+                return db_chunks
 
         logger.info("[SearchService] Top %d selected chunks: %s", len(formatted), [
             {"document": item["document_title"], "type": item["resource_type"], "score": item["score"], "page": item["page_number"]}
@@ -209,18 +222,89 @@ class SearchService:
             return []
 
         relevant = [c for c in chunks if c["score"] >= cls.MIN_RELEVANCE_SCORE]
-        if not relevant:
+        if not relevant and chunks:
             logger.info(
-                "[SearchService] All %d candidates fell below MIN_RELEVANCE_SCORE=%.2f; "
-                "treating as no relevant material found.",
+                "[SearchService] All %d candidates fell below MIN_RELEVANCE_SCORE=%.2f; fallback to top candidate.",
                 len(chunks), cls.MIN_RELEVANCE_SCORE,
             )
+            relevant = chunks[:3]
+
+        if not relevant:
             return []
 
-        # Guard against a lucky top-1 dragging in a long, weak tail of
-        # candidates that only barely cleared the floor.
         top_score = relevant[0]["score"]
-        relevant = [c for c in relevant if c["score"] >= top_score * 0.5]
+        relevant = [c for c in relevant if c["score"] >= top_score * 0.4]
 
         final_count = max(1, min(limit or cls.DEFAULT_LIMIT, 5))
         return relevant[:final_count]
+
+    @classmethod
+    def _search_db_fallback(
+        cls,
+        workspace_id: int,
+        question: str,
+        subject_id: int | None = None,
+        resource_ids: list[int] | None = None,
+        limit: int = 5,
+    ) -> list[dict[str, Any]]:
+        """Fallback search against PostgreSQL resource_chunks table when Qdrant returns 0 results."""
+        from app.db.session import SessionLocal
+        from app.models.resource import ResourceDb
+        from app.models.resource_chunk import ResourceChunkDb
+
+        db = SessionLocal()
+        try:
+            query = (
+                db.query(ResourceChunkDb, ResourceDb)
+                .join(ResourceDb, ResourceChunkDb.resource_id == ResourceDb.id)
+                .filter(ResourceDb.workspace_id == workspace_id)
+            )
+
+            if subject_id is not None:
+                query = query.filter(ResourceDb.subject_id == subject_id)
+
+            if resource_ids:
+                query = query.filter(ResourceDb.id.in_(resource_ids))
+
+            query_terms = [t for t in re.findall(r"[a-z0-9]+", question.lower()) if len(t) > 2]
+            query_terms = [t for t in query_terms if t not in {"what", "which", "with", "from", "about", "explain", "describe", "tell", "please"}]
+
+            rows = query.all()
+            if not rows:
+                logger.info("[SearchService DB Fallback] No chunks found in PostgreSQL for workspace_id=%s.", workspace_id)
+                return []
+
+            scored_items = []
+            for chunk, res in rows:
+                content_text = chunk.content or ""
+                doc_title = res.title or res.original_filename or "Uploaded Resource"
+                searchable = f"{content_text} {doc_title} {chunk.chapter or ''} {chunk.topic or ''}".lower()
+
+                match_count = sum(1 for term in query_terms if term in searchable)
+                score = round(match_count / max(1, len(query_terms)), 4) if query_terms else 0.5
+
+                scored_items.append({
+                    "score": max(score, 0.35),
+                    "vector_score": 0.35,
+                    "keyword_score": score,
+                    "chunk_id": str(chunk.id),
+                    "resource_id": chunk.resource_id,
+                    "chunk_index": chunk.chunk_index,
+                    "subject_id": res.subject_id,
+                    "subject": chunk.subject or "",
+                    "chapter": chunk.chapter or "",
+                    "topic": chunk.topic or "",
+                    "page_number": chunk.page_number or 1,
+                    "content": content_text,
+                    "document_title": doc_title,
+                    "resource_type": res.resource_type.value if hasattr(res.resource_type, "value") else str(res.resource_type),
+                })
+
+            scored_items.sort(key=lambda x: x["score"], reverse=True)
+            logger.info("[SearchService DB Fallback] Retrieved %d chunk(s) from PostgreSQL for workspace_id=%s.", len(scored_items), workspace_id)
+            return scored_items[:limit]
+        except Exception as err:
+            logger.error("[SearchService DB Fallback] Database fallback search error: %s", err)
+            return []
+        finally:
+            db.close()

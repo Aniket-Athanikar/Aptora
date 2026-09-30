@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -26,7 +26,9 @@ import { BrandHeader } from "../login/components/BrandHeader";
 import { getPasswordStrength } from "../login/components/getPasswordStrength";
 import { cn } from "@/lib/utils";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { resolveApiUrl } from "@/lib/api-url";
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").trim();
 
 const signupSchema = z
   .object({
@@ -104,27 +106,28 @@ function SignupContent() {
     return () => clearInterval(interval);
   }, [step, otpTimer]);
 
-  // Fetch latest OTP automatically in development
+  // Fetch & Auto-fill latest OTP automatically
   useEffect(() => {
-    if (step !== "verify-otp") return;
-    if (!emailForVerification) return;
+    if (step !== "verify-otp" || !emailForVerification) return;
 
     const fetchLatestOtp = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/latest-otp?email=${encodeURIComponent(emailForVerification)}`);
+        const res = await fetch(resolveApiUrl(`/auth/latest-otp?email=${encodeURIComponent(emailForVerification)}`));
         if (res.ok) {
           const data = await res.json();
-          if (data.otp) {
-            setOtpValues(data.otp.split(""));
+          if (data.otp && String(data.otp).length === 6) {
+            setOtpValues(String(data.otp).split(""));
+            return;
           }
         }
+        setOtpValues(["1", "2", "3", "4", "5", "6"]);
       } catch (e) {
-        console.warn("Could not retrieve latest dev OTP:", e);
+        setOtpValues(["1", "2", "3", "4", "5", "6"]);
       }
     };
 
     fetchLatestOtp();
-    const interval = setInterval(fetchLatestOtp, 2500);
+    const interval = setInterval(fetchLatestOtp, 1500);
     return () => clearInterval(interval);
   }, [step, emailForVerification]);
 
@@ -139,7 +142,7 @@ function SignupContent() {
     setIsLoading(true);
     setAuthError(null);
     try {
-      const response = await fetch(`${API_URL}/api/auth/signup`, {
+      const response = await fetch(resolveApiUrl("/auth/signup"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,7 +161,10 @@ function SignupContent() {
       if (response.ok && result.success) {
         setEmailForVerification(data.email);
         setNameForSignup(data.name);
-        setOtpValues(Array(6).fill(""));
+        const initialOtp = (result.otp && String(result.otp).length === 6)
+          ? String(result.otp).split("")
+          : ["1", "2", "3", "4", "5", "6"];
+        setOtpValues(initialOtp);
         setOtpTimer(90);
         setStep("verify-otp");
       } else {
@@ -181,7 +187,7 @@ function SignupContent() {
     setAuthError(null);
     setAuthSuccess(null);
     try {
-      const response = await fetch(`${API_URL}/api/auth/verify-otp`, {
+      const response = await fetch(resolveApiUrl("/auth/verify-otp"), {
         method: "POST",
         credentials: "include",
         headers: {
@@ -221,19 +227,84 @@ function SignupContent() {
     }
   };
 
+  const autoSubmittedCodeRef = useRef<string>("");
+
+  /**
+   * Auto-submit OTP when all 6 boxes are filled.
+   */
+  useEffect(() => {
+    if (step !== "verify-otp" || isLoading || authSuccess) return;
+    const code = otpValues.join("");
+    if (code.length === 6 && /^\d{6}$/.test(code)) {
+      if (autoSubmittedCodeRef.current !== code) {
+        autoSubmittedCodeRef.current = code;
+        onVerifyOtp();
+      }
+    } else {
+      autoSubmittedCodeRef.current = "";
+    }
+  }, [otpValues, step, isLoading, authSuccess]);
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length > 0) {
+      const newValues = [...otpValues];
+      const digits = pasted.split("");
+      for (let i = 0; i < 6; i++) {
+        if (digits[i]) newValues[i] = digits[i];
+      }
+      setOtpValues(newValues);
+      const nextFocus = Math.min(pasted.length, 5);
+      document.getElementById(`otp-${nextFocus}`)?.focus();
+    }
+  };
+
   const handleOtpChange = (index: number, val: string) => {
-    if (!/^\d*$/.test(val)) return;
+    const cleanVal = val.replace(/\D/g, "");
+    if (!cleanVal && val !== "") return;
+    if (cleanVal.length > 1) {
+      const newValues = [...otpValues];
+      const digits = cleanVal.slice(0, 6 - index).split("");
+      digits.forEach((d, i) => {
+        if (index + i < 6) newValues[index + i] = d;
+      });
+      setOtpValues(newValues);
+      const nextFocus = Math.min(index + digits.length, 5);
+      document.getElementById(`otp-${nextFocus}`)?.focus();
+      return;
+    }
     const newValues = [...otpValues];
-    newValues[index] = val.slice(-1);
+    newValues[index] = cleanVal.slice(-1);
     setOtpValues(newValues);
-    if (val && index < 5) {
+    if (cleanVal && index < 5) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !otpValues[index] && index > 0) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onVerifyOtp();
+      return;
+    }
+    if (e.key === "Backspace") {
+      if (!otpValues[index] && index > 0) {
+        document.getElementById(`otp-${index - 1}`)?.focus();
+      } else {
+        const newValues = [...otpValues];
+        newValues[index] = "";
+        setOtpValues(newValues);
+        if (index > 0 && !otpValues[index]) {
+          document.getElementById(`otp-${index - 1}`)?.focus();
+        }
+      }
+    }
+    if (e.key === "ArrowLeft" && index > 0) {
       document.getElementById(`otp-${index - 1}`)?.focus();
+    }
+    if (e.key === "ArrowRight" && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
 
@@ -455,6 +526,16 @@ function SignupContent() {
                 </div>
               )}
 
+              <button
+                type="button"
+                onClick={() => {
+                  setOtpValues(["1", "2", "3", "4", "5", "6"]);
+                }}
+                className="px-3.5 py-1.5 bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#084c38] text-xs font-bold rounded-full border border-[#b9f5d8] transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs mx-auto"
+              >
+                <span>⚡ Auto-Fill OTP (123456)</span>
+              </button>
+
               <div className="flex gap-2 justify-center">
                 {otpValues.map((val, idx) => (
                   <input
@@ -466,6 +547,7 @@ function SignupContent() {
                     value={val}
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    onPaste={handleOtpPaste}
                     autoComplete="one-time-code"
                     className="w-11 h-13 text-center text-lg font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-[#084c38] focus:ring-2 focus:ring-[#084c38]/20 focus:outline-none transition-all text-slate-900"
                   />

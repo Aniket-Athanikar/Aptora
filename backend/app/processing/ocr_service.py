@@ -13,7 +13,7 @@ import pytesseract
 # Do not hard-code Windows executables.  Containers use PATH; local Windows
 # installs may optionally supply an explicit executable through this variable.
 _tesseract_cmd = os.getenv("TESSERACT_CMD")
-if _tesseract_cmd:
+if _tesseract_cmd and Path(_tesseract_cmd).exists():
     pytesseract.pytesseract.tesseract_cmd = _tesseract_cmd
 
 class OCRService:

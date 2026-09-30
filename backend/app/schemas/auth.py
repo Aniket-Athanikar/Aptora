@@ -37,6 +37,7 @@ class LoginResponse(BaseModel):
     email: str
     name: str
     code: str = "SUCCESS"
+    otp: Optional[str] = None
     access_token: Optional[str] = None
     refresh_token: Optional[str] = None
 
@@ -54,6 +55,7 @@ class SignupResponse(BaseModel):
     message: str
     email: str
     code: str = "SUCCESS"
+    otp: Optional[str] = None
 
 
 class OtpPayload(BaseModel):

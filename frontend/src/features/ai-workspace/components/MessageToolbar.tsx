@@ -153,10 +153,10 @@ export function MessageToolbar({ message }: MessageToolbarProps) {
           toast("Compiling practice quiz questions...", "success");
           triggerQuickAction("questions");
         }}
-        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-blue-50 border border-slate-300/80 hover:border-blue-400 text-slate-800 hover:text-blue-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
+        className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-emerald-50 border border-slate-300/80 hover:border-emerald-400 text-slate-800 hover:text-emerald-900 transition-all flex items-center gap-1.5 text-[10.5px] font-bold shadow-2xs cursor-pointer"
         title="Create quiz"
       >
-        <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+        <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
         <span>Quiz</span>
       </button>
 

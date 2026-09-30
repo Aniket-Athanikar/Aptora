@@ -1,62 +1,146 @@
+# ============================================================
 # Python virtual environments & cache
+# ============================================================
+
 venv/
 .venv/
+env/
 ef_env/
+
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
+
 .pytest_cache/
 .coverage
 htmlcov/
+
+
+# ============================================================
+# Python databases
+# ============================================================
+
 *.sqlite
 *.sqlite3
+*.db
 
-# Node modules & Next.js cache
+backend/dev.db
+
+
+# ============================================================
+# Node modules & Next.js
+# ============================================================
+
 node_modules/
 .next/
 out/
 build/
 dist/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 .pnpm-debug.log*
 
-# Environment files
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+
 .env
+.env.*
+!.env.example
+
+# Local environment files
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.production
 .env.production.local
 
+# Backend environment
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+
+# ============================================================
 # OS & Editor files
+# ============================================================
+
 .DS_Store
 Thumbs.db
+
 .vscode/
 .idea/
+
 *.swp
 *.swo
+*.swn
 
-# Development artifacts & Local databases
-backend/dev.db
+
+# ============================================================
+# Development artifacts
+# ============================================================
+
 backend/last_email.html
 backend/app/uploads/
+backend/uploads/
 uploads/
 
-# Docker persistent data volumes (if mounted locally)
+*.tmp
+*.temp
+
+
+# ============================================================
+# Docker persistent data
+# ============================================================
+
 pgdata/
 redis_data/
 qdrant_data/
+
 prometheus_data/
 grafana_data/
 loki_data/
+
 docker-compose.override.yml
 
+
+# ============================================================
 # Coverage & Test reports
+# ============================================================
+
 coverage/
 *.lcov
 
+htmlcov/
+.pytest_cache/
+
+
+# ============================================================
 # System logs
+# ============================================================
+
 logs/
 *.log
+
+
+# ============================================================
+# Build / generated files
+# ============================================================
+
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+
+# ============================================================
+# IDE / local configuration
+# ============================================================
+
+*.code-workspace

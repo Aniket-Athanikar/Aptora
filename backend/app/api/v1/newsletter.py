@@ -8,7 +8,7 @@ from app.schemas.contact import NewsletterPayload
 from app.services.email_service import send_real_email
 
 logger = logging.getLogger("backend")
-router = APIRouter(prefix="/api/newsletter", tags=["newsletter"])
+router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 
 @router.post("/subscribe")
 async def subscribe_newsletter(payload: NewsletterPayload, db: Session = Depends(get_db)):

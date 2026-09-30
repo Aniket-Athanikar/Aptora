@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { getAvatarUrl } from '@/lib/avatar';
-import { forwardRef, HTMLAttributes } from 'react';
+import { forwardRef, HTMLAttributes, useState } from 'react';
 
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -11,6 +11,8 @@ export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   ({ className, src, alt, fallback, size = 'md', ...props }, ref) => {
+    const [imageError, setImageError] = useState(false);
+
     const sizeClasses = {
       xs: 'h-6 w-6 text-xs',
       sm: 'h-8 w-8 text-xs',
@@ -31,8 +33,13 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
         {...props}
       >
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={alt || fallback || 'Avatar'} className="aspect-square h-full w-full object-cover" />
+        {avatarUrl && !imageError ? (
+          <img
+            src={avatarUrl}
+            alt={alt || fallback || 'Avatar'}
+            className="aspect-square h-full w-full object-cover"
+            onError={() => setImageError(true)}
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted font-medium">
             {fallback ? fallback.slice(0, 2).toUpperCase() : '?'}

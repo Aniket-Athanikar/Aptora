@@ -7,6 +7,7 @@ and slice retrieved RAG context and conversation history to budget thresholds.
 
 from __future__ import annotations
 import logging
+from app.core.config import settings
 try:
     import tiktoken
 except ImportError:

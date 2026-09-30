@@ -94,32 +94,23 @@ export function ResourceUploadModal({
   useEffect(() => {
     if (!selectedWorkspaceId) return;
 
-    const defaultDiverseSubjects = [
-      { id: "subj-history", name: "History & Culture" },
-      { id: "subj-geography", name: "Geography & Ecology" },
-      { id: "subj-polity", name: "Polity & Governance" },
-      { id: "subj-economy", name: "Economy & Growth" },
-      { id: "subj-science", name: "Science & Technology" },
-    ];
-
     // Check in local workspace context first
     const targetWs = workspaces.find((w) => w.id === selectedWorkspaceId);
     if (targetWs && targetWs.subjects && targetWs.subjects.length > 0) {
       const formatted = targetWs.subjects.map((s) => ({
-        id: s.id,
+        id: String(s.id),
         name: s.name,
       }));
-      const combined = formatted.length > 1 ? formatted : [...formatted, ...defaultDiverseSubjects];
-      setAvailableSubjects(combined);
-      if (!selectedSubjectId || !combined.some((s) => s.id === selectedSubjectId)) {
-        const defaultSubj = defaultSubjectId && combined.some((s) => s.id === defaultSubjectId)
+      setAvailableSubjects(formatted);
+      if (!selectedSubjectId || !formatted.some((s) => s.id === selectedSubjectId)) {
+        const defaultSubj = defaultSubjectId && formatted.some((s) => s.id === defaultSubjectId)
           ? defaultSubjectId
-          : combined[0].id;
+          : formatted[0].id;
         setSelectedSubjectId(defaultSubj);
       }
     }
 
-    // Also fetch dynamically from backend if workspaceId is numeric or to sync
+    // Also fetch dynamically from backend to get official numeric database subjects
     const numWsId = Number(selectedWorkspaceId);
     if (!Number.isInteger(numWsId) || numWsId <= 0) {
       return;
@@ -133,12 +124,11 @@ export function ResourceUploadModal({
             id: String(s.id),
             name: s.name,
           }));
-          const combined = fetched.length > 1 ? fetched : [...fetched, ...defaultDiverseSubjects];
-          setAvailableSubjects(combined);
-          if (!selectedSubjectId || !combined.some((s) => s.id === selectedSubjectId)) {
-            const defaultSubj = defaultSubjectId && combined.some((s) => s.id === defaultSubjectId)
+          setAvailableSubjects(fetched);
+          if (!selectedSubjectId || !fetched.some((s) => s.id === selectedSubjectId)) {
+            const defaultSubj = defaultSubjectId && fetched.some((s) => s.id === defaultSubjectId)
               ? defaultSubjectId
-              : combined[0].id;
+              : fetched[0].id;
             setSelectedSubjectId(defaultSubj);
           }
         }
