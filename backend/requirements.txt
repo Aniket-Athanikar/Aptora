@@ -54,7 +54,7 @@ numpy==2.3.2
 openai==2.50.0
 orjson==3.11.9
 packaging==26.2
-parso==0.8.3
+parso==0.8.7
 pdf2image==1.17.0
 pexpect==4.8.0
 pickleshare==0.7.5
