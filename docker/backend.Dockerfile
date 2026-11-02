@@ -1,5 +1,5 @@
 # Stage 1: Build dependencies
-FROM python:3.11-slim AS builder
+FROM python:3.15-slim AS builder
 
 WORKDIR /build
 
@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Stage 2: Final minimal runtime for Aptora backend
-FROM python:3.11-slim AS runner
+FROM python:3.15-slim AS runner
 
 WORKDIR /app
 
